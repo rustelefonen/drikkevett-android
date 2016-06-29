@@ -7,8 +7,10 @@ import de.greenrobot.daogenerator.Schema;
 public class Main {
 
     public static void main(String[] args) throws Exception {
+        //Mappen entitetene blir lagt i
         Schema schema = new Schema(1, "rustelefonen.no.drikkevett_android.db");
 
+        //Lag en entitet
         Entity program = schema.addEntity("Program");
         program.addIdProperty();
         program.addStringProperty("name");
