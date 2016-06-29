@@ -33,4 +33,7 @@ dependencies {
 
     //Charts
     compile 'com.github.PhilJay:MPAndroidChart:v2.2.5'
+
+    //GreenDAO
+    compile group: 'de.greenrobot', name: 'greendao', version: '2.1.0'
 }
