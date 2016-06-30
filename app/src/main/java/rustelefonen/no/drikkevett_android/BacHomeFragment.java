@@ -16,6 +16,7 @@ public class BacHomeFragment extends Fragment{
         TextView tv = (TextView) v.findViewById(R.id.textViewHome);
         tv.setText("Hjem Skjerm");
 
+
         return v;
     }
 
