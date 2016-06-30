@@ -6,7 +6,17 @@
         android:text="Lars Petter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/promilleLbl"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:text="Legg til"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/addBtn"
         android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/textViewTesting" />
+        android:layout_toRightOf="@+id/promilleLbl"
+        android:layout_toEndOf="@+id/promilleLbl" />
 </RelativeLayout>
