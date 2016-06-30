@@ -10,7 +10,7 @@ import android.widget.TextView;
  * Created by simenfonnes on 30.06.2016.
  */
 
-/*public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
+public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     private String[] mDataset;
 
     // Provide a reference to the views for each data item
@@ -34,12 +34,13 @@ import android.widget.TextView;
     @Override
     public MyAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
                                                    int viewType) {
+        return null;
         // create a new view
-        View v = LayoutInflater.from(parent.getContext())
+        /*View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout., parent, false);
         // set the view's size, margins, paddings and layout parameters
         ViewHolder vh = new ViewHolder(v);
-        return vh;
+        return vh;*/
     }
 
     // Replace the contents of a view (invoked by the layout manager)
@@ -56,4 +57,4 @@ import android.widget.TextView;
     public int getItemCount() {
         return mDataset.length;
     }
-}*/
+}

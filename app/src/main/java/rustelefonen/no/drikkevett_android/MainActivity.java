@@ -1,5 +1,6 @@
 package rustelefonen.no.drikkevett_android;
 
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -54,7 +55,6 @@ public class MainActivity extends AppCompatActivity {
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
-
         //DB
         String DB_NAME = "my-db";
         SQLiteDatabase db;
@@ -95,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            startActivity(new Intent(this, Settings.class));
             return true;
         }
 
@@ -153,8 +154,12 @@ public class MainActivity extends AppCompatActivity {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
             switch(position){
-                case 0: return new BacHomeFragment();
-                case 1: return new BacCalcFragment();
+                case 0:
+                    setTitle("Hjem");
+                    return new BacHomeFragment();
+                case 1:
+                    setTitle("Promillekalkulator");
+                    return new BacCalcFragment();
                 case 2: return new BacPlanPartyFragment();
                 case 3: return new BacDayAfterFragment();
                 case 4: return new BacHistoryFragment();
@@ -163,10 +168,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        public int getCount() {
-            // Show 3 total pages.
-            return 5;
-        }
+        public int getCount() { return 5; }
 
         @Override
         public CharSequence getPageTitle(int position) {
