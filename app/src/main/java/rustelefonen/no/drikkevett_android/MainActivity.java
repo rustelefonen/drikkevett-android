@@ -1,5 +1,6 @@
 package rustelefonen.no.drikkevett_android;
 
+import android.database.sqlite.SQLiteDatabase;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +18,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import android.widget.TextView;
+
+import rustelefonen.no.drikkevett_android.db.DaoMaster;
+import rustelefonen.no.drikkevett_android.db.DaoSession;
+import rustelefonen.no.drikkevett_android.db.User;
+import rustelefonen.no.drikkevett_android.db.UserDao;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -50,15 +56,22 @@ public class MainActivity extends AppCompatActivity {
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
+        String DB_NAME = "my-db";
+        SQLiteDatabase db;
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        SQLiteDatabase.CursorFactory cursorFactory = null;
+        final DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, DB_NAME, cursorFactory);
+        db = helper.getWritableDatabase();
+
+        DaoMaster daoMaster = new DaoMaster(db);
+        DaoSession daoSession = daoMaster.newSession();
+        UserDao userDao = daoSession.getUserDao();
+
+        User newUser = new User();
+        newUser.setAge(12);
+
+        userDao.insert(newUser);
+
 
     }
 
@@ -138,20 +151,17 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        public int getCount() {
-            // Show 3 total pages.
-            return 3;
-        }
+        public int getCount() { return 5; }
 
         @Override
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "SECTION 1";
+                    return "test";
                 case 1:
-                    return "SECTION 2";
+                    return "lol";
                 case 2:
-                    return "SECTION 3";
+                    return "KEK";
             }
             return null;
         }
