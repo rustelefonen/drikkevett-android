@@ -1,22 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:id="@+id/bacCalc">
+
+    <SeekBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/seekBarBacCalc"
+        android:layout_marginBottom="67dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignLeft="@+id/btnRemove"
+        android:layout_alignStart="@+id/btnRemove"
+        android:layout_alignRight="@+id/addBtn"
+        android:layout_alignEnd="@+id/addBtn"
+        android:max="24"
+        />
 
     <TextView
-        android:text="Lars Petter"
+        android:text="Timer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textViewHours"
+        android:layout_above="@+id/seekBarBacCalc"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:text="PROMILLE"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/promilleLbl"
+        android:layout_marginTop="48dp"
+        android:textSize="30sp"
         android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:text="ØL"
+        android:layout_width="170px"
+        android:layout_height="wrap_content"
+        android:id="@+id/textViewTitleBeer"
+        android:textAlignment="center"
+        android:layout_above="@+id/textViewHours"
+        android:layout_alignLeft="@+id/textViewBeerUnits"
+        android:layout_alignStart="@+id/textViewBeerUnits" />
+
+    <TextView
+        android:text="0"
+        android:layout_width="170px"
+        android:layout_height="wrap_content"
+        android:id="@+id/textViewBeerUnits"
+        android:textAlignment="center"
+        android:layout_above="@+id/textViewTitleBeer"
+        android:layout_alignRight="@+id/btnRemove"
+        android:layout_alignEnd="@+id/btnRemove" />
 
     <Button
         android:text="Legg til"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/addBtn"
-        android:layout_centerVertical="true"
-        android:layout_toRightOf="@+id/promilleLbl"
-        android:layout_toEndOf="@+id/promilleLbl" />
+        android:layout_marginLeft="25dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginBottom="51dp"
+        android:layout_above="@+id/textViewBeerUnits"
+        android:layout_toRightOf="@+id/textViewHours"
+        android:layout_toEndOf="@+id/textViewHours" />
+
+    <Button
+        android:text="Fjern"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnRemove"
+        android:layout_marginRight="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_alignBaseline="@+id/addBtn"
+        android:layout_alignBottom="@+id/addBtn"
+        android:layout_toLeftOf="@+id/textViewHours"
+        android:layout_toStartOf="@+id/textViewHours" />
+
+    <TextView
+        android:text="Promille Kalkulator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/promilleLbl"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/textViewQuotes" />
+
 </RelativeLayout>

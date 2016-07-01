@@ -19,7 +19,7 @@ public class BacHomeFragment extends Fragment{
 
         TextView tv = (TextView) v.findViewById(R.id.textViewHome);
         tv.setText("Hjem Skjerm");
-
+        /*
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         String [] test = new String[]{"Ta nytt bilde", "Velg bilde", "Avbryt"};
         builder.setTitle("Profilbilde")
@@ -37,7 +37,7 @@ public class BacHomeFragment extends Fragment{
                     }
                 });
         builder.create().show();
-
+        */
         /*
         new AlertDialog.Builder(getContext())
                 .setTitle("Delete entry")
