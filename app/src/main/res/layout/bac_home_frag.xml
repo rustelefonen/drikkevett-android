@@ -2,13 +2,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent"
     android:id="@+id/home_fragment_layout">
-    <TextView
-        android:text="hjem"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/textViewHome" />
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -40,7 +33,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Denne grafen viser hvordan 3det står til med målet ditt. Ønsker du å vite mer klikk på fargene"
+        android:text="Denne grafen viser hvordan det står til med målet ditt. Ønsker du å vite mer klikk på fargene"
         android:id="@+id/graph_home_text_view"
         android:layout_below="@+id/profile_image"
         android:layout_alignParentLeft="true"/>
@@ -94,6 +87,28 @@
         android:id="@+id/last_month_text_view"
         android:layout_below="@+id/total_highest_bac"
         android:gravity="center"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/last_month_text_view"
+        android:lines="2"
+        android:text="0,-\nKostnader"
+        android:layout_alignParentLeft="true"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/last_month_text_view"
+        android:lines="3"
+        android:text="0.00\nHøyeste\npromille"
+        android:layout_alignParentLeft="true"
+        android:gravity="center"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/last_month_text_view"
+        android:lines="3"
+        android:text="0.00\nGjennomsnitt\nhøyeste promille"
+        android:layout_alignParentRight="true"/>
 
 
 
