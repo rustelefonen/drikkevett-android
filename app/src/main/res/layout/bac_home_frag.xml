@@ -25,4 +25,18 @@
         android:layout_below="@+id/profile_picture"
         android:clickable="true"
         android:onClick="openImageDialog"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/hello_message_text_view"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/user_name_text_view"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/profile_image"
+        android:layout_below="@+id/profile_picture"
+        android:id="@+id/quote_text_view"/>
 </RelativeLayout>

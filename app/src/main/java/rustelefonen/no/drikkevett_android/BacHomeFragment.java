@@ -1,15 +1,11 @@
 package rustelefonen.no.drikkevett_android;
 
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,33 +21,28 @@ public class BacHomeFragment extends Fragment{
     public final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1034;
     public String photoFileName = "photo.jpg";
 
+    //Widgets
+    public TextView tv;
+    public TextView quoteTextView;
+    public ImageView ivPreview;
+    public TextView helloMessageTextView;
+    public TextView usernameTextView;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.bac_home_frag, container, false);
 
-        TextView tv = (TextView) v.findViewById(R.id.textViewHome);
+        helloMessageTextView = (TextView) v.findViewById(R.id.hello_message_text_view);
+        usernameTextView = (TextView) v.findViewById(R.id.user_name_text_view);
+        tv = (TextView) v.findViewById(R.id.textViewHome);
         tv.setText("Hjem Skjerm");
 
+        ivPreview = (ImageView) v.findViewById(R.id.profile_image);
 
-        Uri photoToInsert = getPhotoFileUri(photoFileName);
+        quoteTextView = (TextView) v.findViewById(R.id.quote_text_view);
+        quoteTextView.setText(getRandomQuote());
 
-        File file = new File(photoToInsert.getPath());
-
-        if (file.exists()) {
-            if (photoToInsert != null) {
-                Bitmap takenImage = BitmapFactory.decodeFile(photoToInsert.getPath());
-                System.out.println("bitmap count: " + takenImage.getByteCount());
-                //profileImage.setImageBitmap(takenImage);
-
-                ImageView ivPreview = (ImageView) v.findViewById(R.id.profile_image);
-                ivPreview.setImageBitmap(takenImage);
-                System.out.println("Prøver å sette inn bilde");
-            }
-        } else {
-            System.out.println("Bildet eksisterer ikke");
-        }
-
-
+        insertImageIfExists();
 
         return v;
     }
@@ -69,6 +60,22 @@ public class BacHomeFragment extends Fragment{
     private boolean isExternalStorageAvailable() {
         String state = Environment.getExternalStorageState();
         return state.equals(Environment.MEDIA_MOUNTED);
+    }
+
+    private String getRandomQuote() {
+        return "Det er ok å ta en shot med venner, men pass på at du ikke tar en for mye";
+    }
+
+    private void insertImageIfExists() {
+        Uri photoToInsert = getPhotoFileUri(photoFileName);
+        File file = new File(photoToInsert.getPath());
+
+        if (file.exists()) {
+            Bitmap takenImage = BitmapFactory.decodeFile(photoToInsert.getPath());
+            ivPreview.setImageBitmap(takenImage);
+        } else {
+            System.out.println("Bildet eksisterer ikke");
+        }
     }
 }
 
