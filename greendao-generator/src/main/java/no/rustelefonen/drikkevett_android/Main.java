@@ -46,7 +46,7 @@ public class Main {
         userData.addStringProperty("gender");
         userData.addDateProperty("goalDate");
         userData.addDateProperty("goalBAC");
-        userData.addDoubleProperty("height");
+        userData.addStringProperty("nickname");
         userData.addDoubleProperty("weight");
 
         DaoGenerator dg = new DaoGenerator();

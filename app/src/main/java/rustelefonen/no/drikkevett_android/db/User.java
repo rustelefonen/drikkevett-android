@@ -14,13 +14,13 @@ public class User {
     private String gender;
     private java.util.Date goalDate;
     private java.util.Date goalBAC;
-    private Double height;
+    private String nickname;
     private Double weight;
 
     public User() {
     }
 
-    public User(Integer age, Integer beerPrice, Integer winePrice, Integer drinkPrice, Integer shotPrice, String gender, java.util.Date goalDate, java.util.Date goalBAC, Double height, Double weight) {
+    public User(Integer age, Integer beerPrice, Integer winePrice, Integer drinkPrice, Integer shotPrice, String gender, java.util.Date goalDate, java.util.Date goalBAC, String nickname, Double weight) {
         this.age = age;
         this.beerPrice = beerPrice;
         this.winePrice = winePrice;
@@ -29,7 +29,7 @@ public class User {
         this.gender = gender;
         this.goalDate = goalDate;
         this.goalBAC = goalBAC;
-        this.height = height;
+        this.nickname = nickname;
         this.weight = weight;
     }
 
@@ -97,12 +97,12 @@ public class User {
         this.goalBAC = goalBAC;
     }
 
-    public Double getHeight() {
-        return height;
+    public String getNickname() {
+        return nickname;
     }
 
-    public void setHeight(Double height) {
-        this.height = height;
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
     public Double getWeight() {
