@@ -2,7 +2,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent"
     android:id="@+id/home_fragment_layout">
-
     <TextView
         android:text="hjem"
         android:layout_width="wrap_content"
@@ -10,7 +9,6 @@
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
         android:id="@+id/textViewHome" />
-
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -39,4 +37,64 @@
         android:layout_alignRight="@+id/profile_image"
         android:layout_below="@+id/profile_picture"
         android:id="@+id/quote_text_view"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Denne grafen viser hvordan 3det står til med målet ditt. Ønsker du å vite mer klikk på fargene"
+        android:id="@+id/graph_home_text_view"
+        android:layout_below="@+id/profile_image"
+        android:layout_alignParentLeft="true"/>
+    <com.github.mikephil.charting.charts.PieChart
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/profile_image"
+        android:layout_alignParentRight="true"
+        android:id="@+id/goal_pie_chart"
+        ></com.github.mikephil.charting.charts.PieChart>
+    <com.github.mikephil.charting.charts.BarChart
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/goal_pie_chart"
+        android:id="@+id/history_bar_chart">
+    </com.github.mikephil.charting.charts.BarChart>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Total"
+        android:layout_below="@+id/history_bar_chart"
+        android:id="@+id/total_text_view"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/total_cost_text_view"
+        android:layout_alignParentLeft="true"
+        android:text="0,-\nKostnader"
+        android:lines="2"
+        android:layout_below="@+id/total_text_view"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:lines="3"
+        android:id="@+id/total_highest_bac"
+        android:text="0.00\nHøyeste\nPromille"
+        android:layout_below="@+id/total_text_view"
+        android:gravity="center"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:lines="3"
+        android:text="0.00\nGjennomsnitt\nhøyeste promille"
+        android:layout_below="@+id/total_text_view"
+        android:layout_alignParentRight="true"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Forrige måned"
+        android:id="@+id/last_month_text_view"
+        android:layout_below="@+id/total_highest_bac"
+        android:gravity="center"/>
+
+
+
 </RelativeLayout>
