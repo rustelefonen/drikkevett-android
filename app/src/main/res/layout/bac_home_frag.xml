@@ -78,6 +78,7 @@
         android:layout_height="wrap_content"
         android:lines="3"
         android:text="0.00\nGjennomsnitt\nhøyeste promille"
+        android:id="@+id/total_avg_text_view"
         android:layout_below="@+id/total_text_view"
         android:layout_alignParentRight="true"/>
     <TextView
@@ -92,6 +93,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/last_month_text_view"
         android:lines="2"
+        android:id="@+id/last_month_cost_text_view"
         android:text="0,-\nKostnader"
         android:layout_alignParentLeft="true"/>
     <TextView
@@ -99,6 +101,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/last_month_text_view"
         android:lines="3"
+        android:id="@+id/last_month_highest_bac_text_view"
         android:text="0.00\nHøyeste\npromille"
         android:layout_alignParentLeft="true"
         android:gravity="center"/>
@@ -107,6 +110,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/last_month_text_view"
         android:lines="3"
+        android:id="@+id/last_month_avg_bac_text_view"
         android:text="0.00\nGjennomsnitt\nhøyeste promille"
         android:layout_alignParentRight="true"/>
 

@@ -26,11 +26,6 @@ import rustelefonen.no.drikkevett_android.db.HistoryDao;
 import rustelefonen.no.drikkevett_android.db.User;
 import rustelefonen.no.drikkevett_android.db.UserDao;
 
-import static java.util.Calendar.HOUR;
-import static java.util.Calendar.MILLISECOND;
-import static java.util.Calendar.MINUTE;
-import static java.util.Calendar.SECOND;
-
 public class BacHomeFragment extends Fragment{
 
     //Fields
@@ -43,12 +38,34 @@ public class BacHomeFragment extends Fragment{
     public TextView helloMessageTextView;
     public TextView usernameTextView;
 
+    public TextView totalCostTextView;
+    public TextView totalHighestBac;
+    public TextView totalAvgTextView;
+
+    public TextView lastMonthCostTextView;
+    public TextView lastMonthHighestBacTextView;
+    public TextView lastMonthAvgBacTextView;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.bac_home_frag, container, false);
-        //insertUser();
+        addHistory();
         initWidgets(view);
         fillWidgets();
+
+        List<History> historyList = getHistoryList();
+
+        if (historyList.size() > 0) {
+            totalCostTextView.setText(getTotalCost(historyList) + ",-\nKostnader");
+            totalHighestBac.setText(getTotalHighestBac(historyList) + "\nHøyeste\nPromille");
+            totalAvgTextView.setText(getTotalAverageHighestBac(historyList) + "\nGjennomsnitt\nhøyeste promille");
+
+            lastMonthCostTextView.setText(getLastMonthCost(historyList) + ",-\nKostnader");
+            lastMonthHighestBacTextView.setText(getLastMonthHighestBac(historyList) + "\nHøyeste\npromille");
+            lastMonthAvgBacTextView.setText(getLastMonthAverageBac(historyList) + "\nGjennomsnitt\nhøyeste promille");
+        }
+
+
         return view;
     }
 
@@ -142,6 +159,12 @@ public class BacHomeFragment extends Fragment{
         usernameTextView = (TextView) view.findViewById(R.id.user_name_text_view);
         ivPreview = (ImageView) view.findViewById(R.id.profile_image);
         quoteTextView = (TextView) view.findViewById(R.id.quote_text_view);
+        totalCostTextView = (TextView) view.findViewById(R.id.total_cost_text_view);
+        totalHighestBac = (TextView) view.findViewById(R.id.total_highest_bac);
+        totalAvgTextView = (TextView) view.findViewById(R.id.total_avg_text_view);
+        lastMonthCostTextView = (TextView) view.findViewById(R.id.last_month_cost_text_view);
+        lastMonthHighestBacTextView = (TextView) view.findViewById(R.id.last_month_highest_bac_text_view);
+        lastMonthAvgBacTextView = (TextView) view.findViewById(R.id.last_month_avg_bac_text_view);
     }
 
     private void fillWidgets() {
@@ -273,6 +296,31 @@ public class BacHomeFragment extends Fragment{
 
     private boolean hasLastMonth() {
         return false;
+    }
+
+    private void addHistory() {
+        String DB_NAME = "my-db";
+        SQLiteDatabase db;
+
+        SQLiteDatabase.CursorFactory cursorFactory = null;
+        final DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(getContext(), DB_NAME, cursorFactory);
+        db = helper.getWritableDatabase();
+
+        DaoMaster daoMaster = new DaoMaster(db);
+        DaoSession daoSession = daoMaster.newSession();
+        HistoryDao historyDao = daoSession.getHistoryDao();
+
+        History history = new History();
+        history.setBeerCount(5);
+        history.setDrinkCount(6);
+        history.setWineCount(7);
+        history.setShotCount(8);
+        history.setStartDate(new Date());
+        history.setHighestBAC(0.5);
+        history.setPlannedUnitsCount(10);
+        history.setSum(2000);
+
+        historyDao.insert(history);
     }
 }
 
