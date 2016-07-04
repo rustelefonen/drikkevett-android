@@ -16,9 +16,13 @@
         android:layout_height="wrap_content"
         android:onClick="openImageDialog"
         android:text="bilde"
+        android:id="@+id/profile_picture"
         />
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/profile_image"/>
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:id="@+id/profile_image"
+        android:layout_below="@+id/profile_picture"
+        android:clickable="true"
+        android:onClick="openImageDialog"/>
 </RelativeLayout>

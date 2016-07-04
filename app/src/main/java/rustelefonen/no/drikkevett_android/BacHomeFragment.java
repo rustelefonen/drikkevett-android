@@ -32,17 +32,26 @@ public class BacHomeFragment extends Fragment{
         TextView tv = (TextView) v.findViewById(R.id.textViewHome);
         tv.setText("Hjem Skjerm");
 
+
         Uri photoToInsert = getPhotoFileUri(photoFileName);
 
-        if (photoToInsert != null) {
-            Bitmap takenImage = BitmapFactory.decodeFile(photoToInsert.getPath());
-            System.out.println("bitmap count: " + takenImage.getByteCount());
-            //profileImage.setImageBitmap(takenImage);
+        File file = new File(photoToInsert.getPath());
 
-            ImageView ivPreview = (ImageView) v.findViewById(R.id.profile_image);
-            ivPreview.setImageBitmap(takenImage);
-            System.out.println("Prøver å sette inn bilde");
+        if (file.exists()) {
+            if (photoToInsert != null) {
+                Bitmap takenImage = BitmapFactory.decodeFile(photoToInsert.getPath());
+                System.out.println("bitmap count: " + takenImage.getByteCount());
+                //profileImage.setImageBitmap(takenImage);
+
+                ImageView ivPreview = (ImageView) v.findViewById(R.id.profile_image);
+                ivPreview.setImageBitmap(takenImage);
+                System.out.println("Prøver å sette inn bilde");
+            }
+        } else {
+            System.out.println("Bildet eksisterer ikke");
         }
+
+
 
         return v;
     }
