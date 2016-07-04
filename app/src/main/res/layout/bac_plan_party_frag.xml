@@ -1,12 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    >
 
     <TextView
-        android:text="Planlegg Kvelden"
+        android:text="0"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/textViewPlanParty"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
-</RelativeLayout>
+        android:id="@+id/textViewPromilleLabelPlanPrty"
+        android:layout_marginTop="0dp"
+        android:textSize="36sp" />
+
+    <TextView
+        android:text="Kos deg!"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textViewQuotesPP" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        >
+
+        <Button
+            android:text="Fjern"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/buttonRemovePP" />
+
+        <Button
+            android:text="Legg til"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/buttonAddPP" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        >
+
+        <TextView
+            android:text="0\nØL"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewBeerPP"
+            android:gravity="center"
+            android:layout_marginRight="50dp"
+            />
+
+        <TextView
+            android:text="0\nVin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewWinePP"
+            android:gravity="center"
+            android:layout_marginRight="50dp"
+            />
+
+        <TextView
+            android:text="0\nDrink"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewDrinkPP"
+            android:gravity="center"
+            android:layout_marginRight="50dp"
+            />
+
+        <TextView
+            android:text="0\nShot"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewShotPP"
+            android:gravity="center"
+            />
+    </LinearLayout>
+
+    <Button
+        android:text="Start Kvelden"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/buttonStatusPP" />
+
+
+</LinearLayout>

@@ -1,10 +1,118 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent"
-    android:id="@+id/bacCalc">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/bacCalc"
+    android:orientation="vertical"
+    android:gravity="center"
+    >
+
+    <TextView
+        android:text="0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/promilleLbl"
+        android:layout_marginTop="-110dp"
+        android:textSize="30dp"
+        android:gravity="center"
+        />
+
+    <TextView
+        android:text="Kos deg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/promilleLbl"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/textViewQuotes"
+        android:gravity="center"
+        />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/myfivepanelpager"
+        android:layout_width="wrap_content"
+        android:layout_height="186dp"
+        android:fadingEdge="vertical" />
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center"
+
+    >
+    <Button
+        android:text="Fjern"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnRemove"
+        android:layout_marginRight="50dp"
+        />
+
+    <Button
+        android:text="Legg til"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/addBtn"
+        />
+</LinearLayout>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center"
+    android:layout_marginTop="20dp"
+    >
+    <TextView
+        android:text="0\nØL"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textViewBeerUnits"
+        android:gravity="center"
+        android:layout_marginRight="50dp"
+        />
+
+    <TextView
+        android:text="0\nVin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textViewWineUnits"
+        android:gravity="center"
+        android:layout_marginRight="50dp"
+        />
+
+    <TextView
+        android:text="0\nShot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textViewShotUnits"
+        android:gravity="center"
+        android:layout_marginRight="50dp"
+        />
+
+    <TextView
+        android:text="0\nDrink"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textViewDrinkUnits"
+        android:gravity="center"
+        />
+
+</LinearLayout>
+
+    <TextView
+        android:text="Promillen om 1 time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textViewHours"
+        android:layout_above="@+id/seekBarBacCalc"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:layout_marginTop="40dp"
+        />
 
     <SeekBar
-        android:layout_width="wrap_content"
+        android:layout_width="272dp"
         android:layout_height="wrap_content"
         android:id="@+id/seekBarBacCalc"
         android:layout_marginBottom="67dp"
@@ -16,74 +124,4 @@
         android:max="24"
         />
 
-    <TextView
-        android:text="Timer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textViewHours"
-        android:layout_above="@+id/seekBarBacCalc"
-        android:layout_centerHorizontal="true" />
-
-    <TextView
-        android:text="PROMILLE"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/promilleLbl"
-        android:layout_marginTop="48dp"
-        android:textSize="30sp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
-
-    <TextView
-        android:text="ØL"
-        android:layout_width="170px"
-        android:layout_height="wrap_content"
-        android:id="@+id/textViewTitleBeer"
-        android:textAlignment="center"
-        android:layout_above="@+id/textViewHours"
-        android:layout_alignLeft="@+id/textViewBeerUnits"
-        android:layout_alignStart="@+id/textViewBeerUnits" />
-
-    <TextView
-        android:text="0"
-        android:layout_width="170px"
-        android:layout_height="wrap_content"
-        android:id="@+id/textViewBeerUnits"
-        android:textAlignment="center"
-        android:layout_above="@+id/textViewTitleBeer"
-        android:layout_alignRight="@+id/btnRemove"
-        android:layout_alignEnd="@+id/btnRemove" />
-
-    <Button
-        android:text="Legg til"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/addBtn"
-        android:layout_marginLeft="25dp"
-        android:layout_marginStart="25dp"
-        android:layout_marginBottom="51dp"
-        android:layout_above="@+id/textViewBeerUnits"
-        android:layout_toRightOf="@+id/textViewHours"
-        android:layout_toEndOf="@+id/textViewHours" />
-
-    <Button
-        android:text="Fjern"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/btnRemove"
-        android:layout_marginRight="30dp"
-        android:layout_marginEnd="30dp"
-        android:layout_alignBaseline="@+id/addBtn"
-        android:layout_alignBottom="@+id/addBtn"
-        android:layout_toLeftOf="@+id/textViewHours"
-        android:layout_toStartOf="@+id/textViewHours" />
-
-    <TextView
-        android:text="Promille Kalkulator"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/promilleLbl"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/textViewQuotes" />
-
-</RelativeLayout>
+</LinearLayout>

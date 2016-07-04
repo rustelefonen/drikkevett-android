@@ -2,6 +2,7 @@ package rustelefonen.no.drikkevett_android;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -59,20 +60,11 @@ public class BacCalcFragment extends android.support.v4.app.Fragment {
     // VIEWS
     private static View v;
 
-    private UnitsPagerAdapter mUnitsPageAdapter;
-    private ViewPager mUnitsViewPager;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.bac_calc_frag, container, false);
 
         initVariabels();
-
-        /*
-        mUnitsPageAdapter = new UnitsPagerAdapter(getActivity().getSupportFragmentManager());
-        // Set up the ViewPager with the sections adapter.
-        mUnitsViewPager = (ViewPager) v.findViewById(R.id.viewPagerForUnits);
-        mUnitsViewPager.setAdapter(mUnitsPageAdapter);*/
 
         addButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v){
@@ -81,10 +73,7 @@ public class BacCalcFragment extends android.support.v4.app.Fragment {
                 } else {
                     beer++;
                 }
-                labelBeerNrUnits.setText("" + beer);
-
-                String bac = calculateBAC("Mann", 80, countingGrams(beer, 0, 0, 0), hours);
-                labelPromille.setText("" + bac);
+                labelBeerNrUnits.setText(beer + "\nØL");
 
                 totalPromille();
             }
@@ -97,9 +86,7 @@ public class BacCalcFragment extends android.support.v4.app.Fragment {
                 } else {
                     beer--;
                 }
-                labelBeerNrUnits.setText("" + beer);
-                String bac = calculateBAC("Mann", 80, countingGrams(beer, 0, 0, 0), hours);
-                labelPromille.setText("" + bac);
+                labelBeerNrUnits.setText(beer + "\nØL");
 
                 totalPromille();
             }
@@ -113,14 +100,14 @@ public class BacCalcFragment extends android.support.v4.app.Fragment {
                     hours = i;
                 }
                 hours = i;
-                String bac = calculateBAC("Mann", 80, countingGrams(beer, 0, 0, 0), hours);
-                labelPromille.setText("" + bac);
 
                 if(hours == 1){
                     labelHours.setText("Promillen om " + hours + " time");
                 } else {
                     labelHours.setText("Promillen om " + hours + " timer");
                 }
+
+                totalPromille();
             }
 
             @Override
@@ -145,50 +132,52 @@ public class BacCalcFragment extends android.support.v4.app.Fragment {
 
     public static String textInQuote(double bac){
         String output = "";
-
-        if(bac > 0 && bac < 0.4){
+        if(bac >= 0 && bac < 0.4){
             output = "Kos deg";
+            labelPromille.setTextColor(Color.rgb(0, 0, 0));
         }
         if(bac >= 0.4 && bac < 0.8){
             output = "Lykkepromille";
+            labelPromille.setTextColor(Color.rgb(26, 193, 73));
         }
         if(bac >= 0.8 && bac < 1.0){
             output = "Du blir mer kritikkløs og risikovillig";
+            labelPromille.setTextColor(Color.rgb(255, 180, 10));
         }
         if(bac >= 1.0 && bac < 1.2){
             output = "Balansen blir dårligere";
+            labelPromille.setTextColor(Color.rgb(255, 180, 10));
         }
         if(bac >= 1.2 && bac < 1.4){
             output = "Talen snøvlete og \nkontroll på bevegelser forverres";
+            labelPromille.setTextColor(Color.rgb(255, 160, 0));
         }
         if(bac >= 1.4 && bac < 1.8){
             output = "Man blir trøtt, sløv og \nkan bli kvalm";
+            labelPromille.setTextColor(Color.rgb(255, 160, 0));
         }
-        if(bac >= 1.8 && bac > 3.0){
+        if(bac >= 1.8 && bac < 3.0){
             output = "Hukommelsen sliter";
+            labelPromille.setTextColor(Color.rgb(255, 55, 55));
         }
-        if(bac >= 3.0 && bac > 5.0){
+        if(bac >= 3.0 && bac < 5.0){
             output = "Svært høy promille! \nMan kan bli bevisstløs";
+            labelPromille.setTextColor(Color.rgb(255, 55, 55));
         }
         if(bac >= 5.0){
             output = "Du kan dø ved en så høy promille!";
+            labelPromille.setTextColor(Color.rgb(255, 0, 0));
         }
-
         return output;
     }
 
-    public static String calculateBAC(String gender, int weight, double grams, double hours) {
-        double genderScore = 0.0;
+    public static String calculateBAC(String gender, double weight, double grams, double hours) {
         double oppdatertPromille = 0.0;
+        double genderScore = setGenderScore(gender);
 
         if(grams == 0.0){
             oppdatertPromille = 0.0;
         } else {
-            if(gender == "Mann"){
-                genderScore = 0.70;
-            } else if (gender == "Kvinne"){
-                genderScore = 0.60;
-            }
             oppdatertPromille = grams/(weight * genderScore) - (0.15 * hours);
             if(oppdatertPromille < 0.0){
                 oppdatertPromille = 0.0;
@@ -203,6 +192,19 @@ public class BacCalcFragment extends android.support.v4.app.Fragment {
     public static double countingGrams(double beerUnits, double wineUnits, double drinkUnits, double shotUnits){
         double totalGrams = (beerUnits * beerGrams) + (wineUnits * wineGrams) + (drinkUnits * drinkGrams) + (shotUnits * shotGrams);
         return totalGrams;
+    }
+
+    public static double setGenderScore(String gender){
+        double genderScore = 0.0;
+
+        if(gender == "Mann"){
+            genderScore = 0.70;
+        }
+        if(gender == "Kvinne"){
+            genderScore = 0.60;
+        }
+
+        return genderScore;
     }
 
     public static void initVariabels(){
@@ -220,39 +222,5 @@ public class BacCalcFragment extends android.support.v4.app.Fragment {
         seekBar = (SeekBar) v.findViewById(R.id.seekBarBacCalc);
     }
 
-    public class UnitsPagerAdapter extends FragmentPagerAdapter {
 
-        public UnitsPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
-            switch(position){
-                case 0: return new BacHomeFragment();
-                case 1: return new BacCalcFragment();
-                case 2: return new BacPlanPartyFragment();
-                case 3: return new BacDayAfterFragment();
-                default: return new BacDayAfterFragment();
-            }
-        }
-
-        @Override
-        public int getCount() { return 5; }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            switch (position) {
-                case 0:
-                    return "SECTION 1";
-                case 1:
-                    return "SECTION 2";
-                case 2:
-                    return "SECTION 3";
-            }
-            return null;
-        }
-    }
 }
