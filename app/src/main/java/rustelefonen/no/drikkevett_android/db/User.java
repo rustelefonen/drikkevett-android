@@ -13,14 +13,14 @@ public class User {
     private Integer shotPrice;
     private String gender;
     private java.util.Date goalDate;
-    private java.util.Date goalBAC;
+    private Double goalBAC;
     private String nickname;
     private Double weight;
 
     public User() {
     }
 
-    public User(Integer age, Integer beerPrice, Integer winePrice, Integer drinkPrice, Integer shotPrice, String gender, java.util.Date goalDate, java.util.Date goalBAC, String nickname, Double weight) {
+    public User(Integer age, Integer beerPrice, Integer winePrice, Integer drinkPrice, Integer shotPrice, String gender, java.util.Date goalDate, Double goalBAC, String nickname, Double weight) {
         this.age = age;
         this.beerPrice = beerPrice;
         this.winePrice = winePrice;
@@ -89,11 +89,11 @@ public class User {
         this.goalDate = goalDate;
     }
 
-    public java.util.Date getGoalBAC() {
+    public Double getGoalBAC() {
         return goalBAC;
     }
 
-    public void setGoalBAC(java.util.Date goalBAC) {
+    public void setGoalBAC(Double goalBAC) {
         this.goalBAC = goalBAC;
     }
 

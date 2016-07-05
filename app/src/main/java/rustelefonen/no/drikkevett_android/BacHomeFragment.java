@@ -69,6 +69,7 @@ public class BacHomeFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.bac_home_frag, container, false);
+        insertUser();
         addHistory();
         initWidgets(view);
         fillWidgets();
@@ -211,6 +212,17 @@ public class BacHomeFragment extends Fragment{
     }
 
     private String getUsername() {
+        User user = getUser();
+
+        if (user == null) return "Tom bruker";
+
+        if (user.getNickname() == null || user.getNickname().isEmpty()) return "Tom bruker";
+
+        return user.getNickname();
+
+    }
+
+    private User getUser() {
         String DB_NAME = "my-db";
         SQLiteDatabase db;
 
@@ -224,12 +236,11 @@ public class BacHomeFragment extends Fragment{
 
         List<User> userList = userDao.queryBuilder().list();
 
-        if (userList.size() <= 0) return "Tom bruker";
-        User currentUser = userList.get(0);
-        if (currentUser.getNickname() == null || currentUser.getNickname().isEmpty()) return "Tom bruker";
-
-        return currentUser.getNickname();
-
+        if (userList.size() <= 0) {
+            return null;
+        } else {
+            return userList.get(0);
+        }
     }
 
     private void initWidgets(View view) {
@@ -282,6 +293,7 @@ public class BacHomeFragment extends Fragment{
         User newUser = new User();
         newUser.setAge(14);
         newUser.setNickname("fonsim");
+        newUser.setGoalBAC(0.4);
 
         userDao.insert(newUser);
     }
@@ -387,10 +399,6 @@ public class BacHomeFragment extends Fragment{
         return historyDao.queryBuilder().list();
     }
 
-    private boolean hasLastMonth() {
-        return false;
-    }
-
     private void addHistory() {
         String DB_NAME = "my-db";
         SQLiteDatabase db;
@@ -409,7 +417,7 @@ public class BacHomeFragment extends Fragment{
         history.setWineCount(7);
         history.setShotCount(8);
         history.setStartDate(new Date());
-        history.setHighestBAC(0.5);
+        history.setHighestBAC(0.4);
         history.setPlannedUnitsCount(10);
         history.setSum(2000);
 
@@ -417,17 +425,37 @@ public class BacHomeFragment extends Fragment{
     }
 
     private void fillPieChart() {
+        List<History> historyList = getHistoryList();
+
+        User user = getUser();
+
+        double goal = user.getGoalBAC();
+        double overGoal = 0.0;
+        double underGoal = 0.0;
+
+        for (History history : historyList) {
+            if (history.getHighestBAC() > goal) {       //tok større enn, uenig med iOS-versjonen
+                overGoal++;
+            } else {
+                underGoal++;
+            }
+
+        }
+
+
         ArrayList<Entry> entries = new ArrayList<>();
-        entries.add(new Entry(4f, 0));
-        entries.add(new Entry(8f, 1));
+        entries.add(new Entry((float) overGoal, 0));
+        entries.add(new Entry((float) underGoal, 1));
 
         PieDataSet dataset = new PieDataSet(entries, "# of Calls");
+
+        dataset.setDrawValues(false);
 
         dataset.setColors(new int[]{Color.parseColor("#C11A1A"), Color.parseColor("#1AC149")});
 
         ArrayList<String> labels = new ArrayList<>();
-        labels.add("Positiv");
-        labels.add("Negativ");
+        labels.add("");
+        labels.add("");
 
         PieData data = new PieData(labels, dataset); // initialize Piedata
         goalPieChart.setData(data);
@@ -435,7 +463,13 @@ public class BacHomeFragment extends Fragment{
 
     private void stylePieChart() {
         //style
-        goalPieChart.setCenterText("0.5");
+
+        User user = getUser();
+        if (user != null) {
+            goalPieChart.setCenterText(user.getGoalBAC() +"");
+        }
+
+        //goalPieChart.setCenterText("0.5");
         goalPieChart.setDrawHoleEnabled(true);
         goalPieChart.setHoleRadius(80f);
         goalPieChart.setHoleColor(Color.parseColor("#141414"));
@@ -449,6 +483,9 @@ public class BacHomeFragment extends Fragment{
         goalPieChart.setDrawSliceText(false);
         goalPieChart.getLegend().setEnabled(false);
         goalPieChart.setRotationEnabled(false);
+
+        goalPieChart.setDrawSliceText(false);
+        //goalPieChart.setDrawValues(false);
 
 
         goalPieChart.setCenterTextSize(27.0f);
