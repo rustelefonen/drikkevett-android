@@ -3,6 +3,7 @@ package rustelefonen.no.drikkevett_android;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -11,14 +12,23 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.github.mikephil.charting.animation.Easing;
+import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.data.ChartData;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
+import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -54,6 +64,7 @@ public class BacHomeFragment extends Fragment{
     public TextView lastMonthAvgBacTextView;
 
     public PieChart goalPieChart;
+    public BarChart historyBarChart;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -61,52 +72,79 @@ public class BacHomeFragment extends Fragment{
         addHistory();
         initWidgets(view);
         fillWidgets();
+        fillPieChart();
+        stylePieChart();
+
+        BarData data = new BarData(getXAxisValues(), getDataSet());
+        historyBarChart.setData(data);
+        historyBarChart.setDescription("My Chart");
+        historyBarChart.animateXY(2000, 2000);
+        historyBarChart.invalidate();
 
 
-        ArrayList<Entry> entries = new ArrayList<>();
-        entries.add(new Entry(4f, 0));
-        entries.add(new Entry(8f, 1));
-        entries.add(new Entry(6f, 2));
-        entries.add(new Entry(12f, 3));
-        entries.add(new Entry(18f, 4));
-        entries.add(new Entry(9f, 5));
-
-        PieDataSet dataset = new PieDataSet(entries, "# of Calls");
-
-        ArrayList<String> labels = new ArrayList<String>();
-        labels.add("January");
-        labels.add("February");
-        labels.add("March");
-        labels.add("April");
-        labels.add("May");
-        labels.add("June");
-
-        PieData data = new PieData(labels, dataset); // initialize Piedata
-        goalPieChart.setData(data);
-
-
-
-
-        //Styling chart:
-
-        //pieChartDataSet.colors = [UIColor(red: 193/255.0, green: 26/255.0, blue: 26/255.0, alpha: 1.0), UIColor(red:26/255.0, green: 193/255.0, blue: 73/255.0, alpha: 1.3)]
-
-        goalPieChart.setDrawHoleEnabled(true);
-        goalPieChart.setHoleRadius((float) 0.80);
-        goalPieChart.setHoleColor(1);   //Usikker UIColor(red: 20/255, green: 20/255, blue: 20/255, alpha: 0.0)
-        goalPieChart.setCenterTextRadiusPercent((float) 1.0);
-        goalPieChart.setTransparentCircleRadius((float) 0.85);
-        //goalPieChart.setAnimation();
-        goalPieChart.setDescription("");
-        goalPieChart.setBackgroundColor(1); //Usikker UIColor(red: 20/255, green: 20/255, blue: 20/255, alpha: 0.0)
-        goalPieChart.setTransparentCircleColor(1); //Usikker
-        goalPieChart.setDrawSliceText(false);
-        goalPieChart.getLegend().setEnabled(false);
-        //pieChartView.userInteractionEnabled = false
-
-        goalPieChart.setCenterText("0.5");
 
         return view;
+    }
+
+    private ArrayList<IBarDataSet> getDataSet() {
+        ArrayList<IBarDataSet> dataSets = null;
+
+        ArrayList<BarEntry> valueSet1 = new ArrayList<>();
+        BarEntry v1e1 = new BarEntry(110.000f, 0); // Jan
+        valueSet1.add(v1e1);
+        BarEntry v1e2 = new BarEntry(40.000f, 1); // Feb
+        valueSet1.add(v1e2);
+        BarEntry v1e3 = new BarEntry(60.000f, 2); // Mar
+        valueSet1.add(v1e3);
+        BarEntry v1e4 = new BarEntry(30.000f, 3); // Apr
+        valueSet1.add(v1e4);
+        BarEntry v1e5 = new BarEntry(90.000f, 4); // May
+        valueSet1.add(v1e5);
+        BarEntry v1e6 = new BarEntry(100.000f, 5); // Jun
+        valueSet1.add(v1e6);
+
+        ArrayList<BarEntry> valueSet2 = new ArrayList<>();
+        BarEntry v2e1 = new BarEntry(150.000f, 0); // Jan
+        valueSet2.add(v2e1);
+        BarEntry v2e2 = new BarEntry(90.000f, 1); // Feb
+        valueSet2.add(v2e2);
+        BarEntry v2e3 = new BarEntry(120.000f, 2); // Mar
+        valueSet2.add(v2e3);
+        BarEntry v2e4 = new BarEntry(60.000f, 3); // Apr
+        valueSet2.add(v2e4);
+        BarEntry v2e5 = new BarEntry(20.000f, 4); // May
+        valueSet2.add(v2e5);
+        BarEntry v2e6 = new BarEntry(80.000f, 5); // Jun
+        valueSet2.add(v2e6);
+
+        BarDataSet barDataSet1 = new BarDataSet(valueSet1, "Brand 1");
+        barDataSet1.setColor(Color.rgb(0, 155, 0));
+        BarDataSet barDataSet2 = new BarDataSet(valueSet2, "Brand 2");
+        barDataSet2.setColors(ColorTemplate.COLORFUL_COLORS);
+
+        dataSets = new ArrayList<>();
+        dataSets.add(barDataSet1);
+        dataSets.add(barDataSet2);
+        return dataSets;
+    }
+
+    private ArrayList<String> getXAxisValues() {
+        ArrayList<String> xAxis = new ArrayList<>();
+        xAxis.add("JAN");
+        xAxis.add("FEB");
+        xAxis.add("MAR");
+        xAxis.add("APR");
+        xAxis.add("MAY");
+        xAxis.add("JUN");
+        return xAxis;
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (!this.isVisible()) return;
+        if (!isVisibleToUser) return;
+        goalPieChart.animateY(1400, Easing.EasingOption.EaseInOutQuad);
     }
 
     public Uri getPhotoFileUri(String fileName) {
@@ -207,6 +245,7 @@ public class BacHomeFragment extends Fragment{
         lastMonthAvgBacTextView = (TextView) view.findViewById(R.id.last_month_avg_bac_text_view);
 
         goalPieChart = (PieChart) view.findViewById(R.id.goal_pie_chart);
+        historyBarChart = (BarChart) view.findViewById(R.id.history_bar_chart);
     }
 
     private void fillWidgets() {
@@ -375,6 +414,57 @@ public class BacHomeFragment extends Fragment{
         history.setSum(2000);
 
         historyDao.insert(history);
+    }
+
+    private void fillPieChart() {
+        ArrayList<Entry> entries = new ArrayList<>();
+        entries.add(new Entry(4f, 0));
+        entries.add(new Entry(8f, 1));
+
+        PieDataSet dataset = new PieDataSet(entries, "# of Calls");
+
+        dataset.setColors(new int[]{Color.parseColor("#C11A1A"), Color.parseColor("#1AC149")});
+
+        ArrayList<String> labels = new ArrayList<>();
+        labels.add("Positiv");
+        labels.add("Negativ");
+
+        PieData data = new PieData(labels, dataset); // initialize Piedata
+        goalPieChart.setData(data);
+    }
+
+    private void stylePieChart() {
+        //style
+        goalPieChart.setCenterText("0.5");
+        goalPieChart.setDrawHoleEnabled(true);
+        goalPieChart.setHoleRadius(80f);
+        goalPieChart.setHoleColor(Color.parseColor("#141414"));
+        goalPieChart.setCenterTextRadiusPercent(100f);
+        goalPieChart.setTransparentCircleRadius(85f);
+        goalPieChart.setDescription("");
+        goalPieChart.setBackgroundColor(Color.parseColor("#141414"));
+        goalPieChart.setAnimation(new Animation() {
+        });
+        //goalPieChart.setTransparentCircleColor(Color.tr);
+        goalPieChart.setDrawSliceText(false);
+        goalPieChart.getLegend().setEnabled(false);
+        goalPieChart.setRotationEnabled(false);
+
+
+        goalPieChart.setCenterTextSize(27.0f);
+        goalPieChart.setCenterTextColor(Color.parseColor("#FFFFFF"));
+        goalPieChart.animateY(1400, Easing.EasingOption.EaseInOutQuad);
+        goalPieChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+            @Override
+            public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
+
+            }
+
+            @Override
+            public void onNothingSelected() {
+
+            }
+        });
     }
 }
 
