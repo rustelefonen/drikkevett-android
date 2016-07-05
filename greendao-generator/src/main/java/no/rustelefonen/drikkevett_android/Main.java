@@ -32,6 +32,7 @@ public class Main {
         history.addIntProperty("sum");
         history.addDoubleProperty("highestBAC");
         history.addIntProperty("plannedUnitsCount");
+        history.addDateProperty("firstUnitDate");
 
         Property historyId = graphHistory.addLongProperty("historyId").notNull().getProperty();
         ToMany historyToGraphHistory = history.addToMany(graphHistory, historyId);
@@ -48,6 +49,13 @@ public class Main {
         userData.addDateProperty("goalBAC");
         userData.addStringProperty("nickname");
         userData.addDoubleProperty("weight");
+
+        Entity planParty = schema.addEntity("PlanPartyElements");
+        planParty.addStringProperty("status");
+        planParty.addIntProperty("plannedBeer");
+        planParty.addIntProperty("plannedWine");
+        planParty.addIntProperty("plannedDrink");
+        planParty.addIntProperty("plannedShot");
 
         DaoGenerator dg = new DaoGenerator();
         dg.generateAll(schema, "./app/src/main/java");

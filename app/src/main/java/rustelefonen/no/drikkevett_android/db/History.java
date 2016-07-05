@@ -20,6 +20,7 @@ public class History {
     private Integer sum;
     private Double highestBAC;
     private Integer plannedUnitsCount;
+    private java.util.Date firstUnitDate;
 
     /** Used to resolve relations */
     private transient DaoSession daoSession;
@@ -36,7 +37,7 @@ public class History {
         this.id = id;
     }
 
-    public History(Long id, Integer drinkCount, Integer beerCount, Integer shotCount, Integer wineCount, java.util.Date startDate, java.util.Date endDate, Integer sum, Double highestBAC, Integer plannedUnitsCount) {
+    public History(Long id, Integer drinkCount, Integer beerCount, Integer shotCount, Integer wineCount, java.util.Date startDate, java.util.Date endDate, Integer sum, Double highestBAC, Integer plannedUnitsCount, java.util.Date firstUnitDate) {
         this.id = id;
         this.drinkCount = drinkCount;
         this.beerCount = beerCount;
@@ -47,6 +48,7 @@ public class History {
         this.sum = sum;
         this.highestBAC = highestBAC;
         this.plannedUnitsCount = plannedUnitsCount;
+        this.firstUnitDate = firstUnitDate;
     }
 
     /** called by internal mechanisms, do not call yourself. */
@@ -133,6 +135,14 @@ public class History {
 
     public void setPlannedUnitsCount(Integer plannedUnitsCount) {
         this.plannedUnitsCount = plannedUnitsCount;
+    }
+
+    public java.util.Date getFirstUnitDate() {
+        return firstUnitDate;
+    }
+
+    public void setFirstUnitDate(java.util.Date firstUnitDate) {
+        this.firstUnitDate = firstUnitDate;
     }
 
     /** To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity. */
