@@ -54,8 +54,8 @@ public class BacHomeFragment extends Fragment{
     //Widgets
     public TextView quoteTextView;
     public ImageView ivPreview;
-    public TextView helloMessageTextView;
-    public TextView usernameTextView;
+    //public TextView helloMessageTextView;
+    //public TextView usernameTextView;
 
     public TextView totalCostTextView;
     public TextView totalHighestBac;
@@ -67,6 +67,8 @@ public class BacHomeFragment extends Fragment{
 
     public PieChart goalPieChart;
     public BarChart historyBarChart;
+
+    public TextView graphHomeTextView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -93,7 +95,7 @@ public class BacHomeFragment extends Fragment{
         //self.lineGraph.leftAxis.labelTextColor = UIColor.whiteColor()
         historyBarChart.getXAxis().setTextColor(Color.parseColor("#FFFFFF"));
         //self.lineGraph.rightAxis.enabled = false
-        historyBarChart.setBackgroundColor(Color.parseColor("#141414"));
+        //historyBarChart.setBackgroundColor(Color.parseColor("#141414"));
         historyBarChart.getLegend().setEnabled(false);
         //self.lineGraph.descriptionTextColor = UIColor.redColor()
         //self.lineGraph.userInteractionEnabled = false
@@ -110,6 +112,8 @@ public class BacHomeFragment extends Fragment{
         limit.setLineColor(Color.parseColor("#FFFFFF"));
         //ll.lineDashLengths = [8.5]
         historyBarChart.getAxisRight().addLimitLine(limit);
+
+        //view.add
 
         return view;
     }
@@ -296,8 +300,8 @@ public class BacHomeFragment extends Fragment{
     }
 
     private void initWidgets(View view) {
-        helloMessageTextView = (TextView) view.findViewById(R.id.hello_message_text_view);
-        usernameTextView = (TextView) view.findViewById(R.id.user_name_text_view);
+        //helloMessageTextView = (TextView) view.findViewById(R.id.hello_message_text_view);
+        //usernameTextView = (TextView) view.findViewById(R.id.user_name_text_view);
         ivPreview = (ImageView) view.findViewById(R.id.profile_image);
         quoteTextView = (TextView) view.findViewById(R.id.quote_text_view);
         totalCostTextView = (TextView) view.findViewById(R.id.total_cost_text_view);
@@ -306,14 +310,15 @@ public class BacHomeFragment extends Fragment{
         lastMonthCostTextView = (TextView) view.findViewById(R.id.last_month_cost_text_view);
         lastMonthHighestBacTextView = (TextView) view.findViewById(R.id.last_month_highest_bac_text_view);
         lastMonthAvgBacTextView = (TextView) view.findViewById(R.id.last_month_avg_bac_text_view);
+        graphHomeTextView = (TextView) view.findViewById(R.id.graph_home_text_view);
 
         goalPieChart = (PieChart) view.findViewById(R.id.goal_pie_chart);
         historyBarChart = (BarChart) view.findViewById(R.id.history_bar_chart);
     }
 
     private void fillWidgets() {
-        usernameTextView.setText(getUsername());
-        helloMessageTextView.setText(getRandomWelcomeMessage());
+        //usernameTextView.setText(getUsername());
+        //helloMessageTextView.setText(getRandomWelcomeMessage());
         quoteTextView.setText(getRandomQuote());
         insertImageIfExists();
 
@@ -469,7 +474,7 @@ public class BacHomeFragment extends Fragment{
         history.setWineCount(7);
         history.setShotCount(8);
         history.setStartDate(new Date());
-        history.setHighestBAC(0.4);
+        history.setHighestBAC(0.6);
         history.setPlannedUnitsCount(10);
         history.setSum(2000);
 
@@ -518,11 +523,12 @@ public class BacHomeFragment extends Fragment{
         if (user != null) goalPieChart.setCenterText(user.getGoalBAC() +"");
         goalPieChart.setDrawHoleEnabled(true);
         goalPieChart.setHoleRadius(80f);
-        goalPieChart.setHoleColor(Color.parseColor("#141414"));
+        goalPieChart.setHoleColor(Color.TRANSPARENT);
+        //goalPieChart.setHoleColor(Color.parseColor("#141414"));
         goalPieChart.setCenterTextRadiusPercent(100f);
         goalPieChart.setTransparentCircleRadius(85f);
         goalPieChart.setDescription("");
-        goalPieChart.setBackgroundColor(Color.parseColor("#141414"));
+        //goalPieChart.setBackgroundColor(Color.parseColor("#141414"));
         goalPieChart.setAnimation(new Animation() {
         });
         goalPieChart.setDrawSliceText(false);
@@ -535,15 +541,17 @@ public class BacHomeFragment extends Fragment{
         goalPieChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
             @Override
             public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
-
+                if (e.getXIndex() == 0) {
+                    graphHomeTextView.setText("Målet ditt er her rødt fordi du har gjort det dårlig!!");
+                } else if (e.getXIndex() == 1) {
+                    graphHomeTextView.setText("Målet ditt er her grønt fordi du har gjort det bra!");
+                }
             }
 
             @Override
             public void onNothingSelected() {
-
+                graphHomeTextView.setText("Denne grafikken viser hvordan det står til med målet ditt. Ønsker du å vite mer klikk på fargene");
             }
         });
     }
 }
-
-
