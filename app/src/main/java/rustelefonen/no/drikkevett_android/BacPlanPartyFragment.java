@@ -1,6 +1,7 @@
 package rustelefonen.no.drikkevett_android;
 
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -25,6 +26,7 @@ import rustelefonen.no.drikkevett_android.db.User;
 import rustelefonen.no.drikkevett_android.db.UserDao;
 import rustelefonen.no.drikkevett_android.util.PartyUtil;
 
+import static rustelefonen.no.drikkevett_android.BacCalcFragment.beer;
 import static rustelefonen.no.drikkevett_android.BacCalcFragment.calculateBAC;
 import static rustelefonen.no.drikkevett_android.BacCalcFragment.countingGrams;
 import static rustelefonen.no.drikkevett_android.BacCalcFragment.setGenderScore;
@@ -80,43 +82,29 @@ public class BacPlanPartyFragment extends Fragment {
 
         // hente status fra db
         status = getStatus();
-
+        updateStatus(status.toString());
         stateHandler(status);
 
         addBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addPlannedUnits("Beer");
+                if(status.equals(Status.RUNNING)){
+                    addConsumedUnits("Beer");
+                }
+                if(status.equals(Status.NOT_RUNNING)){
+                    addPlannedUnits("Beer");
+                }
+                if(status.equals(Status.DA_RUNNING)){
+                    // NOTHING SHOULD HAPPOND
+                }
                 stateHandler(status);
             }
         });
 
-
-
         statusBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String textOnBtn = (String) statusBtn.getText();
-                if(textOnBtn.equals("Start Kvelden")){
-                    statusBtn.setText("Avslutt Kvelden");
-
-                    // UPDATE BOTH HERE AND IN DB
-                    status = status.RUNNING;
-                    updateStatus(status.toString());
-                }
-                if(textOnBtn.equals("Avslutt Kvelden")){
-                    statusBtn.setText("Avslutt Dagen Derpå");
-
-                    // CLEAR DB - PLAN PARTY
-                    status = status.DA_RUNNING;
-                    updateStatus(status.toString());
-                }
-                if(textOnBtn.equals("Avslutt Dagen Derpå")){
-                    statusBtn.setText("Start Kvelden");
-                    status = status.NOT_RUNNING;
-                    updateStatus(status.toString());
-                }
-                stateHandler(status);
+                statusBtnHandler();
             }
         });
         return v;
@@ -128,6 +116,19 @@ public class BacPlanPartyFragment extends Fragment {
 
         // hente status fra db
         status = getStatus();
+        updateStatus(status.toString());
+        stateHandler(status);
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (!this.isVisible()) return;
+        if (!isVisibleToUser) return;
+
+        // hente status fra db
+        status = getStatus();
+        updateStatus(status.toString());
         stateHandler(status);
     }
 
@@ -145,30 +146,35 @@ public class BacPlanPartyFragment extends Fragment {
         System.out.println("Status: " + state);
 
         // IF PLAN PARTY IS RUNNING:
-        if(state == status.RUNNING){
+        if(state == Status.RUNNING){
             partyRunning();
         }
         // IF PLAN PARTY IS NOT RUNNING:
-        if(state == status.NOT_RUNNING){
+        if(state == Status.NOT_RUNNING){
             partyNotRunning();
         }
         // IF DAY AFTER IS RUNNING
-        if(state == status.DA_RUNNING){
+        if(state == Status.DA_RUNNING){
             dayAfterRunning();
         }
     }
 
     private void partyRunning(){
+        // SET TEXT ON BUTTON:
+        statusBtn.setText("Avslutt Kvelden");
+        addBtn.setVisibility(View.VISIBLE);
+        removeBtn.setVisibility(View.VISIBLE);
+
         // Consuming alcohol
 
-
         // UPDATE PROMILLE/BAC
+
         // get firstUnitAddedStamp
 
+        promilleBAC = liveUpdatePromille(weight, gender, firstUnitAdded);
 
-        addConsumedUnits("Beer");
-
-        promilleLbl.setText("" + liveUpdatePromille(weight, gender, firstUnitAdded));
+        promilleLbl.setText("" + promilleBAC);
+        textQuoteLbl.setText(textInQuote(promilleBAC));
 
         // GET UNITS (PLANNED AND CONSUMED)
         getUnitsPlanned();
@@ -181,8 +187,14 @@ public class BacPlanPartyFragment extends Fragment {
     }
 
     private void partyNotRunning(){
-        // Plan party by adding units:
+        addBtn.setVisibility(View.VISIBLE);
+        removeBtn.setVisibility(View.VISIBLE);
 
+        // Text quote
+        textQuoteLbl.setText("Planlegg kvelden!");
+
+        // Set text on statusBtn
+        statusBtn.setText("Start Kvelden");
 
         // LAYOUT / UTSEENDE
         beerLbl.setText(plannedBeers + "\nØL");
@@ -194,6 +206,18 @@ public class BacPlanPartyFragment extends Fragment {
     }
 
     private void dayAfterRunning(){
+        // change text on textQuotes
+        textQuoteLbl.setText("Klikk på knappen for å starte å planlegge en ny kveld");
+
+
+
+        // Remove buttons
+        addBtn.setVisibility(View.GONE);
+        removeBtn.setVisibility(View.GONE);
+
+        // Set text on statusbtn
+        statusBtn.setText("Avslutt Dagen Derpå");
+
         // LAYOUT / UTSEENDE
         beerLbl.setText("-\nØL");
         wineLbl.setText("-\nVin");
@@ -246,6 +270,10 @@ public class BacPlanPartyFragment extends Fragment {
     }
 
     private void updateStatus(String status){
+        /*
+        * ADDING PLANNED UNITS HAPPONDS IN THIS METHOD
+        * */
+
         // CONNECT TO DB
         String DB_NAME = "my-db";
         SQLiteDatabase db;
@@ -268,6 +296,9 @@ public class BacPlanPartyFragment extends Fragment {
             plannedWines = 0;
             plannedDrinks = 0;
             plannedShots = 0;
+
+            // RESET CONSUMED UNITS
+
         }
         if(status.equals("RUNNING")){
             // INGENTING SKJER
@@ -297,6 +328,27 @@ public class BacPlanPartyFragment extends Fragment {
         partyDao.insert(newParty);
     }
 
+    private void statusBtnHandler(){
+        String textOnBtn = (String) statusBtn.getText();
+        if(textOnBtn.equals("Start Kvelden")){
+            statusBtn.setText("Avslutt Kvelden");
+            status = status.RUNNING;
+        }
+        if(textOnBtn.equals("Avslutt Kvelden")){
+            statusBtn.setText("Avslutt Dagen Derpå");
+            status = status.DA_RUNNING;
+        }
+        if(textOnBtn.equals("Avslutt Dagen Derpå")){
+            statusBtn.setText("Start Kvelden");
+            status = status.NOT_RUNNING;
+
+            // Clear tabels: (PlanPartyElements and DayAfterBAC)
+            clearPartyTables();
+        }
+        updateStatus(status.toString());
+        stateHandler(status);
+    }
+
     /*
     *
     * METHODS WHICH COMMUNICATES WITH DATABASE
@@ -323,6 +375,7 @@ public class BacPlanPartyFragment extends Fragment {
         DaoSession daoSession = daoMaster.newSession();
 
         DayAfterBACDao dayAfterDao = daoSession.getDayAfterBACDao();
+
         List<DayAfterBAC> dayAfterBACList = dayAfterDao.queryBuilder().list();
 
         for (DayAfterBAC dayAfter : dayAfterBACList) {
@@ -345,7 +398,7 @@ public class BacPlanPartyFragment extends Fragment {
             long timeDifference = getDateDiff(currentDate, firstUnitAddedTimeStamp, TimeUnit.HOURS);
 
             // FROM 0 - 4 mins
-            if(timeDifference > 0.085){
+            if(timeDifference < 0.085){
                 System.out.println("Fra 0-4 minutter...");
                 sum = 0;
             }
@@ -358,8 +411,10 @@ public class BacPlanPartyFragment extends Fragment {
                 // KALKULER PROMILLE
                 sum = Double.parseDouble(calculateBAC(gender, weight, totalGrams, timeDifference));
             }
-        }
 
+            System.out.println("LiveP ( UNIT ) = " + dayAfter.getUnit());
+
+        }
         return sum;
     }
 
@@ -397,7 +452,7 @@ public class BacPlanPartyFragment extends Fragment {
         plannedShots = tempPlShot;
     }
 
-    public void clearTablePlanParty(){
+    public void clearPartyTables(){
         String DB_NAME = "my-db";
         SQLiteDatabase db;
 
@@ -409,14 +464,26 @@ public class BacPlanPartyFragment extends Fragment {
         DaoSession daoSession = daoMaster.newSession();
 
         PlanPartyElementsDao partyDao = daoSession.getPlanPartyElementsDao();
+        DayAfterBACDao dayAfterDao = daoSession.getDayAfterBACDao();
 
-        // clearing the TABLE
+        List<DayAfterBAC> dayAfterBACList = dayAfterDao.queryBuilder().list();
+        for (DayAfterBAC dayAfter : dayAfterBACList) {
+            System.out.println("(clearTables) units = " + dayAfter.getUnit());
+        }
+
+        // clearing the tables (PlanPartyDao and DayAfterBacDao)
         partyDao.deleteAll();
+        dayAfterDao.deleteAll();
 
+        // Clear variabels planned and consumed
         plannedBeers = 0;
         plannedWines = 0;
         plannedDrinks = 0;
         plannedShots = 0;
+        beersConsumed = 0;
+        winesConsumed = 0;
+        drinksConsumed = 0;
+        shotsConsumed = 0;
     }
 
     public Status getStatus(){
@@ -448,6 +515,47 @@ public class BacPlanPartyFragment extends Fragment {
             }
         }
         return tempStatus;
+    }
+
+    public String textInQuote(double bac){
+        String output = "";
+        if(bac >= 0 && bac < 0.4){
+            output = "Kos deg";
+            promilleLbl.setTextColor(Color.rgb(0, 0, 0));
+        }
+        if(bac >= 0.4 && bac < 0.8){
+            output = "Lykkepromille";
+            promilleLbl.setTextColor(Color.rgb(26, 193, 73));
+        }
+        if(bac >= 0.8 && bac < 1.0){
+            output = "Du blir mer kritikkløs og risikovillig";
+            promilleLbl.setTextColor(Color.rgb(255, 180, 10));
+        }
+        if(bac >= 1.0 && bac < 1.2){
+            output = "Balansen blir dårligere";
+            promilleLbl.setTextColor(Color.rgb(255, 180, 10));
+        }
+        if(bac >= 1.2 && bac < 1.4){
+            output = "Talen snøvlete og \nkontroll på bevegelser forverres";
+            promilleLbl.setTextColor(Color.rgb(255, 160, 0));
+        }
+        if(bac >= 1.4 && bac < 1.8){
+            output = "Man blir trøtt, sløv og \nkan bli kvalm";
+            promilleLbl.setTextColor(Color.rgb(255, 160, 0));
+        }
+        if(bac >= 1.8 && bac < 3.0){
+            output = "Hukommelsen sliter";
+            promilleLbl.setTextColor(Color.rgb(255, 55, 55));
+        }
+        if(bac >= 3.0 && bac < 5.0){
+            output = "Svært høy promille! \nMan kan bli bevisstløs";
+            promilleLbl.setTextColor(Color.rgb(255, 55, 55));
+        }
+        if(bac >= 5.0){
+            output = "Du kan dø ved en så høy promille!";
+            promilleLbl.setTextColor(Color.rgb(255, 0, 0));
+        }
+        return output;
     }
 
     /*
