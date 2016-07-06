@@ -6,26 +6,36 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ImageSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,6 +57,8 @@ public class MainActivity extends AppCompatActivity {
     public final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1034;
     public String photoFileName = "photo.jpg";
 
+    public TabLayout tabLayout;
+
     public ImageView profileImage;
 
     @Override
@@ -61,11 +73,26 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), this);
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
+
+        tabLayout = (TabLayout) findViewById(R.id.tabs);
+
+        tabLayout.setupWithViewPager(mViewPager);
+
+        tabLayout.getTabAt(0).setIcon(R.drawable.ic_account_balance_black_24dp);
+        tabLayout.getTabAt(1).setIcon(R.drawable.ic_account_balance_black_24dp);
+        tabLayout.getTabAt(2).setIcon(R.drawable.ic_account_balance_black_24dp);
+        tabLayout.getTabAt(3).setIcon(R.drawable.ic_account_balance_black_24dp);
+        tabLayout.getTabAt(4).setIcon(R.drawable.ic_account_balance_black_24dp);
+
+
+
+
+
 
         //profileImage = (ImageView) relativeLayout.findViewById(R.id.profile_image);
 
@@ -96,6 +123,8 @@ public class MainActivity extends AppCompatActivity {
             System.out.println("Prøver å sette inn bilde");
         }*/
     }
+
+
 
     @Override
     protected void onStart() {
@@ -235,21 +264,27 @@ public class MainActivity extends AppCompatActivity {
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
-        public SectionsPagerAdapter(FragmentManager fm) {
+        private Context context;
+        private int[] imageResId = {
+                R.drawable.ic_account_balance_black_24dp,
+                R.drawable.ic_account_balance_black_24dp,
+                R.drawable.ic_account_balance_black_24dp,
+                R.drawable.ic_account_balance_black_24dp,
+                R.drawable.ic_account_balance_black_24dp
+        };
+
+        public SectionsPagerAdapter(FragmentManager fm, Context context) {
             super(fm);
+            this.context = context;
         }
+
+        private String tabTitles[] = new String[] { "Hjem", "Promillekalkulator", "Planlegg kvelden", "Dagen derpå", "Historikk"};
 
         @Override
         public Fragment getItem(int position) {
-            // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
             switch(position){
-                case 0:
-                    setTitle("Hjem");
-                    return new BacHomeFragment();
-                case 1:
-                    setTitle("Promillekalkulator");
-                    return new BacCalcFragment();
+                case 0: return new BacHomeFragment();
+                case 1: return new BacCalcFragment();
                 case 2: return new BacPlanPartyFragment();
                 case 3: return new BacDayAfterFragment();
                 case 4: return new BacHistoryFragment();
@@ -262,15 +297,8 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public CharSequence getPageTitle(int position) {
-            switch (position) {
-                case 0:
-                    return "SECTION 1";
-                case 1:
-                    return "SECTION 2";
-                case 2:
-                    return "SECTION 3";
-            }
-            return null;
+
+            return tabTitles[position];
         }
     }
 
