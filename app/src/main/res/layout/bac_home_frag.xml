@@ -38,15 +38,15 @@
         android:layout_below="@+id/profile_image"
         android:layout_alignParentLeft="true"/>
     <com.github.mikephil.charting.charts.PieChart
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_below="@+id/profile_image"
         android:layout_alignParentRight="true"
         android:id="@+id/goal_pie_chart"
         ></com.github.mikephil.charting.charts.PieChart>
     <com.github.mikephil.charting.charts.BarChart
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="200dp"
         android:layout_below="@+id/goal_pie_chart"
         android:id="@+id/history_bar_chart">
     </com.github.mikephil.charting.charts.BarChart>

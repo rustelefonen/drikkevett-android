@@ -30,7 +30,7 @@ public class UserDao extends AbstractDao<User, Void> {
         public final static Property ShotPrice = new Property(4, Integer.class, "shotPrice", false, "SHOT_PRICE");
         public final static Property Gender = new Property(5, String.class, "gender", false, "GENDER");
         public final static Property GoalDate = new Property(6, java.util.Date.class, "goalDate", false, "GOAL_DATE");
-        public final static Property GoalBAC = new Property(7, java.util.Date.class, "goalBAC", false, "GOAL_BAC");
+        public final static Property GoalBAC = new Property(7, Double.class, "goalBAC", false, "GOAL_BAC");
         public final static Property Nickname = new Property(8, String.class, "nickname", false, "NICKNAME");
         public final static Property Weight = new Property(9, Double.class, "weight", false, "WEIGHT");
     };
@@ -55,7 +55,7 @@ public class UserDao extends AbstractDao<User, Void> {
                 "\"SHOT_PRICE\" INTEGER," + // 4: shotPrice
                 "\"GENDER\" TEXT," + // 5: gender
                 "\"GOAL_DATE\" INTEGER," + // 6: goalDate
-                "\"GOAL_BAC\" INTEGER," + // 7: goalBAC
+                "\"GOAL_BAC\" REAL," + // 7: goalBAC
                 "\"NICKNAME\" TEXT," + // 8: nickname
                 "\"WEIGHT\" REAL);"); // 9: weight
     }
@@ -106,9 +106,9 @@ public class UserDao extends AbstractDao<User, Void> {
             stmt.bindLong(7, goalDate.getTime());
         }
  
-        java.util.Date goalBAC = entity.getGoalBAC();
+        Double goalBAC = entity.getGoalBAC();
         if (goalBAC != null) {
-            stmt.bindLong(8, goalBAC.getTime());
+            stmt.bindDouble(8, goalBAC);
         }
  
         String nickname = entity.getNickname();
@@ -139,7 +139,7 @@ public class UserDao extends AbstractDao<User, Void> {
             cursor.isNull(offset + 4) ? null : cursor.getInt(offset + 4), // shotPrice
             cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // gender
             cursor.isNull(offset + 6) ? null : new java.util.Date(cursor.getLong(offset + 6)), // goalDate
-            cursor.isNull(offset + 7) ? null : new java.util.Date(cursor.getLong(offset + 7)), // goalBAC
+            cursor.isNull(offset + 7) ? null : cursor.getDouble(offset + 7), // goalBAC
             cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8), // nickname
             cursor.isNull(offset + 9) ? null : cursor.getDouble(offset + 9) // weight
         );
@@ -156,7 +156,7 @@ public class UserDao extends AbstractDao<User, Void> {
         entity.setShotPrice(cursor.isNull(offset + 4) ? null : cursor.getInt(offset + 4));
         entity.setGender(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
         entity.setGoalDate(cursor.isNull(offset + 6) ? null : new java.util.Date(cursor.getLong(offset + 6)));
-        entity.setGoalBAC(cursor.isNull(offset + 7) ? null : new java.util.Date(cursor.getLong(offset + 7)));
+        entity.setGoalBAC(cursor.isNull(offset + 7) ? null : cursor.getDouble(offset + 7));
         entity.setNickname(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
         entity.setWeight(cursor.isNull(offset + 9) ? null : cursor.getDouble(offset + 9));
      }

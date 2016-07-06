@@ -46,7 +46,7 @@ public class Main {
         userData.addIntProperty("shotPrice");
         userData.addStringProperty("gender");
         userData.addDateProperty("goalDate");
-        userData.addDateProperty("goalBAC");
+        userData.addDoubleProperty("goalBAC");
         userData.addStringProperty("nickname");
         userData.addDoubleProperty("weight");
 
