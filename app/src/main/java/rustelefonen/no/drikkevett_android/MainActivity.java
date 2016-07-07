@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -15,27 +14,18 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.style.ImageSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,6 +36,11 @@ import rustelefonen.no.drikkevett_android.db.DaoMaster;
 import rustelefonen.no.drikkevett_android.db.DaoSession;
 import rustelefonen.no.drikkevett_android.db.User;
 import rustelefonen.no.drikkevett_android.db.UserDao;
+import rustelefonen.no.drikkevett_android.tabs.BacCalcFragment;
+import rustelefonen.no.drikkevett_android.tabs.BacDayAfterFragment;
+import rustelefonen.no.drikkevett_android.tabs.BacHistoryFragment;
+import rustelefonen.no.drikkevett_android.tabs.home.BacHomeFragment;
+import rustelefonen.no.drikkevett_android.tabs.BacPlanPartyFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -84,10 +79,10 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(mViewPager);
 
         tabLayout.getTabAt(0).setIcon(R.drawable.ic_home_black_24dp);
-        tabLayout.getTabAt(1).setIcon(R.drawable.ic_account_balance_black_24dp);
-        tabLayout.getTabAt(2).setIcon(R.drawable.ic_account_balance_black_24dp);
-        tabLayout.getTabAt(3).setIcon(R.drawable.ic_account_balance_black_24dp);
-        tabLayout.getTabAt(4).setIcon(R.drawable.ic_account_balance_black_24dp);
+        tabLayout.getTabAt(1).setIcon(R.drawable.ic_battery_charging_full_black_24dp);
+        tabLayout.getTabAt(2).setIcon(R.drawable.ic_list_black_24dp);
+        tabLayout.getTabAt(3).setIcon(R.drawable.ic_mood_bad_black_24dp);
+        tabLayout.getTabAt(4).setIcon(R.drawable.ic_access_time_black_24dp);
 
 
 
@@ -264,21 +259,9 @@ public class MainActivity extends AppCompatActivity {
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
-        private Context context;
-        private int[] imageResId = {
-                R.drawable.ic_account_balance_black_24dp,
-                R.drawable.ic_account_balance_black_24dp,
-                R.drawable.ic_account_balance_black_24dp,
-                R.drawable.ic_account_balance_black_24dp,
-                R.drawable.ic_account_balance_black_24dp
-        };
-
         public SectionsPagerAdapter(FragmentManager fm, Context context) {
             super(fm);
-            this.context = context;
         }
-
-        private String tabTitles[] = new String[] { "Hjem", "Promillekalkulator", "Planlegg kvelden", "Dagen derpå", "Historikk"};
 
         @Override
         public Fragment getItem(int position) {
@@ -298,7 +281,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public CharSequence getPageTitle(int position) {
 
-            return "";//tabTitles[position];
+            return "";
         }
     }
 

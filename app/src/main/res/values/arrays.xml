@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="quotes">
+        <item>Visste du at du forbrenner ca. 0,15 promille per time</item>
+        <item>Visste du at shotting og rask drikking gjør at kroppen ikke rekker å registere alkoholen før du tilsetter den mer? Da er risikoen for å miste kontroll stor!</item>
+        <item>Nyt alkohol med måte, det vil både gjøre din kveld bedre og andres kveld mer hyggelig</item>
+        <item>Det er ok å ta en shot med venner, men pass på at du ikke tar en for mye</item>
+        <item>Ca 90 % av alkoholen forbrennes i leveren, resten utskilles i utåndingsluften, urinen og svetten</item>
+        <item>Evnen til innlæring synker drastisk etter 0.4 i promille</item>
+        <item>Alkohol gjør at hjernen blir selektiv slik at du lettere irriterer deg over småting</item>
+        <item>Med promille fra 1.4 og oppover kan du få blackout</item>
+        <item>Drikker du fort, er risikoen for blackout større</item>
+        <item>Drikker du sprit, risikerer du å få for høy promille for fort</item>
+        <item>Det beste rådet mot fyllesyke er å ha drikkevett dagen før</item>
+        <item>Slutter du å drikke i god tid før du legger deg, minsker sjansen for å bli fyllesyk</item>
+        <item>Er promillen høy, kan det være farlig å legge seg på stigende promille</item>
+        <item>Er du ofte på fylla, øker risikoen for overvekt og ernæringsmangler.</item>
+        <item>Alkohol inneholder mye kalorier og karbohydrater </item>
+        <item>Alkohol kan gi dårligere treningseffekt både på kort og lang sikt.</item>
+        <item>Alkohol gir dårligere prestasjonsevne</item>
+        <item>Planlegger du på forhånd hvor lite du skal drikke, er det lettere å holde seg til målet</item>
+        <item>Spiser du et godt måltid før du begynner å drikke, blir promillen jevnere og litt lettere å kontrollere</item>
+        <item>Alkohol er dehydrerende; drikk vann mellom hvert glass alkohol</item>
+        <item>Det er ingen skam å tåle minst</item>
+        <item>Er du syk, stresset, sover dårlig, eller bruker medisiner e.l. tåler du mindre alkohol, enn når du er frisk og uthvilt</item>
+        <item>Alkohol gjør at du fortere mistforstår andre mennesker og situasjoner</item>
+    </string-array>
+    <string-array name="welcomeMessages">
+        <item>Hei</item>
+        <item>Halla</item>
+        <item>Hallo</item>
+        <item>Whats up?</item>
+        <item>Hallois</item>
+        <item>Skjer a?</item>
+        <item>Skjer?</item>
+        <item>God dag</item>
+        <item>Ha en fin dag</item>
+        <item>Hallo</item>
+        <item>Que pasa?</item>
+        <item>Morn</item>
+        <item>Åssen går det?</item>
+        <item>Står til?</item>
+        <item>Läget?</item>
+    </string-array>
+</resources>

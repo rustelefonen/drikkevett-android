@@ -1,4 +1,4 @@
-package rustelefonen.no.drikkevett_android;
+package rustelefonen.no.drikkevett_android.tabs;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.github.mikephil.charting.animation.Easing;
 
+import rustelefonen.no.drikkevett_android.R;
 import rustelefonen.no.drikkevett_android.util.PartyUtil;
 
 import java.util.List;

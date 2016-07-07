@@ -1,4 +1,4 @@
-package rustelefonen.no.drikkevett_android;
+package rustelefonen.no.drikkevett_android.tabs;
 
 import android.app.Activity;
 import android.content.Context;
@@ -22,6 +22,8 @@ import android.widget.TextView;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+
+import rustelefonen.no.drikkevett_android.R;
 
 public class BacCalcFragment extends android.support.v4.app.Fragment {
 

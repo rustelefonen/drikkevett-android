@@ -1,4 +1,4 @@
-package rustelefonen.no.drikkevett_android;
+package rustelefonen.no.drikkevett_android.tabs;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
@@ -12,24 +12,20 @@ import android.widget.TextView;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
+import rustelefonen.no.drikkevett_android.R;
 import rustelefonen.no.drikkevett_android.db.DaoMaster;
 import rustelefonen.no.drikkevett_android.db.DaoSession;
 import rustelefonen.no.drikkevett_android.db.DayAfterBAC;
 import rustelefonen.no.drikkevett_android.db.DayAfterBACDao;
 import rustelefonen.no.drikkevett_android.db.PlanPartyElements;
 import rustelefonen.no.drikkevett_android.db.PlanPartyElementsDao;
-import rustelefonen.no.drikkevett_android.db.User;
-import rustelefonen.no.drikkevett_android.db.UserDao;
 import rustelefonen.no.drikkevett_android.util.PartyUtil;
 
-import static rustelefonen.no.drikkevett_android.BacCalcFragment.beer;
-import static rustelefonen.no.drikkevett_android.BacCalcFragment.calculateBAC;
-import static rustelefonen.no.drikkevett_android.BacCalcFragment.countingGrams;
-import static rustelefonen.no.drikkevett_android.BacCalcFragment.setGenderScore;
+import static rustelefonen.no.drikkevett_android.tabs.BacCalcFragment.calculateBAC;
+import static rustelefonen.no.drikkevett_android.tabs.BacCalcFragment.countingGrams;
+import static rustelefonen.no.drikkevett_android.tabs.BacCalcFragment.setGenderScore;
 import static rustelefonen.no.drikkevett_android.util.PartyUtil.getDateDiff;
 
 public class BacPlanPartyFragment extends Fragment {

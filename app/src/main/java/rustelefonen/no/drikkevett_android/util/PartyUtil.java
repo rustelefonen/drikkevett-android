@@ -1,16 +1,7 @@
 package rustelefonen.no.drikkevett_android.util;
 
-import android.database.sqlite.SQLiteDatabase;
-
 import java.util.Date;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
-
-import rustelefonen.no.drikkevett_android.BacPlanPartyFragment;
-import rustelefonen.no.drikkevett_android.db.DaoMaster;
-import rustelefonen.no.drikkevett_android.db.DaoSession;
-import rustelefonen.no.drikkevett_android.db.PlanPartyElements;
-import rustelefonen.no.drikkevett_android.db.PlanPartyElementsDao;
 
 /**
  * Created by LarsPetterKristiansen on 05.07.2016.
