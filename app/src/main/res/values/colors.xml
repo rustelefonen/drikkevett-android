@@ -7,4 +7,5 @@
     <color name="backgroundColor">#333333</color>
     <color name="textColor">#FFFFFF</color>
     <color name="topBarColor">#666666</color>
+    <color name="greenSuper">#70DD7F</color>
 </resources>
