@@ -28,6 +28,8 @@ import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
 import java.io.File;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -66,6 +68,9 @@ public class BacHomeFragment extends Fragment{
     public PieChart goalPieChart;
     public BarChart historyBarChart;
     public TextView graphHomeTextView;
+    public TextView totalCountTextView;
+    public TextView totalBacCountTextView;
+    public TextView avgBacCountTextView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -162,6 +167,9 @@ public class BacHomeFragment extends Fragment{
         graphHomeTextView = (TextView) view.findViewById(R.id.graph_home_text_view);
         goalPieChart = (PieChart) view.findViewById(R.id.goal_pie_chart);
         historyBarChart = (BarChart) view.findViewById(R.id.history_bar_chart);
+        totalCountTextView = (TextView) view.findViewById(R.id.total_count_text_view);
+        totalBacCountTextView = (TextView) view.findViewById(R.id.total_bac_count_text_view);
+        avgBacCountTextView = (TextView) view.findViewById(R.id.avg_bac_count_text_view);
     }
 
     private void fillWidgets() {
@@ -170,13 +178,17 @@ public class BacHomeFragment extends Fragment{
 
         List<History> historyList = getHistoryList();
         if (historyList.size() > 0) {
-            totalCostTextView.setText(getTotalCost(historyList) + ",-\nKostnader");
-            totalHighestBac.setText(getTotalHighestBac(historyList) + "\nHøyeste\nPromille");
-            totalAvgTextView.setText(getTotalAverageHighestBac(historyList) + "\nGjennomsnitt\nhøyeste promille");
 
-            lastMonthCostTextView.setText(getLastMonthCost(historyList) + ",-\nKostnader");
-            lastMonthHighestBacTextView.setText(getLastMonthHighestBac(historyList) + "\nHøyeste\npromille");
-            lastMonthAvgBacTextView.setText(getLastMonthAverageBac(historyList) + "\nGjennomsnitt\nhøyeste promille");
+            DecimalFormat df = new DecimalFormat("#.##");
+            df.setRoundingMode(RoundingMode.CEILING);
+
+            totalCountTextView.setText(df.format(getTotalCost(historyList)) + ",-");
+            totalBacCountTextView.setText(df.format(getTotalHighestBac(historyList)));
+            avgBacCountTextView.setText(df.format(getTotalAverageHighestBac(historyList)));
+
+            lastMonthCostTextView.setText(df.format(getLastMonthCost(historyList)) + ",-\nKostnader");
+            lastMonthHighestBacTextView.setText(df.format(getLastMonthHighestBac(historyList)) + "\nHøyeste\npromille");
+            lastMonthAvgBacTextView.setText(df.format(getLastMonthAverageBac(historyList)) + "\nGjennomsnitt\nhøyeste promille");
         }
 
         BarChartController chartController = new BarChartController(historyBarChart, user, getHistoryList());
