@@ -42,7 +42,7 @@ import rustelefonen.no.drikkevett_android.tabs.BacHistoryFragment;
 import rustelefonen.no.drikkevett_android.tabs.home.BacHomeFragment;
 import rustelefonen.no.drikkevett_android.tabs.BacPlanPartyFragment;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener {
 
     //Fields
     private SectionsPagerAdapter mSectionsPagerAdapter;
@@ -83,6 +83,10 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.getTabAt(2).setIcon(R.drawable.ic_list_black_24dp);
         tabLayout.getTabAt(3).setIcon(R.drawable.ic_mood_bad_black_24dp);
         tabLayout.getTabAt(4).setIcon(R.drawable.ic_access_time_black_24dp);
+
+        mViewPager.addOnPageChangeListener(this);
+
+        onPageSelected(0);
 
 
 
@@ -214,6 +218,27 @@ public class MainActivity extends AppCompatActivity {
         builder.create().show();
     }
 
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        String title = position == 0 ? "Home"
+                : position == 1 ? "Promillekalkulator"
+                : position == 2 ? "Planlegg kvelden"
+                : position == 3 ? "Dagen Derpå"
+                : position == 4 ? "Historikk"
+                : "";
+
+        if (getSupportActionBar() != null) getSupportActionBar().setTitle(title);
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
+    }
 
 
     /**

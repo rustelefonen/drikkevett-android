@@ -71,6 +71,7 @@ public class BacHomeFragment extends Fragment{
     public TextView totalCountTextView;
     public TextView totalBacCountTextView;
     public TextView avgBacCountTextView;
+    public TextView imageTextView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -170,10 +171,12 @@ public class BacHomeFragment extends Fragment{
         totalCountTextView = (TextView) view.findViewById(R.id.total_count_text_view);
         totalBacCountTextView = (TextView) view.findViewById(R.id.total_bac_count_text_view);
         avgBacCountTextView = (TextView) view.findViewById(R.id.avg_bac_count_text_view);
+        imageTextView = (TextView) view.findViewById(R.id.myImageViewText);
     }
 
     private void fillWidgets() {
         quoteTextView.setText(getRandomQuote());
+        imageTextView.setText(user.getNickname());
         insertImageIfExists();
 
         List<History> historyList = getHistoryList();
