@@ -41,13 +41,13 @@ public class BarChartController {
         barChart.getAxisLeft().setDrawGridLines(false);
         barChart.getAxisRight().setDrawGridLines(false);
         barChart.getXAxis().setDrawGridLines(false);
-        barChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+        barChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM_INSIDE);
         barChart.getAxisRight().setDrawTopYLabelEntry(false);
         barChart.getAxisLeft().setTextColor(WHITE_COLOR);
         barChart.getAxisRight().setEnabled(false);
         barChart.getXAxis().setTextColor(WHITE_COLOR);
         barChart.getLegend().setEnabled(false);
-        barChart.setDescriptionColor(Color.RED);
+        barChart.setDescription("");
         barChart.setPinchZoom(false);
         barChart.setDoubleTapToZoomEnabled(false);
         barChart.getAxisRight().removeAllLimitLines();
@@ -56,6 +56,15 @@ public class BarChartController {
         limit.setLineColor(WHITE_COLOR);
         limit.enableDashedLine(8.5f, 8.5f, 6.5f);
         barChart.getAxisRight().addLimitLine(limit);
+        barChart.getAxisLeft().setDrawAxisLine(false);
+        barChart.getXAxis().setDrawAxisLine(false);
+
+
+        barChart.getXAxis().setSpaceBetweenLabels(10);
+
+        barChart.getXAxis().setAxisMinValue(0f);
+
+
     }
 
     private ArrayList<IBarDataSet> getDataSet() {
@@ -73,9 +82,10 @@ public class BarChartController {
 
         BarDataSet barDataSet1 = new BarDataSet(valueSet1, "Brand 1");
         barDataSet1.setColor(Color.rgb(0, 155, 0));
+        barDataSet1.setDrawValues(false);
         BarDataSet barDataSet2 = new BarDataSet(valueSet2, "Brand 2");
-        barDataSet2.setColor(Color.RED);
-
+        barDataSet2.setColor(Color.rgb(221, 112, 112));
+        barDataSet2.setDrawValues(false);
         ArrayList<IBarDataSet> dataSets = new ArrayList<>();
         dataSets.add(barDataSet1);
         dataSets.add(barDataSet2);
@@ -85,7 +95,7 @@ public class BarChartController {
     private ArrayList<String> getXAxisValues() {
         ArrayList<String> xAxis = new ArrayList<>();
         for (History history : historyList) {
-            xAxis.add(DateUtil.getDateAsStringRepresentation(history.getStartDate()));
+            xAxis.add(DateUtil.getDayOfMonth(history.getStartDate()));
         }
         return xAxis;
     }

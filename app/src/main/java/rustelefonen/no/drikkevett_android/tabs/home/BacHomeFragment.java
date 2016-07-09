@@ -78,7 +78,7 @@ public class BacHomeFragment extends Fragment{
         View view = inflater.inflate(R.layout.bac_home_frag, container, false);
         insertUser();
         user = getUser();
-        addHistory();
+        //addHistory();
         initWidgets(view);
         fillWidgets();
         fillPieChart();
@@ -189,9 +189,9 @@ public class BacHomeFragment extends Fragment{
             totalBacCountTextView.setText(df.format(getTotalHighestBac(historyList)));
             avgBacCountTextView.setText(df.format(getTotalAverageHighestBac(historyList)));
 
-            lastMonthCostTextView.setText(df.format(getLastMonthCost(historyList)) + ",-\nKostnader");
-            lastMonthHighestBacTextView.setText(df.format(getLastMonthHighestBac(historyList)) + "\nHøyeste\npromille");
-            lastMonthAvgBacTextView.setText(df.format(getLastMonthAverageBac(historyList)) + "\nGjennomsnitt\nhøyeste promille");
+            lastMonthCostTextView.setText(df.format(getLastMonthCost(historyList)) + ",-");
+            lastMonthHighestBacTextView.setText(df.format(getLastMonthHighestBac(historyList)));
+            lastMonthAvgBacTextView.setText(df.format(getLastMonthAverageBac(historyList)));
         }
 
         BarChartController chartController = new BarChartController(historyBarChart, user, getHistoryList());
@@ -261,7 +261,7 @@ public class BacHomeFragment extends Fragment{
 
         dataset.setDrawValues(false);
 
-        dataset.setColors(new int[]{Color.parseColor("#C11A1A"), Color.parseColor("#1AC149")});
+        dataset.setColors(new int[]{Color.parseColor("#DD7070"), Color.parseColor("#1AC149")});
 
         ArrayList<String> labels = new ArrayList<>();
         labels.add("");

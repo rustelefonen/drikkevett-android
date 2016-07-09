@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         setContentView(R.layout.activity_main);
 
         LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        RelativeLayout relativeLayout = (RelativeLayout) inflater.inflate(R.layout.bac_home_frag, null);
+        //RelativeLayout relativeLayout = (RelativeLayout) inflater.inflate(R.layout.bac_home_frag, null);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
