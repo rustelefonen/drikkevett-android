@@ -25,7 +25,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,7 +35,7 @@ import rustelefonen.no.drikkevett_android.db.DaoMaster;
 import rustelefonen.no.drikkevett_android.db.DaoSession;
 import rustelefonen.no.drikkevett_android.db.User;
 import rustelefonen.no.drikkevett_android.db.UserDao;
-import rustelefonen.no.drikkevett_android.tabs.BacCalcFragment;
+import rustelefonen.no.drikkevett_android.tabs.calc.BacCalcFragment;
 import rustelefonen.no.drikkevett_android.tabs.BacDayAfterFragment;
 import rustelefonen.no.drikkevett_android.tabs.BacHistoryFragment;
 import rustelefonen.no.drikkevett_android.tabs.home.BacHomeFragment;
@@ -68,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         setSupportActionBar(toolbar);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), this);
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
@@ -284,7 +283,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
-        public SectionsPagerAdapter(FragmentManager fm, Context context) {
+        public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
@@ -305,32 +304,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
         @Override
         public CharSequence getPageTitle(int position) {
-
             return "";
-        }
-    }
-
-    private void dbThings() {
-        String DB_NAME = "my-db";
-        SQLiteDatabase db;
-
-        SQLiteDatabase.CursorFactory cursorFactory = null;
-        final DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, DB_NAME, cursorFactory);
-        db = helper.getWritableDatabase();
-
-        DaoMaster daoMaster = new DaoMaster(db);
-        DaoSession daoSession = daoMaster.newSession();
-        UserDao userDao = daoSession.getUserDao();
-
-        User newUser = new User();
-        newUser.setAge(14);
-
-        userDao.insert(newUser);
-
-        List<User> userList = userDao.queryBuilder().list();
-
-        for (User user : userList) {
-            System.out.println(user.getAge());
         }
     }
 }

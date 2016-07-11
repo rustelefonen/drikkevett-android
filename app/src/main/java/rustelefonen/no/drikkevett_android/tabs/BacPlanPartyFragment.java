@@ -23,9 +23,6 @@ import rustelefonen.no.drikkevett_android.db.PlanPartyElements;
 import rustelefonen.no.drikkevett_android.db.PlanPartyElementsDao;
 import rustelefonen.no.drikkevett_android.util.PartyUtil;
 
-import static rustelefonen.no.drikkevett_android.tabs.BacCalcFragment.calculateBAC;
-import static rustelefonen.no.drikkevett_android.tabs.BacCalcFragment.countingGrams;
-import static rustelefonen.no.drikkevett_android.tabs.BacCalcFragment.setGenderScore;
 import static rustelefonen.no.drikkevett_android.util.PartyUtil.getDateDiff;
 
 public class BacPlanPartyFragment extends Fragment {
@@ -388,7 +385,7 @@ public class BacPlanPartyFragment extends Fragment {
                 shotsConsumed++;
             }
 
-            double totalGrams = countingGrams(beersConsumed, winesConsumed, drinksConsumed, shotsConsumed);
+            double totalGrams = 0;//countingGrams(beersConsumed, winesConsumed, drinksConsumed, shotsConsumed);
 
             Date currentDate = new Date();
             long timeDifference = getDateDiff(currentDate, firstUnitAddedTimeStamp, TimeUnit.HOURS);
@@ -401,11 +398,11 @@ public class BacPlanPartyFragment extends Fragment {
             // FROM 5 - 15 MIN
             if(timeDifference > 0.085 && timeDifference <= 0.25){
                 // KALKULER PROMILLE
-                sum = totalGrams/(weight * setGenderScore(gender)) - (PartyUtil.intervalCalc(timeDifference) * timeDifference);
+                sum = totalGrams/(weight * 1);//setGenderScore(gender)) - (PartyUtil.intervalCalc(timeDifference) * timeDifference);
             }
             if(timeDifference > 0.25){
                 // KALKULER PROMILLE
-                sum = Double.parseDouble(calculateBAC(gender, weight, totalGrams, timeDifference));
+                sum = 0;//Double.parseDouble(calculateBAC(gender, weight, totalGrams, timeDifference));
             }
 
             System.out.println("LiveP ( UNIT ) = " + dayAfter.getUnit());
