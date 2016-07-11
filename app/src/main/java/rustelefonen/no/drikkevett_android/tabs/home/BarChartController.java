@@ -5,6 +5,7 @@ import android.graphics.Color;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
@@ -60,9 +61,8 @@ public class BarChartController {
         barChart.getXAxis().setDrawAxisLine(false);
 
 
-        barChart.getXAxis().setSpaceBetweenLabels(10);
 
-        barChart.getXAxis().setAxisMinValue(0f);
+        barChart.getXAxis().setAvoidFirstLastClipping(true);
 
 
     }
