@@ -6,21 +6,41 @@ package rustelefonen.no.drikkevett_android.db;
  */
 public class PlanPartyElements {
 
+    private Long id;
     private String status;
     private Integer plannedBeer;
     private Integer plannedWine;
     private Integer plannedDrink;
     private Integer plannedShot;
+    private java.util.Date firstUnitAddedDate;
+    private java.util.Date startTimeStamp;
+    private java.util.Date endTimeStamp;
 
     public PlanPartyElements() {
     }
 
-    public PlanPartyElements(String status, Integer plannedBeer, Integer plannedWine, Integer plannedDrink, Integer plannedShot) {
+    public PlanPartyElements(Long id) {
+        this.id = id;
+    }
+
+    public PlanPartyElements(Long id, String status, Integer plannedBeer, Integer plannedWine, Integer plannedDrink, Integer plannedShot, java.util.Date firstUnitAddedDate, java.util.Date startTimeStamp, java.util.Date endTimeStamp) {
+        this.id = id;
         this.status = status;
         this.plannedBeer = plannedBeer;
         this.plannedWine = plannedWine;
         this.plannedDrink = plannedDrink;
         this.plannedShot = plannedShot;
+        this.firstUnitAddedDate = firstUnitAddedDate;
+        this.startTimeStamp = startTimeStamp;
+        this.endTimeStamp = endTimeStamp;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getStatus() {
@@ -61,6 +81,30 @@ public class PlanPartyElements {
 
     public void setPlannedShot(Integer plannedShot) {
         this.plannedShot = plannedShot;
+    }
+
+    public java.util.Date getFirstUnitAddedDate() {
+        return firstUnitAddedDate;
+    }
+
+    public void setFirstUnitAddedDate(java.util.Date firstUnitAddedDate) {
+        this.firstUnitAddedDate = firstUnitAddedDate;
+    }
+
+    public java.util.Date getStartTimeStamp() {
+        return startTimeStamp;
+    }
+
+    public void setStartTimeStamp(java.util.Date startTimeStamp) {
+        this.startTimeStamp = startTimeStamp;
+    }
+
+    public java.util.Date getEndTimeStamp() {
+        return endTimeStamp;
+    }
+
+    public void setEndTimeStamp(java.util.Date endTimeStamp) {
+        this.endTimeStamp = endTimeStamp;
     }
 
 }

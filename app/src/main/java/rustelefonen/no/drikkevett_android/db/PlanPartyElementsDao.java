@@ -14,7 +14,7 @@ import rustelefonen.no.drikkevett_android.db.PlanPartyElements;
 /** 
  * DAO for table "PLAN_PARTY_ELEMENTS".
 */
-public class PlanPartyElementsDao extends AbstractDao<PlanPartyElements, Void> {
+public class PlanPartyElementsDao extends AbstractDao<PlanPartyElements, Long> {
 
     public static final String TABLENAME = "PLAN_PARTY_ELEMENTS";
 
@@ -23,11 +23,15 @@ public class PlanPartyElementsDao extends AbstractDao<PlanPartyElements, Void> {
      * Can be used for QueryBuilder and for referencing column names.
     */
     public static class Properties {
-        public final static Property Status = new Property(0, String.class, "status", false, "STATUS");
-        public final static Property PlannedBeer = new Property(1, Integer.class, "plannedBeer", false, "PLANNED_BEER");
-        public final static Property PlannedWine = new Property(2, Integer.class, "plannedWine", false, "PLANNED_WINE");
-        public final static Property PlannedDrink = new Property(3, Integer.class, "plannedDrink", false, "PLANNED_DRINK");
-        public final static Property PlannedShot = new Property(4, Integer.class, "plannedShot", false, "PLANNED_SHOT");
+        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
+        public final static Property Status = new Property(1, String.class, "status", false, "STATUS");
+        public final static Property PlannedBeer = new Property(2, Integer.class, "plannedBeer", false, "PLANNED_BEER");
+        public final static Property PlannedWine = new Property(3, Integer.class, "plannedWine", false, "PLANNED_WINE");
+        public final static Property PlannedDrink = new Property(4, Integer.class, "plannedDrink", false, "PLANNED_DRINK");
+        public final static Property PlannedShot = new Property(5, Integer.class, "plannedShot", false, "PLANNED_SHOT");
+        public final static Property FirstUnitAddedDate = new Property(6, java.util.Date.class, "firstUnitAddedDate", false, "FIRST_UNIT_ADDED_DATE");
+        public final static Property StartTimeStamp = new Property(7, java.util.Date.class, "startTimeStamp", false, "START_TIME_STAMP");
+        public final static Property EndTimeStamp = new Property(8, java.util.Date.class, "endTimeStamp", false, "END_TIME_STAMP");
     };
 
 
@@ -43,11 +47,15 @@ public class PlanPartyElementsDao extends AbstractDao<PlanPartyElements, Void> {
     public static void createTable(SQLiteDatabase db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"PLAN_PARTY_ELEMENTS\" (" + //
-                "\"STATUS\" TEXT," + // 0: status
-                "\"PLANNED_BEER\" INTEGER," + // 1: plannedBeer
-                "\"PLANNED_WINE\" INTEGER," + // 2: plannedWine
-                "\"PLANNED_DRINK\" INTEGER," + // 3: plannedDrink
-                "\"PLANNED_SHOT\" INTEGER);"); // 4: plannedShot
+                "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
+                "\"STATUS\" TEXT," + // 1: status
+                "\"PLANNED_BEER\" INTEGER," + // 2: plannedBeer
+                "\"PLANNED_WINE\" INTEGER," + // 3: plannedWine
+                "\"PLANNED_DRINK\" INTEGER," + // 4: plannedDrink
+                "\"PLANNED_SHOT\" INTEGER," + // 5: plannedShot
+                "\"FIRST_UNIT_ADDED_DATE\" INTEGER," + // 6: firstUnitAddedDate
+                "\"START_TIME_STAMP\" INTEGER," + // 7: startTimeStamp
+                "\"END_TIME_STAMP\" INTEGER);"); // 8: endTimeStamp
     }
 
     /** Drops the underlying database table. */
@@ -61,47 +69,71 @@ public class PlanPartyElementsDao extends AbstractDao<PlanPartyElements, Void> {
     protected void bindValues(SQLiteStatement stmt, PlanPartyElements entity) {
         stmt.clearBindings();
  
+        Long id = entity.getId();
+        if (id != null) {
+            stmt.bindLong(1, id);
+        }
+ 
         String status = entity.getStatus();
         if (status != null) {
-            stmt.bindString(1, status);
+            stmt.bindString(2, status);
         }
  
         Integer plannedBeer = entity.getPlannedBeer();
         if (plannedBeer != null) {
-            stmt.bindLong(2, plannedBeer);
+            stmt.bindLong(3, plannedBeer);
         }
  
         Integer plannedWine = entity.getPlannedWine();
         if (plannedWine != null) {
-            stmt.bindLong(3, plannedWine);
+            stmt.bindLong(4, plannedWine);
         }
  
         Integer plannedDrink = entity.getPlannedDrink();
         if (plannedDrink != null) {
-            stmt.bindLong(4, plannedDrink);
+            stmt.bindLong(5, plannedDrink);
         }
  
         Integer plannedShot = entity.getPlannedShot();
         if (plannedShot != null) {
-            stmt.bindLong(5, plannedShot);
+            stmt.bindLong(6, plannedShot);
+        }
+ 
+        java.util.Date firstUnitAddedDate = entity.getFirstUnitAddedDate();
+        if (firstUnitAddedDate != null) {
+            stmt.bindLong(7, firstUnitAddedDate.getTime());
+        }
+ 
+        java.util.Date startTimeStamp = entity.getStartTimeStamp();
+        if (startTimeStamp != null) {
+            stmt.bindLong(8, startTimeStamp.getTime());
+        }
+ 
+        java.util.Date endTimeStamp = entity.getEndTimeStamp();
+        if (endTimeStamp != null) {
+            stmt.bindLong(9, endTimeStamp.getTime());
         }
     }
 
     /** @inheritdoc */
     @Override
-    public Void readKey(Cursor cursor, int offset) {
-        return null;
+    public Long readKey(Cursor cursor, int offset) {
+        return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
     }    
 
     /** @inheritdoc */
     @Override
     public PlanPartyElements readEntity(Cursor cursor, int offset) {
         PlanPartyElements entity = new PlanPartyElements( //
-            cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0), // status
-            cursor.isNull(offset + 1) ? null : cursor.getInt(offset + 1), // plannedBeer
-            cursor.isNull(offset + 2) ? null : cursor.getInt(offset + 2), // plannedWine
-            cursor.isNull(offset + 3) ? null : cursor.getInt(offset + 3), // plannedDrink
-            cursor.isNull(offset + 4) ? null : cursor.getInt(offset + 4) // plannedShot
+            cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
+            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // status
+            cursor.isNull(offset + 2) ? null : cursor.getInt(offset + 2), // plannedBeer
+            cursor.isNull(offset + 3) ? null : cursor.getInt(offset + 3), // plannedWine
+            cursor.isNull(offset + 4) ? null : cursor.getInt(offset + 4), // plannedDrink
+            cursor.isNull(offset + 5) ? null : cursor.getInt(offset + 5), // plannedShot
+            cursor.isNull(offset + 6) ? null : new java.util.Date(cursor.getLong(offset + 6)), // firstUnitAddedDate
+            cursor.isNull(offset + 7) ? null : new java.util.Date(cursor.getLong(offset + 7)), // startTimeStamp
+            cursor.isNull(offset + 8) ? null : new java.util.Date(cursor.getLong(offset + 8)) // endTimeStamp
         );
         return entity;
     }
@@ -109,24 +141,32 @@ public class PlanPartyElementsDao extends AbstractDao<PlanPartyElements, Void> {
     /** @inheritdoc */
     @Override
     public void readEntity(Cursor cursor, PlanPartyElements entity, int offset) {
-        entity.setStatus(cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0));
-        entity.setPlannedBeer(cursor.isNull(offset + 1) ? null : cursor.getInt(offset + 1));
-        entity.setPlannedWine(cursor.isNull(offset + 2) ? null : cursor.getInt(offset + 2));
-        entity.setPlannedDrink(cursor.isNull(offset + 3) ? null : cursor.getInt(offset + 3));
-        entity.setPlannedShot(cursor.isNull(offset + 4) ? null : cursor.getInt(offset + 4));
+        entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
+        entity.setStatus(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
+        entity.setPlannedBeer(cursor.isNull(offset + 2) ? null : cursor.getInt(offset + 2));
+        entity.setPlannedWine(cursor.isNull(offset + 3) ? null : cursor.getInt(offset + 3));
+        entity.setPlannedDrink(cursor.isNull(offset + 4) ? null : cursor.getInt(offset + 4));
+        entity.setPlannedShot(cursor.isNull(offset + 5) ? null : cursor.getInt(offset + 5));
+        entity.setFirstUnitAddedDate(cursor.isNull(offset + 6) ? null : new java.util.Date(cursor.getLong(offset + 6)));
+        entity.setStartTimeStamp(cursor.isNull(offset + 7) ? null : new java.util.Date(cursor.getLong(offset + 7)));
+        entity.setEndTimeStamp(cursor.isNull(offset + 8) ? null : new java.util.Date(cursor.getLong(offset + 8)));
      }
     
     /** @inheritdoc */
     @Override
-    protected Void updateKeyAfterInsert(PlanPartyElements entity, long rowId) {
-        // Unsupported or missing PK type
-        return null;
+    protected Long updateKeyAfterInsert(PlanPartyElements entity, long rowId) {
+        entity.setId(rowId);
+        return rowId;
     }
     
     /** @inheritdoc */
     @Override
-    public Void getKey(PlanPartyElements entity) {
-        return null;
+    public Long getKey(PlanPartyElements entity) {
+        if(entity != null) {
+            return entity.getId();
+        } else {
+            return null;
+        }
     }
 
     /** @inheritdoc */

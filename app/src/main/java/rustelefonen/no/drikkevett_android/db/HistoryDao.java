@@ -33,7 +33,6 @@ public class HistoryDao extends AbstractDao<History, Long> {
         public final static Property Sum = new Property(7, Integer.class, "sum", false, "SUM");
         public final static Property HighestBAC = new Property(8, Double.class, "highestBAC", false, "HIGHEST_BAC");
         public final static Property PlannedUnitsCount = new Property(9, Integer.class, "plannedUnitsCount", false, "PLANNED_UNITS_COUNT");
-        public final static Property FirstUnitDate = new Property(10, java.util.Date.class, "firstUnitDate", false, "FIRST_UNIT_DATE");
     };
 
     private DaoSession daoSession;
@@ -61,8 +60,7 @@ public class HistoryDao extends AbstractDao<History, Long> {
                 "\"END_DATE\" INTEGER," + // 6: endDate
                 "\"SUM\" INTEGER," + // 7: sum
                 "\"HIGHEST_BAC\" REAL," + // 8: highestBAC
-                "\"PLANNED_UNITS_COUNT\" INTEGER," + // 9: plannedUnitsCount
-                "\"FIRST_UNIT_DATE\" INTEGER);"); // 10: firstUnitDate
+                "\"PLANNED_UNITS_COUNT\" INTEGER);"); // 9: plannedUnitsCount
     }
 
     /** Drops the underlying database table. */
@@ -125,11 +123,6 @@ public class HistoryDao extends AbstractDao<History, Long> {
         if (plannedUnitsCount != null) {
             stmt.bindLong(10, plannedUnitsCount);
         }
- 
-        java.util.Date firstUnitDate = entity.getFirstUnitDate();
-        if (firstUnitDate != null) {
-            stmt.bindLong(11, firstUnitDate.getTime());
-        }
     }
 
     @Override
@@ -157,8 +150,7 @@ public class HistoryDao extends AbstractDao<History, Long> {
             cursor.isNull(offset + 6) ? null : new java.util.Date(cursor.getLong(offset + 6)), // endDate
             cursor.isNull(offset + 7) ? null : cursor.getInt(offset + 7), // sum
             cursor.isNull(offset + 8) ? null : cursor.getDouble(offset + 8), // highestBAC
-            cursor.isNull(offset + 9) ? null : cursor.getInt(offset + 9), // plannedUnitsCount
-            cursor.isNull(offset + 10) ? null : new java.util.Date(cursor.getLong(offset + 10)) // firstUnitDate
+            cursor.isNull(offset + 9) ? null : cursor.getInt(offset + 9) // plannedUnitsCount
         );
         return entity;
     }
@@ -176,7 +168,6 @@ public class HistoryDao extends AbstractDao<History, Long> {
         entity.setSum(cursor.isNull(offset + 7) ? null : cursor.getInt(offset + 7));
         entity.setHighestBAC(cursor.isNull(offset + 8) ? null : cursor.getDouble(offset + 8));
         entity.setPlannedUnitsCount(cursor.isNull(offset + 9) ? null : cursor.getInt(offset + 9));
-        entity.setFirstUnitDate(cursor.isNull(offset + 10) ? null : new java.util.Date(cursor.getLong(offset + 10)));
      }
     
     /** @inheritdoc */

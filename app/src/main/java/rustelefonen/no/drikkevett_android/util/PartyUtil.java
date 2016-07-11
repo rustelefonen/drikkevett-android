@@ -13,7 +13,7 @@ public class PartyUtil {
         RUNNING, NOT_RUNNING, DA_RUNNING
     }
 
-    public static double intervalCalc(long timeDifference){
+    public static double intervalCalc(double timeDifference){
         double BACDownPerHour = 0.0;
         double minute = 1 / 60;
 
@@ -83,16 +83,5 @@ public class PartyUtil {
     public static long getDateDiff(Date date1, Date date2, TimeUnit timeUnit) {
         long diffInMillies = date2.getTime() - date1.getTime();
         return timeUnit.convert(diffInMillies,TimeUnit.MILLISECONDS);
-    }
-
-    public static int calculateCosts(int b, int w, int d, int s){
-        // get costs
-        int beerC = 100;
-        int wineC = 200;
-        int drinkC = 300;
-        int shotC = 400;
-
-
-        return (b * beerC) + (w * wineC) + (d * drinkC) + (s * shotC);
     }
 }

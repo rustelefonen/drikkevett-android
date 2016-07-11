@@ -94,11 +94,40 @@
 
 
 </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        >
+        <Button
+            android:text="ØL"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnAfterRegBeer_DA" />
+        <Button
+            android:text="VIN"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnAfterRegWine_DA" />
+        <Button
+            android:text="DRINK"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnAfterRegDrink_DA" />
+        <Button
+            android:text="SHOT"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnAfterRegShot_DA" />
+
+    </LinearLayout>
 
     <Button
         android:text="Avslutt Dagen Derpå"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/btnEndDayAfter" />
+        android:id="@+id/btnEndDayAfter"
+        />
 
 </LinearLayout>
