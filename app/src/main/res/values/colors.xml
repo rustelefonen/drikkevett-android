@@ -8,8 +8,10 @@
     <color name="textColor">#FFFFFF</color>
     <color name="topBarColor">#424040</color>
     <color name="greenSuper">#70DD7F</color>
+    <color name="redSuper">#DD7070</color>
     <color name="beerColor">#FEC52E</color>
     <color name="wineColor">#B97BFC</color>
     <color name="drinkColor">#7CFD95</color>
     <color name="shotColor">#F95680</color>
+    <color name="greyTextColor">#787878</color>
 </resources>

@@ -2,52 +2,61 @@
 <android.support.v4.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent"
+    android:background="@color/backgroundColor">
 
     <LinearLayout
         android:layout_width="match_parent"
+        android:layout_marginTop="16dp"
         android:layout_height="match_parent"
         android:id="@+id/bacCalc"
         android:orientation="vertical"
-        android:gravity="center"
-        android:background="@color/backgroundColor">
+        android:gravity="center">
 
         <com.github.mikephil.charting.charts.PieChart
-            android:layout_marginTop="16dp"
+            android:padding="16dp"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="150dp"
             android:id="@+id/pie_chart_bac_calc">
         </com.github.mikephil.charting.charts.PieChart>
 
+
         <android.support.v4.view.ViewPager
+            android:padding="16dp"
             android:id="@+id/beer_scroll"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="150dp"
             android:layout_below="@+id/pie_chart_bac_calc">
         </android.support.v4.view.ViewPager>
 
-        <TextView
-            android:text="Kos deg"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:id="@+id/text_view_quotes"
-            android:gravity="center"
-            android:layout_below="@+id/beer_scroll"
-            />
+        <!--<TextView-->
+            <!--android:padding="16dp"-->
+            <!--android:text="Kos deg"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_centerHorizontal="true"-->
+            <!--android:id="@+id/text_view_quotes"-->
+            <!--android:gravity="center"-->
+            <!--android:textColor="@color/textColor"-->
+            <!--android:textSize="16sp"-->
+            <!--android:layout_below="@+id/beer_scroll"-->
+            <!--/>-->
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:padding="16dp"
             android:gravity="center"
-            android:layout_below="@+id/text_view_quotes">
+            android:layout_below="@+id/beer_scroll">
             <Button
                 android:text="Fjern"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/btnRemove"
                 android:layout_marginRight="50dp"
+                android:background="@color/redSuper"
+                android:textColor="@color/textColor"
                 />
 
             <Button
@@ -55,6 +64,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/addBtn"
+                android:background="@color/greenSuper"
+                android:textColor="@color/textColor"
                 />
         </LinearLayout>
         <LinearLayout
@@ -62,47 +73,126 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center"
-            android:layout_marginTop="20dp"
-            >
-            <TextView
-                android:textColor="@color/textColor"
-                android:text="0\nØL"
+            android:layout_marginTop="20dp">
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/textViewBeerUnits"
-                android:gravity="center"
-                android:layout_marginRight="50dp"
-                />
+                android:orientation="vertical"
+                android:layout_weight="25">
 
-            <TextView
-                android:textColor="@color/textColor"
-                android:text="0\nVin"
+                <TextView
+                    android:textColor="@color/textColor"
+                    android:text="0"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textViewBeerUnits"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:textSize="32sp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/greyTextColor"
+                    android:textSize="10sp"
+                    android:layout_gravity="center"
+                    android:text="Øl"/>
+                <LinearLayout
+                    android:layout_marginTop="8dp"
+                    android:layout_width="10dp"
+                    android:layout_height="3dp"
+                    android:layout_gravity="center"
+                    android:background="@color/beerColor"/>
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/textViewWineUnits"
-                android:gravity="center"
-                android:layout_marginRight="50dp"
-                />
+                android:layout_weight="25"
+                android:orientation="vertical">
 
-            <TextView
-                android:textColor="@color/textColor"
-                android:text="0\nShot"
+                <TextView
+                    android:textColor="@color/textColor"
+                    android:text="0"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textViewWineUnits"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:textSize="32sp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="Vin"
+                    android:textSize="10sp"
+                    android:textColor="@color/greyTextColor"/>
+                <LinearLayout
+                    android:layout_marginTop="8dp"
+                    android:layout_width="10dp"
+                    android:layout_height="3dp"
+                    android:layout_gravity="center"
+                    android:background="@color/wineColor"/>
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/textViewShotUnits"
-                android:gravity="center"
-                android:layout_marginRight="50dp"
-                />
+                android:layout_weight="25"
+                android:orientation="vertical">
 
-            <TextView
-                android:textColor="@color/textColor"
-                android:text="0\nDrink"
+                <TextView
+                    android:textColor="@color/textColor"
+                    android:text="0"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textViewDrinkUnits"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:textSize="32sp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/greyTextColor"
+                    android:layout_gravity="center"
+                    android:text="Drink" />
+                <LinearLayout
+                    android:layout_marginTop="8dp"
+                    android:layout_width="10dp"
+                    android:layout_height="3dp"
+                    android:layout_gravity="center"
+                    android:background="@color/drinkColor"/>
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/textViewDrinkUnits"
-                android:gravity="center"
-                />
+                android:layout_weight="25"
+                android:orientation="vertical">
 
+                <TextView
+                    android:textColor="@color/textColor"
+                    android:text="0"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textViewShotUnits"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:textSize="32sp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/greyTextColor"
+                    android:layout_gravity="center"
+                    android:text="Shot"/>
+                <LinearLayout
+                    android:layout_marginTop="8dp"
+                    android:layout_width="10dp"
+                    android:layout_height="3dp"
+                    android:layout_gravity="center"
+                    android:background="@color/shotColor"/>
+            </LinearLayout>
         </LinearLayout>
 
         <TextView

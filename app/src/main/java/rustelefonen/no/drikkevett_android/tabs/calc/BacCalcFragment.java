@@ -50,8 +50,12 @@ public class BacCalcFragment extends android.support.v4.app.Fragment {
 
     // TEXTVIEWS
     public TextView labelHours;
+    //public TextView labelQuotes;
+
     public TextView labelBeerNrUnits;
-    public TextView labelQuotes;
+    public TextView labelWineNrUnits;
+    public TextView labelDrinkNrUnits;
+    public TextView labelShotNrUnits;
 
     // SEEKBAR
     private SeekBar seekBar;
@@ -60,6 +64,7 @@ public class BacCalcFragment extends android.support.v4.app.Fragment {
     private View view;
 
     public PieChart pieChart;
+    public ViewPager beerScroll;
 
     private static final String PER_MILLE = "\u2030";
 
@@ -69,39 +74,13 @@ public class BacCalcFragment extends android.support.v4.app.Fragment {
 
         initVariabels();
 
-        addButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v){
-                if(beer >= 20){
-                    beer = 20;
-                } else {
-                    beer++;
-                }
-                labelBeerNrUnits.setText(beer + "\nØL");
-
-                totalPromille();
-            }
-        });
-
-        removeButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v){
-                if(beer <= 0){
-                    beer = 0;
-                } else {
-                    beer--;
-                }
-                labelBeerNrUnits.setText(beer + "\nØL");
-
-                totalPromille();
-            }
-        });
+        addButton.setOnClickListener(new View.OnClickListener() {public void onClick(View v){addBeverage();}});
+        removeButton.setOnClickListener(new View.OnClickListener() {public void onClick(View v){removeBeverage();}});
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                if(i <= 1){
-                    i = 1;
-                    hours = i;
-                }
+                if (i < 1 && i > 24) hours = 1;
                 hours = i;
 
                 if(hours == 1){
@@ -109,8 +88,8 @@ public class BacCalcFragment extends android.support.v4.app.Fragment {
                 } else {
                     labelHours.setText("Promillen om " + hours + " timer");
                 }
-
                 totalPromille();
+                fillPieChart();
             }
 
             @Override
@@ -120,7 +99,6 @@ public class BacCalcFragment extends android.support.v4.app.Fragment {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-
             }
         });
 
@@ -130,7 +108,7 @@ public class BacCalcFragment extends android.support.v4.app.Fragment {
 
 
 
-        ViewPager beerScroll = (ViewPager) view.findViewById(R.id.beer_scroll);
+        beerScroll = (ViewPager) view.findViewById(R.id.beer_scroll);
         beerScroll.setAdapter(new BeerScrollAdapter(this.getFragmentManager()));
 
 
@@ -138,10 +116,10 @@ public class BacCalcFragment extends android.support.v4.app.Fragment {
     }
 
     public void totalPromille(){
-        String bac = calculateBAC("Mann", 80, countingGrams(beer, 0, 0, 0), hours);
+        String bac = calculateBAC("Mann", 80, countingGrams(beer, wine, drink, shot), hours);
         //labelPromille.setText("" + bac);
         pieChart.setCenterText(Double.valueOf(bac) + PER_MILLE);
-        labelQuotes.setText(textInQuote(Double.valueOf(bac)));
+        //labelQuotes.setText(textInQuote(Double.valueOf(bac)));
     }
 
     public String textInQuote(double bac){
@@ -228,11 +206,16 @@ public class BacCalcFragment extends android.support.v4.app.Fragment {
         // TEXTVIEWS
         //labelPromille = (TextView) view.findViewById(R.id.promilleLbl);
         labelHours = (TextView) view.findViewById(R.id.textViewHours);
-        labelBeerNrUnits = (TextView) view.findViewById(R.id.textViewBeerUnits);
-        labelQuotes = (TextView) view.findViewById(R.id.text_view_quotes);
+        //labelQuotes = (TextView) view.findViewById(R.id.text_view_quotes);
 
         // SEEKBAR
         seekBar = (SeekBar) view.findViewById(R.id.seekBarBacCalc);
+
+        //
+        labelBeerNrUnits = (TextView) view.findViewById(R.id.textViewBeerUnits);
+        labelWineNrUnits = (TextView) view.findViewById(R.id.textViewWineUnits);
+        labelDrinkNrUnits = (TextView) view.findViewById(R.id.textViewDrinkUnits);
+        labelShotNrUnits = (TextView) view.findViewById(R.id.textViewShotUnits);
     }
 
 
@@ -259,10 +242,10 @@ public class BacCalcFragment extends android.support.v4.app.Fragment {
     private void stylePieChart() {
         pieChart.setCenterText("0.0" + PER_MILLE);
         pieChart.setDrawHoleEnabled(true);
-        pieChart.setHoleRadius(80f);
+        pieChart.setHoleRadius(90f);
         pieChart.setHoleColor(Color.TRANSPARENT);
         pieChart.setCenterTextRadiusPercent(100f);
-        pieChart.setTransparentCircleRadius(85f);
+        pieChart.setTransparentCircleRadius(95f);
         pieChart.setDescription("");
         pieChart.setDrawSliceText(false);
         pieChart.getLegend().setEnabled(false);
@@ -279,5 +262,61 @@ public class BacCalcFragment extends android.support.v4.app.Fragment {
                 ContextCompat.getColor(getContext(), R.color.wineColor),
                 ContextCompat.getColor(getContext(), R.color.drinkColor),
                 ContextCompat.getColor(getContext(), R.color.shotColor)};
+    }
+
+    private void addBeverage() {
+        switch (beerScroll.getCurrentItem()) {
+            case 0: {
+                if (beer < 20) beer++;
+                labelBeerNrUnits.setText(beer + "");
+                break;
+            }
+            case 1: {
+                if (wine < 20) wine++;
+                labelWineNrUnits.setText(wine + "");
+                break;
+            }
+            case 2: {
+                if (drink < 20) drink++;
+                labelDrinkNrUnits.setText(drink + "");
+                break;
+            }
+            case 3: {
+                if (shot < 20) shot++;
+                labelShotNrUnits.setText(shot + "");
+                break;
+            }
+        }
+        totalPromille();
+        fillPieChart();
+        pieChart.animateY(1400, Easing.EasingOption.EaseInOutQuad);
+    }
+
+    private void removeBeverage() {
+        switch (beerScroll.getCurrentItem()) {
+            case 0: {
+                if (beer > 0) beer--;
+                labelBeerNrUnits.setText(beer + "");
+                break;
+            }
+            case 1: {
+                if (wine > 0) wine--;
+                labelWineNrUnits.setText(wine + "");
+                break;
+            }
+            case 2: {
+                if (drink > 0) drink--;
+                labelDrinkNrUnits.setText(drink + "");
+                break;
+            }
+            case 3: {
+                if (shot > 0) shot--;
+                labelShotNrUnits.setText(shot + "");
+                break;
+            }
+        }
+        totalPromille();
+        fillPieChart();
+        pieChart.animateY(1400, Easing.EasingOption.EaseOutQuad);
     }
 }
