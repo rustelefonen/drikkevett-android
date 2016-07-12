@@ -21,6 +21,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".Settings"/>
+        <activity android:name=".tabs.history.HistoryActivity"/>
     </application>
 
 </manifest>

@@ -2,23 +2,81 @@ package rustelefonen.no.drikkevett_android.tabs.history;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+
+import java.util.List;
 
 import rustelefonen.no.drikkevett_android.R;
+import rustelefonen.no.drikkevett_android.db.History;
+import rustelefonen.no.drikkevett_android.db.HistoryDao;
+import rustelefonen.no.drikkevett_android.tabs.home.SuperDao;
 
 public class BacHistoryFragment extends Fragment {
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.bac_history_frag, container, false);
+    private static final String TAG = "RecyclerViewFragment";
+    private static final int SPAN_COUNT = 2;
 
-        TextView tv = (TextView) v.findViewById(R.id.textViewHistory);
-        tv.setText("Historikk");
-
-        return v;
+    private enum LayoutManagerType {
+        GRID_LAYOUT_MANAGER,
+        LINEAR_LAYOUT_MANAGER
     }
 
+    protected LayoutManagerType mCurrentLayoutManagerType;
+    protected RecyclerView mRecyclerView;
+    protected HistoryAdapter mAdapter;
+    protected RecyclerView.LayoutManager mLayoutManager;
 
+    private List<History> historyList;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        initDataset();
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.bac_history_frag, container, false);
+        rootView.setTag(TAG);
+
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
+        mLayoutManager = new LinearLayoutManager(getActivity());
+        mCurrentLayoutManagerType = LayoutManagerType.LINEAR_LAYOUT_MANAGER;
+
+        setRecyclerViewLayoutManager(mCurrentLayoutManagerType);
+
+        mAdapter = new HistoryAdapter(historyList);
+        mRecyclerView.setAdapter(mAdapter);
+
+        return rootView;
+    }
+
+    private void setRecyclerViewLayoutManager(LayoutManagerType layoutManagerType) {
+        int scrollPosition = 0;
+
+        if (mRecyclerView.getLayoutManager() != null) {
+            scrollPosition = ((LinearLayoutManager) mRecyclerView.getLayoutManager())
+                    .findFirstCompletelyVisibleItemPosition();
+        }
+
+        if (layoutManagerType == LayoutManagerType.GRID_LAYOUT_MANAGER) {
+            mLayoutManager = new GridLayoutManager(getActivity(), SPAN_COUNT);
+            mCurrentLayoutManagerType = LayoutManagerType.GRID_LAYOUT_MANAGER;
+        } else {
+            mLayoutManager = new LinearLayoutManager(getActivity());
+            mCurrentLayoutManagerType = LayoutManagerType.LINEAR_LAYOUT_MANAGER;
+        }
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.scrollToPosition(scrollPosition);
+    }
+
+    private void initDataset() {
+        SuperDao superDao = new SuperDao(getContext());
+        HistoryDao historyDao = superDao.getHistoryDao();
+        historyList = historyDao.queryBuilder().list();
+    }
 }
