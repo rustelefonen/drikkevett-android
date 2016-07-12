@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -33,12 +34,6 @@ import rustelefonen.no.drikkevett_android.db.User;
 import rustelefonen.no.drikkevett_android.db.UserDao;
 import rustelefonen.no.drikkevett_android.util.PartyUtil;
 
-import static rustelefonen.no.drikkevett_android.tabs.BacCalcFragment.calculateBAC;
-import static rustelefonen.no.drikkevett_android.tabs.BacCalcFragment.countingGrams;
-import static rustelefonen.no.drikkevett_android.tabs.BacCalcFragment.setGenderScore;
-import static rustelefonen.no.drikkevett_android.tabs.BacCalcFragment.calculateBAC;
-import static rustelefonen.no.drikkevett_android.tabs.BacCalcFragment.countingGrams;
-import static rustelefonen.no.drikkevett_android.tabs.BacCalcFragment.setGenderScore;
 import static rustelefonen.no.drikkevett_android.util.PartyUtil.getDateDiff;
 
 public class BacPlanPartyFragment extends Fragment {
@@ -68,6 +63,12 @@ public class BacPlanPartyFragment extends Fragment {
     public Date startTimeStamp = new Date();
     public Date endTimeStamp = new Date();
     public static final long HOUR = 3600*1000; // in milli-seconds.
+
+    // dummy grams
+    double beerGrams = 12.6;
+    double wineGrams = 14.0;
+    double drinkGrams = 15.0;
+    double shotGrams = 16.0;
 
 
     /* WIDGETS */
@@ -506,6 +507,41 @@ public class BacPlanPartyFragment extends Fragment {
         return sum;
     }
 
+    public String calculateBAC(String gender, double weight, double grams, double hours) {
+        double oppdatertPromille = 0.0;
+        double genderScore = setGenderScore(gender);
+
+        if(grams == 0.0){
+            oppdatertPromille = 0.0;
+        } else {
+            oppdatertPromille = grams/(weight * genderScore) - (0.15 * hours);
+            if(oppdatertPromille < 0.0){
+                oppdatertPromille = 0.0;
+            }
+        }
+        DecimalFormat numberFormat = new DecimalFormat("#.##");
+        String newPromille = numberFormat.format(oppdatertPromille);
+
+        return newPromille;
+    }
+
+    public double countingGrams(double beerUnits, double wineUnits, double drinkUnits, double shotUnits){
+        return (beerUnits * beerGrams) + (wineUnits * wineGrams) + (drinkUnits * drinkGrams) + (shotUnits * shotGrams);
+    }
+
+    public double setGenderScore(String gender){
+        double genderScore = 0.0;
+
+        if(gender.equals("Mann")){
+            genderScore = 0.70;
+        }
+        if(gender.equals("Kvinne")){
+            genderScore = 0.60;
+        }
+
+        return genderScore;
+    }
+
     private void getUnitsPlanned() {
         // TEMP VARIABLES
         int tempPlBeer = 0;
@@ -778,6 +814,7 @@ public class BacPlanPartyFragment extends Fragment {
             System.out.println("<---------------------------------------------------->");
         }
     }
+
 
 
     public String textInQuote(double bac){

@@ -24,6 +24,7 @@ import rustelefonen.no.drikkevett_android.db.User;
 import rustelefonen.no.drikkevett_android.db.UserDao;
 import rustelefonen.no.drikkevett_android.util.PartyUtil;
 
+import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -36,9 +37,6 @@ import rustelefonen.no.drikkevett_android.db.DayAfterBACDao;
 import rustelefonen.no.drikkevett_android.db.PlanPartyElements;
 import rustelefonen.no.drikkevett_android.db.PlanPartyElementsDao;
 
-import static rustelefonen.no.drikkevett_android.tabs.BacCalcFragment.calculateBAC;
-import static rustelefonen.no.drikkevett_android.tabs.BacCalcFragment.countingGrams;
-import static rustelefonen.no.drikkevett_android.tabs.BacCalcFragment.setGenderScore;
 import static rustelefonen.no.drikkevett_android.util.PartyUtil.getDateDiff;
 
 public class BacDayAfterFragment extends Fragment {
@@ -64,6 +62,12 @@ public class BacDayAfterFragment extends Fragment {
     int wineCost = 200;
     int drinkCost = 300;
     int shotCost = 400;
+
+    // dummy beergrams
+    double beerGrams = 12.6;
+    double wineGrams = 14.0;
+    double drinkGrams = 15.0;
+    double shotGrams = 16.0;
 
     public Status status;
 
@@ -375,6 +379,41 @@ public class BacDayAfterFragment extends Fragment {
         System.out.println("LivePromille Promille: " + sum);
         System.out.println("<---------------------------------------------------->");
         return sum;
+    }
+
+    public String calculateBAC(String gender, double weight, double grams, double hours) {
+        double oppdatertPromille = 0.0;
+        double genderScore = setGenderScore(gender);
+
+        if(grams == 0.0){
+            oppdatertPromille = 0.0;
+        } else {
+            oppdatertPromille = grams/(weight * genderScore) - (0.15 * hours);
+            if(oppdatertPromille < 0.0){
+                oppdatertPromille = 0.0;
+            }
+        }
+        DecimalFormat numberFormat = new DecimalFormat("#.##");
+        String newPromille = numberFormat.format(oppdatertPromille);
+
+        return newPromille;
+    }
+
+    public double countingGrams(double beerUnits, double wineUnits, double drinkUnits, double shotUnits){
+        return (beerUnits * beerGrams) + (wineUnits * wineGrams) + (drinkUnits * drinkGrams) + (shotUnits * shotGrams);
+    }
+
+    public double setGenderScore(String gender){
+        double genderScore = 0.0;
+
+        if(gender.equals("Mann")){
+            genderScore = 0.70;
+        }
+        if(gender.equals("Kvinne")){
+            genderScore = 0.60;
+        }
+
+        return genderScore;
     }
 
     private void clearDBTables(){
