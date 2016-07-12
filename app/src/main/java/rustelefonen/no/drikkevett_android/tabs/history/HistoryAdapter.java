@@ -30,19 +30,16 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView textView;
         private final TextView totalCostTextView;
+        private View view;
 
-        public ViewHolder(View v, final Context context) {
+        private Context context;
+
+        public ViewHolder(View v, Context context) {
             super(v);
-            // Define click listener for the ViewHolder's View.
-            v.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.d(TAG, "Element " + getAdapterPosition() + " clicked.");
-                    context.startActivity(new Intent(context, HistoryActivity.class));
-                }
-            });
+            this.context = context;
             textView = (TextView) v.findViewById(R.id.textView);
             totalCostTextView = (TextView) v.findViewById(R.id.history_total_cost_text_view);
+            view = v;
         }
 
         public TextView getTextView() {
@@ -51,6 +48,14 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
 
         public TextView getTotalCostTextView() {
             return totalCostTextView;
+        }
+
+        public View getView() {
+            return view;
+        }
+
+        public Context getContext() {
+            return context;
         }
     }
 
@@ -69,6 +74,19 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         Log.d(TAG, "Element " + position + " set.");
         viewHolder.getTextView().setText(historyList.get(position).getHighestBAC() + "");
         viewHolder.getTextView().setText("22000,-");
+
+        final View view = viewHolder.getView();
+
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Context context = view.getContext();
+                Intent intent = new Intent(context, HistoryActivity.class);
+                intent.putExtra(HistoryActivity.ID, historyList.get(position));
+
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override

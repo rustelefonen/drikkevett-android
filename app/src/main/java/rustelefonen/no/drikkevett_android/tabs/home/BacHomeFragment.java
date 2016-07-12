@@ -230,7 +230,7 @@ public class BacHomeFragment extends Fragment{
         history.setWineCount(7);
         history.setShotCount(8);
         history.setStartDate(new Date());
-        history.setHighestBAC(0.6);
+        history.setHighestBAC(0.4);
         history.setPlannedUnitsCount(10);
         history.setSum(2000);
 

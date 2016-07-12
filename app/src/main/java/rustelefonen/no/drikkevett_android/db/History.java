@@ -8,7 +8,7 @@ import de.greenrobot.dao.DaoException;
 /**
  * Entity mapped to table "HISTORY".
  */
-public class History {
+public class History implements java.io.Serializable {
 
     private Long id;
     private Integer drinkCount;

@@ -32,6 +32,7 @@ public class Main {
         history.addIntProperty("sum");
         history.addDoubleProperty("highestBAC");
         history.addIntProperty("plannedUnitsCount");
+        history.implementsSerializable();
 
         Property historyId = graphHistory.addLongProperty("historyId").notNull().getProperty();
         ToMany historyToGraphHistory = history.addToMany(graphHistory, historyId);
