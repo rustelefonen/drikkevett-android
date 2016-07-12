@@ -1,4 +1,4 @@
-package rustelefonen.no.drikkevett_android.tabs;
+package rustelefonen.no.drikkevett_android.tabs.history;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

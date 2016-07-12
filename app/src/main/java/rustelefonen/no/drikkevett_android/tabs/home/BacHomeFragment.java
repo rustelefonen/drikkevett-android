@@ -78,7 +78,7 @@ public class BacHomeFragment extends Fragment{
         View view = inflater.inflate(R.layout.bac_home_frag, container, false);
         insertUser();
         user = getUser();
-        //addHistory();
+        addHistory();
         initWidgets(view);
         fillWidgets();
         fillPieChart();

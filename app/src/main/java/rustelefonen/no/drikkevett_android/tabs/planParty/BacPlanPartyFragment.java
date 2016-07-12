@@ -1,4 +1,4 @@
-package rustelefonen.no.drikkevett_android.tabs;
+package rustelefonen.no.drikkevett_android.tabs.planParty;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;

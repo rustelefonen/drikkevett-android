@@ -89,16 +89,17 @@ public class BacCalcFragment extends android.support.v4.app.Fragment {
                     labelHours.setText("Promillen om " + hours + " timer");
                 }
                 totalPromille();
-                fillPieChart();
             }
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-
+                System.out.println("kek");
             }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
+                fillPieChart();
+                pieChart.animateY(1400, Easing.EasingOption.EaseInOutQuad);
             }
         });
 
@@ -119,6 +120,7 @@ public class BacCalcFragment extends android.support.v4.app.Fragment {
         String bac = calculateBAC("Mann", 80, countingGrams(beer, wine, drink, shot), hours);
         //labelPromille.setText("" + bac);
         pieChart.setCenterText(Double.valueOf(bac) + PER_MILLE);
+        pieChart.animateY(0, Easing.EasingOption.EaseInOutQuad);
         //labelQuotes.setText(textInQuote(Double.valueOf(bac)));
     }
 
@@ -258,7 +260,7 @@ public class BacCalcFragment extends android.support.v4.app.Fragment {
 
     private int[] getColors() {
         return new int[]{
-                ContextCompat.getColor(getContext(),R.color.beerColor),
+                ContextCompat.getColor(getContext(), R.color.beerColor),
                 ContextCompat.getColor(getContext(), R.color.wineColor),
                 ContextCompat.getColor(getContext(), R.color.drinkColor),
                 ContextCompat.getColor(getContext(), R.color.shotColor)};
@@ -317,6 +319,6 @@ public class BacCalcFragment extends android.support.v4.app.Fragment {
         }
         totalPromille();
         fillPieChart();
-        pieChart.animateY(1400, Easing.EasingOption.EaseOutQuad);
+        pieChart.animateY(1400, Easing.EasingOption.EaseInOutQuad);
     }
 }

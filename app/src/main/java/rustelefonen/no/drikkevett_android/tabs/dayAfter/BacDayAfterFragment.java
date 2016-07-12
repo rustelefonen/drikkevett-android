@@ -1,8 +1,6 @@
-package rustelefonen.no.drikkevett_android.tabs;
+package rustelefonen.no.drikkevett_android.tabs.dayAfter;
 
 import android.app.AlertDialog;
-import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -11,16 +9,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.github.mikephil.charting.animation.Easing;
-
-import rustelefonen.no.drikkevett_android.MainActivity;
 import rustelefonen.no.drikkevett_android.R;
-import rustelefonen.no.drikkevett_android.db.User;
 import rustelefonen.no.drikkevett_android.db.UserDao;
 import rustelefonen.no.drikkevett_android.util.PartyUtil;
 

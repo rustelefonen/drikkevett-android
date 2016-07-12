@@ -3,7 +3,6 @@ package rustelefonen.no.drikkevett_android;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -29,17 +28,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
-import java.util.List;
 
-import rustelefonen.no.drikkevett_android.db.DaoMaster;
-import rustelefonen.no.drikkevett_android.db.DaoSession;
-import rustelefonen.no.drikkevett_android.db.User;
-import rustelefonen.no.drikkevett_android.db.UserDao;
 import rustelefonen.no.drikkevett_android.tabs.calc.BacCalcFragment;
-import rustelefonen.no.drikkevett_android.tabs.BacDayAfterFragment;
-import rustelefonen.no.drikkevett_android.tabs.BacHistoryFragment;
+import rustelefonen.no.drikkevett_android.tabs.dayAfter.BacDayAfterFragment;
+import rustelefonen.no.drikkevett_android.tabs.history.BacHistoryFragment;
 import rustelefonen.no.drikkevett_android.tabs.home.BacHomeFragment;
-import rustelefonen.no.drikkevett_android.tabs.BacPlanPartyFragment;
+import rustelefonen.no.drikkevett_android.tabs.planParty.BacPlanPartyFragment;
 
 public class MainActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener {
 
