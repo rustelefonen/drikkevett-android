@@ -4,7 +4,7 @@ package rustelefonen.no.drikkevett_android.db;
 /**
  * Entity mapped to table "USER".
  */
-public class User {
+public class User implements java.io.Serializable {
 
     private Integer age;
     private Integer beerPrice;

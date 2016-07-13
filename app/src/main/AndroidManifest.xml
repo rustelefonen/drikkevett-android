@@ -33,5 +33,7 @@
             </intent-filter>
 
         </activity>
+        <activity android:name=".intro.AlcoholPricingRegistrationActivity"
+            android:label="Alkoholpriser"/>
     </application>
 </manifest>

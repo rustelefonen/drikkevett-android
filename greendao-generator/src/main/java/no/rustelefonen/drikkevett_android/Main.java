@@ -49,6 +49,7 @@ public class Main {
         userData.addDoubleProperty("goalBAC");
         userData.addStringProperty("nickname");
         userData.addDoubleProperty("weight");
+        userData.implementsSerializable();
 
         Entity planParty = schema.addEntity("PlanPartyElements");
         planParty.addIdProperty();

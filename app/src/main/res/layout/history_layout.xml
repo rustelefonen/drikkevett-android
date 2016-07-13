@@ -74,7 +74,6 @@
                         android:text="0"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/textViewBeerUnits"
                         android:gravity="center"
                         android:layout_gravity="center"
                         android:textSize="32sp"/>
@@ -105,7 +104,6 @@
                         android:text="0"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/textViewWineUnits"
                         android:gravity="center"
                         android:layout_gravity="center"
                         android:textSize="32sp"/>
@@ -135,7 +133,6 @@
                         android:text="0"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/textViewDrinkUnits"
                         android:gravity="center"
                         android:layout_gravity="center"
                         android:textSize="32sp"/>
@@ -164,7 +161,6 @@
                         android:text="0"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/textViewShotUnits"
                         android:layout_gravity="center"
                         android:gravity="center"
                         android:textSize="32sp"/>

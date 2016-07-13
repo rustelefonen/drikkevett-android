@@ -1,5 +1,6 @@
 package rustelefonen.no.drikkevett_android.intro;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -80,10 +81,8 @@ public class UserRegistrationActivity extends AppCompatActivity {
             return;
         }
 
-
-
-
-
-        System.out.println("Kom seg gjennom! " + user.getNickname() + " " + user.getGender() + " " + user.getWeight() + " " + user.getAge());
+        Intent intent = new Intent(this, AlcoholPricingRegistrationActivity.class);
+        intent.putExtra(AlcoholPricingRegistrationActivity.ID, user);
+        startActivity(intent);
     }
 }
