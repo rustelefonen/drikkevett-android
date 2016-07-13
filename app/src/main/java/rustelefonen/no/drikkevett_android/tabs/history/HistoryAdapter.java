@@ -74,7 +74,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         Log.d(TAG, "Element " + position + " set.");
         viewHolder.getTextView().setText(historyList.get(position).getHighestBAC() + "");
         viewHolder.getTextView().setText("22000,-");
-
+        
         final View view = viewHolder.getView();
 
         view.setOnClickListener(new View.OnClickListener() {

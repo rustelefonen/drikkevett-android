@@ -1,12 +1,169 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/backgroundColor">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="LOOOOL"
-        android:textSize="32sp"/>
+        android:orientation="vertical">
 
-</LinearLayout>
+        <android.support.v7.widget.CardView
+            android:id="@+id/history_graph_card_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            card_view:cardBackgroundColor="@color/cardColor"
+            card_view:cardUseCompatPadding="true"
+            card_view:cardElevation="4dp">
+
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/history_line_chart_view"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:padding="16dp"
+                android:layout_gravity="center">
+
+            </com.github.mikephil.charting.charts.LineChart>
+
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            card_view:cardBackgroundColor="@color/cardColor"
+            card_view:cardUseCompatPadding="true"
+            card_view:cardElevation="4dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginTop="20dp"
+                android:padding="16dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_weight="25">
+
+                    <TextView
+                        android:textColor="@color/textColor"
+                        android:text="0"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/textViewBeerUnits"
+                        android:gravity="center"
+                        android:layout_gravity="center"
+                        android:textSize="32sp"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/greyTextColor"
+                        android:textSize="10sp"
+                        android:layout_gravity="center"
+                        android:text="Øl"/>
+                    <LinearLayout
+                        android:layout_marginTop="8dp"
+                        android:layout_width="10dp"
+                        android:layout_height="3dp"
+                        android:layout_gravity="center"
+                        android:background="@color/beerColor"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="25"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:textColor="@color/textColor"
+                        android:text="0"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/textViewWineUnits"
+                        android:gravity="center"
+                        android:layout_gravity="center"
+                        android:textSize="32sp"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="Vin"
+                        android:textSize="10sp"
+                        android:textColor="@color/greyTextColor"/>
+                    <LinearLayout
+                        android:layout_marginTop="8dp"
+                        android:layout_width="10dp"
+                        android:layout_height="3dp"
+                        android:layout_gravity="center"
+                        android:background="@color/wineColor"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="25"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:textColor="@color/textColor"
+                        android:text="0"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/textViewDrinkUnits"
+                        android:gravity="center"
+                        android:layout_gravity="center"
+                        android:textSize="32sp"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/greyTextColor"
+                        android:layout_gravity="center"
+                        android:text="Drink" />
+                    <LinearLayout
+                        android:layout_marginTop="8dp"
+                        android:layout_width="10dp"
+                        android:layout_height="3dp"
+                        android:layout_gravity="center"
+                        android:background="@color/drinkColor"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="25"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:textColor="@color/textColor"
+                        android:text="0"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/textViewShotUnits"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:textSize="32sp"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/greyTextColor"
+                        android:layout_gravity="center"
+                        android:text="Shot"/>
+                    <LinearLayout
+                        android:layout_marginTop="8dp"
+                        android:layout_width="10dp"
+                        android:layout_height="3dp"
+                        android:layout_gravity="center"
+                        android:background="@color/shotColor"/>
+                </LinearLayout>
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+    </LinearLayout>
+</android.support.v4.widget.NestedScrollView>

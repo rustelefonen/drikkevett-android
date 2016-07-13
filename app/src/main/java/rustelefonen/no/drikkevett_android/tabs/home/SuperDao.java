@@ -4,6 +4,7 @@ import android.content.Context;
 
 import rustelefonen.no.drikkevett_android.db.DaoMaster;
 import rustelefonen.no.drikkevett_android.db.DaoSession;
+import rustelefonen.no.drikkevett_android.db.GraphHistoryDao;
 import rustelefonen.no.drikkevett_android.db.HistoryDao;
 import rustelefonen.no.drikkevett_android.db.UserDao;
 
@@ -29,6 +30,10 @@ public class SuperDao {
 
     public UserDao getUserDao() {
         return daoSession.getUserDao();
+    }
+
+    public GraphHistoryDao getGraphHistoryDao() {
+        return daoSession.getGraphHistoryDao();
     }
 
     public void close() {
