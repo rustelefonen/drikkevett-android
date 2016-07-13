@@ -1,7 +1,9 @@
 package rustelefonen.no.drikkevett_android.tabs.history;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
@@ -83,6 +85,15 @@ public class HistoryActivity extends AppCompatActivity {
         lineChart.setData(getLineData());
         lineChart.setDescription("");
         lineChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+        int textColor = ContextCompat.getColor(this, R.color.textColor);
+        lineChart.getXAxis().setTextColor(textColor);
+        lineChart.getAxisLeft().setTextColor(textColor);
+        lineChart.getAxisRight().setEnabled(false);
+        lineChart.getAxisRight().setDrawGridLines(false);
+        lineChart.getAxisLeft().setDrawGridLines(false);
+        lineChart.getXAxis().setDrawGridLines(false);
+        lineChart.getLegend().setEnabled(false);
+        lineChart.setVisibleXRange(3, 3);
         lineChart.animateY(1400, Easing.EasingOption.EaseInOutQuad);
     }
 
@@ -111,7 +122,15 @@ public class HistoryActivity extends AppCompatActivity {
         LineDataSet dataset = new LineDataSet(entries, "# of Calls");
 
         dataset.setDrawFilled(true);
-        dataset.setColors(ColorTemplate.COLORFUL_COLORS);
+        dataset.setDrawHighlightIndicators(false);
+        dataset.setDrawCircleHole(true);
+        dataset.setDrawValues(false);
+        dataset.setCircleRadius(5f);
+        //dataset.setCircleHoleRadius(3f);
+        //dataset.setCircleColorHole(Color.RED);
+        dataset.setCircleColor(ContextCompat.getColor(this, R.color.textColor));
+        dataset.setFillColor(ContextCompat.getColor(this, R.color.historyLineChartGreen));
+        dataset.setColor(ContextCompat.getColor(this, R.color.historyLineChartGreen));
         dataset.setMode(LineDataSet.Mode.CUBIC_BEZIER);
 
         return new LineData(labels, dataset);

@@ -15,4 +15,5 @@
     <color name="shotColor">#B97BFC</color>
     <color name="greyTextColor">#787878</color>
     <color name="historyRed">#FC5353</color>
+    <color name="historyLineChartGreen">#53A964</color>
 </resources>
