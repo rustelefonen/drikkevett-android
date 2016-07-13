@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/backgroundColor">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        card_view:cardBackgroundColor="@color/cardColor"
+        card_view:cardUseCompatPadding="true"
+        card_view:cardElevation="4dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="32dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/textColor"
+                android:textSize="32sp"
+                android:text="Brukerregistrering"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_marginBottom="16dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/greyTextColor"
+                android:textSize="24sp"
+                android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec finibus odio feugiat, dictum metus id, porttitor metus. Nam pharetra nulla at lacus tincidunt congue."
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_marginBottom="16dp"/>
+
+            <EditText
+                android:id="@+id/user_reg_nickname_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_person_black_24dp"
+                android:hint="Kallenavn"
+                android:textColorHint="@color/greyTextColor"
+                android:textColor="@color/backgroundColor"
+                android:background="@color/textColor"
+                android:textSize="24sp"
+                android:layout_marginBottom="16dp"
+                android:maxLines="1"
+                android:imeOptions="actionNext"
+                android:lines="1"/>
+
+            <AutoCompleteTextView
+                android:id="@+id/user_reg_gender_auto_complete_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_android_black_24dp"
+                android:background="@color/textColor"
+                android:hint="Kjønn"
+                android:textColorHint="@color/greyTextColor"
+                android:textSize="24sp"
+                android:layout_marginBottom="16dp"/>
+
+            <EditText
+                android:id="@+id/user_reg_weight_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_android_black_24dp"
+                android:background="@color/textColor"
+                android:hint="Vekt"
+                android:textColorHint="@color/greyTextColor"
+                android:textSize="24sp"
+                android:layout_marginBottom="16dp"
+                android:inputType="numberDecimal"/>
+            <EditText
+                android:id="@+id/user_reg_age_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_android_black_24dp"
+                android:background="@color/textColor"
+                android:hint="Alder"
+                android:textColorHint="@color/greyTextColor"
+                android:textSize="24sp"
+                android:layout_marginBottom="16dp"
+                android:inputType="number"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Neste"
+                    android:background="@color/greenSuper"
+                    android:textColor="@color/textColor"
+                    android:layout_alignParentRight="true"
+                    android:onClick="next"/>
+            </RelativeLayout>
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+</android.support.v4.widget.NestedScrollView>

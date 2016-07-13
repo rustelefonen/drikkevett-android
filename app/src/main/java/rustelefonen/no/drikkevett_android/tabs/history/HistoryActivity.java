@@ -1,6 +1,5 @@
 package rustelefonen.no.drikkevett_android.tabs.history;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -14,7 +13,6 @@ import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -25,7 +23,6 @@ import rustelefonen.no.drikkevett_android.R;
 import rustelefonen.no.drikkevett_android.db.GraphHistory;
 import rustelefonen.no.drikkevett_android.db.GraphHistoryDao;
 import rustelefonen.no.drikkevett_android.db.History;
-import rustelefonen.no.drikkevett_android.db.HistoryDao;
 import rustelefonen.no.drikkevett_android.tabs.home.SuperDao;
 
 /**
@@ -77,9 +74,6 @@ public class HistoryActivity extends AppCompatActivity {
         graphHistories = graphHistoryDao.queryBuilder().where(GraphHistoryDao.Properties.HistoryId.eq(history.getId())).list();
 
         superDao.close();
-
-        //You can use chart.setVisibleXRange(10) to show only 10 values maximum.
-
 
         lineChart = (LineChart) findViewById(R.id.history_line_chart_view);
         lineChart.setData(getLineData());
