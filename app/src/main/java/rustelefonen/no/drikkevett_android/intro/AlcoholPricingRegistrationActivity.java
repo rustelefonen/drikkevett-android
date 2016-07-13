@@ -1,5 +1,6 @@
 package rustelefonen.no.drikkevett_android.intro;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -8,7 +9,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import rustelefonen.no.drikkevett_android.R;
-import rustelefonen.no.drikkevett_android.db.History;
 import rustelefonen.no.drikkevett_android.db.User;
 
 /**
@@ -39,7 +39,6 @@ public class AlcoholPricingRegistrationActivity extends AppCompatActivity {
         Object tmpUser = getIntent().getSerializableExtra(ID);
         if (tmpUser != null && tmpUser instanceof User) {
             user = (User) tmpUser;
-            System.out.println(user.getAge());
         }
     }
 
@@ -85,8 +84,9 @@ public class AlcoholPricingRegistrationActivity extends AppCompatActivity {
             user.setShotPrice(shotPrice);
         }
 
-        System.out.println("Kom seg gjennom!");
-        System.out.println(user.getBeerPrice() + " " + user.getWinePrice() + " " + user.getDrinkPrice() + " " + user.getShotPrice() + " ");
+        Intent intent = new Intent(this, GoalRegistrationActivity.class);
+        intent.putExtra(GoalRegistrationActivity.ID, user);
+        startActivity(intent);
     }
 
     public void setDefault(View view) {

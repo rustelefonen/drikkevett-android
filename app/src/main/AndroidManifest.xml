@@ -35,5 +35,7 @@
         </activity>
         <activity android:name=".intro.AlcoholPricingRegistrationActivity"
             android:label="Alkoholpriser"/>
+        <activity android:name=".intro.GoalRegistrationActivity"
+            android:label="Målsetning"/>
     </application>
 </manifest>
