@@ -84,4 +84,17 @@ public class PartyUtil {
         long diffInMillies = date2.getTime() - date1.getTime();
         return timeUnit.convert(diffInMillies,TimeUnit.MILLISECONDS);
     }
+
+    public static double setGenderScore(String gender){
+        double genderScore = 0.0;
+
+        if(gender.equals("Mann")){
+            genderScore = 0.70;
+        }
+        if(gender.equals("Kvinne")){
+            genderScore = 0.60;
+        }
+
+        return genderScore;
+    }
 }

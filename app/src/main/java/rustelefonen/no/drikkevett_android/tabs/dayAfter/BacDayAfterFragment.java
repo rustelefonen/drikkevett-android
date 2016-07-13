@@ -14,10 +14,15 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import rustelefonen.no.drikkevett_android.R;
+import rustelefonen.no.drikkevett_android.db.History;
+import rustelefonen.no.drikkevett_android.db.HistoryDao;
 import rustelefonen.no.drikkevett_android.db.UserDao;
+import rustelefonen.no.drikkevett_android.util.CustomTimePickerDialog;
 import rustelefonen.no.drikkevett_android.util.PartyUtil;
 
+import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -31,11 +36,16 @@ import rustelefonen.no.drikkevett_android.db.PlanPartyElements;
 import rustelefonen.no.drikkevett_android.db.PlanPartyElementsDao;
 
 import static rustelefonen.no.drikkevett_android.util.PartyUtil.getDateDiff;
+import static rustelefonen.no.drikkevett_android.util.PartyUtil.setGenderScore;
 
 public class BacDayAfterFragment extends Fragment {
     /*
     * ATTRIBUTES
     * */
+    // user data:
+    double weight = 80.0;
+    String gender = "Mann";
+
     int planBeers = 0;
     int planWines = 0;
     int planDrink = 0;
@@ -76,7 +86,7 @@ public class BacDayAfterFragment extends Fragment {
 
     public TextView costsLbl;
     public TextView highBACLbl;
-    public TextView currBAC;
+    public TextView currBACLbl;
 
     // BUTTONS
     public Button btnEndDA;
@@ -104,23 +114,13 @@ public class BacDayAfterFragment extends Fragment {
             }
         });
 
-        // AFTER REGISTRATION
+        // REGISTRATION
 
         // beer
         beerBtnAfterReg_DA.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setTitle("Time Picker");
-                builder.setIcon(R.mipmap.ic_launcher);
-                final Calendar calendar = Calendar.getInstance();
-                TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker timePicker, int i, int i1) {
-                        Toast.makeText(getContext(), i + ":" + i1, Toast.LENGTH_SHORT).show();
-                    }
-                }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), false);
-                timePickerDialog.show();
+                dateShitter();
             }
         });
 
@@ -128,7 +128,8 @@ public class BacDayAfterFragment extends Fragment {
         wineBtnAfterReg_DA.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Date some = setDate(2, 2, 1);
+                System.out.println("SetDate: " + some);
             }
         });
 
@@ -218,30 +219,14 @@ public class BacDayAfterFragment extends Fragment {
         return tempStatus;
     }
 
-    /*
-    *
-    * */
-
     private void planPartyRunning(){
         setVisualsPP();
     }
 
     private void dayAfterRunning(){
         getUnits();
+        setStats();
         setVisualsDA();
-        setBACValues();
-
-        // Calculating total costs
-        costs = calculateCosts(consumBeers, consumWines, consumDrink, consumShots);
-
-        // Calculating current BAC
-        currentBAC = getCurrentBAC(80.0, "Mann", new Date());
-
-        // Calculating/Fetching current highest BAC
-        // highestBAC = method2();
-
-        System.out.println("Planlagte ØL: " + planBeers + " Planlagte VIN: " + planWines + " Planlagte DRINK: " + planDrink + " Planlagte SHOT: " + planShots);
-        System.out.println("Drukkete ØL: " + consumBeers + " Drukkete VIN: " + consumWines + " Drukkede DRINK: " + consumDrink + " Drukkede SHOT: " + consumShots);
     }
 
     private void clearUnitVariabels(){
@@ -265,9 +250,7 @@ public class BacDayAfterFragment extends Fragment {
     * DATABASE COMMUNICATION METHODS
     * */
 
-    private void getUnits(){
-        clearUnitVariabels();
-
+    private DaoSession getSesDB(){
         String DB_NAME = "my-db";
         SQLiteDatabase db;
 
@@ -278,8 +261,21 @@ public class BacDayAfterFragment extends Fragment {
         DaoMaster daoMaster = new DaoMaster(db);
         DaoSession daoSession = daoMaster.newSession();
 
-        PlanPartyElementsDao partyDao = daoSession.getPlanPartyElementsDao();
-        DayAfterBACDao dayAfterDao = daoSession.getDayAfterBACDao();
+        return daoSession;
+    }
+
+    private Date getFirstUnAddedStamp(){
+        PlanPartyElementsDao partyDao = getSesDB().getPlanPartyElementsDao();
+        List<PlanPartyElements> planPList = partyDao.queryBuilder().list();
+        PlanPartyElements lastElement = planPList.get(planPList.size() - 1);
+        return lastElement.getFirstUnitAddedDate();
+    }
+
+    private void getUnits(){
+        clearUnitVariabels();
+
+        PlanPartyElementsDao partyDao = getSesDB().getPlanPartyElementsDao();
+        DayAfterBACDao dayAfterDao = getSesDB().getDayAfterBACDao();
 
         // GET elements to temporary store them in variables then re-saving them
         List<PlanPartyElements> partyList = partyDao.queryBuilder().list();
@@ -309,7 +305,10 @@ public class BacDayAfterFragment extends Fragment {
     }
 
     private double getHighestBAC(){
-        return 0.0;
+        HistoryDao historyDao = getSesDB().getHistoryDao();
+        List<History> histList = historyDao.queryBuilder().list();
+        History lastElement = histList.get(histList.size() -1);
+        return lastElement.getHighestBAC();
     }
 
     private double getCurrentBAC(double weight, String gender, Date firstUnitAddedTimeStamp){
@@ -321,7 +320,6 @@ public class BacDayAfterFragment extends Fragment {
         consumShots = 0;
 
         DayAfterBACDao dayAfterDao = setDaoSessionDB().getDayAfterBACDao();
-
         List<DayAfterBAC> dayAfterBACList = dayAfterDao.queryBuilder().list();
 
         for (DayAfterBAC dayAfter : dayAfterBACList) {
@@ -396,32 +394,9 @@ public class BacDayAfterFragment extends Fragment {
         return (beerUnits * beerGrams) + (wineUnits * wineGrams) + (drinkUnits * drinkGrams) + (shotUnits * shotGrams);
     }
 
-    public double setGenderScore(String gender){
-        double genderScore = 0.0;
-
-        if(gender.equals("Mann")){
-            genderScore = 0.70;
-        }
-        if(gender.equals("Kvinne")){
-            genderScore = 0.60;
-        }
-
-        return genderScore;
-    }
-
     private void clearDBTables(){
-        String DB_NAME = "my-db";
-        SQLiteDatabase db;
-
-        SQLiteDatabase.CursorFactory cursorFactory = null;
-        final DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(getContext(), DB_NAME, cursorFactory);
-        db = helper.getWritableDatabase();
-
-        DaoMaster daoMaster = new DaoMaster(db);
-        DaoSession daoSession = daoMaster.newSession();
-
-        PlanPartyElementsDao partyDao = daoSession.getPlanPartyElementsDao();
-        DayAfterBACDao dayAfterDao = daoSession.getDayAfterBACDao();
+        PlanPartyElementsDao partyDao = getSesDB().getPlanPartyElementsDao();
+        DayAfterBACDao dayAfterDao = getSesDB().getDayAfterBACDao();
 
         List<DayAfterBAC> dayAfterBACList = dayAfterDao.queryBuilder().list();
         for (DayAfterBAC dayAfter : dayAfterBACList) {
@@ -489,17 +464,81 @@ public class BacDayAfterFragment extends Fragment {
         return daoSession;
     }
 
-    private void setBACValues(){
-        System.out.println("REGN UT PROMILLE OG HØYESTE PROMILLE!");
+    private void setStats(){
+        // Calculating total costs
+        costs = calculateCosts(consumBeers, consumWines, consumDrink, consumShots);
+
+        // Calculating current BAC
+        currentBAC = getCurrentBAC(weight, gender, getFirstUnAddedStamp());
+
+        // Calculating/Fetching current highest BAC
+        highestBAC = getHighestBAC();
+    }
+
+    /*
+    * REGISTRATION ( OF FORGOTTEN UNITS )
+    * */
+
+    private void dateShitter(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Time Picker");
+        builder.setIcon(R.mipmap.ic_launcher);
+        final Calendar calendar = Calendar.getInstance();
+        TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker timePicker, int i, int i1) {
+                Toast.makeText(getContext(), i + ":" + i1, Toast.LENGTH_SHORT).show();
+            }
+        }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), false);
+        timePickerDialog.show();
+    }
+
+    private Date setUnitAfterRegDate(int hours, int minutes){
+        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+        Date date = new Date();
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+
+        calendar.add(Calendar.HOUR, -hours);
+        calendar.add(Calendar.MINUTE, -minutes);
+
+        date = calendar.getTime();
+        return date;
+    }
+
+    public static Date setDate(int day, int hour, int minute) {
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.DAY_OF_MONTH, day);
+        cal.set(Calendar.HOUR_OF_DAY, hour);
+        cal.set(Calendar.MINUTE, minute);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        return cal.getTime();
     }
 
     /*
     * WIDGETS
     * */
-    private void changeEndBtnText(Status status){
-        if(status.equals(Status.DA_RUNNING)){
 
-        }
+    private void setVisibility(int visibility){
+        // Units
+        beerLbl.setVisibility(visibility);
+        wineLbl.setVisibility(visibility);
+        drinkLbl.setVisibility(visibility);
+        shotLbl.setVisibility(visibility);
+
+        // Stats
+        costsLbl.setVisibility(visibility);
+        highBACLbl.setVisibility(visibility);
+        currBACLbl.setVisibility(visibility);
+
+        // Buttons
+        btnEndDA.setVisibility(visibility);
+        beerBtnAfterReg_DA.setVisibility(visibility);
+        wineBtnAfterReg_DA.setVisibility(visibility);
+        drinkBtnAfterReg_DA.setVisibility(visibility);
+        shotBtnAfterReg_DA.setVisibility(visibility);
     }
 
     private void setVisualsPP(){
@@ -508,16 +547,11 @@ public class BacDayAfterFragment extends Fragment {
 
         titleLbl.setText("Planlegg Kvelden pågår");
 
-        beerLbl.setText(consumBeers + "\nØL");
-        wineLbl.setText(consumWines + "\nVin");
-        drinkLbl.setText(consumDrink + "\nDrink");
-        shotLbl.setText(consumShots + "\nShot");
-
-        costsLbl.setText(costs + ",-\nForbruk");
+        setVisibility(View.GONE);
     }
 
     private void setVisualsDA(){
-        btnEndDA.setVisibility(View.VISIBLE);
+        setVisibility(View.VISIBLE);
 
         titleLbl.setText("Dagen Derpå pågår");
 
@@ -527,6 +561,8 @@ public class BacDayAfterFragment extends Fragment {
         shotLbl.setText(consumShots + "\nShot");
 
         costsLbl.setText(costs + ",-\nForbruk");
+        highBACLbl.setText(highestBAC + "\nHøyeste\nPromille");
+        currBACLbl.setText(currentBAC + "\nNåværende\nPromille");
     }
 
     private void initWidgets(){
@@ -539,7 +575,7 @@ public class BacDayAfterFragment extends Fragment {
 
         costsLbl = (TextView) v.findViewById(R.id.txtViewCosts_DA);
         highBACLbl = (TextView) v.findViewById(R.id.txtViewHighestBAC_DA);
-        currBAC = (TextView) v.findViewById(R.id.txtViewCurrBAC_DA);
+        currBACLbl = (TextView) v.findViewById(R.id.txtViewCurrBAC_DA);
 
         // BUTTONS
         btnEndDA = (Button) v.findViewById(R.id.btnEndDayAfter);
