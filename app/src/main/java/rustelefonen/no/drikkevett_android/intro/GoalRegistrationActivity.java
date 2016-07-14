@@ -2,6 +2,7 @@ package rustelefonen.no.drikkevett_android.intro;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.DialogFragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -30,13 +31,10 @@ public class GoalRegistrationActivity extends AppCompatActivity {
     public EditText bacEditText;
     public EditText dateEditText;
 
-    private Calendar myCalendar;
 
     private User user;
 
-    int day_x;
-    int month_x;
-    int year_x;
+
 
 
 
@@ -56,27 +54,15 @@ public class GoalRegistrationActivity extends AppCompatActivity {
         dateEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showDialog(DIALOG_ID);
+                DialogFragment picker = new IntroDatepickerFragment();
+                picker.show(getFragmentManager(), "datePicker");
             }
         });
 
     }
 
-    @Override
-    protected Dialog onCreateDialog(int id) {
-        if (id == DIALOG_ID) {
-            return new DatePickerDialog(this, dpickerListener, year_x, month_x, day_x);
-        }
-        return null;
-    }
 
-    private DatePickerDialog.OnDateSetListener dpickerListener = new DatePickerDialog.OnDateSetListener() {
-        @Override
-        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-            year_x = year;
-            month_x = monthOfYear;
-            day_x = dayOfMonth;
-        }};
+
 
     public void showDialog() {
 
