@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,6 +36,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import rustelefonen.no.drikkevett_android.MainActivity;
 import rustelefonen.no.drikkevett_android.R;
 import rustelefonen.no.drikkevett_android.db.History;
 import rustelefonen.no.drikkevett_android.db.HistoryDao;
@@ -54,7 +56,6 @@ public class BacHomeFragment extends Fragment{
     //Fields
     public final String APP_TAG = "MyCustomApp";
     public String photoFileName = "photo.jpg";
-    private User user;
 
     //Widgets
     public TextView quoteTextView;
@@ -76,8 +77,30 @@ public class BacHomeFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.bac_home_frag, container, false);
-        insertUser();
-        user = getUser();
+
+        if (((MainActivity)getActivity()).getUser() == null) {
+            System.out.println("brukern er null i home");
+        } else {
+            System.out.println("brukern er ikke null i home");
+        }
+
+        User user = ((MainActivity)getActivity()).getUser();
+
+        System.out.println(user.getNickname());
+        System.out.println(user.getGender());
+        System.out.println(user.getWeight());
+        System.out.println(user.getAge());
+        System.out.println(user.getBeerPrice());
+        System.out.println(user.getWinePrice());
+        System.out.println(user.getDrinkPrice());
+        System.out.println(user.getShotPrice());
+        System.out.println(user.getGoalBAC());
+        System.out.println(user.getGoalDate());
+
+
+
+        System.out.println(((MainActivity)getActivity()).getUser().getGoalBAC());
+        //user = getUser();
         addHistory();
         initWidgets(view);
         fillWidgets();
@@ -135,25 +158,13 @@ public class BacHomeFragment extends Fragment{
     }
 
     private String getUsername() {
+        User user = ((MainActivity)getActivity()).getUser();
         if (user == null) return "Tom bruker";
 
         if (user.getNickname() == null || user.getNickname().isEmpty()) return "Tom bruker";
 
         return user.getNickname();
 
-    }
-
-    private User getUser() {
-        SuperDao superDao = new SuperDao(getContext());
-        UserDao userDao = superDao.getUserDao();
-
-        List<User> userList = userDao.queryBuilder().list();
-        superDao.close();
-        if (userList.size() <= 0) {
-            return null;
-        } else {
-            return userList.get(0);
-        }
     }
 
     private void initWidgets(View view) {
@@ -175,6 +186,7 @@ public class BacHomeFragment extends Fragment{
     }
 
     private void fillWidgets() {
+        User user = ((MainActivity)getActivity()).getUser();
         quoteTextView.setText(getRandomQuote());
         imageTextView.setText(user.getNickname());
         insertImageIfExists();
@@ -197,19 +209,6 @@ public class BacHomeFragment extends Fragment{
         BarChartController chartController = new BarChartController(historyBarChart, user, getHistoryList());
         chartController.setData();
         chartController.styleBarChart();
-    }
-
-    private void insertUser() {
-        SuperDao superDao = new SuperDao(getContext());
-        UserDao userDao = superDao.getUserDao();
-
-        User newUser = new User();
-        newUser.setAge(14);
-        newUser.setNickname("fonsim");
-        newUser.setGoalBAC(0.4);
-
-        userDao.insert(newUser);
-        superDao.close();
     }
 
     private List<History> getHistoryList() {
@@ -241,7 +240,7 @@ public class BacHomeFragment extends Fragment{
     private void fillPieChart() {
         List<History> historyList = getHistoryList();
 
-        double goal = user.getGoalBAC();
+        double goal = ((MainActivity)getActivity()).getUser().getGoalBAC();
         double overGoal = 0.0;
         double underGoal = 0.0;
 
@@ -272,6 +271,7 @@ public class BacHomeFragment extends Fragment{
     }
 
     private void stylePieChart() {
+        User user = ((MainActivity)getActivity()).getUser();
         if (user != null) goalPieChart.setCenterText(user.getGoalBAC() +"");
         goalPieChart.setDrawHoleEnabled(true);
         goalPieChart.setHoleRadius(80f);

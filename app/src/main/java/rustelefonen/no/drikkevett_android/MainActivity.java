@@ -28,14 +28,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.util.List;
 
+import rustelefonen.no.drikkevett_android.db.User;
+import rustelefonen.no.drikkevett_android.db.UserDao;
 import rustelefonen.no.drikkevett_android.tabs.calc.BacCalcFragment;
 import rustelefonen.no.drikkevett_android.tabs.dayAfter.BacDayAfterFragment;
 import rustelefonen.no.drikkevett_android.tabs.history.BacHistoryFragment;
 import rustelefonen.no.drikkevett_android.tabs.home.BacHomeFragment;
+import rustelefonen.no.drikkevett_android.tabs.home.SuperDao;
 import rustelefonen.no.drikkevett_android.tabs.planParty.BacPlanPartyFragment;
 
 public class MainActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener {
+
+    public static final String ID = "MainActivity";
 
     //Fields
     private SectionsPagerAdapter mSectionsPagerAdapter;
@@ -49,21 +55,43 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
     public ImageView profileImage;
 
+    private User user;
+
+    public User getUser() {
+        return user;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        SuperDao superDao = new SuperDao(this);
+        UserDao userDao = superDao.getUserDao();
+        List<User> users = userDao.queryBuilder().list();
+        superDao.close();
+
+        if (users.size() <= 0) {
+            System.out.println("Ingen brukere...");
+            return;
+        } else {
+            System.out.println("userCount: " + users.size());
+        }
+        User tmpUser = users.get(0);
+        if (tmpUser == null) {
+            System.out.println("Brukern er null");
+            return;
+        } else {
+            System.out.println("Brukern er ikke null");
+        }
+        user = tmpUser;
+
         LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        //RelativeLayout relativeLayout = (RelativeLayout) inflater.inflate(R.layout.bac_home_frag, null);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
-        // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
@@ -82,38 +110,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         onPageSelected(0);
 
 
-
-
-
-
-        //profileImage = (ImageView) relativeLayout.findViewById(R.id.profile_image);
-
-        /*Uri photoToInsert = getPhotoFileUri(photoFileName);
-
-        String dir = photoToInsert.getPath().replace("/photo.jpg", "");
-        File photoFolder = new File(dir);
-
-        System.out.println("alle filer");
-
-        System.out.println(photoToInsert.getPath());
-        for (File file : photoFolder.listFiles()) {
-            System.out.println(file.getName());
-        }
-
-        if (photoToInsert != null) {
-
-            System.out.println("har bilde der: " + hasImageAtPath(photoToInsert.getPath()));
-
-            Uri takenPhotoUri = getPhotoFileUri(photoFileName);
-
-            Bitmap takenImage = BitmapFactory.decodeFile(takenPhotoUri.getPath());
-            System.out.println("bitmap count: " + takenImage.getByteCount());
-            //profileImage.setImageBitmap(takenImage);
-
-            ImageView ivPreview = (ImageView) relativeLayout.findViewById(R.id.profile_image);
-            ivPreview.setImageBitmap(takenImage);
-            System.out.println("Prøver å sette inn bilde");
-        }*/
     }
 
 
@@ -301,4 +297,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
             return "";
         }
     }
+
+
 }

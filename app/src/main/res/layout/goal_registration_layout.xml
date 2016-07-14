@@ -50,7 +50,7 @@
                 android:background="@color/textColor"
                 android:textSize="24sp"
                 android:layout_marginBottom="16dp"
-                android:inputType="number"/>
+                android:inputType="numberDecimal" />
 
             <EditText
                 android:id="@+id/goal_reg_date_edit_text"
@@ -63,7 +63,8 @@
                 android:background="@color/textColor"
                 android:textSize="24sp"
                 android:layout_marginBottom="16dp"
-                android:focusable="false"/>
+                android:focusable="false"
+                android:onClick="showDialog"/>
 
             <RelativeLayout
                 android:layout_width="match_parent"

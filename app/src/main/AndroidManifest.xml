@@ -27,15 +27,18 @@
         <activity
             android:name=".intro.UserRegistrationActivity"
             android:label="Brukerregistrering">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
 
         </activity>
         <activity android:name=".intro.AlcoholPricingRegistrationActivity"
             android:label="Alkoholpriser"/>
         <activity android:name=".intro.GoalRegistrationActivity"
             android:label="Målsetning"/>
+        <activity android:name=".LauncherActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 </manifest>
