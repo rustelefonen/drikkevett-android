@@ -141,18 +141,6 @@ public class BacPlanPartyFragment extends Fragment {
         return v;
     }
 
-    public void delayedLivePromille(){
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if(firstUnitAdded != null){
-                    promilleBAC = Double.parseDouble(liveUpdatePromille(weight, gender, firstUnitAdded));
-                    promilleLbl.setText("" + promilleBAC);
-                }
-            }
-        }, 5000);
-    }
-
     @Override
     public void onResume(){
         super.onResume();
@@ -220,7 +208,6 @@ public class BacPlanPartyFragment extends Fragment {
         if(firstUnitAdded != null){
             promilleBAC = Double.parseDouble(liveUpdatePromille(weight, gender, firstUnitAdded)) ;
         }
-        delayedLivePromille();
 
         promilleLbl.setText("" + promilleBAC);
         textQuoteLbl.setText(textInQuote(promilleBAC));
@@ -251,7 +238,7 @@ public class BacPlanPartyFragment extends Fragment {
         drinkLbl.setText(plannedDrinks + "\nDrink");
         shotLbl.setText(plannedShots + "\nShot");
 
-        promilleLbl.setText(promilleBAC + "");
+        promilleLbl.setText("0.00");
     }
 
     private void dayAfterRunning(){
@@ -369,15 +356,18 @@ public class BacPlanPartyFragment extends Fragment {
     private void statusDA_Running(PlanPartyElementsDao partyDao){
         List<PlanPartyElements> PlanPartyList = partyDao.queryBuilder().list();
 
-        for (PlanPartyElements party : PlanPartyList) {
-            plannedBeers = party.getPlannedBeer();
-            plannedWines = party.getPlannedWine();
-            plannedDrinks = party.getPlannedDrink();
-            plannedShots = party.getPlannedShot();
-            startTimeStamp = party.getStartTimeStamp();
-            endTimeStamp = new Date();
-            firstUnitAdded = party.getFirstUnitAddedDate();
-        }
+        PlanPartyElements lastElement = PlanPartyList.get(PlanPartyList.size() - 1);
+
+        System.out.println("End Date BEFORE: " + lastElement.getEndTimeStamp());
+        plannedBeers = lastElement.getPlannedBeer();
+        plannedWines = lastElement.getPlannedWine();
+        plannedDrinks = lastElement.getPlannedDrink();
+        plannedShots = lastElement.getPlannedShot();
+        startTimeStamp = lastElement.getStartTimeStamp();
+        endTimeStamp = new Date();
+        firstUnitAdded = lastElement.getFirstUnitAddedDate();
+
+        System.out.println("Planlegg Kvelden: (Avslutt kvelden trykket: EndSes: " + endTimeStamp + ") + (StartSes: + " + startTimeStamp + ")");
         // send to graphHistory (values needed for the Graph)
         handleGraphHistory();
     }
