@@ -3,17 +3,22 @@ package rustelefonen.no.drikkevett_android;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -32,6 +37,7 @@ import java.util.List;
 
 import rustelefonen.no.drikkevett_android.db.User;
 import rustelefonen.no.drikkevett_android.db.UserDao;
+import rustelefonen.no.drikkevett_android.settings.UserSettingsActivity;
 import rustelefonen.no.drikkevett_android.tabs.calc.BacCalcFragment;
 import rustelefonen.no.drikkevett_android.tabs.dayAfter.BacDayAfterFragment;
 import rustelefonen.no.drikkevett_android.tabs.history.BacHistoryFragment;
@@ -57,14 +63,92 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
     private User user;
 
+    private DrawerLayout mDrawer;
+    private Toolbar toolbar;
+    private NavigationView nvDrawer;
+    private ActionBarDrawerToggle drawerToggle;
+
     public User getUser() {
         return user;
+    }
+
+    private ActionBarDrawerToggle setupDrawerToggle() {
+        return new ActionBarDrawerToggle(this, mDrawer, toolbar, R.string.drawer_open,  R.string.drawer_close);
+    }
+
+    // `onPostCreate` called when activity start-up is complete after `onStart()`
+    // NOTE! Make sure to override the method with only a single `Bundle` argument
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        drawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        // Pass any configuration change to the drawer toggles
+        drawerToggle.onConfigurationChanged(newConfig);
+    }
+
+
+    public void selectDrawerItem(MenuItem menuItem) {
+        Intent intent;
+        switch(menuItem.getItemId()) {
+            case R.id.nav_first_fragment:
+                intent = new Intent(this, UserSettingsActivity.class);
+                break;
+            case R.id.nav_second_fragment:
+                intent = new Intent(this, UserSettingsActivity.class);
+                break;
+            case R.id.nav_third_fragment:
+                intent = new Intent(this, UserSettingsActivity.class);
+                break;
+            default:
+                intent = new Intent(this, UserSettingsActivity.class);
+        }
+
+        // Highlight the selected item has been done by NavigationView
+        menuItem.setChecked(true);
+        // Set action bar title
+        //setTitle(menuItem.getTitle());
+        // Close the navigation drawer
+        mDrawer.closeDrawers();
+
+        startActivity(intent);
+    }
+
+    private void setupDrawerContent(NavigationView navigationView) {
+        navigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(MenuItem menuItem) {
+                        selectDrawerItem(menuItem);
+                        return true;
+                    }
+                });
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Set a Toolbar to replace the ActionBar.
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        // Find our drawer view
+        mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        // Tie DrawerLayout events to the ActionBarToggle
+        mDrawer.addDrawerListener(drawerToggle);
+
+        nvDrawer = (NavigationView) findViewById(R.id.nvView);
+
+        setupDrawerContent(nvDrawer);
+
+        drawerToggle = setupDrawerToggle();
 
         SuperDao superDao = new SuperDao(this);
         UserDao userDao = superDao.getUserDao();
@@ -73,14 +157,12 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
         if (users.size() <= 0) {
             System.out.println("Ingen brukere...");
-            return;
         } else {
             System.out.println("userCount: " + users.size());
         }
         User tmpUser = users.get(0);
         if (tmpUser == null) {
             System.out.println("Brukern er null");
-            return;
         } else {
             System.out.println("Brukern er ikke null");
         }
@@ -112,8 +194,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
     }
 
-
-
     @Override
     protected void onStart() {
         super.onStart();
@@ -138,17 +218,17 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             startActivity(new Intent(this, Settings.class));
             return true;
+        } else if (id == android.R.id.home) {
+            mDrawer.openDrawer(GravityCompat.START);
+            return true;
         }
-
+        if (drawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -208,9 +288,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     }
 
     @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-    }
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
 
     @Override
     public void onPageSelected(int position) {

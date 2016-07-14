@@ -77,30 +77,6 @@ public class BacHomeFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.bac_home_frag, container, false);
-
-        if (((MainActivity)getActivity()).getUser() == null) {
-            System.out.println("brukern er null i home");
-        } else {
-            System.out.println("brukern er ikke null i home");
-        }
-
-        User user = ((MainActivity)getActivity()).getUser();
-
-        System.out.println(user.getNickname());
-        System.out.println(user.getGender());
-        System.out.println(user.getWeight());
-        System.out.println(user.getAge());
-        System.out.println(user.getBeerPrice());
-        System.out.println(user.getWinePrice());
-        System.out.println(user.getDrinkPrice());
-        System.out.println(user.getShotPrice());
-        System.out.println(user.getGoalBAC());
-        System.out.println(user.getGoalDate());
-
-
-
-        System.out.println(((MainActivity)getActivity()).getUser().getGoalBAC());
-        //user = getUser();
         addHistory();
         initWidgets(view);
         fillWidgets();
