@@ -4,7 +4,8 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_first_fragment"
-            android:title="Endre din bruker" />
+            android:title="Endre din bruker"
+            android:icon="@drawable/ic_person_black_24dp"/>
         <item
             android:id="@+id/nav_second_fragment"
             android:title="Endre ditt mål" />
