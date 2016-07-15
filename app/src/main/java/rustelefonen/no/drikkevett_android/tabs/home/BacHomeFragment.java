@@ -77,7 +77,7 @@ public class BacHomeFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.bac_home_frag, container, false);
-        addHistory();
+        //addHistory();
         initWidgets(view);
         fillWidgets();
         fillPieChart();
@@ -140,7 +140,6 @@ public class BacHomeFragment extends Fragment{
         if (user.getNickname() == null || user.getNickname().isEmpty()) return "Tom bruker";
 
         return user.getNickname();
-
     }
 
     private void initWidgets(View view) {

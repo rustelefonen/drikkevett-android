@@ -1,5 +1,8 @@
 package rustelefonen.no.drikkevett_android.util;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -96,5 +99,18 @@ public class PartyUtil {
         }
 
         return genderScore;
+    }
+
+    public static Date addMinsToDate(int minutes){
+        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+        Date date = new Date();
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+
+        calendar.add(Calendar.MINUTE, minutes);
+
+        date = calendar.getTime();
+        return date;
     }
 }
