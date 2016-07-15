@@ -15,11 +15,13 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import rustelefonen.no.drikkevett_android.MainActivity;
 import rustelefonen.no.drikkevett_android.R;
 import rustelefonen.no.drikkevett_android.db.GraphHistory;
 import rustelefonen.no.drikkevett_android.db.GraphHistoryDao;
 import rustelefonen.no.drikkevett_android.db.History;
 import rustelefonen.no.drikkevett_android.db.HistoryDao;
+import rustelefonen.no.drikkevett_android.db.User;
 import rustelefonen.no.drikkevett_android.db.UserDao;
 import rustelefonen.no.drikkevett_android.util.PartyUtil;
 
@@ -38,6 +40,7 @@ import rustelefonen.no.drikkevett_android.db.DayAfterBACDao;
 import rustelefonen.no.drikkevett_android.db.PlanPartyElements;
 import rustelefonen.no.drikkevett_android.db.PlanPartyElementsDao;
 
+import static rustelefonen.no.drikkevett_android.util.PartyUtil.addMinsToDate;
 import static rustelefonen.no.drikkevett_android.util.PartyUtil.getDateDiff;
 import static rustelefonen.no.drikkevett_android.util.PartyUtil.setGenderScore;
 
@@ -49,25 +52,12 @@ public class BacDayAfterFragment extends Fragment {
     double weight = 80.0;
     String gender = "Mann";
 
-    int planBeers = 0;
-    int planWines = 0;
-    int planDrink = 0;
-    int planShots = 0;
-
-    int consumBeers = 0;
-    int consumWines = 0;
-    int consumDrink = 0;
-    int consumShots = 0;
+    int planBeers = 0, planWines = 0, planDrink = 0, planShots = 0;
+    int consumBeers = 0, consumWines = 0, consumDrink = 0, consumShots = 0;
 
     int costs = 0;
     double currentBAC = 0.0;
     double highestBAC = 0.0;
-
-    // dummy:
-    int beerCost = 100;
-    int wineCost = 200;
-    int drinkCost = 300;
-    int shotCost = 400;
 
     // dummy beergrams
     double beerGrams = 12.6;
@@ -76,6 +66,10 @@ public class BacDayAfterFragment extends Fragment {
     double shotGrams = 16.0;
 
     public Status status;
+
+    // start and end stamp session
+    public Date startStamp = new Date();
+    public Date endStamp = new Date();
 
     /*
     * WIDGETS
@@ -122,8 +116,6 @@ public class BacDayAfterFragment extends Fragment {
                 statusHandler(status);
             }
         });
-
-        refreshGraphHist();
 
         // REGISTRATION
 
@@ -179,6 +171,9 @@ public class BacDayAfterFragment extends Fragment {
         // hente status fra db
         status = getStatus();
         statusHandler(status);
+
+        // TESTING:
+        testingForLoop();
     }
 
     /*
@@ -424,30 +419,8 @@ public class BacDayAfterFragment extends Fragment {
     }
 
     public int calculateCosts(int b, int w, int d, int s){
-        // get costs from DB:
-        UserDao userDao = setDaoSessionDB().getUserDao();
-        int beerC = 0;
-        int wineC = 0;
-        int drinkC = 0;
-        int shotC = 0;
-
-        /* DETTE FYLLER FRA DATABASEN, MEN FORELØPIG INGEN BRUKERINFO
-        List<User> userList = userDao.queryBuilder().list();
-        for (User user : userList) {
-            beerC = user.getBeerPrice();
-            wineC = user.getWinePrice();
-            drinkC = user.getDrinkPrice();
-            shotC = user.getShotPrice();
-        }
-        */
-
-        // dummy costs:
-        beerC = 100;
-        wineC = 200;
-        drinkC = 300;
-        shotC = 400;
-
-        return (b * beerC) + (w * wineC) + (d * drinkC) + (s * shotC);
+        User user = ((MainActivity)getActivity()).getUser();
+        return (b * user.getBeerPrice()) + (w * user.getWinePrice()) + (d * user.getDrinkPrice()) + (s * user.getShotPrice());
     }
 
     public DaoSession setDaoSessionDB(){
@@ -465,19 +438,26 @@ public class BacDayAfterFragment extends Fragment {
     }
 
     private void setStats(){
-        // Calculating total costs
         costs = calculateCosts(consumBeers, consumWines, consumDrink, consumShots);
-
-        // Calculating current BAC
-        currentBAC = getCurrentBAC(weight, gender, getFirstUnAddedStamp());
-
-        // Calculating/Fetching current highest BAC
+        if(getFirstUnAddedStamp() != null){
+            currentBAC = getCurrentBAC(weight, gender, getFirstUnAddedStamp());
+        }
         highestBAC = getHighestBAC();
     }
 
     /*
     * REGISTRATION ( OF FORGOTTEN UNITS )
     * */
+
+    private void testingForLoop(){
+        int intervalHours = 0;
+        for(double i = 0; i < 5; i+= 0.5){
+            System.out.println(i);
+            if(i > 0.5 && i < 1){
+                intervalHours = 1;
+            }
+        }
+    }
 
     private int setMaxSeekBarVal(){
         int intervallHours = 0;
@@ -615,38 +595,143 @@ public class BacDayAfterFragment extends Fragment {
         // add one more unit to history table ( beer/wine/drink/shot )
         updateUnitInHistory(unit);
 
-        // refresh graphHistory, by removing all the last values and adding them again with the new unit added
-        //refreshGraphHist();
+        // add unit to day after
+        addDayAfter(newUnitStamp, unit);
 
+        // refresh graphHistory, by removing all the last values and adding them again with the new unit added
+        refreshGraphHist();
     }
 
     private void refreshGraphHist(){
+        // REMOVE ALL LATEST GRAPH HIST WITH SAME ID AS HISTORY ID AND TEMP STORE THE TIMESTAMPS
+        HistoryDao historyDao = setDaoSessionDB().getHistoryDao();
+        List<History> histories = historyDao.queryBuilder().list();
+        History lastElement = histories.get(histories.size() -1);
+        System.out.println("Last Element ID: " + lastElement.getId());
+
         GraphHistoryDao graphHistoryDao = setDaoSessionDB().getGraphHistoryDao();
+        List<GraphHistory> graphHistList = graphHistoryDao.queryBuilder().where(GraphHistoryDao.Properties.HistoryId.eq(lastElement.getId())).list();
 
-        List<GraphHistory> graphHistList = graphHistoryDao.queryBuilder().list();
-
-        for (GraphHistory graph : graphHistList){
-            GraphHistory lastElement = graphHistList.get(graphHistList.size() - 1);
-
-            if(lastElement.getHistoryId() == graph.getHistoryId()){
-                System.out.println("(" + graph.getId() + ") har historie ID: " + graph.getHistoryId());
-                //graphHistList.remove(graph.getHistoryId());
-            }
-
-
-
-            System.out.println("(" + graph.getId() + ") har historie ID: " + graph.getHistoryId());
-            System.out.println("Promille i graph: " + graph.getCurrentBAC());
-
-
-
-
-
-
-
-
-
+        System.out.println("refreshGraphHist: ------: ");
+        for(GraphHistory graphHist : graphHistList){
+            graphHistoryDao.deleteByKey(graphHist.getId());
         }
+
+        // ADD NEW VALUES IN GRAPH HIST WITH THE AFTER REGISTRATED TIME STAMP
+        long id = lastElement.getId();
+        calcPr((int) id);
+    }
+
+    private void addDayAfter(Date newUnitStamp, String unitType){
+        DayAfterBACDao dayAfterBACDao = setDaoSessionDB().getDayAfterBACDao();
+        DayAfterBAC newDayAfter = new DayAfterBAC();
+        newDayAfter.setTimestamp(newUnitStamp);
+        newDayAfter.setUnit(unitType);
+        dayAfterBACDao.insert(newDayAfter);
+    }
+
+    private void addGraphValues(double currentBAC, Date timeStamp, int id){
+        GraphHistoryDao graphHistoryDao = setDaoSessionDB().getGraphHistoryDao();
+        GraphHistory newGraphVal = new GraphHistory();
+        newGraphVal.setHistoryId(id);
+        newGraphVal.setCurrentBAC(currentBAC);
+        newGraphVal.setTimestamp(timeStamp);
+        graphHistoryDao.insert(newGraphVal);
+    }
+
+    private void setStartAndEndStamp(){
+        PlanPartyElementsDao planDao = setDaoSessionDB().getPlanPartyElementsDao();
+        List<PlanPartyElements> planPList = planDao.queryBuilder().list();
+        PlanPartyElements element = planPList.get(planPList.size() - 1);
+        startStamp = element.getStartTimeStamp();
+        endStamp = element.getEndTimeStamp();
+    }
+
+    private void calcPr(int id){
+        // Loop gjennom DayAfterBAC. Simuler hva promillen var hvert kvarter/halvtime
+        DayAfterBACDao dayAfterBACDao = setDaoSessionDB().getDayAfterBACDao();
+        List<DayAfterBAC> dayAfterBacList = dayAfterBACDao.queryBuilder().list();
+
+        double highestBAC = 0.0;
+        double promille = 0.0;
+        Date tempTimeStamp = new Date();
+
+        // GET START AND END STAMP
+        setStartAndEndStamp();
+
+        double sessionInterval = getDateDiff(startStamp, endStamp, TimeUnit.MINUTES);
+        double tempInterval = 0;
+
+        while(tempInterval < sessionInterval){
+            int beer = 0;
+            int wine = 0;
+            int drink = 0;
+            int shot = 0;
+
+            tempInterval += 15;
+            for(DayAfterBAC dayAfter : dayAfterBacList){
+                String unit = dayAfter.getUnit();
+
+                if(unit.equals("Beer")){
+                    beer++;
+                }
+                if(unit.equals("Wine")){
+                    wine++;
+                }
+                if(unit.equals("Drink")){
+                    drink++;
+                }
+                if(unit.equals("Shot")){
+                    shot++;
+                }
+
+                double hoursToMins = tempInterval / 60;
+
+                String tempPromille = calculateBAC(gender, weight, countingGrams(beer, wine, drink, shot), hoursToMins);
+                promille = Double.parseDouble(tempPromille);
+
+                // Sjekke høyeste promille og temp lagre denne verdien før man oppdaterer høyeste promille i historikken. ( I LOOPEN )
+                if(highestBAC < promille){
+                    highestBAC = promille;
+                }
+
+                // Legg til 15 min på en date
+                tempTimeStamp = addMinsToDate((int) tempInterval);
+            }
+            // Legg til elementet i databasen ( I LOOPEN )
+            addGraphValues(promille, tempTimeStamp, id);
+        }
+        updateHighestBACinHistory(highestBAC);
+        startStamp = null;
+        endStamp = null;
+        printLastGraphValues();
+    }
+
+    private void printLastGraphValues(){
+        // REMOVE ALL LATEST GRAPH HIST WITH SAME ID AS HISTORY ID AND TEMP STORE THE TIMESTAMPS
+        HistoryDao historyDao = setDaoSessionDB().getHistoryDao();
+        List<History> histories = historyDao.queryBuilder().list();
+        History lastElement = histories.get(histories.size() -1);
+
+        GraphHistoryDao graphHistoryDao = setDaoSessionDB().getGraphHistoryDao();
+        List<GraphHistory> graphHistList = graphHistoryDao.queryBuilder().where(GraphHistoryDao.Properties.HistoryId.eq(lastElement.getId())).list();
+
+        System.out.println("Last hist id: (" + lastElement.getId() + ")");
+        for(GraphHistory graphHist : graphHistList){
+            System.out.println("graph value id: " + graphHist.getId());
+            System.out.println("graph value history_id: " + graphHist.getHistoryId());
+            System.out.println("graph value timeStamp: " + graphHist.getTimestamp());
+            System.out.println("graph value currentBac: " + graphHist.getCurrentBAC());
+        }
+    }
+
+    private void updateHighestBACinHistory(double highBac){
+        // update highest BAC in History
+        HistoryDao historyDao = setDaoSessionDB().getHistoryDao();
+        List<History> histories = historyDao.queryBuilder().list();
+        History lastElement = histories.get(histories.size() -1);
+        lastElement.setHighestBAC(highBac);
+        historyDao.insertOrReplace(lastElement);
     }
 
     private Date setNewUnitDate(int minutes){
@@ -700,8 +785,8 @@ public class BacDayAfterFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
-                System.out.println(hours + "<-- You choose this shitz...");
-                addForgottenUnit(unit, tempMins);
+                System.out.println(hours + " <--...");
+                addForgottenUnit(unit, tempMins); // tempMins
             }
         });
 
@@ -714,15 +799,12 @@ public class BacDayAfterFragment extends Fragment {
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 if (i < 1 && i > 24) hours = 1;
                 hours = i;
-
                 seekBar.setMax(setMaxSeekBarVal());
-
                 tempMins = configSeekBar(hours);
             }
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-                System.out.println("kek");
             }
 
             @Override
@@ -760,9 +842,7 @@ public class BacDayAfterFragment extends Fragment {
     private void setVisualsPP(){
         clearUnitVariabels();
         btnEndDA.setVisibility(View.GONE);
-
         titleLbl.setText("Planlegg Kvelden pågår");
-
         setVisibility(View.GONE);
     }
 

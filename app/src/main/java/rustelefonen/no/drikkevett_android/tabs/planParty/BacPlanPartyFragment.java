@@ -22,6 +22,7 @@ import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 import android.os.Handler;
 
+import rustelefonen.no.drikkevett_android.MainActivity;
 import rustelefonen.no.drikkevett_android.R;
 import rustelefonen.no.drikkevett_android.db.DaoMaster;
 import rustelefonen.no.drikkevett_android.db.DaoSession;
@@ -39,11 +40,12 @@ import rustelefonen.no.drikkevett_android.tabs.calc.fragments.BeerScrollAdapter;
 import rustelefonen.no.drikkevett_android.util.PartyUtil;
 
 import static rustelefonen.no.drikkevett_android.util.PartyUtil.getDateDiff;
+import static rustelefonen.no.drikkevett_android.util.PartyUtil.setGenderScore;
 
 public class BacPlanPartyFragment extends Fragment {
 
-    int weight = 80;
-    String gender = "Mann";
+    double weight = 0;
+    String gender = "";
     Date firstUnitAdded = new Date();
 
     // UNITS
@@ -100,6 +102,7 @@ public class BacPlanPartyFragment extends Fragment {
         v = inflater.inflate(R.layout.bac_plan_party_frag, container, false);
 
         initWidgets();
+        //setUserData();
 
         // Check session
         status = isSessionOver();
@@ -148,6 +151,7 @@ public class BacPlanPartyFragment extends Fragment {
         // Check session
         status = isSessionOver();
         stateHandler(status);
+        //setUserData();
     }
 
     @Override
@@ -155,23 +159,13 @@ public class BacPlanPartyFragment extends Fragment {
         super.setUserVisibleHint(isVisibleToUser);
         if (!this.isVisible()) return;
         if (!isVisibleToUser) return;
-
-        System.out.println("<-------------------------------------------->");
-        System.out.println("1. Status when re-entering view: " + status);
-
-        // Check session
+        //setUserData();
         status = isSessionOver();
-        System.out.println("2. Status when re-entering view: " + status);
-
         stateHandler(status);
-        System.out.println("3. Status when re-entering view: " + status);
-        System.out.println("<-------------------------------------------->");
     }
 
     /*
-    *
     * STATUS
-    *
     * */
 
     private enum Status {
@@ -261,9 +255,7 @@ public class BacPlanPartyFragment extends Fragment {
     }
 
     /*
-    *
     * ADDING UNITS ( CONSUMED AND PLANNED
-    *
     * */
 
     private void addConsumedUnits(String unit){
@@ -279,8 +271,6 @@ public class BacPlanPartyFragment extends Fragment {
 
         DayAfterBACDao dayAfterDao = daoSession.getDayAfterBACDao();
         DayAfterBAC newTS = new DayAfterBAC();
-
-        // EN IF SOM SJEKKER OM EN ENHET ALLEREDE ER LAGT TIL, OG HVIS DEN IKKE ER DET ER DETTE FIRST UNIT TIME STAMP
 
         newTS.setTimestamp(new Date());
         newTS.setUnit(unit);
@@ -418,14 +408,14 @@ public class BacPlanPartyFragment extends Fragment {
         stateHandler(status);
     }
 
-    private void updateEndStamp(){
-
+    private void setUserData(){
+        User user = ((MainActivity)getActivity()).getUser();
+        weight = user.getWeight();
+        gender = user.getGender();
     }
 
     /*
-    *
     * DATABASE METHODS
-    *
     * */
 
     public DaoSession setDaoSessionDB(){
@@ -497,37 +487,18 @@ public class BacPlanPartyFragment extends Fragment {
     }
 
     private void getUnitsPlanned() {
-        // TEMP VARIABLES
-        int tempPlBeer = 0;
-        int tempPlWine = 0;
-        int tempPlDrink = 0;
-        int tempPlShot = 0;
-
         PlanPartyElementsDao partyDao = setDaoSessionDB().getPlanPartyElementsDao();
-
-        // GET elements to temporary store them in variables then re-saving them
         List<PlanPartyElements> partyList = partyDao.queryBuilder().list();
-        for (PlanPartyElements party : partyList) {
-            tempPlBeer = party.getPlannedBeer();
-            tempPlWine = party.getPlannedWine();
-            tempPlDrink = party.getPlannedDrink();
-            tempPlShot = party.getPlannedShot();
-        }
-
-        plannedBeers = tempPlBeer;
-        plannedWines = tempPlWine;
-        plannedDrinks = tempPlDrink;
-        plannedShots = tempPlShot;
+        PlanPartyElements elements = partyList.get(partyList.size() - 1);
+        plannedBeers = elements.getPlannedBeer();
+        plannedWines = elements.getPlannedWine();
+        plannedDrinks = elements.getPlannedDrink();
+        plannedShots = elements.getPlannedShot();
     }
 
     public void clearPartyTables(){
         PlanPartyElementsDao partyDao = setDaoSessionDB().getPlanPartyElementsDao();
         DayAfterBACDao dayAfterDao = setDaoSessionDB().getDayAfterBACDao();
-
-        List<DayAfterBAC> dayAfterBACList = dayAfterDao.queryBuilder().list();
-        for (DayAfterBAC dayAfter : dayAfterBACList) {
-            //System.out.println("(clearTables) units = " + dayAfter.getUnit());
-        }
 
         // clearing the tables (PlanPartyDao and DayAfterBacDao)
         partyDao.deleteAll();
@@ -675,30 +646,8 @@ public class BacPlanPartyFragment extends Fragment {
     }
 
     public int calculateCosts(int b, int w, int d, int s){
-        // get costs from DB:
-        UserDao userDao = setDaoSessionDB().getUserDao();
-        int beerC = 0;
-        int wineC = 0;
-        int drinkC = 0;
-        int shotC = 0;
-
-        /* DETTE ER IKKE IMPLEMENTERT ENDA:
-        List<User> userList = userDao.queryBuilder().list();
-        for (User user : userList) {
-            beerC = user.getBeerPrice();
-            wineC = user.getWinePrice();
-            drinkC = user.getDrinkPrice();
-            shotC = user.getShotPrice();
-        }
-        */
-
-        // dummy costs:
-        beerC = 100;
-        wineC = 200;
-        drinkC = 300;
-        shotC = 400;
-
-        return (b * beerC) + (w * wineC) + (d * drinkC) + (s * shotC);
+        User user = ((MainActivity)getActivity()).getUser();
+        return (b * user.getBeerPrice()) + (w * user.getWinePrice()) + (d * user.getDrinkPrice()) + (s * user.getShotPrice());
     }
 
     private void insertHistoryDB(int b, int w, int d, int s, Date startD, Date endD, int totalCosts, double highBAC){
@@ -775,21 +724,18 @@ public class BacPlanPartyFragment extends Fragment {
 
     private int fetchHistoryID_DB(){
         double tempID = 0;
-
         HistoryDao historyDao = setDaoSessionDB().getHistoryDao();
         List<History> historyList = historyDao.queryBuilder().list();
-
-        for(History hist : historyList) {
-            tempID = (double) hist.getId();
-        }
-
+        History lastElement = historyList.get(historyList.size() -1);
+        tempID = lastElement.getId();
+        System.out.println("Temp ID: " + tempID);
         return (int) tempID;
     }
 
     private void addGraphValues(double currentBAC, Date timeStamp, int id){
         GraphHistoryDao graphHistoryDao = setDaoSessionDB().getGraphHistoryDao();
         GraphHistory newGraphVal = new GraphHistory();
-
+        System.out.println("Id som blir sendt inn til G HIST: " + id);
         newGraphVal.setHistoryId(id);
         newGraphVal.setCurrentBAC(currentBAC);
         newGraphVal.setTimestamp(timeStamp);
@@ -807,8 +753,6 @@ public class BacPlanPartyFragment extends Fragment {
         Date tempTimeStamp = new Date();
 
         double sessionInterval = getDateDiff(startTimeStamp, endTimeStamp, TimeUnit.MINUTES);
-        System.out.println("Session Interval: " + sessionInterval);
-
         double tempInterval = 0;
 
         while(tempInterval < sessionInterval){
@@ -818,11 +762,9 @@ public class BacPlanPartyFragment extends Fragment {
             int shot = 0;
 
             tempInterval += 15;
-            System.out.println("Temp Interval: " + tempInterval);
 
             for(DayAfterBAC dayAfter : dayAfterBacList){
                 String unit = dayAfter.getUnit();
-
                 if(unit.equals("Beer")){
                     beer++;
                 }
@@ -835,16 +777,12 @@ public class BacPlanPartyFragment extends Fragment {
                 if(unit.equals("Shot")){
                     shot++;
                 }
-
-                System.out.println("-- (beer) --: " + beer);
                 // set minuts to hours
                 double hoursToMins = tempInterval / 60;
-                System.out.println("Hours to mins: " + hoursToMins);
 
                 // Legg til IDen til hvert av promillene og et tidspunkt ( I LOOPEN )
                 String tempPromille = calculateBAC(gender, weight, countingGrams(beer, wine, drink, shot), hoursToMins);
                 promille = Double.parseDouble(tempPromille);
-                System.out.println("Promille: " + promille);
 
                 // Sjekke høyeste promille og temp lagre denne verdien før man oppdaterer høyeste promille i historikken. ( I LOOPEN )
                 if(highestBAC < promille){
@@ -853,26 +791,20 @@ public class BacPlanPartyFragment extends Fragment {
 
                 // Legg til 15 min på en date
                 tempTimeStamp = addMinsToDate((int) tempInterval);
-                System.out.println("Temp Time Stamp: " + tempTimeStamp);
-
-                // Legg til elementet i databasen ( I LOOPEN )
-                addGraphValues(promille, tempTimeStamp, id);
             }
+            // Legg til elementet i databasen ( I LOOPEN )
+            addGraphValues(promille, tempTimeStamp, id);
         }
+        updateHighestBac(highestBAC);
+    }
 
+    private void updateHighestBac(double highestBAC){
         // update highest BAC in History
         HistoryDao historyDao = setDaoSessionDB().getHistoryDao();
-
         List<History> histories = historyDao.queryBuilder().list();
-
         History lastElement = histories.get(histories.size() -1);
-        System.out.println("Siste Element i DB History: " + lastElement.getId() + "Høyeste før: " + lastElement.getHighestBAC());
-
         lastElement.setHighestBAC(highestBAC);
-
         historyDao.insertOrReplace(lastElement);
-
-        System.out.println("Høyeste etter: " + lastElement.getHighestBAC());
     }
 
     /*
@@ -966,19 +898,6 @@ public class BacPlanPartyFragment extends Fragment {
         return (beerUnits * beerGrams) + (wineUnits * wineGrams) + (drinkUnits * drinkGrams) + (shotUnits * shotGrams);
     }
 
-    public double setGenderScore(String gender){
-        double genderScore = 0.0;
-
-        if(gender.equals("Mann")){
-            genderScore = 0.70;
-        }
-        if(gender.equals("Kvinne")){
-            genderScore = 0.60;
-        }
-
-        return genderScore;
-    }
-
     private String getUnitId(){
         String unit = "";
         switch (beerScroll.getCurrentItem()) {
@@ -1003,9 +922,7 @@ public class BacPlanPartyFragment extends Fragment {
     }
 
     /*
-    *
     * WIDGETS
-    *
     * */
 
     private void initWidgets(){
