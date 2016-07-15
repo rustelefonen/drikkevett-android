@@ -15,10 +15,6 @@
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".Settings"/>
         <activity
@@ -27,8 +23,6 @@
         <activity
             android:name=".intro.UserRegistrationActivity"
             android:label="Brukerregistrering">
-
-
         </activity>
         <activity android:name=".intro.AlcoholPricingRegistrationActivity"
             android:label="Alkoholpriser"/>
@@ -45,5 +39,7 @@
         </activity>
         <activity android:name=".settings.UserSettingsActivity"
             android:label="Brukerinnstillinger"/>
+        <activity android:name=".settings.AlcoholPricingSettingsActivity"/>
+        <activity android:name=".settings.GoalSettingsActivity"/>
     </application>
 </manifest>

@@ -8,10 +8,10 @@
             android:icon="@drawable/ic_person_black_24dp"/>
         <item
             android:id="@+id/nav_second_fragment"
-            android:title="Endre ditt mål" />
+            android:title="Endre alkoholpriser" />
         <item
             android:id="@+id/nav_third_fragment"
-            android:title="Endre alkoholpriser" />
+            android:title="Endre ditt mål" />
         <item
             android:id="@+id/nav_fourth_fragment"
             android:title="Varslinger" />

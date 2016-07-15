@@ -23,6 +23,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -37,6 +38,9 @@ import java.util.List;
 
 import rustelefonen.no.drikkevett_android.db.User;
 import rustelefonen.no.drikkevett_android.db.UserDao;
+import rustelefonen.no.drikkevett_android.intro.GoalRegistrationActivity;
+import rustelefonen.no.drikkevett_android.settings.AlcoholPricingSettingsActivity;
+import rustelefonen.no.drikkevett_android.settings.GoalSettingsActivity;
 import rustelefonen.no.drikkevett_android.settings.UserSettingsActivity;
 import rustelefonen.no.drikkevett_android.tabs.calc.BacCalcFragment;
 import rustelefonen.no.drikkevett_android.tabs.dayAfter.BacDayAfterFragment;
@@ -97,12 +101,15 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         switch(menuItem.getItemId()) {
             case R.id.nav_first_fragment:
                 intent = new Intent(this, UserSettingsActivity.class);
+                intent.putExtra(UserSettingsActivity.ID, getUser());
                 break;
             case R.id.nav_second_fragment:
-                intent = new Intent(this, UserSettingsActivity.class);
+                intent = new Intent(this, AlcoholPricingSettingsActivity.class);
+                intent.putExtra(AlcoholPricingSettingsActivity.ID, getUser());
                 break;
             case R.id.nav_third_fragment:
-                intent = new Intent(this, UserSettingsActivity.class);
+                intent = new Intent(this, GoalSettingsActivity.class);
+                intent.putExtra(GoalSettingsActivity.ID, getUser());
                 break;
             default:
                 intent = new Intent(this, UserSettingsActivity.class);
@@ -375,6 +382,19 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
             return "";
         }
     }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)  {
+        if (Integer.parseInt(android.os.Build.VERSION.SDK) > 5 && keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+            onBackPressed();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+
+    @Override
+    public void onBackPressed() {}
 
 
 }

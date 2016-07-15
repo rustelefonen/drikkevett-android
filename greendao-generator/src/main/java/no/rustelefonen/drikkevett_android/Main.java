@@ -39,6 +39,7 @@ public class Main {
         historyToGraphHistory.setName("graphHistories");
 
         Entity userData = schema.addEntity("User");
+        userData.addIdProperty();
         userData.addIntProperty("age");
         userData.addIntProperty("beerPrice");
         userData.addIntProperty("winePrice");
