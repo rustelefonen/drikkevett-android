@@ -1,8 +1,12 @@
 package rustelefonen.no.drikkevett_android.settings;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -71,6 +75,42 @@ public class AlcoholPricingSettingsActivity extends AppCompatActivity {
         }
     }
 
+    private void hasChanged() {
+        int beerPrice = getInt(beerPriceEditText.getText().toString());
+        int winePrice = getInt(winePriceEditText.getText().toString());
+        int drinkPrice = getInt(drinkPriceEditText.getText().toString());
+        int shotPrice = getInt(shotPriceEditText.getText().toString());
+
+        if (beerPrice != user.getBeerPrice() || winePrice != user.getWinePrice() ||
+                drinkPrice != user.getDrinkPrice() || shotPrice != user.getShotPrice()) {
+            new AlertDialog.Builder(this)
+                    .setTitle("Endringer oppdaget")
+                    .setMessage("Er du sikker på at du vil gå tilbake? Endringene vil ikke bli lagret.")
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            goBack();
+                        }
+                    })
+                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // do nothing
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    private void goBack() {
+        super.onBackPressed();
+    }
+
+    public void cancel(View view) {
+        hasChanged();
+    }
+
     public void saveNewPrices(View view) {
         int beerPrice = getInt(beerPriceEditText.getText().toString());
         if (beerPrice <= 0) {
@@ -118,5 +158,21 @@ public class AlcoholPricingSettingsActivity extends AppCompatActivity {
         userDao.update(userToEdit);
 
         superDao.close();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)  {
+        if (Integer.parseInt(android.os.Build.VERSION.SDK) > 5 && keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+            Log.d("CDA", "onKeyDown Called");
+            onBackPressed();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        hasChanged();
     }
 }

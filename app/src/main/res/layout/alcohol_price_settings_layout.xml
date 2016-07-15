@@ -98,7 +98,8 @@
                     android:text="Avbryt"
                     android:background="@color/redSuper"
                     android:textColor="@color/textColor"
-                    android:layout_weight="33" />
+                    android:layout_weight="33"
+                    android:onClick="cancel"/>
 
                 <Button
                     android:layout_width="wrap_content"
