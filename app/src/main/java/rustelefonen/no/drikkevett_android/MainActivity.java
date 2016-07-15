@@ -30,6 +30,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -154,6 +155,9 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         nvDrawer = (NavigationView) findViewById(R.id.nvView);
 
         setupDrawerContent(nvDrawer);
+
+        nvDrawer.getMenu().findItem(R.id.drawer_view_switch).setActionView(new Switch(this));
+        ((Switch) nvDrawer.getMenu().findItem(R.id.drawer_view_switch).getActionView()).setChecked(true);
 
         drawerToggle = setupDrawerToggle();
 
