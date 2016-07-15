@@ -98,6 +98,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         switch(menuItem.getItemId()) {
             case R.id.nav_first_fragment:
                 intent = new Intent(this, UserSettingsActivity.class);
+                intent.putExtra(UserSettingsActivity.ID, getUser());
                 break;
             case R.id.nav_second_fragment:
                 intent = new Intent(this, UserSettingsActivity.class);

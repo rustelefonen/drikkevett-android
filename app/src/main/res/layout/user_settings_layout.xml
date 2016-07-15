@@ -94,6 +94,15 @@
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="Avbryt"
+                    android:background="@color/redSuper"
+                    android:textColor="@color/textColor"
+                    android:layout_alignParentLeft="true"
+                    android:onClick="backToMain"/>
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:text="Lagre"
                     android:background="@color/greenSuper"
                     android:textColor="@color/textColor"

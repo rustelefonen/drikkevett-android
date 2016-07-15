@@ -6,6 +6,7 @@ package rustelefonen.no.drikkevett_android.db;
  */
 public class User implements java.io.Serializable {
 
+    private Long id;
     private Integer age;
     private Integer beerPrice;
     private Integer winePrice;
@@ -20,7 +21,12 @@ public class User implements java.io.Serializable {
     public User() {
     }
 
-    public User(Integer age, Integer beerPrice, Integer winePrice, Integer drinkPrice, Integer shotPrice, String gender, java.util.Date goalDate, Double goalBAC, String nickname, Double weight) {
+    public User(Long id) {
+        this.id = id;
+    }
+
+    public User(Long id, Integer age, Integer beerPrice, Integer winePrice, Integer drinkPrice, Integer shotPrice, String gender, java.util.Date goalDate, Double goalBAC, String nickname, Double weight) {
+        this.id = id;
         this.age = age;
         this.beerPrice = beerPrice;
         this.winePrice = winePrice;
@@ -31,6 +37,14 @@ public class User implements java.io.Serializable {
         this.goalBAC = goalBAC;
         this.nickname = nickname;
         this.weight = weight;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Integer getAge() {

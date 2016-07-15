@@ -14,7 +14,7 @@ import rustelefonen.no.drikkevett_android.db.User;
 /** 
  * DAO for table "USER".
 */
-public class UserDao extends AbstractDao<User, Void> {
+public class UserDao extends AbstractDao<User, Long> {
 
     public static final String TABLENAME = "USER";
 
@@ -23,16 +23,17 @@ public class UserDao extends AbstractDao<User, Void> {
      * Can be used for QueryBuilder and for referencing column names.
     */
     public static class Properties {
-        public final static Property Age = new Property(0, Integer.class, "age", false, "AGE");
-        public final static Property BeerPrice = new Property(1, Integer.class, "beerPrice", false, "BEER_PRICE");
-        public final static Property WinePrice = new Property(2, Integer.class, "winePrice", false, "WINE_PRICE");
-        public final static Property DrinkPrice = new Property(3, Integer.class, "drinkPrice", false, "DRINK_PRICE");
-        public final static Property ShotPrice = new Property(4, Integer.class, "shotPrice", false, "SHOT_PRICE");
-        public final static Property Gender = new Property(5, String.class, "gender", false, "GENDER");
-        public final static Property GoalDate = new Property(6, java.util.Date.class, "goalDate", false, "GOAL_DATE");
-        public final static Property GoalBAC = new Property(7, Double.class, "goalBAC", false, "GOAL_BAC");
-        public final static Property Nickname = new Property(8, String.class, "nickname", false, "NICKNAME");
-        public final static Property Weight = new Property(9, Double.class, "weight", false, "WEIGHT");
+        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
+        public final static Property Age = new Property(1, Integer.class, "age", false, "AGE");
+        public final static Property BeerPrice = new Property(2, Integer.class, "beerPrice", false, "BEER_PRICE");
+        public final static Property WinePrice = new Property(3, Integer.class, "winePrice", false, "WINE_PRICE");
+        public final static Property DrinkPrice = new Property(4, Integer.class, "drinkPrice", false, "DRINK_PRICE");
+        public final static Property ShotPrice = new Property(5, Integer.class, "shotPrice", false, "SHOT_PRICE");
+        public final static Property Gender = new Property(6, String.class, "gender", false, "GENDER");
+        public final static Property GoalDate = new Property(7, java.util.Date.class, "goalDate", false, "GOAL_DATE");
+        public final static Property GoalBAC = new Property(8, Double.class, "goalBAC", false, "GOAL_BAC");
+        public final static Property Nickname = new Property(9, String.class, "nickname", false, "NICKNAME");
+        public final static Property Weight = new Property(10, Double.class, "weight", false, "WEIGHT");
     };
 
 
@@ -48,16 +49,17 @@ public class UserDao extends AbstractDao<User, Void> {
     public static void createTable(SQLiteDatabase db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"USER\" (" + //
-                "\"AGE\" INTEGER," + // 0: age
-                "\"BEER_PRICE\" INTEGER," + // 1: beerPrice
-                "\"WINE_PRICE\" INTEGER," + // 2: winePrice
-                "\"DRINK_PRICE\" INTEGER," + // 3: drinkPrice
-                "\"SHOT_PRICE\" INTEGER," + // 4: shotPrice
-                "\"GENDER\" TEXT," + // 5: gender
-                "\"GOAL_DATE\" INTEGER," + // 6: goalDate
-                "\"GOAL_BAC\" REAL," + // 7: goalBAC
-                "\"NICKNAME\" TEXT," + // 8: nickname
-                "\"WEIGHT\" REAL);"); // 9: weight
+                "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
+                "\"AGE\" INTEGER," + // 1: age
+                "\"BEER_PRICE\" INTEGER," + // 2: beerPrice
+                "\"WINE_PRICE\" INTEGER," + // 3: winePrice
+                "\"DRINK_PRICE\" INTEGER," + // 4: drinkPrice
+                "\"SHOT_PRICE\" INTEGER," + // 5: shotPrice
+                "\"GENDER\" TEXT," + // 6: gender
+                "\"GOAL_DATE\" INTEGER," + // 7: goalDate
+                "\"GOAL_BAC\" REAL," + // 8: goalBAC
+                "\"NICKNAME\" TEXT," + // 9: nickname
+                "\"WEIGHT\" REAL);"); // 10: weight
     }
 
     /** Drops the underlying database table. */
@@ -71,77 +73,83 @@ public class UserDao extends AbstractDao<User, Void> {
     protected void bindValues(SQLiteStatement stmt, User entity) {
         stmt.clearBindings();
  
+        Long id = entity.getId();
+        if (id != null) {
+            stmt.bindLong(1, id);
+        }
+ 
         Integer age = entity.getAge();
         if (age != null) {
-            stmt.bindLong(1, age);
+            stmt.bindLong(2, age);
         }
  
         Integer beerPrice = entity.getBeerPrice();
         if (beerPrice != null) {
-            stmt.bindLong(2, beerPrice);
+            stmt.bindLong(3, beerPrice);
         }
  
         Integer winePrice = entity.getWinePrice();
         if (winePrice != null) {
-            stmt.bindLong(3, winePrice);
+            stmt.bindLong(4, winePrice);
         }
  
         Integer drinkPrice = entity.getDrinkPrice();
         if (drinkPrice != null) {
-            stmt.bindLong(4, drinkPrice);
+            stmt.bindLong(5, drinkPrice);
         }
  
         Integer shotPrice = entity.getShotPrice();
         if (shotPrice != null) {
-            stmt.bindLong(5, shotPrice);
+            stmt.bindLong(6, shotPrice);
         }
  
         String gender = entity.getGender();
         if (gender != null) {
-            stmt.bindString(6, gender);
+            stmt.bindString(7, gender);
         }
  
         java.util.Date goalDate = entity.getGoalDate();
         if (goalDate != null) {
-            stmt.bindLong(7, goalDate.getTime());
+            stmt.bindLong(8, goalDate.getTime());
         }
  
         Double goalBAC = entity.getGoalBAC();
         if (goalBAC != null) {
-            stmt.bindDouble(8, goalBAC);
+            stmt.bindDouble(9, goalBAC);
         }
  
         String nickname = entity.getNickname();
         if (nickname != null) {
-            stmt.bindString(9, nickname);
+            stmt.bindString(10, nickname);
         }
  
         Double weight = entity.getWeight();
         if (weight != null) {
-            stmt.bindDouble(10, weight);
+            stmt.bindDouble(11, weight);
         }
     }
 
     /** @inheritdoc */
     @Override
-    public Void readKey(Cursor cursor, int offset) {
-        return null;
+    public Long readKey(Cursor cursor, int offset) {
+        return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
     }    
 
     /** @inheritdoc */
     @Override
     public User readEntity(Cursor cursor, int offset) {
         User entity = new User( //
-            cursor.isNull(offset + 0) ? null : cursor.getInt(offset + 0), // age
-            cursor.isNull(offset + 1) ? null : cursor.getInt(offset + 1), // beerPrice
-            cursor.isNull(offset + 2) ? null : cursor.getInt(offset + 2), // winePrice
-            cursor.isNull(offset + 3) ? null : cursor.getInt(offset + 3), // drinkPrice
-            cursor.isNull(offset + 4) ? null : cursor.getInt(offset + 4), // shotPrice
-            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // gender
-            cursor.isNull(offset + 6) ? null : new java.util.Date(cursor.getLong(offset + 6)), // goalDate
-            cursor.isNull(offset + 7) ? null : cursor.getDouble(offset + 7), // goalBAC
-            cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8), // nickname
-            cursor.isNull(offset + 9) ? null : cursor.getDouble(offset + 9) // weight
+            cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
+            cursor.isNull(offset + 1) ? null : cursor.getInt(offset + 1), // age
+            cursor.isNull(offset + 2) ? null : cursor.getInt(offset + 2), // beerPrice
+            cursor.isNull(offset + 3) ? null : cursor.getInt(offset + 3), // winePrice
+            cursor.isNull(offset + 4) ? null : cursor.getInt(offset + 4), // drinkPrice
+            cursor.isNull(offset + 5) ? null : cursor.getInt(offset + 5), // shotPrice
+            cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // gender
+            cursor.isNull(offset + 7) ? null : new java.util.Date(cursor.getLong(offset + 7)), // goalDate
+            cursor.isNull(offset + 8) ? null : cursor.getDouble(offset + 8), // goalBAC
+            cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9), // nickname
+            cursor.isNull(offset + 10) ? null : cursor.getDouble(offset + 10) // weight
         );
         return entity;
     }
@@ -149,29 +157,34 @@ public class UserDao extends AbstractDao<User, Void> {
     /** @inheritdoc */
     @Override
     public void readEntity(Cursor cursor, User entity, int offset) {
-        entity.setAge(cursor.isNull(offset + 0) ? null : cursor.getInt(offset + 0));
-        entity.setBeerPrice(cursor.isNull(offset + 1) ? null : cursor.getInt(offset + 1));
-        entity.setWinePrice(cursor.isNull(offset + 2) ? null : cursor.getInt(offset + 2));
-        entity.setDrinkPrice(cursor.isNull(offset + 3) ? null : cursor.getInt(offset + 3));
-        entity.setShotPrice(cursor.isNull(offset + 4) ? null : cursor.getInt(offset + 4));
-        entity.setGender(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
-        entity.setGoalDate(cursor.isNull(offset + 6) ? null : new java.util.Date(cursor.getLong(offset + 6)));
-        entity.setGoalBAC(cursor.isNull(offset + 7) ? null : cursor.getDouble(offset + 7));
-        entity.setNickname(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
-        entity.setWeight(cursor.isNull(offset + 9) ? null : cursor.getDouble(offset + 9));
+        entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
+        entity.setAge(cursor.isNull(offset + 1) ? null : cursor.getInt(offset + 1));
+        entity.setBeerPrice(cursor.isNull(offset + 2) ? null : cursor.getInt(offset + 2));
+        entity.setWinePrice(cursor.isNull(offset + 3) ? null : cursor.getInt(offset + 3));
+        entity.setDrinkPrice(cursor.isNull(offset + 4) ? null : cursor.getInt(offset + 4));
+        entity.setShotPrice(cursor.isNull(offset + 5) ? null : cursor.getInt(offset + 5));
+        entity.setGender(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
+        entity.setGoalDate(cursor.isNull(offset + 7) ? null : new java.util.Date(cursor.getLong(offset + 7)));
+        entity.setGoalBAC(cursor.isNull(offset + 8) ? null : cursor.getDouble(offset + 8));
+        entity.setNickname(cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9));
+        entity.setWeight(cursor.isNull(offset + 10) ? null : cursor.getDouble(offset + 10));
      }
     
     /** @inheritdoc */
     @Override
-    protected Void updateKeyAfterInsert(User entity, long rowId) {
-        // Unsupported or missing PK type
-        return null;
+    protected Long updateKeyAfterInsert(User entity, long rowId) {
+        entity.setId(rowId);
+        return rowId;
     }
     
     /** @inheritdoc */
     @Override
-    public Void getKey(User entity) {
-        return null;
+    public Long getKey(User entity) {
+        if(entity != null) {
+            return entity.getId();
+        } else {
+            return null;
+        }
     }
 
     /** @inheritdoc */
