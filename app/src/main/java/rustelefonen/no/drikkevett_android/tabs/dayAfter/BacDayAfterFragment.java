@@ -171,9 +171,6 @@ public class BacDayAfterFragment extends Fragment {
         // hente status fra db
         status = getStatus();
         statusHandler(status);
-
-        // TESTING:
-        testingForLoop();
     }
 
     /*
@@ -181,7 +178,7 @@ public class BacDayAfterFragment extends Fragment {
     * */
 
     private void statusHandler(Status state){
-        if(state == status.RUNNING || state == status.NOT_RUNNING){
+        if(state == status.RUNNING || state == status.NOT_RUNNING || state == status.DEFAULT){
             planPartyRunning();
         }
         if(state == status.DA_RUNNING){
@@ -448,16 +445,6 @@ public class BacDayAfterFragment extends Fragment {
     /*
     * REGISTRATION ( OF FORGOTTEN UNITS )
     * */
-
-    private void testingForLoop(){
-        int intervalHours = 0;
-        for(double i = 0; i < 5; i+= 0.5){
-            System.out.println(i);
-            if(i > 0.5 && i < 1){
-                intervalHours = 1;
-            }
-        }
-    }
 
     private int setMaxSeekBarVal(){
         int intervallHours = 0;
