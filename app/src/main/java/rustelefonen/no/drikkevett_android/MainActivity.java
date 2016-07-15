@@ -38,7 +38,9 @@ import java.util.List;
 
 import rustelefonen.no.drikkevett_android.db.User;
 import rustelefonen.no.drikkevett_android.db.UserDao;
+import rustelefonen.no.drikkevett_android.intro.GoalRegistrationActivity;
 import rustelefonen.no.drikkevett_android.settings.AlcoholPricingSettingsActivity;
+import rustelefonen.no.drikkevett_android.settings.GoalSettingsActivity;
 import rustelefonen.no.drikkevett_android.settings.UserSettingsActivity;
 import rustelefonen.no.drikkevett_android.tabs.calc.BacCalcFragment;
 import rustelefonen.no.drikkevett_android.tabs.dayAfter.BacDayAfterFragment;
@@ -106,7 +108,8 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                 intent.putExtra(AlcoholPricingSettingsActivity.ID, getUser());
                 break;
             case R.id.nav_third_fragment:
-                intent = new Intent(this, UserSettingsActivity.class);
+                intent = new Intent(this, GoalSettingsActivity.class);
+                intent.putExtra(GoalSettingsActivity.ID, getUser());
                 break;
             default:
                 intent = new Intent(this, UserSettingsActivity.class);
