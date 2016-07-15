@@ -7,4 +7,6 @@ import android.support.v7.app.AppCompatActivity;
  */
 
 public class GoalSettingsActivity extends AppCompatActivity {
+
+    public static final String ID = "GoalSettings";
 }

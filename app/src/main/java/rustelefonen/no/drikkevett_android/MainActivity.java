@@ -38,6 +38,7 @@ import java.util.List;
 
 import rustelefonen.no.drikkevett_android.db.User;
 import rustelefonen.no.drikkevett_android.db.UserDao;
+import rustelefonen.no.drikkevett_android.settings.AlcoholPricingSettingsActivity;
 import rustelefonen.no.drikkevett_android.settings.UserSettingsActivity;
 import rustelefonen.no.drikkevett_android.tabs.calc.BacCalcFragment;
 import rustelefonen.no.drikkevett_android.tabs.dayAfter.BacDayAfterFragment;
@@ -101,7 +102,8 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                 intent.putExtra(UserSettingsActivity.ID, getUser());
                 break;
             case R.id.nav_second_fragment:
-                intent = new Intent(this, UserSettingsActivity.class);
+                intent = new Intent(this, AlcoholPricingSettingsActivity.class);
+                intent.putExtra(AlcoholPricingSettingsActivity.ID, getUser());
                 break;
             case R.id.nav_third_fragment:
                 intent = new Intent(this, UserSettingsActivity.class);
