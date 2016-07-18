@@ -52,7 +52,7 @@ public class InformationCategoryActivity extends AppCompatActivity {
 
         setRecyclerViewLayoutManager(mCurrentLayoutManagerType);
 
-        mAdapter = new InformationCategoryAdapter(informationCategories);
+        mAdapter = new InformationCategoryAdapter(informationCategories, this);
         mRecyclerView.setAdapter(mAdapter);
 
     }

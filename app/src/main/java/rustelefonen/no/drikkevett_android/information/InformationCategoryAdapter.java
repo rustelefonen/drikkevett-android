@@ -7,7 +7,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import java.util.List;
 
@@ -22,9 +21,11 @@ import rustelefonen.no.drikkevett_android.db.InformationCategory;
 public class InformationCategoryAdapter extends RecyclerView.Adapter<InformationCategoryAdapter.ViewHolder> {
 
     private List<InformationCategory> informationCategoryList;
+    private Context context;
 
-    public InformationCategoryAdapter(List<InformationCategory> informationCategoryList) {
+    public InformationCategoryAdapter(List<InformationCategory> informationCategoryList, Context context) {
         this.informationCategoryList = informationCategoryList;
+        this.context = context;
     }
 
     @Override
@@ -45,24 +46,70 @@ public class InformationCategoryAdapter extends RecyclerView.Adapter<Information
 
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
-        if (position % 2 == 0) {
+        /*int tmpPosition = position + 1;
+        while (tmpPosition % 3 != 0) tmpPosition++;
+        tmpPosition -= position + 1;
+        final Intent intent = new Intent(context, InformationListActivity.class);
+        intent.putExtra(InformationListActivity.ID, informationCategoryList.get(position));
+
+        System.out.println("pos " + position);
+        System.out.println("tmpPos" + tmpPosition);
+
+
+        if (tmpPosition == 0) {
+            holder.getCardViewShortTwo().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    System.out.println("kort kort 2");
+                    context.startActivity(intent);
+                }
+            });
+        } else if (tmpPosition == 1) {
+            holder.getCardViewShortOne().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    System.out.println("kort kort 1");
+                    context.startActivity(intent);
+                }
+            });
+
+        } else if (tmpPosition == 2) {
             holder.getCardViewLong().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     System.out.println("langt kort");
+                    context.startActivity(intent);
+                }
+            });
+        }*/
+
+        final Intent intent = new Intent(context, InformationListActivity.class);
+
+        if (position % 2 == 0) {
+
+            holder.getCardViewLong().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int index = position + (position/2);
+                    intent.putExtra(InformationListActivity.ID, informationCategoryList.get(index));
+                    context.startActivity(intent);
                 }
             });
         } else {
             holder.getCardViewShortOne().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    System.out.println("kort kort 1");
+                    int index = position + (position / 2);
+                    intent.putExtra(InformationListActivity.ID, informationCategoryList.get(index));
+                    context.startActivity(intent);
                 }
             });
             holder.getCardViewShortTwo().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    System.out.println("kort kort 2");
+                    int index = position + (position / 2) + 1;
+                    intent.putExtra(InformationListActivity.ID, informationCategoryList.get(index));
+                    context.startActivity(intent);
                 }
             });
         }
