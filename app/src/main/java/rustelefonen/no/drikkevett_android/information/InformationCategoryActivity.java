@@ -4,6 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -20,6 +23,17 @@ import rustelefonen.no.drikkevett_android.tabs.home.SuperDao;
  */
 
 public class InformationCategoryActivity extends AppCompatActivity {
+    private static final int SPAN_COUNT = 2;
+
+    private enum LayoutManagerType {
+        GRID_LAYOUT_MANAGER,
+        LINEAR_LAYOUT_MANAGER
+    }
+
+    protected LayoutManagerType mCurrentLayoutManagerType;
+    protected RecyclerView mRecyclerView;
+    protected InformationCategoryAdapter mAdapter;
+    protected RecyclerView.LayoutManager mLayoutManager;
 
     private List<InformationCategory> informationCategories;
 
@@ -32,17 +46,34 @@ public class InformationCategoryActivity extends AppCompatActivity {
         initDataset();
 
 
-        GridView gridview = (GridView) findViewById(R.id.information_category_grid_view);
-        gridview.setAdapter(new InformationCategoryAdapter(this, informationCategories));
+        mRecyclerView = (RecyclerView) findViewById(R.id.information_category_recycler_view);
+        mLayoutManager = new LinearLayoutManager(this);
+        mCurrentLayoutManagerType = LayoutManagerType.LINEAR_LAYOUT_MANAGER;
 
-        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                //Toast.makeText(v.getContext(), "" + position, Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(v.getContext(), InformationListActivity.class);
-                intent.putExtra(InformationListActivity.ID, informationCategories.get(position));
-                startActivity(intent);
-            }
-        });
+        setRecyclerViewLayoutManager(mCurrentLayoutManagerType);
+
+        mAdapter = new InformationCategoryAdapter(informationCategories);
+        mRecyclerView.setAdapter(mAdapter);
+
+    }
+
+    private void setRecyclerViewLayoutManager(LayoutManagerType layoutManagerType) {
+        int scrollPosition = 0;
+
+        if (mRecyclerView.getLayoutManager() != null) {
+            scrollPosition = ((LinearLayoutManager) mRecyclerView.getLayoutManager())
+                    .findFirstCompletelyVisibleItemPosition();
+        }
+
+        if (layoutManagerType == LayoutManagerType.GRID_LAYOUT_MANAGER) {
+            mLayoutManager = new GridLayoutManager(this, SPAN_COUNT);
+            mCurrentLayoutManagerType = LayoutManagerType.GRID_LAYOUT_MANAGER;
+        } else {
+            mLayoutManager = new LinearLayoutManager(this);
+            mCurrentLayoutManagerType = LayoutManagerType.LINEAR_LAYOUT_MANAGER;
+        }
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.scrollToPosition(scrollPosition);
     }
 
     private void insertInformationCategory() {

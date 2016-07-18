@@ -36,8 +36,6 @@ public class InformationListAdapter extends RecyclerView.Adapter<InformationList
     @Override
     public void onBindViewHolder(InformationListAdapter.ViewHolder holder, final int position) {
         holder.getNameTextView().setText(informationList.get(position).getName());
-
-
         final View view = holder.getView();
 
         view.setOnClickListener(new View.OnClickListener() {
@@ -60,8 +58,6 @@ public class InformationListAdapter extends RecyclerView.Adapter<InformationList
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        //private final TextView textView;
-        //private final TextView totalCostTextView;
         private final TextView nameTextView;
         private View view;
 
@@ -71,18 +67,8 @@ public class InformationListAdapter extends RecyclerView.Adapter<InformationList
             super(v);
             this.context = context;
             nameTextView = (TextView) v.findViewById(R.id.information_list_category_name);
-            //textView = (TextView) v.findViewById(R.id.textView);
-            //totalCostTextView = (TextView) v.findViewById(R.id.history_total_cost_text_view);
             view = v;
         }
-
-        /*public TextView getTextView() {
-            return textView;
-        }
-
-        public TextView getTotalCostTextView() {
-            return totalCostTextView;
-        }*/
 
         public TextView getNameTextView() {
             return nameTextView;
