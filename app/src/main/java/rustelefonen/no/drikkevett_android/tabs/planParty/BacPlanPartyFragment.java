@@ -200,7 +200,7 @@ public class BacPlanPartyFragment extends Fragment {
 
         // calculate BAC
         if(firstUnitAdded != null){
-            promilleBAC = Double.parseDouble(liveUpdatePromille(weight, gender, firstUnitAdded)) ;
+            promilleBAC = Double.parseDouble(liveUpdatePromille(weight, gender, firstUnitAdded));
         }
 
         promilleLbl.setText("" + promilleBAC);
@@ -611,12 +611,13 @@ public class BacPlanPartyFragment extends Fragment {
 
     private Status isSessionOver(){
         Date currentDate = new Date();
-        Date endSes = new Date();
+        Date endSes = null;
 
         PlanPartyElementsDao partyDao = setDaoSessionDB().getPlanPartyElementsDao();
 
         // GET elements to temporary store them in variables then re-saving them
         List<PlanPartyElements> partyList = partyDao.queryBuilder().list();
+
         for (PlanPartyElements party : partyList) {
             endSes = party.getEndTimeStamp();
         }
