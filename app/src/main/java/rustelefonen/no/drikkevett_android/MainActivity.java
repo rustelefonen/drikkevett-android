@@ -373,8 +373,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         public Fragment getItem(int position) {
             switch(position){
                 case 0: return new BacHomeFragment();
-                case 1: return new BacCalcFragment();
-                case 2: return new BacPlanPartyFragment();
+                case 1: return new BacCalcFragment();case 2: return new BacPlanPartyFragment();
                 case 3: return new BacDayAfterFragment();
                 case 4: return new BacHistoryFragment();
                 default: return PlaceholderFragment.newInstance(position + 1);
