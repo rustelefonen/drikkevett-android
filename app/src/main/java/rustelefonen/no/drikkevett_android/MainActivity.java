@@ -39,6 +39,7 @@ import java.util.List;
 
 import rustelefonen.no.drikkevett_android.db.User;
 import rustelefonen.no.drikkevett_android.db.UserDao;
+import rustelefonen.no.drikkevett_android.information.InformationCategoryActivity;
 import rustelefonen.no.drikkevett_android.intro.GoalRegistrationActivity;
 import rustelefonen.no.drikkevett_android.settings.AlcoholPricingSettingsActivity;
 import rustelefonen.no.drikkevett_android.settings.GoalSettingsActivity;
@@ -100,6 +101,9 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     public void selectDrawerItem(MenuItem menuItem) {
         Intent intent;
         switch(menuItem.getItemId()) {
+            case R.id.drawer_view_information:
+                intent = new Intent(this, InformationCategoryActivity.class);
+                break;
             case R.id.nav_first_fragment:
                 intent = new Intent(this, UserSettingsActivity.class);
                 intent.putExtra(UserSettingsActivity.ID, getUser());
@@ -160,6 +164,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         ((Switch) nvDrawer.getMenu().findItem(R.id.drawer_view_switch).getActionView()).setChecked(true);
 
         drawerToggle = setupDrawerToggle();
+
 
         SuperDao superDao = new SuperDao(this);
         UserDao userDao = superDao.getUserDao();
@@ -314,9 +319,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     }
 
     @Override
-    public void onPageScrollStateChanged(int state) {
-
-    }
+    public void onPageScrollStateChanged(int state) {}
 
 
     /**

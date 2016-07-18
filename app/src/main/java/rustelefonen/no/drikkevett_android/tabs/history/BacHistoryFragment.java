@@ -78,5 +78,6 @@ public class BacHistoryFragment extends Fragment {
         SuperDao superDao = new SuperDao(getContext());
         HistoryDao historyDao = superDao.getHistoryDao();
         historyList = historyDao.queryBuilder().list();
+        superDao.close();
     }
 }

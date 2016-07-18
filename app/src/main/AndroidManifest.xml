@@ -41,5 +41,8 @@
             android:label="Brukerinnstillinger"/>
         <activity android:name=".settings.AlcoholPricingSettingsActivity"/>
         <activity android:name=".settings.GoalSettingsActivity"/>
+        <activity android:name=".information.InformationCategoryActivity" android:label="Informasjon"/>
+        <activity android:name=".information.InformationListActivity"/>
+        <activity android:name=".information.InformationActivity"/>
     </application>
 </manifest>
