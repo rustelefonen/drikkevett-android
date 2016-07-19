@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="32dp">
+            android:padding="28dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -37,7 +37,7 @@
                 android:text="Legg inn brukerinnstillinger"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:layout_marginBottom="96dp"/>
+                android:layout_marginBottom="64dp"/>
 
             <EditText
                 android:padding="8dp"
@@ -50,7 +50,7 @@
                 android:textColor="@color/backgroundColor"
                 android:background="@color/textColor"
                 android:textSize="16sp"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="32dp"
                 android:maxLines="1"
                 android:imeOptions="actionNext"
                 android:lines="1" />
@@ -65,7 +65,7 @@
                 android:hint="Kjønn"
                 android:textColorHint="@color/greyTextColor"
                 android:textSize="16sp"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="32dp"
                 android:focusable="false"
                 android:drawableRight="@drawable/ic_arrow_drop_down_black_24dp"/>
 
@@ -79,7 +79,7 @@
                 android:hint="Vekt"
                 android:textColorHint="@color/greyTextColor"
                 android:textSize="16sp"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="32dp"
                 android:inputType="numberDecimal"/>
             <EditText
                 android:padding="8dp"
@@ -91,16 +91,15 @@
                 android:hint="Alder"
                 android:textColorHint="@color/greyTextColor"
                 android:textSize="16sp"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="32dp"
                 android:inputType="number"/>
 
             <Button
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:text="Neste"
                 android:background="@color/greenSuper"
                 android:textColor="@color/textColor"
-                android:layout_alignParentRight="true"
                 android:onClick="next"/>
         </LinearLayout>
     </android.support.v7.widget.CardView>
