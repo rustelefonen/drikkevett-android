@@ -3,6 +3,7 @@ package rustelefonen.no.drikkevett_android.tabs.dayAfter;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -49,8 +50,8 @@ public class BacDayAfterFragment extends Fragment {
     * ATTRIBUTES
     * */
     // user data:
-    double weight = 80.0;
-    String gender = "Mann";
+    double weight = 0;
+    String gender = "";
 
     int planBeers = 0, planWines = 0, planDrink = 0, planShots = 0;
     int consumBeers = 0, consumWines = 0, consumDrink = 0, consumShots = 0;
@@ -105,15 +106,16 @@ public class BacDayAfterFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.bac_day_after_frag, container, false);
         initWidgets();
+        setUserData();
 
         status = getStatus();
+        System.out.println("Status DA: " + status);
         statusHandler(status);
 
         btnEndDA.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view){
-                clearDBTables();
-                statusHandler(status);
+                showAlert();
             }
         });
 
@@ -158,6 +160,7 @@ public class BacDayAfterFragment extends Fragment {
     public void onResume(){
         super.onResume();
 
+        setUserData();
         // hente status fra db
         status = getStatus();
         statusHandler(status);
@@ -168,6 +171,8 @@ public class BacDayAfterFragment extends Fragment {
         super.setUserVisibleHint(isVisibleToUser);
         if (!this.isVisible()) return;
         if (!isVisibleToUser) return;
+
+        setUserData();
         // hente status fra db
         status = getStatus();
         statusHandler(status);
@@ -259,6 +264,12 @@ public class BacDayAfterFragment extends Fragment {
         return daoSession;
     }
 
+    private void setUserData(){
+        User user = ((MainActivity)getActivity()).getUser();
+        weight = user.getWeight();
+        gender = user.getGender();
+    }
+
     private Date getFirstUnAddedStamp(){
         PlanPartyElementsDao partyDao = getSesDB().getPlanPartyElementsDao();
         List<PlanPartyElements> planPList = partyDao.queryBuilder().list();
@@ -300,10 +311,16 @@ public class BacDayAfterFragment extends Fragment {
     }
 
     private double getHighestBAC(){
+        double tempVal = 0.0;
         HistoryDao historyDao = getSesDB().getHistoryDao();
-        List<History> histList = historyDao.queryBuilder().list();
-        History lastElement = histList.get(histList.size() -1);
-        return lastElement.getHighestBAC();
+        if(historyDao == null){
+            System.out.println("HISTORIE TOM");
+        } else {
+            List<History> histList = historyDao.queryBuilder().list();
+            History lastElement = histList.get(histList.size() -1);
+            tempVal = lastElement.getHighestBAC();
+        }
+        return tempVal;
     }
 
     private double getCurrentBAC(double weight, String gender, Date firstUnitAddedTimeStamp){
@@ -343,7 +360,6 @@ public class BacDayAfterFragment extends Fragment {
 
             System.out.println("Time Difference: " + timeDifference);
             System.out.println("Timer: " + minToHours);
-
             System.out.println("<---------------------------------------------------->");
             // FROM 0 - 4 mins
             if(minToHours < 0.085){
@@ -353,17 +369,28 @@ public class BacDayAfterFragment extends Fragment {
             // FROM 5 - 15 MIN
             if(minToHours > 0.085 && minToHours <= 0.25){
                 // KALKULER PROMILLE
-                sum = totalGrams/(weight * setGenderScore(gender)) - (PartyUtil.intervalCalc(minToHours) * minToHours);
+                try {
+                    sum = totalGrams/(weight * setGenderScore(gender)) - (PartyUtil.intervalCalc(minToHours) * minToHours);
+                } catch (NumberFormatException e){
+                    sum = 0;
+                }
                 System.out.println("Fra 5-15 minutter... (" + sum + ")");
             }
             if(minToHours > 0.25){
                 // KALKULER PROMILLE
-                sum = Double.parseDouble(calculateBAC(gender, weight, totalGrams, minToHours));
+                try{
+                    sum = Double.parseDouble(calculateBAC(gender, weight, totalGrams, minToHours));
+                } catch (NumberFormatException e){
+                    sum = 0;
+                }
+
                 System.out.println("Fra 15 og oppover... (" + sum + ")");
             }
         }
         System.out.println("LivePromille Promille: " + sum);
         System.out.println("<---------------------------------------------------->");
+
+
         return sum;
     }
 
@@ -475,8 +502,10 @@ public class BacDayAfterFragment extends Fragment {
         System.out.println("End Stamp: " + endS + " Start Stamp: " + startS);
         System.out.println("Difference = " + timeDiff);
 
+        double timeDiffToDouble = (double) timeDiff;
+
         // max være 24
-        double convertToHours = (double) (timeDiff / 60);
+        double convertToHours = timeDiffToDouble / 60;
         System.out.println("Timer: " + convertToHours);
 
         if(convertToHours < 0.5){
@@ -559,7 +588,7 @@ public class BacDayAfterFragment extends Fragment {
 
     private int configSeekBar(int hours){
         int minutes = 0;
-        if(hours == 0){ txtView.setText("For lite tid."); minutes = 0; }
+        if(hours == 0){ txtView.setText("0"); minutes = 0; }
         if(hours == 1){ txtView.setText(30 + " m"); minutes = 30; }
         if(hours == 2){ txtView.setText(1 + " t"); minutes = 60; }
         if(hours == 3){ txtView.setText(1 + " t " + 30 + " m"); minutes = 90; }
@@ -600,6 +629,23 @@ public class BacDayAfterFragment extends Fragment {
 
         // refresh graphHistory, by removing all the last values and adding them again with the new unit added
         refreshGraphHist();
+
+        // refresh all visuals
+        dayAfterRunning();
+
+        // add unitToVariable
+        if(unit == "Beer"){
+            consumBeers++;
+        }
+        if(unit == "Wine"){
+            consumWines++;
+        }
+        if(unit == "Drink"){
+            consumDrink++;
+        }
+        if(unit == "Shot"){
+            consumShots++;
+        }
     }
 
     private void refreshGraphHist(){
@@ -780,13 +826,22 @@ public class BacDayAfterFragment extends Fragment {
         dialog.setTitle("Title...");
 
         Button dialogButton = (Button) dialog.findViewById(R.id.dialogButtonOK);
+        Button dialogCancel = (Button) dialog.findViewById(R.id.dialogCancel);
+
         // if button is clicked, close the custom dialog
         dialogButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialog.dismiss();
                 System.out.println(hours + " <--...");
                 addForgottenUnit(unit, tempMins); // tempMins
+                dialog.dismiss();
+            }
+        });
+
+        dialogCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
             }
         });
 
@@ -813,6 +868,28 @@ public class BacDayAfterFragment extends Fragment {
             }
         });
         dialog.show();
+    }
+
+    private void showAlert(){
+        AlertDialog.Builder alert_builder = new AlertDialog.Builder(getContext());
+        alert_builder.setMessage("Er du sikker på at du vil avslutte dagen derpå? ").setCancelable(false).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                System.out.println("Ok");
+                clearDBTables();
+                statusHandler(status);
+            }
+        }).setNegativeButton("Avbryt", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                System.out.println("Avbryt");
+                dialogInterface.cancel();
+            }
+        });
+
+        AlertDialog alert = alert_builder.create();
+        alert.setTitle("Avslutt Dagen Derpå");
+        alert.show();
     }
 
     /*

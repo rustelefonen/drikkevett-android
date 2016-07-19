@@ -6,6 +6,12 @@
     android:orientation="vertical"
     android:background="@color/backgroundColor"
     >
+    <com.github.mikephil.charting.charts.PieChart
+        android:padding="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:id="@+id/pie_chart_bac_plan_party">
+    </com.github.mikephil.charting.charts.PieChart>
 
     <TextView
         android:text="0"
@@ -56,6 +62,11 @@
             android:background="@color/greenSuper"
             android:textColor="@color/textColor"
             />
+        <Button
+            android:text="Start Kvelden"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/buttonStatusPP" />
 
     </LinearLayout>
 
@@ -105,11 +116,7 @@
             />
     </LinearLayout>
 
-    <Button
-        android:text="Start Kvelden"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/buttonStatusPP" />
+
 
 
 </LinearLayout>
