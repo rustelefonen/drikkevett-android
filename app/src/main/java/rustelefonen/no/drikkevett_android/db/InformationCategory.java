@@ -12,6 +12,7 @@ public class InformationCategory implements java.io.Serializable {
 
     private Long id;
     private String name;
+    private byte[] image;
 
     /** Used to resolve relations */
     private transient DaoSession daoSession;
@@ -28,9 +29,10 @@ public class InformationCategory implements java.io.Serializable {
         this.id = id;
     }
 
-    public InformationCategory(Long id, String name) {
+    public InformationCategory(Long id, String name, byte[] image) {
         this.id = id;
         this.name = name;
+        this.image = image;
     }
 
     /** called by internal mechanisms, do not call yourself. */
@@ -53,6 +55,14 @@ public class InformationCategory implements java.io.Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
     }
 
     /** To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity. */

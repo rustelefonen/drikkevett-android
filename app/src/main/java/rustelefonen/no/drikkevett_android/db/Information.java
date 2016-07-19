@@ -9,6 +9,7 @@ public class Information implements java.io.Serializable {
     private Long id;
     private String name;
     private String content;
+    private byte[] image;
     private long categoryId;
 
     public Information() {
@@ -18,10 +19,11 @@ public class Information implements java.io.Serializable {
         this.id = id;
     }
 
-    public Information(Long id, String name, String content, long categoryId) {
+    public Information(Long id, String name, String content, byte[] image, long categoryId) {
         this.id = id;
         this.name = name;
         this.content = content;
+        this.image = image;
         this.categoryId = categoryId;
     }
 
@@ -47,6 +49,14 @@ public class Information implements java.io.Serializable {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
     }
 
     public long getCategoryId() {

@@ -2,10 +2,13 @@ package rustelefonen.no.drikkevett_android.information;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -35,7 +38,15 @@ public class InformationListAdapter extends RecyclerView.Adapter<InformationList
 
     @Override
     public void onBindViewHolder(InformationListAdapter.ViewHolder holder, final int position) {
-        holder.getNameTextView().setText(informationList.get(position).getName());
+        Information currentInformation = informationList.get(position);
+        holder.getNameTextView().setText(currentInformation.getName());
+
+        byte[] image = currentInformation.getImage();
+        if (image != null) {
+            Bitmap bitmap = BitmapFactory.decodeByteArray(image , 0, image.length);
+            if (bitmap != null) holder.getImageView().setImageBitmap(bitmap);
+            else System.out.println("bitmap er null");
+        }
 
 
         final View view = holder.getView();
@@ -43,8 +54,6 @@ public class InformationListAdapter extends RecyclerView.Adapter<InformationList
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println(informationList.get(position).getContent());
-
                 Context context = view.getContext();
                 Intent intent = new Intent(context, InformationActivity.class);
                 intent.putExtra(InformationActivity.ID, informationList.get(position));
@@ -60,10 +69,9 @@ public class InformationListAdapter extends RecyclerView.Adapter<InformationList
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        //private final TextView textView;
-        //private final TextView totalCostTextView;
         private final TextView nameTextView;
         private View view;
+        private final ImageView imageView;
 
         private Context context;
 
@@ -71,18 +79,9 @@ public class InformationListAdapter extends RecyclerView.Adapter<InformationList
             super(v);
             this.context = context;
             nameTextView = (TextView) v.findViewById(R.id.information_list_category_name);
-            //textView = (TextView) v.findViewById(R.id.textView);
-            //totalCostTextView = (TextView) v.findViewById(R.id.history_total_cost_text_view);
             view = v;
+            imageView = (ImageView) v.findViewById(R.id.information_list_image);
         }
-
-        /*public TextView getTextView() {
-            return textView;
-        }
-
-        public TextView getTotalCostTextView() {
-            return totalCostTextView;
-        }*/
 
         public TextView getNameTextView() {
             return nameTextView;
@@ -94,6 +93,10 @@ public class InformationListAdapter extends RecyclerView.Adapter<InformationList
 
         public Context getContext() {
             return context;
+        }
+
+        public ImageView getImageView() {
+            return imageView;
         }
     }
 }

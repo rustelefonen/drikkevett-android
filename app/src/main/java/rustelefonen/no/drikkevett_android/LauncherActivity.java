@@ -9,6 +9,7 @@ import java.util.List;
 
 import rustelefonen.no.drikkevett_android.db.User;
 import rustelefonen.no.drikkevett_android.db.UserDao;
+import rustelefonen.no.drikkevett_android.information.DBSeeder;
 import rustelefonen.no.drikkevett_android.intro.UserRegistrationActivity;
 import rustelefonen.no.drikkevett_android.tabs.home.SuperDao;
 
@@ -36,6 +37,7 @@ public class LauncherActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        DBSeeder.seed(this);
         Intent intent;
         if (hasUser()) {
             intent = new Intent(this, MainActivity.class);

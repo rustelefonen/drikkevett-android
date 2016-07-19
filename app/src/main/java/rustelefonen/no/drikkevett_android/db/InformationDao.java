@@ -29,7 +29,8 @@ public class InformationDao extends AbstractDao<Information, Long> {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
         public final static Property Name = new Property(1, String.class, "name", false, "NAME");
         public final static Property Content = new Property(2, String.class, "content", false, "CONTENT");
-        public final static Property CategoryId = new Property(3, long.class, "categoryId", false, "CATEGORY_ID");
+        public final static Property Image = new Property(3, byte[].class, "image", false, "IMAGE");
+        public final static Property CategoryId = new Property(4, long.class, "categoryId", false, "CATEGORY_ID");
     };
 
     private Query<Information> informationCategory_InformationListQuery;
@@ -49,7 +50,8 @@ public class InformationDao extends AbstractDao<Information, Long> {
                 "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
                 "\"NAME\" TEXT," + // 1: name
                 "\"CONTENT\" TEXT," + // 2: content
-                "\"CATEGORY_ID\" INTEGER NOT NULL );"); // 3: categoryId
+                "\"IMAGE\" BLOB," + // 3: image
+                "\"CATEGORY_ID\" INTEGER NOT NULL );"); // 4: categoryId
     }
 
     /** Drops the underlying database table. */
@@ -77,7 +79,12 @@ public class InformationDao extends AbstractDao<Information, Long> {
         if (content != null) {
             stmt.bindString(3, content);
         }
-        stmt.bindLong(4, entity.getCategoryId());
+ 
+        byte[] image = entity.getImage();
+        if (image != null) {
+            stmt.bindBlob(4, image);
+        }
+        stmt.bindLong(5, entity.getCategoryId());
     }
 
     /** @inheritdoc */
@@ -93,7 +100,8 @@ public class InformationDao extends AbstractDao<Information, Long> {
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
             cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // name
             cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // content
-            cursor.getLong(offset + 3) // categoryId
+            cursor.isNull(offset + 3) ? null : cursor.getBlob(offset + 3), // image
+            cursor.getLong(offset + 4) // categoryId
         );
         return entity;
     }
@@ -104,7 +112,8 @@ public class InformationDao extends AbstractDao<Information, Long> {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setName(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
         entity.setContent(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
-        entity.setCategoryId(cursor.getLong(offset + 3));
+        entity.setImage(cursor.isNull(offset + 3) ? null : cursor.getBlob(offset + 3));
+        entity.setCategoryId(cursor.getLong(offset + 4));
      }
     
     /** @inheritdoc */

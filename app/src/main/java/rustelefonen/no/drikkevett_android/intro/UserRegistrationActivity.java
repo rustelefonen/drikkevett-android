@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -24,12 +26,33 @@ public class UserRegistrationActivity extends AppCompatActivity {
     public EditText weightEditText;
     public EditText ageEditText;
 
+    private static final String[] GENDERS = new String[]{"Mann", "Kvinne"};
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.user_registration_layout);
         nicknameEditText = (EditText) findViewById(R.id.user_reg_nickname_edit_text);
         genderAutoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.user_reg_gender_auto_complete_text_view);
+        genderAutoCompleteTextView.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, GENDERS));
+
+        genderAutoCompleteTextView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) genderAutoCompleteTextView.showDropDown();
+            }
+        });
+
+        genderAutoCompleteTextView.setOnTouchListener(new View.OnTouchListener() {
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                genderAutoCompleteTextView.showDropDown();
+                return false;
+            }
+        });
+
         weightEditText = (EditText) findViewById(R.id.user_reg_weight_edit_text);
         ageEditText = (EditText) findViewById(R.id.user_reg_age_edit_text);
     }

@@ -22,6 +22,7 @@ android {
 
 repositories {
     maven { url "https://jitpack.io" }
+    mavenCentral()
 }
 
 dependencies {
@@ -45,4 +46,6 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:21.0.+'
 
     compile 'com.android.support:appcompat-v7:23.2.0'
+
+    compile 'com.github.paolorotolo:appintro:4.0.0'
 }
