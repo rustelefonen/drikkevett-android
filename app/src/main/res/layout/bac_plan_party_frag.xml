@@ -24,6 +24,7 @@
         android:layout_marginTop="0dp"
         android:textSize="36sp"
         android:textColor="@color/textColor"
+        android:layout_gravity="center"
         />
 
     <TextView
@@ -32,6 +33,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/textViewQuotesPP"
         android:textColor="@color/textColor"
+        android:layout_gravity="center"
         />
 
     <android.support.v4.view.ViewPager
@@ -55,6 +57,7 @@
             android:id="@+id/buttonRemovePP"
             android:background="@color/redSuper"
             android:textColor="@color/textColor"
+            android:layout_marginRight="40dp"
             />
 
         <Button
@@ -70,46 +73,114 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
+        android:paddingTop="20dp"
         >
-
-        <TextView
-            android:text="0\nØL"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/textViewBeerPP"
-            android:gravity="center"
-            android:layout_marginRight="50dp"
-            android:textColor="@color/textColor"
-            />
-
-        <TextView
-            android:text="0\nVin"
+            android:orientation="vertical"
+            >
+            <TextView
+                android:text="0"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textViewBeerPP"
+                android:gravity="center"
+                android:minWidth="75dp"
+                android:textColor="@color/textColor"
+                android:textSize="35dp"
+                />
+            <TextView
+                android:text="ØL"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textViewBeer_title_PP"
+                android:gravity="center"
+                android:minWidth="75dp"
+                android:textColor="@color/greyTextColor"
+                android:textSize="18dp"
+                />
+        </LinearLayout>
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/textViewWinePP"
-            android:gravity="center"
-            android:layout_marginRight="50dp"
-            android:textColor="@color/textColor"
-            />
-
-        <TextView
-            android:text="0\nDrink"
+            android:orientation="vertical"
+            >
+            <TextView
+                android:text="0"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textViewWinePP"
+                android:gravity="center"
+                android:minWidth="75dp"
+                android:textColor="@color/textColor"
+                android:textSize="35dp"
+                />
+            <TextView
+                android:text="VIN"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textViewWine_title_PP"
+                android:gravity="center"
+                android:minWidth="75dp"
+                android:textColor="@color/greyTextColor"
+                android:textSize="18dp"
+                />
+        </LinearLayout>
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/textViewDrinkPP"
-            android:gravity="center"
-            android:layout_marginRight="50dp"
-            android:textColor="@color/textColor"
-            />
-
-        <TextView
-            android:text="0\nShot"
+            android:orientation="vertical"
+            >
+            <TextView
+                android:text="0"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textViewDrinkPP"
+                android:gravity="center"
+                android:minWidth="75dp"
+                android:textColor="@color/textColor"
+                android:textSize="35dp"
+                />
+            <TextView
+                android:text="DRINK"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textViewDrink_title_PP"
+                android:gravity="center"
+                android:minWidth="75dp"
+                android:textColor="@color/greyTextColor"
+                android:textSize="18dp"
+                />
+        </LinearLayout>
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/textViewShotPP"
-            android:gravity="center"
-            android:textColor="@color/textColor"
-            />
+            android:orientation="vertical"
+            >
+            <TextView
+                android:text="0"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textViewShotPP"
+                android:gravity="center"
+                android:textColor="@color/textColor"
+                android:minWidth="75dp"
+                android:textSize="35dp"
+                />
+            <TextView
+                android:text="SHOT"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textViewShot_title_PP"
+                android:gravity="center"
+                android:minWidth="75dp"
+                android:textColor="@color/greyTextColor"
+                android:textSize="18dp"
+                />
+
+
+        </LinearLayout>
     </LinearLayout>
         <Button
             android:text="Start Kvelden"

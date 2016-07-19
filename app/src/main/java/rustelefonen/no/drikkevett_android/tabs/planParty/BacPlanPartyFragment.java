@@ -223,10 +223,10 @@ public class BacPlanPartyFragment extends Fragment {
         getUnitsPlanned();
 
         // Layout
-        beerLbl.setText(beersConsumed + "/" + plannedBeers + "\nØL");
-        wineLbl.setText(winesConsumed + "/" + plannedWines + "\nVin");
-        drinkLbl.setText(drinksConsumed + "/" + plannedDrinks + "\nDrink");
-        shotLbl.setText(shotsConsumed + "/" + plannedShots + "\nShot");
+        beerLbl.setText(beersConsumed + "/" + plannedBeers);
+        wineLbl.setText(winesConsumed + "/" + plannedWines);
+        drinkLbl.setText(drinksConsumed + "/" + plannedDrinks);
+        shotLbl.setText(shotsConsumed + "/" + plannedShots);
 
         // Visibility
         visuals(View.VISIBLE);
@@ -243,10 +243,10 @@ public class BacPlanPartyFragment extends Fragment {
         statusBtn.setText("Start Kvelden");
 
         // LAYOUT / UTSEENDE
-        beerLbl.setText(plannedBeers + "\nØL");
-        wineLbl.setText(plannedWines + "\nVin");
-        drinkLbl.setText(plannedDrinks + "\nDrink");
-        shotLbl.setText(plannedShots + "\nShot");
+        beerLbl.setText(plannedBeers + "");
+        wineLbl.setText(plannedWines + "");
+        drinkLbl.setText(plannedDrinks + "");
+        shotLbl.setText(plannedShots + "");
 
         promilleLbl.setText("0.00");
 

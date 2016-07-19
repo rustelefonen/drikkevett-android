@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -55,15 +56,14 @@ public class BacDayAfterFragment extends Fragment {
     double weight = 0;
     String gender = "";
 
-    int planBeers = 0, planWines = 0, planDrink = 0, planShots = 0;
-    int consumBeers = 0, consumWines = 0, consumDrink = 0, consumShots = 0;
+    private int planBeers = 0, planWines = 0, planDrink = 0, planShots = 0;
+    private int consumBeers = 0, consumWines = 0, consumDrink = 0, consumShots = 0;
 
-    int costs = 0;
-    double currentBAC = 0.0;
-    double highestBAC = 0.0;
+    private int costs = 0;
+    private double currentBAC = 0.0, highestBAC = 0.0;
 
     // dummy beergrams
-    double beerGrams = 12.6;
+    private double beerGrams = 12.6;
     double wineGrams = 14.0;
     double drinkGrams = 15.0;
     double shotGrams = 16.0;
@@ -71,37 +71,25 @@ public class BacDayAfterFragment extends Fragment {
     public Status status;
 
     // start and end stamp session
-    public Date startStamp = new Date();
-    public Date endStamp = new Date();
+    public Date startStamp = new Date(), endStamp = new Date();
 
     /*
     * WIDGETS
     * */
-    public TextView titleLbl;
+    private TextView titleLbl;
+    private TextView beerLbl, wineLbl, drinkLbl, shotLbl;
+    private TextView costsLbl, highBACLbl, currBACLbl;
 
-    public TextView beerLbl;
-    public TextView wineLbl;
-    public TextView drinkLbl;
-    public TextView shotLbl;
-
-    public TextView costsLbl;
-    public TextView highBACLbl;
-    public TextView currBACLbl;
-
-    public TextView afterRegBeerLbl, afterRegWineLbl, afterRegDrinkLbl, afterRegShotLbl;
+    // after reg:
+    private TextView afterRegBeerLbl, afterRegWineLbl, afterRegDrinkLbl, afterRegShotLbl;
 
     // BUTTONS
-    public Button btnEndDA;
-    public Button beerBtnAfterReg_DA;
-    public Button wineBtnAfterReg_DA;
-    public Button drinkBtnAfterReg_DA;
-    public Button shotBtnAfterReg_DA;
+    private Button btnEndDA, beerBtnAfterReg_DA, wineBtnAfterReg_DA, drinkBtnAfterReg_DA, shotBtnAfterReg_DA;
 
     // SEEKBAR
-    public TextView txtView;
-    public SeekBar seekBar;
-    int hours = 0;
-    int tempMins = 0;
+    private TextView txtView;
+    private SeekBar seekBar;
+    private int hours = 0, tempMins = 0;
 
     // VIEWS
     public View v;
@@ -190,7 +178,7 @@ public class BacDayAfterFragment extends Fragment {
     * */
 
     private void statusHandler(Status state){
-        if(state == status.RUNNING || state == status.NOT_RUNNING){
+        if(state == status.RUNNING || state == status.NOT_RUNNING || state == status.DEFAULT){
             planPartyRunning();
         }
         if(state == status.DA_RUNNING){
@@ -220,6 +208,11 @@ public class BacDayAfterFragment extends Fragment {
                 tempStatus = Status.DA_RUNNING;
             }
         }
+        // For å sjekke om listen er tom
+        if(partyList.size() == 0){
+            System.out.println("Party listen er tom! ");
+        }
+
         return tempStatus;
     }
 
@@ -927,6 +920,12 @@ public class BacDayAfterFragment extends Fragment {
         wineBtnAfterReg_DA.setVisibility(visibility);
         drinkBtnAfterReg_DA.setVisibility(visibility);
         shotBtnAfterReg_DA.setVisibility(visibility);
+
+        // after Reg
+        afterRegBeerLbl.setVisibility(visibility);
+        afterRegWineLbl.setVisibility(visibility);
+        afterRegDrinkLbl.setVisibility(visibility);
+        afterRegShotLbl.setVisibility(visibility);
     }
 
     private void setVisualsPP(){
