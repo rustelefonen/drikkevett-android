@@ -24,10 +24,9 @@
                 android:layout_height="wrap_content">
 
                 <ImageView
-                    android:id="@+id/shot_row_image_one"
+                    android:id="@+id/short_row_image_one"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/beer"
                     android:scaleType="fitXY"/>
 
                 <TextView
@@ -37,7 +36,7 @@
                     android:layout_height="wrap_content"
                     android:textSize="32sp"
                     android:textColor="@color/textColor"
-                    android:layout_below="@+id/shot_row_image_one"/>
+                    android:layout_below="@+id/short_row_image_one"/>
             </RelativeLayout>
 
         </android.support.v7.widget.CardView>
@@ -56,10 +55,9 @@
                 android:layout_height="wrap_content">
 
                 <ImageView
-                    android:id="@+id/shot_row_image_two"
+                    android:id="@+id/short_row_image_two"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/beer"
                     android:scaleType="fitXY"/>
 
                 <TextView
@@ -69,7 +67,7 @@
                     android:layout_height="wrap_content"
                     android:textSize="32sp"
                     android:textColor="@color/textColor"
-                    android:layout_below="@+id/shot_row_image_two"/>
+                    android:layout_below="@+id/short_row_image_two"/>
             </RelativeLayout>
 
         </android.support.v7.widget.CardView>

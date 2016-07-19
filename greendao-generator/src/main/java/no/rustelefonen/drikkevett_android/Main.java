@@ -63,6 +63,23 @@ public class Main {
         planParty.addDateProperty("startTimeStamp");
         planParty.addDateProperty("endTimeStamp");
 
+        Entity informationCategory = schema.addEntity("InformationCategory");
+        informationCategory.addIdProperty();
+        informationCategory.addStringProperty("name");
+        informationCategory.addByteArrayProperty("image");
+        informationCategory.implementsSerializable();
+
+        Entity information = schema.addEntity("Information");
+        information.addIdProperty();
+        information.addStringProperty("name");
+        information.addStringProperty("content");
+        information.addByteArrayProperty("image");
+        information.implementsSerializable();
+
+        Property informationCategoryId = information.addLongProperty("categoryId").notNull().getProperty();
+        ToMany informationCategoryToInformation = informationCategory.addToMany(information, informationCategoryId);
+        informationCategoryToInformation.setName("informationList");
+
         DaoGenerator dg = new DaoGenerator();
         dg.generateAll(schema, "./app/src/main/java");
     }

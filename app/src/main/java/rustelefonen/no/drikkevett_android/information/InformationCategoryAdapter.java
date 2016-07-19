@@ -2,16 +2,18 @@ package rustelefonen.no.drikkevett_android.information;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import java.util.List;
 
 import rustelefonen.no.drikkevett_android.R;
-import rustelefonen.no.drikkevett_android.db.Information;
 import rustelefonen.no.drikkevett_android.db.InformationCategory;
 
 /**
@@ -46,78 +48,40 @@ public class InformationCategoryAdapter extends RecyclerView.Adapter<Information
 
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
-        /*int tmpPosition = position + 1;
-        while (tmpPosition % 3 != 0) tmpPosition++;
-        tmpPosition -= position + 1;
-        final Intent intent = new Intent(context, InformationListActivity.class);
-        intent.putExtra(InformationListActivity.ID, informationCategoryList.get(position));
-
-        System.out.println("pos " + position);
-        System.out.println("tmpPos" + tmpPosition);
-
-
-        if (tmpPosition == 0) {
-            holder.getCardViewShortTwo().setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    System.out.println("kort kort 2");
-                    context.startActivity(intent);
-                }
-            });
-        } else if (tmpPosition == 1) {
-            holder.getCardViewShortOne().setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    System.out.println("kort kort 1");
-                    context.startActivity(intent);
-                }
-            });
-
-        } else if (tmpPosition == 2) {
-            holder.getCardViewLong().setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    System.out.println("langt kort");
-                    context.startActivity(intent);
-                }
-            });
-        }*/
-
-        final Intent intent = new Intent(context, InformationListActivity.class);
-
         if (position % 2 == 0) {
-
-            holder.getCardViewLong().setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int index = position + (position/2);
-                    intent.putExtra(InformationListActivity.ID, informationCategoryList.get(index));
-                    context.startActivity(intent);
-                }
-            });
+            setupCurrentCard(holder.getCardViewLong(), holder.getImageLong(), informationCategoryList.get(position + (position/2)));
         } else {
-            holder.getCardViewShortOne().setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int index = position + (position / 2);
-                    intent.putExtra(InformationListActivity.ID, informationCategoryList.get(index));
-                    context.startActivity(intent);
-                }
-            });
-            holder.getCardViewShortTwo().setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int index = position + (position / 2) + 1;
-                    intent.putExtra(InformationListActivity.ID, informationCategoryList.get(index));
-                    context.startActivity(intent);
-                }
-            });
+            setupCurrentCard(holder.getCardViewShortOne(), holder.getImageShortOne(), informationCategoryList.get(position + (position/2)));
+            setupCurrentCard(holder.getCardViewShortTwo(), holder.getImageShortTwo(), informationCategoryList.get(position + (position/2) + 1));
         }
+    }
+
+    private void setupCurrentCard(CardView cardView, ImageView imageView, final InformationCategory informationCategory) {
+        cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, InformationListActivity.class);
+                intent.putExtra(InformationListActivity.ID, informationCategory);
+                context.startActivity(intent);
+            }
+        });
+        byte[] image = informationCategory.getImage();
+        Bitmap bitmap = BitmapFactory.decodeByteArray(image , 0, image.length);
+        if (bitmap != null) imageView.setImageBitmap(bitmap);
+        else System.out.println("bitmap er null");
     }
 
     @Override
     public int getItemCount() {
-        return informationCategoryList.size();
+        int counter = 0;
+        for (int i = 0; i < informationCategoryList.size(); i++) {
+            if (i % 3 != 0) {
+                counter++;
+            }
+        }
+        return counter;
+
+        //return informationCategoryList.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -126,12 +90,20 @@ public class InformationCategoryAdapter extends RecyclerView.Adapter<Information
         private final CardView cardViewShortOne;
         private final CardView cardViewShortTwo;
 
+        private final ImageView imageLong;
+        private final ImageView imageShortOne;
+        private final ImageView imageShortTwo;
+
 
         public ViewHolder(View v) {
             super(v);
             cardViewLong = (CardView) v.findViewById(R.id.long_row_card);
             cardViewShortOne = (CardView) v.findViewById(R.id.short_row_card_one);
             cardViewShortTwo = (CardView) v.findViewById(R.id.short_row_card_two);
+
+            imageLong = (ImageView) v.findViewById(R.id.long_row_image);
+            imageShortOne = (ImageView) v.findViewById(R.id.short_row_image_one);
+            imageShortTwo = (ImageView) v.findViewById(R.id.short_row_image_two);
         }
 
         public CardView getCardViewLong() {
@@ -144,6 +116,18 @@ public class InformationCategoryAdapter extends RecyclerView.Adapter<Information
 
         public CardView getCardViewShortTwo() {
             return cardViewShortTwo;
+        }
+
+        public ImageView getImageLong() {
+            return imageLong;
+        }
+
+        public ImageView getImageShortOne() {
+            return imageShortOne;
+        }
+
+        public ImageView getImageShortTwo() {
+            return imageShortTwo;
         }
     }
 }
