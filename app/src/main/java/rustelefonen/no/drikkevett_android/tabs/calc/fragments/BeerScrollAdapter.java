@@ -25,9 +25,8 @@ public class BeerScrollAdapter extends FragmentPagerAdapter {
         } else if (position == 3) {
             return new ShotFragment();
         } else {
-
+            return new BeerFragment();
         }
-        return new BeerFragment();
     }
 
     @Override
