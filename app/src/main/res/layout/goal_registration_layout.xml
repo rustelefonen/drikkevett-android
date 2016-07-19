@@ -27,17 +27,17 @@
                 android:text="Målsetning"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:layout_marginBottom="16dp"/>
+                android:layout_marginBottom="32dp"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/greyTextColor"
-                android:textSize="24sp"
-                android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec finibus odio feugiat, dictum metus id, porttitor metus. Nam pharetra nulla at lacus tincidunt congue."
+                android:textColor="@color/textColor"
+                android:textSize="16sp"
+                android:text="Legg inn en langsiktig makspromille du ønsker å holde deg under frem til en ønsket dato. Makspromillen tilsvarer et nivå av promille du ikke vil overstige i løpet av én kveld."
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:layout_marginBottom="16dp"/>
+                android:layout_marginBottom="64dp"/>
 
             <EditText
                 android:id="@+id/goal_reg_bac_edit_text"
@@ -48,9 +48,10 @@
                 android:textColorHint="@color/greyTextColor"
                 android:textColor="@color/backgroundColor"
                 android:background="@color/textColor"
-                android:textSize="24sp"
-                android:layout_marginBottom="16dp"
-                android:inputType="numberDecimal" />
+                android:textSize="16sp"
+                android:layout_marginBottom="32dp"
+                android:inputType="numberDecimal"
+                android:padding="8dp"/>
 
             <EditText
                 android:id="@+id/goal_reg_date_edit_text"
@@ -61,25 +62,20 @@
                 android:textColorHint="@color/greyTextColor"
                 android:textColor="@color/backgroundColor"
                 android:background="@color/textColor"
-                android:textSize="24sp"
-                android:layout_marginBottom="16dp"
+                android:textSize="16sp"
+                android:layout_marginBottom="32dp"
                 android:focusable="false"
-                android:onClick="showDialog"/>
+                android:onClick="showDialog"
+                android:maxLines="1"
+                android:padding="8dp"/>
 
-            <RelativeLayout
+            <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Fullfør"
-                    android:background="@color/greenSuper"
-                    android:textColor="@color/textColor"
-                    android:onClick="finish"
-                    android:layout_alignParentRight="true"/>
-            </RelativeLayout>
+                android:text="Fullfør"
+                android:background="@color/greenSuper"
+                android:textColor="@color/textColor"
+                android:onClick="finish"/>
         </LinearLayout>
     </android.support.v7.widget.CardView>
 </android.support.v4.widget.NestedScrollView>
