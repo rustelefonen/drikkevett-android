@@ -16,6 +16,8 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import org.w3c.dom.Text;
+
 import rustelefonen.no.drikkevett_android.MainActivity;
 import rustelefonen.no.drikkevett_android.R;
 import rustelefonen.no.drikkevett_android.db.GraphHistory;
@@ -85,6 +87,8 @@ public class BacDayAfterFragment extends Fragment {
     public TextView costsLbl;
     public TextView highBACLbl;
     public TextView currBACLbl;
+
+    public TextView afterRegBeerLbl, afterRegWineLbl, afterRegDrinkLbl, afterRegShotLbl;
 
     // BUTTONS
     public Button btnEndDA;
@@ -633,9 +637,17 @@ public class BacDayAfterFragment extends Fragment {
         // refresh all visuals
         dayAfterRunning();
 
+        // add number of after registered units
+        int afterRegBeer = 0;
+        int afterRegWine = 0;
+        int afterRegDrink = 0;
+        int afterRegShot = 0;
+
         // add unitToVariable
         if(unit == "Beer"){
             consumBeers++;
+            afterRegBeer++;
+            afterRegBeerLbl.setText(afterRegBeer + "");
         }
         if(unit == "Wine"){
             consumWines++;
@@ -796,30 +808,26 @@ public class BacDayAfterFragment extends Fragment {
     private void updateUnitInHistory(String unit){
         // update highest BAC in History
         HistoryDao historyDao = setDaoSessionDB().getHistoryDao();
-
         List<History> histories = historyDao.queryBuilder().list();
-
         History lastElement = histories.get(histories.size() -1);
         System.out.println("Siste Element i DB History: " + lastElement.getId());
 
-        if(unit == "Beer"){
+        if(unit.equals("Beer")){
             lastElement.setBeerCount(lastElement.getBeerCount() + 1);
         }
-        if(unit == "Wine"){
+        if(unit.equals("Wine")){
             lastElement.setWineCount(lastElement.getWineCount() + 1);
         }
-        if(unit == "Drink"){
+        if(unit.equals("Drink")){
             lastElement.setDrinkCount(lastElement.getDrinkCount() + 1);
         }
-        if(unit == "Shot"){
+        if(unit.equals("Shot")){
             lastElement.setShotCount(lastElement.getShotCount() + 1);
         }
-
         historyDao.insertOrReplace(lastElement);
     }
 
     private void afterPopUp(final String unit){
-
         // custom dialog
         final Dialog dialog = new Dialog(getContext());
         dialog.setContentView(R.layout.custom_day_a_pop_up);
@@ -832,12 +840,16 @@ public class BacDayAfterFragment extends Fragment {
         dialogButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println(hours + " <--...");
-                addForgottenUnit(unit, tempMins); // tempMins
-                dialog.dismiss();
+                if(tempMins == 0){
+                    Toast.makeText(getContext(), "Kan ikke legge til med verdi 0!", Toast.LENGTH_SHORT).show();
+                    dialog.dismiss();
+                } else {
+                    addForgottenUnit(unit, tempMins); // tempMins
+                    Toast.makeText(getContext(), unit + " lagt til", Toast.LENGTH_SHORT).show();
+                    dialog.dismiss();
+                }
             }
         });
-
         dialogCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -856,6 +868,7 @@ public class BacDayAfterFragment extends Fragment {
                 hours = i;
                 seekBar.setMax(setMaxSeekBarVal());
                 tempMins = configSeekBar(hours);
+                System.out.println("Temp Mins: " + tempMins);
             }
 
             @Override
@@ -919,23 +932,23 @@ public class BacDayAfterFragment extends Fragment {
     private void setVisualsPP(){
         clearUnitVariabels();
         btnEndDA.setVisibility(View.GONE);
+        titleLbl.setVisibility(View.VISIBLE);
         titleLbl.setText("Planlegg Kvelden pågår");
         setVisibility(View.GONE);
     }
 
     private void setVisualsDA(){
         setVisibility(View.VISIBLE);
+        titleLbl.setVisibility(View.GONE);
 
-        titleLbl.setText("Dagen Derpå pågår");
+        beerLbl.setText(consumBeers + "");
+        wineLbl.setText(consumWines + "");
+        drinkLbl.setText(consumDrink + "");
+        shotLbl.setText(consumShots + "");
 
-        beerLbl.setText(consumBeers + "\nØL");
-        wineLbl.setText(consumWines + "\nVin");
-        drinkLbl.setText(consumDrink + "\nDrink");
-        shotLbl.setText(consumShots + "\nShot");
-
-        costsLbl.setText(costs + ",-\nForbruk");
-        highBACLbl.setText(highestBAC + "\nHøyeste\nPromille");
-        currBACLbl.setText(currentBAC + "\nNåværende\nPromille");
+        costsLbl.setText(costs + ",-");
+        highBACLbl.setText(highestBAC + "");
+        currBACLbl.setText(currentBAC + "");
     }
 
     private void initWidgets(){
@@ -956,5 +969,11 @@ public class BacDayAfterFragment extends Fragment {
         wineBtnAfterReg_DA = (Button) v.findViewById(R.id.btnAfterRegWine_DA);
         drinkBtnAfterReg_DA = (Button) v.findViewById(R.id.btnAfterRegDrink_DA);
         shotBtnAfterReg_DA = (Button) v.findViewById(R.id.btnAfterRegShot_DA);
+
+        // AFTER REG UNITS
+        afterRegBeerLbl = (TextView) v.findViewById(R.id.txtViewAfterRegBeerUnit_DA);
+        afterRegWineLbl = (TextView) v.findViewById(R.id.txtViewAfterRegWineUnit_DA);
+        afterRegDrinkLbl = (TextView) v.findViewById(R.id.txtViewAfterRegDrinkUnit_DA);
+        afterRegShotLbl = (TextView) v.findViewById(R.id.txtViewAfterRegShotUnit_DA);
     }
 }

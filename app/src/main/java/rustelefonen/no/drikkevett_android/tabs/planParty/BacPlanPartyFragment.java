@@ -156,10 +156,10 @@ public class BacPlanPartyFragment extends Fragment {
     public void onResume(){
         super.onResume();
 
+        setUserData();
         // Check session
         status = isSessionOver();
         stateHandler(status);
-        setUserData();
     }
 
     @Override
@@ -227,6 +227,9 @@ public class BacPlanPartyFragment extends Fragment {
         wineLbl.setText(winesConsumed + "/" + plannedWines + "\nVin");
         drinkLbl.setText(drinksConsumed + "/" + plannedDrinks + "\nDrink");
         shotLbl.setText(shotsConsumed + "/" + plannedShots + "\nShot");
+
+        // Visibility
+        visuals(View.VISIBLE);
     }
 
     private void partyNotRunning(){
@@ -246,25 +249,32 @@ public class BacPlanPartyFragment extends Fragment {
         shotLbl.setText(plannedShots + "\nShot");
 
         promilleLbl.setText("0.00");
+
+        // Visibility
+        visuals(View.VISIBLE);
     }
 
     private void dayAfterRunning(){
         // change text on textQuotes
         textQuoteLbl.setText("Klikk på knappen for å starte å planlegge en ny kveld");
 
-        // Remove buttons
-        addBtn.setVisibility(View.GONE);
-        removeBtn.setVisibility(View.GONE);
-
         // Set text on statusbtn
         statusBtn.setText("Avslutt Dagen Derpå");
 
-        // LAYOUT / UTSEENDE
-        beerLbl.setText("-\nØL");
-        wineLbl.setText("-\nVin");
-        drinkLbl.setText("-\nDrink");
-        shotLbl.setText("-\nShot");
-        promilleLbl.setText("-");
+        // Visibility
+        visuals(View.GONE);
+    }
+
+    private void visuals(int visibility){
+        beerLbl.setVisibility(visibility);
+        wineLbl.setVisibility(visibility);
+        drinkLbl.setVisibility(visibility);
+        shotLbl.setVisibility(visibility);
+        promilleLbl.setVisibility(visibility);
+
+        // Remove buttons
+        addBtn.setVisibility(visibility);
+        removeBtn.setVisibility(visibility);
     }
 
     /*
@@ -405,22 +415,14 @@ public class BacPlanPartyFragment extends Fragment {
         String textOnBtn = (String) statusBtn.getText();
 
         if(textOnBtn.equals("Avslutt Kvelden")){
-            statusBtn.setText("Avslutt Dagen Derpå");
-            status = Status.DA_RUNNING;
+            showAlertRunning();
         }
         if(textOnBtn.equals("Avslutt Dagen Derpå")){
-            statusBtn.setText("Start Kvelden");
-            status = Status.NOT_RUNNING;
-
-            // Clear tabels: (PlanPartyElements and DayAfterBAC)
-            clearPartyTables();
+            showAlertDayAfterRunning();
         }
         if(textOnBtn.equals("Start Kvelden")){
-            statusBtn.setText("Avslutt Kvelden");
-            status = Status.RUNNING;
+            showAlertNotRunning();
         }
-        updateStatusBtn(status.toString());
-        stateHandler(status);
     }
 
     private void setUserData(){
@@ -645,13 +647,13 @@ public class BacPlanPartyFragment extends Fragment {
             if(endSes.after(currentDate)){
                 return Status.RUNNING;
             } else {
-                updateStateWhenSessionIsOver();
+                updateStateWhenSessionIsOver(Status.DA_RUNNING.toString());
                 return Status.DA_RUNNING;
             }
         }
     }
 
-    private void updateStateWhenSessionIsOver(){
+    private void updateStateWhenSessionIsOver(String status){
         PlanPartyElementsDao partyDao = setDaoSessionDB().getPlanPartyElementsDao();
         List<PlanPartyElements> PlanPartyList = partyDao.queryBuilder().list();
 
@@ -665,20 +667,52 @@ public class BacPlanPartyFragment extends Fragment {
             firstUnitAdded = parEl.getFirstUnitAddedDate();
         }
 
+        partyDao.deleteAll();
+
+        // Inserting new planned elements
+        PlanPartyElements newParty = new PlanPartyElements();
+
+        // set planned units
+        newParty.setPlannedBeer(plannedBeers);
+        newParty.setPlannedWine(plannedWines);
+        newParty.setPlannedDrink(plannedDrinks);
+        newParty.setPlannedShot(plannedShots);
+
+        // set new status
+        System.out.println("Status in updateStatus: " + status);
+        newParty.setStatus(status);
+
+        // set start and end timeStamp for session
+        newParty.setStartTimeStamp(startTimeStamp);
+        System.out.println("Endstamp before setting it: " + endTimeStamp);
+        newParty.setEndTimeStamp(endTimeStamp);
+
+        // First unit added
+        newParty.setFirstUnitAddedDate(firstUnitAdded);
+
+        partyDao.insert(newParty);
+
         Date tempStartDate = null;
 
         HistoryDao histDao = setDaoSessionDB().getHistoryDao();
         List<History> histList = histDao.queryBuilder().list();
         for(History histItems : histList){
             tempStartDate = histItems.getStartDate();
-        }
 
-        if(endTimeStamp == tempStartDate){
+        }
+        System.out.println("History Date: " + tempStartDate + " = " + startTimeStamp);
+        if(startTimeStamp.equals(tempStartDate)){
             // IF they are equal the history is allready added, if not, add the new history.
             System.out.println("History already added...");
         } else {
             System.out.println("Hist not added...");
+            setHistory();
+            handleGraphHistory();
         }
+        beersConsumed = 0;
+        winesConsumed = 0;
+        drinksConsumed = 0;
+        shotsConsumed = 0;
     }
 
     private Date setEndOfSesStamp(int hours){
@@ -725,6 +759,30 @@ public class BacPlanPartyFragment extends Fragment {
 
     private void setHistory(){
         int totalCosts = 0;
+        // hente forskjellige enheter:
+        DayAfterBACDao dayDao = setDaoSessionDB().getDayAfterBACDao();
+        List<DayAfterBAC> dayAfterBACList = dayDao.queryBuilder().list();
+        beersConsumed = 0;
+        winesConsumed = 0;
+        drinksConsumed = 0;
+        shotsConsumed = 0;
+
+        for (DayAfterBAC dayAfter : dayAfterBACList) {
+            String unit = dayAfter.getUnit();
+            if(unit.equals("Beer")){
+                beersConsumed++;
+            }
+            if(unit.equals("Wine")){
+                winesConsumed++;
+            }
+            if(unit.equals("Drink")){
+                drinksConsumed++;
+            }
+            if(unit.equals("Shot")){
+                shotsConsumed++;
+            }
+        }
+
         // regne ut kostnader (1)
         totalCosts = calculateCosts(beersConsumed, winesConsumed, drinksConsumed, shotsConsumed);
         insertHistoryDB(beersConsumed, winesConsumed, drinksConsumed, shotsConsumed, startTimeStamp, endTimeStamp, totalCosts, 0.0);
@@ -792,6 +850,7 @@ public class BacPlanPartyFragment extends Fragment {
             int shot = 0;
 
             tempInterval += 15;
+            System.out.println("Temp Interval: " + tempInterval);
 
             for(DayAfterBAC dayAfter : dayAfterBacList){
                 String unit = dayAfter.getUnit();
@@ -810,7 +869,7 @@ public class BacPlanPartyFragment extends Fragment {
                 // set minuts to hours
                 double hoursToMins = tempInterval / 60;
 
-                // Legg til IDen til hvert av promillene og et tidspunkt ( I LOOPEN )
+
                 String tempPromille = calculateBAC(gender, weight, countingGrams(beer, wine, drink, shot), hoursToMins);
                 try{
                     promille = Double.parseDouble(tempPromille);
@@ -960,9 +1019,10 @@ public class BacPlanPartyFragment extends Fragment {
         alert_builder.setMessage("Har du husket alt? ").setCancelable(false).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                System.out.println("Ok");
-                //clearDBTables();
-                //statusHandler(status);
+                statusBtn.setText("Avslutt Kvelden");
+                status = Status.RUNNING;
+                updateStatusBtn(status.toString());
+                stateHandler(status);
             }
         }).setNegativeButton("Avbryt", new DialogInterface.OnClickListener() {
             @Override
@@ -982,14 +1042,14 @@ public class BacPlanPartyFragment extends Fragment {
         alert_builder.setMessage("Er du sikker på at du vil avslutte kvelden?").setCancelable(false).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                System.out.println("Ok");
-                //clearDBTables();
-                //statusHandler(status);
+                statusBtn.setText("Avslutt Dagen Derpå");
+                status = Status.DA_RUNNING;
+                updateStatusBtn(status.toString());
+                stateHandler(status);
             }
         }).setNegativeButton("Avbryt", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                System.out.println("Avbryt");
                 dialogInterface.cancel();
             }
         });
@@ -1004,14 +1064,18 @@ public class BacPlanPartyFragment extends Fragment {
         alert_builder.setMessage("Er du sikker på at du vil avslutte Dagen Derpå? ").setCancelable(false).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                System.out.println("Ok");
-                //clearDBTables();
-                //statusHandler(status);
+                statusBtn.setText("Start Kvelden");
+                status = Status.NOT_RUNNING;
+
+                // Clear tabels: (PlanPartyElements and DayAfterBAC)
+                clearPartyTables();
+
+                updateStatusBtn(status.toString());
+                stateHandler(status);
             }
         }).setNegativeButton("Avbryt", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                System.out.println("Avbryt");
                 dialogInterface.cancel();
             }
         });

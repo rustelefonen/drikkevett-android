@@ -97,4 +97,6 @@
 
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
+    <string name="custom_pop_up_title">Etterregistrer enhet</string>
+    <string name="custom_pop_up_text">Her velger du tiden fra du begynte å drikke til du konsumerte enheten du glemte å registrere</string>
 </resources>
