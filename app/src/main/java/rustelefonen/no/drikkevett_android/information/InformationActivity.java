@@ -50,9 +50,11 @@ public class InformationActivity extends AppCompatActivity {
 
 
         byte[] image = information.getImage();
-        Bitmap bitmap = BitmapFactory.decodeByteArray(image , 0, image.length);
-        if (bitmap != null) informationImageView.setImageBitmap(bitmap);
-        else System.out.println("bitmap er null");
+        if (image != null) {
+            Bitmap bitmap = BitmapFactory.decodeByteArray(image , 0, image.length);
+            if (bitmap != null) informationImageView.setImageBitmap(bitmap);
+            else System.out.println("bitmap er null");
+        }
     }
 
     private void test() {

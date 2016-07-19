@@ -22,8 +22,8 @@
                 android:id="@+id/long_row_image"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
-                android:scaleType="fitXY"/>
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"/>
 
             <TextView
                 android:gravity="center"

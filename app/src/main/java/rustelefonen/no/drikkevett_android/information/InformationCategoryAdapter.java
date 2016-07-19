@@ -66,9 +66,11 @@ public class InformationCategoryAdapter extends RecyclerView.Adapter<Information
             }
         });
         byte[] image = informationCategory.getImage();
-        Bitmap bitmap = BitmapFactory.decodeByteArray(image , 0, image.length);
-        if (bitmap != null) imageView.setImageBitmap(bitmap);
-        else System.out.println("bitmap er null");
+        if (image != null) {
+            Bitmap bitmap = BitmapFactory.decodeByteArray(image , 0, image.length);
+            if (bitmap != null) imageView.setImageBitmap(bitmap);
+            else System.out.println("bitmap er null");
+        }
     }
 
     @Override

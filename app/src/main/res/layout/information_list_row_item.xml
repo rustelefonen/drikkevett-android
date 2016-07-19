@@ -19,8 +19,8 @@
                 android:id="@+id/information_list_image"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:src="@drawable/beer"
-                android:scaleType="fitXY"/>
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"/>
             <TextView
                 android:id="@+id/information_list_category_name"
                 android:gravity="center"

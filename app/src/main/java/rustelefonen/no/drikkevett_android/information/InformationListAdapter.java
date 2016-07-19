@@ -42,9 +42,12 @@ public class InformationListAdapter extends RecyclerView.Adapter<InformationList
         holder.getNameTextView().setText(currentInformation.getName());
 
         byte[] image = currentInformation.getImage();
-        Bitmap bitmap = BitmapFactory.decodeByteArray(image , 0, image.length);
-        if (bitmap != null) holder.getImageView().setImageBitmap(bitmap);
-        else System.out.println("bitmap er null");
+        if (image != null) {
+            Bitmap bitmap = BitmapFactory.decodeByteArray(image , 0, image.length);
+            if (bitmap != null) holder.getImageView().setImageBitmap(bitmap);
+            else System.out.println("bitmap er null");
+        }
+
 
         final View view = holder.getView();
 

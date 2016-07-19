@@ -48,7 +48,7 @@ public class InformationListActivity extends AppCompatActivity{
             informationCategory = (InformationCategory) tmpInformationCategory;
         }
 
-        insertInformation();
+        //insertInformation();
         initDataset();
 
         mRecyclerView = (RecyclerView) findViewById(R.id.information_list_recycler_view);
