@@ -54,4 +54,8 @@ public class InformationActivity extends AppCompatActivity {
         if (bitmap != null) informationImageView.setImageBitmap(bitmap);
         else System.out.println("bitmap er null");
     }
+
+    private void test() {
+
+    }
 }
