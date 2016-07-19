@@ -198,6 +198,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         tabLayout.setupWithViewPager(mViewPager);
 
         //ICONS http://romannurik.github.io/AndroidAssetStudio/icons-actionbar.html#source.type=image&source.space.trim=1&source.space.pad=0&name=ic_action_test_1&theme=dark&color=33b5e5%2C60
+
         tabLayout.getTabAt(0).setIcon(R.drawable.ic_home_black_24dp);
         tabLayout.getTabAt(1).setIcon(R.drawable.per_mille_icon);
         tabLayout.getTabAt(2).setIcon(R.drawable.ic_list_black_24dp);
