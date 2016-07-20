@@ -200,8 +200,8 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         //ICONS http://romannurik.github.io/AndroidAssetStudio/icons-actionbar.html#source.type=image&source.space.trim=1&source.space.pad=0&name=ic_action_test_1&theme=dark&color=33b5e5%2C60
 
         tabLayout.getTabAt(0).setIcon(R.drawable.ic_home_black_24dp);
-        tabLayout.getTabAt(1).setIcon(R.drawable.per_mille_icon);
-        tabLayout.getTabAt(2).setIcon(R.drawable.ic_list_black_24dp);
+        tabLayout.getTabAt(1).setIcon(R.drawable.per_mille);
+        tabLayout.getTabAt(2).setIcon(R.drawable.ic_playlist_add_black_24dp);
         tabLayout.getTabAt(3).setIcon(R.drawable.ic_mood_bad_black_24dp);
         tabLayout.getTabAt(4).setIcon(R.drawable.ic_access_time_black_24dp);
 
@@ -310,7 +310,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
     @Override
     public void onPageSelected(int position) {
-        String title = position == 0 ? "Home"
+        String title = position == 0 ? "Hjem"
                 : position == 1 ? "Promillekalkulator"
                 : position == 2 ? "Planlegg kvelden"
                 : position == 3 ? "Dagen Derpå"

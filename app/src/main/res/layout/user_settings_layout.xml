@@ -34,7 +34,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/greyTextColor"
                 android:textSize="24sp"
-                android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec finibus odio feugiat, dictum metus id, porttitor metus. Nam pharetra nulla at lacus tincidunt congue."
+                android:text="Endre brukerinnstillinger"
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:layout_marginBottom="16dp"/>
