@@ -266,7 +266,6 @@ public class BacPlanPartyFragment extends Fragment {
         }
         if(unit.equals("Shot")){
             totalUnits++;
-            System.out.println("total units: " + totalUnits);
             if(totalUnits <= limit){
                 totalUnits = limit;
                 plannedShots++;
