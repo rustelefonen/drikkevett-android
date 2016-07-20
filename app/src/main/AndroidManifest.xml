@@ -45,5 +45,6 @@
         <activity android:name=".information.InformationListActivity"/>
         <activity android:name=".information.InformationActivity"/>
         <activity android:name=".intro.SuperIntro"/>
+        <activity android:name=".intro.WelcomeActivity"/>
     </application>
 </manifest>
