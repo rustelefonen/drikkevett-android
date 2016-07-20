@@ -1,20 +1,22 @@
 package rustelefonen.no.drikkevett_android.util;
 
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Created by LarsPetterKristiansen on 05.07.2016.
+ * Created by RUSTELEFONEN on 05.07.2016.
  */
 
 public class PartyUtil {
-
-    public enum Status {
-        RUNNING, NOT_RUNNING, DA_RUNNING
-    }
+    // SET GRAM VALUES:
+    private static double beerGrams = 12.6;
+    private static double wineGrams = 14.0;
+    private static double drinkGrams = 15.0;
+    private static double shotGrams = 16.0;
 
     public static double intervalCalc(double timeDifference){
         double BACDownPerHour = 0.0;
@@ -112,5 +114,25 @@ public class PartyUtil {
 
         date = calendar.getTime();
         return date;
+    }
+
+    public static double countingGrams(double beerUnits, double wineUnits, double drinkUnits, double shotUnits){
+        return (beerUnits * beerGrams) + (wineUnits * wineGrams) + (drinkUnits * drinkGrams) + (shotUnits * shotGrams);
+    }
+
+    public static String calculateBAC(String gender, double weight, double grams, double hours) {
+        double oppdatertPromille = 0.0;
+        double genderScore = setGenderScore(gender);
+
+        if(grams == 0.0){
+            oppdatertPromille = 0.0;
+        } else {
+            oppdatertPromille = grams/(weight * genderScore) - (0.15 * hours);
+            if(oppdatertPromille < 0.0){
+                oppdatertPromille = 0.0;
+            }
+        }
+        DecimalFormat numberFormat = new DecimalFormat("#.##");
+        return numberFormat.format(oppdatertPromille);
     }
 }

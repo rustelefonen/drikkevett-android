@@ -29,9 +29,13 @@ public class PlanPartyElementsDao extends AbstractDao<PlanPartyElements, Long> {
         public final static Property PlannedWine = new Property(3, Integer.class, "plannedWine", false, "PLANNED_WINE");
         public final static Property PlannedDrink = new Property(4, Integer.class, "plannedDrink", false, "PLANNED_DRINK");
         public final static Property PlannedShot = new Property(5, Integer.class, "plannedShot", false, "PLANNED_SHOT");
-        public final static Property FirstUnitAddedDate = new Property(6, java.util.Date.class, "firstUnitAddedDate", false, "FIRST_UNIT_ADDED_DATE");
-        public final static Property StartTimeStamp = new Property(7, java.util.Date.class, "startTimeStamp", false, "START_TIME_STAMP");
-        public final static Property EndTimeStamp = new Property(8, java.util.Date.class, "endTimeStamp", false, "END_TIME_STAMP");
+        public final static Property AftRegBeer = new Property(6, Integer.class, "aftRegBeer", false, "AFT_REG_BEER");
+        public final static Property AftRegWine = new Property(7, Integer.class, "aftRegWine", false, "AFT_REG_WINE");
+        public final static Property AftRegDrink = new Property(8, Integer.class, "aftRegDrink", false, "AFT_REG_DRINK");
+        public final static Property AftRegShot = new Property(9, Integer.class, "aftRegShot", false, "AFT_REG_SHOT");
+        public final static Property FirstUnitAddedDate = new Property(10, java.util.Date.class, "firstUnitAddedDate", false, "FIRST_UNIT_ADDED_DATE");
+        public final static Property StartTimeStamp = new Property(11, java.util.Date.class, "startTimeStamp", false, "START_TIME_STAMP");
+        public final static Property EndTimeStamp = new Property(12, java.util.Date.class, "endTimeStamp", false, "END_TIME_STAMP");
     };
 
 
@@ -53,9 +57,13 @@ public class PlanPartyElementsDao extends AbstractDao<PlanPartyElements, Long> {
                 "\"PLANNED_WINE\" INTEGER," + // 3: plannedWine
                 "\"PLANNED_DRINK\" INTEGER," + // 4: plannedDrink
                 "\"PLANNED_SHOT\" INTEGER," + // 5: plannedShot
-                "\"FIRST_UNIT_ADDED_DATE\" INTEGER," + // 6: firstUnitAddedDate
-                "\"START_TIME_STAMP\" INTEGER," + // 7: startTimeStamp
-                "\"END_TIME_STAMP\" INTEGER);"); // 8: endTimeStamp
+                "\"AFT_REG_BEER\" INTEGER," + // 6: aftRegBeer
+                "\"AFT_REG_WINE\" INTEGER," + // 7: aftRegWine
+                "\"AFT_REG_DRINK\" INTEGER," + // 8: aftRegDrink
+                "\"AFT_REG_SHOT\" INTEGER," + // 9: aftRegShot
+                "\"FIRST_UNIT_ADDED_DATE\" INTEGER," + // 10: firstUnitAddedDate
+                "\"START_TIME_STAMP\" INTEGER," + // 11: startTimeStamp
+                "\"END_TIME_STAMP\" INTEGER);"); // 12: endTimeStamp
     }
 
     /** Drops the underlying database table. */
@@ -99,19 +107,39 @@ public class PlanPartyElementsDao extends AbstractDao<PlanPartyElements, Long> {
             stmt.bindLong(6, plannedShot);
         }
  
+        Integer aftRegBeer = entity.getAftRegBeer();
+        if (aftRegBeer != null) {
+            stmt.bindLong(7, aftRegBeer);
+        }
+ 
+        Integer aftRegWine = entity.getAftRegWine();
+        if (aftRegWine != null) {
+            stmt.bindLong(8, aftRegWine);
+        }
+ 
+        Integer aftRegDrink = entity.getAftRegDrink();
+        if (aftRegDrink != null) {
+            stmt.bindLong(9, aftRegDrink);
+        }
+ 
+        Integer aftRegShot = entity.getAftRegShot();
+        if (aftRegShot != null) {
+            stmt.bindLong(10, aftRegShot);
+        }
+ 
         java.util.Date firstUnitAddedDate = entity.getFirstUnitAddedDate();
         if (firstUnitAddedDate != null) {
-            stmt.bindLong(7, firstUnitAddedDate.getTime());
+            stmt.bindLong(11, firstUnitAddedDate.getTime());
         }
  
         java.util.Date startTimeStamp = entity.getStartTimeStamp();
         if (startTimeStamp != null) {
-            stmt.bindLong(8, startTimeStamp.getTime());
+            stmt.bindLong(12, startTimeStamp.getTime());
         }
  
         java.util.Date endTimeStamp = entity.getEndTimeStamp();
         if (endTimeStamp != null) {
-            stmt.bindLong(9, endTimeStamp.getTime());
+            stmt.bindLong(13, endTimeStamp.getTime());
         }
     }
 
@@ -131,9 +159,13 @@ public class PlanPartyElementsDao extends AbstractDao<PlanPartyElements, Long> {
             cursor.isNull(offset + 3) ? null : cursor.getInt(offset + 3), // plannedWine
             cursor.isNull(offset + 4) ? null : cursor.getInt(offset + 4), // plannedDrink
             cursor.isNull(offset + 5) ? null : cursor.getInt(offset + 5), // plannedShot
-            cursor.isNull(offset + 6) ? null : new java.util.Date(cursor.getLong(offset + 6)), // firstUnitAddedDate
-            cursor.isNull(offset + 7) ? null : new java.util.Date(cursor.getLong(offset + 7)), // startTimeStamp
-            cursor.isNull(offset + 8) ? null : new java.util.Date(cursor.getLong(offset + 8)) // endTimeStamp
+            cursor.isNull(offset + 6) ? null : cursor.getInt(offset + 6), // aftRegBeer
+            cursor.isNull(offset + 7) ? null : cursor.getInt(offset + 7), // aftRegWine
+            cursor.isNull(offset + 8) ? null : cursor.getInt(offset + 8), // aftRegDrink
+            cursor.isNull(offset + 9) ? null : cursor.getInt(offset + 9), // aftRegShot
+            cursor.isNull(offset + 10) ? null : new java.util.Date(cursor.getLong(offset + 10)), // firstUnitAddedDate
+            cursor.isNull(offset + 11) ? null : new java.util.Date(cursor.getLong(offset + 11)), // startTimeStamp
+            cursor.isNull(offset + 12) ? null : new java.util.Date(cursor.getLong(offset + 12)) // endTimeStamp
         );
         return entity;
     }
@@ -147,9 +179,13 @@ public class PlanPartyElementsDao extends AbstractDao<PlanPartyElements, Long> {
         entity.setPlannedWine(cursor.isNull(offset + 3) ? null : cursor.getInt(offset + 3));
         entity.setPlannedDrink(cursor.isNull(offset + 4) ? null : cursor.getInt(offset + 4));
         entity.setPlannedShot(cursor.isNull(offset + 5) ? null : cursor.getInt(offset + 5));
-        entity.setFirstUnitAddedDate(cursor.isNull(offset + 6) ? null : new java.util.Date(cursor.getLong(offset + 6)));
-        entity.setStartTimeStamp(cursor.isNull(offset + 7) ? null : new java.util.Date(cursor.getLong(offset + 7)));
-        entity.setEndTimeStamp(cursor.isNull(offset + 8) ? null : new java.util.Date(cursor.getLong(offset + 8)));
+        entity.setAftRegBeer(cursor.isNull(offset + 6) ? null : cursor.getInt(offset + 6));
+        entity.setAftRegWine(cursor.isNull(offset + 7) ? null : cursor.getInt(offset + 7));
+        entity.setAftRegDrink(cursor.isNull(offset + 8) ? null : cursor.getInt(offset + 8));
+        entity.setAftRegShot(cursor.isNull(offset + 9) ? null : cursor.getInt(offset + 9));
+        entity.setFirstUnitAddedDate(cursor.isNull(offset + 10) ? null : new java.util.Date(cursor.getLong(offset + 10)));
+        entity.setStartTimeStamp(cursor.isNull(offset + 11) ? null : new java.util.Date(cursor.getLong(offset + 11)));
+        entity.setEndTimeStamp(cursor.isNull(offset + 12) ? null : new java.util.Date(cursor.getLong(offset + 12)));
      }
     
     /** @inheritdoc */

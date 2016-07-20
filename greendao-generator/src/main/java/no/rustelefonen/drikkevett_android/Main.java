@@ -59,6 +59,10 @@ public class Main {
         planParty.addIntProperty("plannedWine");
         planParty.addIntProperty("plannedDrink");
         planParty.addIntProperty("plannedShot");
+        planParty.addIntProperty("aftRegBeer");
+        planParty.addIntProperty("aftRegWine");
+        planParty.addIntProperty("aftRegDrink");
+        planParty.addIntProperty("aftRegShot");
         planParty.addDateProperty("firstUnitAddedDate");
         planParty.addDateProperty("startTimeStamp");
         planParty.addDateProperty("endTimeStamp");

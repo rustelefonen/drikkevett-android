@@ -1,5 +1,7 @@
 package rustelefonen.no.drikkevett_android.util;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -58,5 +60,23 @@ public class DateUtil {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
         return cal.get(Calendar.DAY_OF_MONTH) + "";
+    }
+
+    public static Date setNewUnitDate(int minutes){
+        Date date = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.MINUTE, minutes);
+        date = calendar.getTime();
+        return date;
+    }
+
+    public static Date setEndOfSesStamp(int hours){
+        Date date = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.HOUR, hours);
+        date = calendar.getTime();
+        return date;
     }
 }

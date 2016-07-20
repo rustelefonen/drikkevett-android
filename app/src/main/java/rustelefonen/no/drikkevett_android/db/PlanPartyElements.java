@@ -12,6 +12,10 @@ public class PlanPartyElements {
     private Integer plannedWine;
     private Integer plannedDrink;
     private Integer plannedShot;
+    private Integer aftRegBeer;
+    private Integer aftRegWine;
+    private Integer aftRegDrink;
+    private Integer aftRegShot;
     private java.util.Date firstUnitAddedDate;
     private java.util.Date startTimeStamp;
     private java.util.Date endTimeStamp;
@@ -23,13 +27,17 @@ public class PlanPartyElements {
         this.id = id;
     }
 
-    public PlanPartyElements(Long id, String status, Integer plannedBeer, Integer plannedWine, Integer plannedDrink, Integer plannedShot, java.util.Date firstUnitAddedDate, java.util.Date startTimeStamp, java.util.Date endTimeStamp) {
+    public PlanPartyElements(Long id, String status, Integer plannedBeer, Integer plannedWine, Integer plannedDrink, Integer plannedShot, Integer aftRegBeer, Integer aftRegWine, Integer aftRegDrink, Integer aftRegShot, java.util.Date firstUnitAddedDate, java.util.Date startTimeStamp, java.util.Date endTimeStamp) {
         this.id = id;
         this.status = status;
         this.plannedBeer = plannedBeer;
         this.plannedWine = plannedWine;
         this.plannedDrink = plannedDrink;
         this.plannedShot = plannedShot;
+        this.aftRegBeer = aftRegBeer;
+        this.aftRegWine = aftRegWine;
+        this.aftRegDrink = aftRegDrink;
+        this.aftRegShot = aftRegShot;
         this.firstUnitAddedDate = firstUnitAddedDate;
         this.startTimeStamp = startTimeStamp;
         this.endTimeStamp = endTimeStamp;
@@ -81,6 +89,38 @@ public class PlanPartyElements {
 
     public void setPlannedShot(Integer plannedShot) {
         this.plannedShot = plannedShot;
+    }
+
+    public Integer getAftRegBeer() {
+        return aftRegBeer;
+    }
+
+    public void setAftRegBeer(Integer aftRegBeer) {
+        this.aftRegBeer = aftRegBeer;
+    }
+
+    public Integer getAftRegWine() {
+        return aftRegWine;
+    }
+
+    public void setAftRegWine(Integer aftRegWine) {
+        this.aftRegWine = aftRegWine;
+    }
+
+    public Integer getAftRegDrink() {
+        return aftRegDrink;
+    }
+
+    public void setAftRegDrink(Integer aftRegDrink) {
+        this.aftRegDrink = aftRegDrink;
+    }
+
+    public Integer getAftRegShot() {
+        return aftRegShot;
+    }
+
+    public void setAftRegShot(Integer aftRegShot) {
+        this.aftRegShot = aftRegShot;
     }
 
     public java.util.Date getFirstUnitAddedDate() {
