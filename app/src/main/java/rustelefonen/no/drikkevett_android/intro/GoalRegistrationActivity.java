@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.SeekBar;
 import android.widget.Toast;
 
 import java.text.ParseException;
@@ -29,6 +30,7 @@ public class GoalRegistrationActivity extends AppCompatActivity {
 
     public EditText bacEditText;
     public EditText dateEditText;
+    public SeekBar bacSeekBar;
 
     private User user;
 
@@ -44,6 +46,28 @@ public class GoalRegistrationActivity extends AppCompatActivity {
 
         bacEditText = (EditText) findViewById(R.id.goal_reg_bac_edit_text);
         dateEditText = (EditText) findViewById(R.id.goal_reg_date_edit_text);
+        bacSeekBar = (SeekBar) findViewById(R.id.goal_reg_seek_bar);
+
+        bacEditText.setText(0.5f + "");
+        bacSeekBar.setProgress(5);
+
+        bacSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                float perMille = (float) progress / 10f;
+                bacEditText.setText(perMille + "");
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
     }
 
     public void showDialog(View view) {
