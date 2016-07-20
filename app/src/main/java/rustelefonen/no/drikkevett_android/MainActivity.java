@@ -29,6 +29,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -50,6 +51,7 @@ import rustelefonen.no.drikkevett_android.tabs.history.BacHistoryFragment;
 import rustelefonen.no.drikkevett_android.tabs.home.BacHomeFragment;
 import rustelefonen.no.drikkevett_android.tabs.home.SuperDao;
 import rustelefonen.no.drikkevett_android.tabs.planParty.BacPlanPartyFragment;
+import rustelefonen.no.drikkevett_android.util.NotificationUtil;
 
 public class MainActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener {
 
@@ -161,7 +163,13 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         setupDrawerContent(nvDrawer);
 
         nvDrawer.getMenu().findItem(R.id.drawer_view_switch).setActionView(new Switch(this));
-        ((Switch) nvDrawer.getMenu().findItem(R.id.drawer_view_switch).getActionView()).setChecked(true);
+        ((Switch) nvDrawer.getMenu().findItem(R.id.drawer_view_switch).getActionView()).setChecked(NotificationUtil.getSelected(this));
+        ((Switch) nvDrawer.getMenu().findItem(R.id.drawer_view_switch).getActionView()).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                NotificationUtil.setSelected(getBaseContext(), isChecked);
+            }
+        });
 
         drawerToggle = setupDrawerToggle();
 
@@ -210,6 +218,28 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         onPageSelected(0);
 
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SuperDao superDao = new SuperDao(this);
+        UserDao userDao = superDao.getUserDao();
+        List<User> users = userDao.queryBuilder().list();
+        superDao.close();
+
+        if (users.size() <= 0) {
+            System.out.println("Ingen brukere...");
+        } else {
+            System.out.println("userCount: " + users.size());
+        }
+        User tmpUser = users.get(0);
+        if (tmpUser == null) {
+            System.out.println("Brukern er null");
+        } else {
+            System.out.println("Brukern er ikke null");
+        }
+        user = tmpUser;
     }
 
     @Override
