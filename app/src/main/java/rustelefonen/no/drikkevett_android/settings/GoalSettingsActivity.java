@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.SeekBar;
 import android.widget.Toast;
 
 import java.text.ParseException;
@@ -33,6 +34,7 @@ public class GoalSettingsActivity extends AppCompatActivity {
 
     public EditText goalBacEditText;
     public EditText dateEditText;
+    public SeekBar goalBacSeekBar;
 
     private User user;
 
@@ -52,10 +54,26 @@ public class GoalSettingsActivity extends AppCompatActivity {
     private void initWidgets() {
         goalBacEditText = (EditText) findViewById(R.id.goal_settings_bac_edit_text);
         dateEditText = (EditText) findViewById(R.id.goal_settings_date_edit_text);
+        goalBacSeekBar = (SeekBar) findViewById(R.id.goal_settings_seek_bar);
+        goalBacSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                float perMille = (float) progress / 10f;
+                goalBacEditText.setText(Float.toString(perMille));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {}
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {}
+        });
     }
 
     private void fillWidgets() {
         goalBacEditText.setText(Double.toString(user.getGoalBAC()));
+        int currentProgress = (int) (user.getGoalBAC() * 10.0);
+        goalBacSeekBar.setProgress(currentProgress);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String formattedDate = sdf.format(user.getGoalDate());
         dateEditText.setText(formattedDate);
