@@ -101,35 +101,28 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
 
     public void selectDrawerItem(MenuItem menuItem) {
-        Intent intent;
-        switch(menuItem.getItemId()) {
-            case R.id.drawer_view_information:
-                intent = new Intent(this, InformationCategoryActivity.class);
-                break;
-            case R.id.nav_first_fragment:
-                intent = new Intent(this, UserSettingsActivity.class);
-                intent.putExtra(UserSettingsActivity.ID, getUser());
-                break;
-            case R.id.nav_second_fragment:
-                intent = new Intent(this, AlcoholPricingSettingsActivity.class);
-                intent.putExtra(AlcoholPricingSettingsActivity.ID, getUser());
-                break;
-            case R.id.nav_third_fragment:
-                intent = new Intent(this, GoalSettingsActivity.class);
-                intent.putExtra(GoalSettingsActivity.ID, getUser());
-                break;
-            default:
-                intent = new Intent(this, UserSettingsActivity.class);
+        int itemId = menuItem.getItemId();
+        if (itemId == R.id.drawer_view_switch) {
+            menuItem.setChecked(false);
+            return;
         }
-
-        // Highlight the selected item has been done by NavigationView
-        menuItem.setChecked(true);
-        // Set action bar title
-        //setTitle(menuItem.getTitle());
-        // Close the navigation drawer
+        //menuItem.setChecked(true);
         mDrawer.closeDrawers();
-
-        startActivity(intent);
+        if (itemId == R.id.drawer_view_information) {
+            startActivity(new Intent(this, InformationCategoryActivity.class));
+        } else if (itemId == R.id.nav_first_fragment) {
+            Intent intent = new Intent(this, UserSettingsActivity.class);
+            intent.putExtra(UserSettingsActivity.ID, getUser());
+            startActivity(intent);
+        } else if (itemId == R.id.nav_second_fragment) {
+            Intent intent = new Intent(this, AlcoholPricingSettingsActivity.class);
+            intent.putExtra(AlcoholPricingSettingsActivity.ID, getUser());
+            startActivity(intent);
+        } else if (itemId == R.id.nav_third_fragment) {
+            Intent intent = new Intent(this, GoalSettingsActivity.class);
+            intent.putExtra(GoalSettingsActivity.ID, getUser());
+            startActivity(intent);
+        }
     }
 
     private void setupDrawerContent(NavigationView navigationView) {
@@ -217,7 +210,14 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
         onPageSelected(0);
 
-
+        if (user != null) {
+            String nickname = user.getNickname();
+            if (nickname != null) {
+                View headerLayout = nvDrawer.getHeaderView(0);
+                TextView headerTextView = (TextView) headerLayout.findViewById(R.id.nav_header);
+                headerTextView.setText(nickname);
+            }
+        }
     }
 
     @Override
@@ -240,6 +240,13 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
             System.out.println("Brukern er ikke null");
         }
         user = tmpUser;
+
+        //Litt hack?
+        nvDrawer.getMenu().getItem(0).setChecked(false);
+        nvDrawer.getMenu().getItem(1).setChecked(false);
+        nvDrawer.getMenu().getItem(2).setChecked(false);
+        nvDrawer.getMenu().getItem(3).setChecked(false);
+
     }
 
     @Override
@@ -405,7 +412,8 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         public Fragment getItem(int position) {
             switch(position){
                 case 0: return new BacHomeFragment();
-                case 1: return new BacCalcFragment();case 2: return new BacPlanPartyFragment();
+                case 1: return new BacCalcFragment();
+                case 2: return new BacPlanPartyFragment();
                 case 3: return new BacDayAfterFragment();
                 case 4: return new BacHistoryFragment();
                 default: return PlaceholderFragment.newInstance(position + 1);
