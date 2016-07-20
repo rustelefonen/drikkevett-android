@@ -43,7 +43,7 @@
                 android:id="@+id/goal_reg_bac_edit_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/ic_android_black_24dp"
+                android:drawableLeft="@drawable/ic_goal_bac"
                 android:hint="Oppgi en øvre promille"
                 android:textColorHint="@color/greyTextColor"
                 android:textColor="@color/backgroundColor"
@@ -53,11 +53,19 @@
                 android:inputType="numberDecimal"
                 android:padding="8dp"/>
 
+            <SeekBar
+                android:id="@+id/goal_reg_seek_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="20"
+                android:layout_marginBottom="32dp"
+                />
+
             <EditText
                 android:id="@+id/goal_reg_date_edit_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/ic_android_black_24dp"
+                android:drawableLeft="@drawable/ic_goal_date"
                 android:hint="Oppgi en dato for målet"
                 android:textColorHint="@color/greyTextColor"
                 android:textColor="@color/backgroundColor"

@@ -27,17 +27,17 @@
                 android:text="Alkoholpriser"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:layout_marginBottom="16dp"/>
+                android:layout_marginBottom="32dp"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/greyTextColor"
-                android:textSize="24sp"
-                android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec finibus odio feugiat, dictum metus id, porttitor metus. Nam pharetra nulla at lacus tincidunt congue."
+                android:textSize="16sp"
+                android:text="Legg inn pris som ca. tilsvarer hva du betaler for hver enkel enhet.\nKlikk på &quot;Standard&quot;-knappen for gjennomsnittlige priser."
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:layout_marginBottom="16dp"/>
+                android:layout_marginBottom="32dp"/>
 
             <EditText
                 android:id="@+id/alco_settings_beer_edit_text"
@@ -48,9 +48,10 @@
                 android:textColorHint="@color/greyTextColor"
                 android:textColor="@color/backgroundColor"
                 android:background="@color/textColor"
-                android:textSize="24sp"
-                android:layout_marginBottom="16dp"
-                android:inputType="number"/>
+                android:textSize="16sp"
+                android:layout_marginBottom="32dp"
+                android:inputType="number"
+                android:padding="8dp"/>
 
             <EditText
                 android:id="@+id/alco_settings_wine_edit_text"
@@ -60,9 +61,10 @@
                 android:background="@color/textColor"
                 android:hint="Oppgi det du betaler for en enhet vin"
                 android:textColorHint="@color/greyTextColor"
-                android:textSize="24sp"
-                android:layout_marginBottom="16dp"
-                android:inputType="number"/>
+                android:textSize="16sp"
+                android:layout_marginBottom="32dp"
+                android:inputType="number"
+                android:padding="8dp"/>
 
             <EditText
                 android:id="@+id/alco_settings_drink_edit_text"
@@ -72,9 +74,10 @@
                 android:background="@color/textColor"
                 android:hint="Oppgi det du betaler for en enhet drink"
                 android:textColorHint="@color/greyTextColor"
-                android:textSize="24sp"
-                android:layout_marginBottom="16dp"
-                android:inputType="number"/>
+                android:textSize="16sp"
+                android:layout_marginBottom="32dp"
+                android:inputType="number"
+                android:padding="8dp"/>
             <EditText
                 android:id="@+id/alco_settings_shot_edit_text"
                 android:layout_width="match_parent"
@@ -83,9 +86,10 @@
                 android:background="@color/textColor"
                 android:hint="Oppgi det du betaler for en enhet shot"
                 android:textColorHint="@color/greyTextColor"
-                android:textSize="24sp"
-                android:layout_marginBottom="16dp"
-                android:inputType="number"/>
+                android:textSize="16sp"
+                android:layout_marginBottom="32dp"
+                android:inputType="number"
+                android:padding="8dp"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -98,17 +102,26 @@
                     android:text="Avbryt"
                     android:background="@color/redSuper"
                     android:textColor="@color/textColor"
-                    android:layout_weight="33"
+                    android:layout_weight="30"
                     android:onClick="cancel"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="5"/>
 
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Default"
-                    android:background="@color/greenSuper"
+                    android:text="Standard"
+                    android:background="@color/defaultGreen"
                     android:textColor="@color/textColor"
-                    android:layout_weight="33"
-                    android:onClick="setDefault"/>
+                    android:layout_weight="30"
+                    android:onClick="setDefault" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="5"/>
 
                 <Button
                     android:layout_width="wrap_content"
@@ -116,7 +129,7 @@
                     android:text="Lagre"
                     android:background="@color/greenSuper"
                     android:textColor="@color/textColor"
-                    android:layout_weight="33"
+                    android:layout_weight="30"
                     android:onClick="saveNewPrices"/>
             </LinearLayout>
         </LinearLayout>

@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.SeekBar;
 import android.widget.Toast;
 
 import java.text.ParseException;
@@ -26,9 +27,11 @@ import rustelefonen.no.drikkevett_android.tabs.home.SuperDao;
 public class GoalRegistrationActivity extends AppCompatActivity {
 
     public static final String ID = "GoalRegistration";
+    private static final String PROGRESS_START = 0.5f + "";
 
     public EditText bacEditText;
     public EditText dateEditText;
+    public SeekBar bacSeekBar;
 
     private User user;
 
@@ -41,9 +44,31 @@ public class GoalRegistrationActivity extends AppCompatActivity {
         if (tmpUser != null && tmpUser instanceof User) {
             user = (User) tmpUser;
         }
+        initWidgets();
+        fillWidgets();
+    }
 
+    private void initWidgets() {
         bacEditText = (EditText) findViewById(R.id.goal_reg_bac_edit_text);
         dateEditText = (EditText) findViewById(R.id.goal_reg_date_edit_text);
+        bacSeekBar = (SeekBar) findViewById(R.id.goal_reg_seek_bar);
+        bacSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                float perMille = (float) progress / 10f;
+                bacEditText.setText(Float.toString(perMille));
+            }
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {}
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {}
+        });
+    }
+
+    private void fillWidgets() {
+        bacEditText.setText(PROGRESS_START);
+        bacSeekBar.setProgress(5);
     }
 
     public void showDialog(View view) {
@@ -81,15 +106,17 @@ public class GoalRegistrationActivity extends AppCompatActivity {
             return;
         }
 
-        SuperDao superDao = new SuperDao(this);
-        UserDao userDao = superDao.getUserDao();
-
-        userDao.insert(user);
-
-        superDao.close();
+        insertUser();
 
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra(MainActivity.ID, user);
         startActivity(intent);
+    }
+
+    private void insertUser() {
+        SuperDao superDao = new SuperDao(this);
+        UserDao userDao = superDao.getUserDao();
+        userDao.insert(user);
+        superDao.close();
     }
 }

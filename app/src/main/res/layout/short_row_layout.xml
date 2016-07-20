@@ -30,6 +30,7 @@
                     android:scaleType="fitXY"/>
 
                 <TextView
+                    android:id="@+id/short_row_text_one"
                     android:gravity="center"
                     android:layout_centerHorizontal="true"
                     android:layout_width="wrap_content"
@@ -61,6 +62,7 @@
                     android:scaleType="fitXY"/>
 
                 <TextView
+                    android:id="@+id/short_row_text_two"
                     android:gravity="center"
                     android:layout_centerHorizontal="true"
                     android:layout_width="wrap_content"

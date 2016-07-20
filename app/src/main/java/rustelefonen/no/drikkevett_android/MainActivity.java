@@ -29,6 +29,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -50,6 +51,7 @@ import rustelefonen.no.drikkevett_android.tabs.history.BacHistoryFragment;
 import rustelefonen.no.drikkevett_android.tabs.home.BacHomeFragment;
 import rustelefonen.no.drikkevett_android.tabs.home.SuperDao;
 import rustelefonen.no.drikkevett_android.tabs.planParty.BacPlanPartyFragment;
+import rustelefonen.no.drikkevett_android.util.NotificationUtil;
 
 public class MainActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener {
 
@@ -161,7 +163,13 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         setupDrawerContent(nvDrawer);
 
         nvDrawer.getMenu().findItem(R.id.drawer_view_switch).setActionView(new Switch(this));
-        ((Switch) nvDrawer.getMenu().findItem(R.id.drawer_view_switch).getActionView()).setChecked(true);
+        ((Switch) nvDrawer.getMenu().findItem(R.id.drawer_view_switch).getActionView()).setChecked(NotificationUtil.getSelected(this));
+        ((Switch) nvDrawer.getMenu().findItem(R.id.drawer_view_switch).getActionView()).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                NotificationUtil.setSelected(getBaseContext(), isChecked);
+            }
+        });
 
         drawerToggle = setupDrawerToggle();
 
@@ -200,8 +208,8 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         //ICONS http://romannurik.github.io/AndroidAssetStudio/icons-actionbar.html#source.type=image&source.space.trim=1&source.space.pad=0&name=ic_action_test_1&theme=dark&color=33b5e5%2C60
 
         tabLayout.getTabAt(0).setIcon(R.drawable.ic_home_black_24dp);
-        tabLayout.getTabAt(1).setIcon(R.drawable.per_mille_icon);
-        tabLayout.getTabAt(2).setIcon(R.drawable.ic_list_black_24dp);
+        tabLayout.getTabAt(1).setIcon(R.drawable.per_mille);
+        tabLayout.getTabAt(2).setIcon(R.drawable.ic_playlist_add_black_24dp);
         tabLayout.getTabAt(3).setIcon(R.drawable.ic_mood_bad_black_24dp);
         tabLayout.getTabAt(4).setIcon(R.drawable.ic_access_time_black_24dp);
 
@@ -210,6 +218,28 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         onPageSelected(0);
 
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SuperDao superDao = new SuperDao(this);
+        UserDao userDao = superDao.getUserDao();
+        List<User> users = userDao.queryBuilder().list();
+        superDao.close();
+
+        if (users.size() <= 0) {
+            System.out.println("Ingen brukere...");
+        } else {
+            System.out.println("userCount: " + users.size());
+        }
+        User tmpUser = users.get(0);
+        if (tmpUser == null) {
+            System.out.println("Brukern er null");
+        } else {
+            System.out.println("Brukern er ikke null");
+        }
+        user = tmpUser;
     }
 
     @Override
@@ -310,7 +340,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
     @Override
     public void onPageSelected(int position) {
-        String title = position == 0 ? "Home"
+        String title = position == 0 ? "Hjem"
                 : position == 1 ? "Promillekalkulator"
                 : position == 2 ? "Planlegg kvelden"
                 : position == 3 ? "Dagen Derpå"

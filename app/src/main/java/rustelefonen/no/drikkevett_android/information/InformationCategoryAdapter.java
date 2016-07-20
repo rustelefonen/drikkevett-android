@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -49,14 +50,14 @@ public class InformationCategoryAdapter extends RecyclerView.Adapter<Information
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
         if (position % 2 == 0) {
-            setupCurrentCard(holder.getCardViewLong(), holder.getImageLong(), informationCategoryList.get(position + (position/2)));
+            setupCurrentCard(holder.getCardViewLong(), holder.getImageLong(), holder.getTextViewLong(), informationCategoryList.get(position + (position/2)));
         } else {
-            setupCurrentCard(holder.getCardViewShortOne(), holder.getImageShortOne(), informationCategoryList.get(position + (position/2)));
-            setupCurrentCard(holder.getCardViewShortTwo(), holder.getImageShortTwo(), informationCategoryList.get(position + (position/2) + 1));
+            setupCurrentCard(holder.getCardViewShortOne(), holder.getImageShortOne(), holder.getTextViewShortOne(), informationCategoryList.get(position + (position/2)));
+            setupCurrentCard(holder.getCardViewShortTwo(), holder.getImageShortTwo(), holder.getTextViewShortTwo(), informationCategoryList.get(position + (position/2) + 1));
         }
     }
 
-    private void setupCurrentCard(CardView cardView, ImageView imageView, final InformationCategory informationCategory) {
+    private void setupCurrentCard(CardView cardView, ImageView imageView, TextView textView, final InformationCategory informationCategory) {
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -65,6 +66,8 @@ public class InformationCategoryAdapter extends RecyclerView.Adapter<Information
                 context.startActivity(intent);
             }
         });
+        String categoryTitle = informationCategory.getName();
+        if (categoryTitle != null) textView.setText(categoryTitle);
         byte[] image = informationCategory.getImage();
         if (image != null) {
             Bitmap bitmap = BitmapFactory.decodeByteArray(image , 0, image.length);
@@ -96,6 +99,10 @@ public class InformationCategoryAdapter extends RecyclerView.Adapter<Information
         private final ImageView imageShortOne;
         private final ImageView imageShortTwo;
 
+        private final TextView textViewLong;
+        private final TextView textViewShortOne;
+        private final TextView textViewShortTwo;
+
 
         public ViewHolder(View v) {
             super(v);
@@ -106,6 +113,10 @@ public class InformationCategoryAdapter extends RecyclerView.Adapter<Information
             imageLong = (ImageView) v.findViewById(R.id.long_row_image);
             imageShortOne = (ImageView) v.findViewById(R.id.short_row_image_one);
             imageShortTwo = (ImageView) v.findViewById(R.id.short_row_image_two);
+
+            textViewLong = (TextView) v.findViewById(R.id.long_row_text);
+            textViewShortOne = (TextView) v.findViewById(R.id.short_row_text_one);
+            textViewShortTwo = (TextView) v.findViewById(R.id.short_row_text_two);
         }
 
         public CardView getCardViewLong() {
@@ -130,6 +141,18 @@ public class InformationCategoryAdapter extends RecyclerView.Adapter<Information
 
         public ImageView getImageShortTwo() {
             return imageShortTwo;
+        }
+
+        public TextView getTextViewLong() {
+            return textViewLong;
+        }
+
+        public TextView getTextViewShortOne() {
+            return textViewShortOne;
+        }
+
+        public TextView getTextViewShortTwo() {
+            return textViewShortTwo;
         }
     }
 }

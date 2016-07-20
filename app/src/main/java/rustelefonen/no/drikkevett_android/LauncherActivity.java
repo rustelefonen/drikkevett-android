@@ -11,6 +11,7 @@ import rustelefonen.no.drikkevett_android.db.User;
 import rustelefonen.no.drikkevett_android.db.UserDao;
 import rustelefonen.no.drikkevett_android.information.DBSeeder;
 import rustelefonen.no.drikkevett_android.intro.UserRegistrationActivity;
+import rustelefonen.no.drikkevett_android.intro.WelcomeActivity;
 import rustelefonen.no.drikkevett_android.tabs.home.SuperDao;
 
 /**
@@ -43,7 +44,7 @@ public class LauncherActivity extends AppCompatActivity {
             intent = new Intent(this, MainActivity.class);
             intent.putExtra(MainActivity.ID, user);
         } else {
-            intent = new Intent(this, UserRegistrationActivity.class);
+            intent = new Intent(this, WelcomeActivity.class);
         }
         startActivity(intent);
         finish();
