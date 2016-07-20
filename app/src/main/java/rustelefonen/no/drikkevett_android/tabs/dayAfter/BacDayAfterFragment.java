@@ -2,11 +2,13 @@ package rustelefonen.no.drikkevett_android.tabs.dayAfter;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,10 +16,13 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
+import com.github.mikephil.charting.animation.Easing;
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
 
 import rustelefonen.no.drikkevett_android.MainActivity;
 import rustelefonen.no.drikkevett_android.R;
@@ -29,10 +34,8 @@ import rustelefonen.no.drikkevett_android.db.User;
 import rustelefonen.no.drikkevett_android.db.UserDao;
 import rustelefonen.no.drikkevett_android.util.PartyUtil;
 
-import java.text.DateFormat;
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -44,55 +47,52 @@ import rustelefonen.no.drikkevett_android.db.DayAfterBACDao;
 import rustelefonen.no.drikkevett_android.db.PlanPartyElements;
 import rustelefonen.no.drikkevett_android.db.PlanPartyElementsDao;
 
+import static rustelefonen.no.drikkevett_android.util.DateUtil.setNewUnitDate;
 import static rustelefonen.no.drikkevett_android.util.PartyUtil.addMinsToDate;
+import static rustelefonen.no.drikkevett_android.util.PartyUtil.calculateBAC;
+import static rustelefonen.no.drikkevett_android.util.PartyUtil.countingGrams;
 import static rustelefonen.no.drikkevett_android.util.PartyUtil.getDateDiff;
 import static rustelefonen.no.drikkevett_android.util.PartyUtil.setGenderScore;
 
 public class BacDayAfterFragment extends Fragment {
-    /*
-    * ATTRIBUTES
-    * */
-    // user data:
-    double weight = 0;
-    String gender = "";
+    private double weight = 0;
+    private String gender = "";
 
-    private int planBeers = 0, planWines = 0, planDrink = 0, planShots = 0;
-    private int consumBeers = 0, consumWines = 0, consumDrink = 0, consumShots = 0;
+    private int consumBeers = 0, consumWines = 0, consumDrink = 0, consumShots = 0, planBeers = 0, planWines = 0, planDrink = 0, planShots = 0, totalConsumed = 0;
+
+    private int afterRegBeer = 0;
+    private int afterRegWine = 0;
+    private int afterRegDrink = 0;
+    private int afterRegShot = 0;
 
     private int costs = 0;
-    private double currentBAC = 0.0, highestBAC = 0.0;
-
-    // dummy beergrams
-    private double beerGrams = 12.6;
-    double wineGrams = 14.0;
-    double drinkGrams = 15.0;
-    double shotGrams = 16.0;
+    private String currentBAC = "";
+    private double highestBAC = 0.0;
 
     public Status status;
 
-    // start and end stamp session
     public Date startStamp = new Date(), endStamp = new Date();
 
     /*
     * WIDGETS
     * */
-    private TextView titleLbl;
-    private TextView beerLbl, wineLbl, drinkLbl, shotLbl;
-    private TextView costsLbl, highBACLbl, currBACLbl;
+    private TextView beerLbl, wineLbl, drinkLbl, shotLbl, costsLbl, highBACLbl, currBACLbl;
 
-    // after reg:
     private TextView afterRegBeerLbl, afterRegWineLbl, afterRegDrinkLbl, afterRegShotLbl;
 
-    // BUTTONS
     private Button btnEndDA, beerBtnAfterReg_DA, wineBtnAfterReg_DA, drinkBtnAfterReg_DA, shotBtnAfterReg_DA;
 
-    // SEEKBAR
+    private LinearLayout planPaRunning_LinLay, dayAfterRunning_LinLay;
+
     private TextView txtView;
     private SeekBar seekBar;
     private int hours = 0, tempMins = 0;
 
-    // VIEWS
     public View v;
+
+    public PieChart pieChart;
+    private static final String PER_MILLE = "\u2030";
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -165,12 +165,8 @@ public class BacDayAfterFragment extends Fragment {
         if (!isVisibleToUser) return;
 
         setUserData();
-        // hente status fra db
         status = getStatus();
         statusHandler(status);
-
-        // TESTING:
-        testingForLoop();
     }
 
     /*
@@ -193,7 +189,7 @@ public class BacDayAfterFragment extends Fragment {
     private Status getStatus(){
         Status tempStatus = Status.DEFAULT;
 
-        PlanPartyElementsDao partyDao = getSesDB().getPlanPartyElementsDao();
+        PlanPartyElementsDao partyDao = setDaoSessionDB().getPlanPartyElementsDao();
 
         // GET elements to temporary store them in variables then re-saving them
         List<PlanPartyElements> partyList = partyDao.queryBuilder().list();
@@ -212,7 +208,6 @@ public class BacDayAfterFragment extends Fragment {
         if(partyList.size() == 0){
             System.out.println("Party listen er tom! ");
         }
-
         return tempStatus;
     }
 
@@ -223,23 +218,24 @@ public class BacDayAfterFragment extends Fragment {
     private void dayAfterRunning(){
         getUnits();
         setStats();
+
+        // pie chart
+        pieChart = (PieChart) v.findViewById(R.id.pie_chart_bac_day_after);
+        fillPieChart();
+        stylePieChart();
+
         setVisualsDA();
     }
 
     private void clearUnitVariabels(){
-        // Planned units
         planBeers = 0;
         planWines = 0;
         planDrink = 0;
         planShots = 0;
-
-        // consumed units
         consumBeers = 0;
         consumWines = 0;
         consumDrink = 0;
         consumShots = 0;
-
-        // costs
         costs = 0;
     }
 
@@ -247,17 +243,14 @@ public class BacDayAfterFragment extends Fragment {
     * DATABASE COMMUNICATION METHODS
     * */
 
-    private DaoSession getSesDB(){
+    private DaoSession setDaoSessionDB(){
         String DB_NAME = "my-db";
         SQLiteDatabase db;
-
         SQLiteDatabase.CursorFactory cursorFactory = null;
         final DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(getContext(), DB_NAME, cursorFactory);
         db = helper.getWritableDatabase();
-
         DaoMaster daoMaster = new DaoMaster(db);
         DaoSession daoSession = daoMaster.newSession();
-
         return daoSession;
     }
 
@@ -268,7 +261,7 @@ public class BacDayAfterFragment extends Fragment {
     }
 
     private Date getFirstUnAddedStamp(){
-        PlanPartyElementsDao partyDao = getSesDB().getPlanPartyElementsDao();
+        PlanPartyElementsDao partyDao = setDaoSessionDB().getPlanPartyElementsDao();
         List<PlanPartyElements> planPList = partyDao.queryBuilder().list();
         PlanPartyElements lastElement = planPList.get(planPList.size() - 1);
         return lastElement.getFirstUnitAddedDate();
@@ -277,8 +270,8 @@ public class BacDayAfterFragment extends Fragment {
     private void getUnits(){
         clearUnitVariabels();
 
-        PlanPartyElementsDao partyDao = getSesDB().getPlanPartyElementsDao();
-        DayAfterBACDao dayAfterDao = getSesDB().getDayAfterBACDao();
+        PlanPartyElementsDao partyDao = setDaoSessionDB().getPlanPartyElementsDao();
+        DayAfterBACDao dayAfterDao = setDaoSessionDB().getDayAfterBACDao();
 
         // GET elements to temporary store them in variables then re-saving them
         List<PlanPartyElements> partyList = partyDao.queryBuilder().list();
@@ -287,6 +280,27 @@ public class BacDayAfterFragment extends Fragment {
             planWines = party.getPlannedWine();
             planDrink = party.getPlannedDrink();
             planShots = party.getPlannedShot();
+            if(party.getAftRegBeer() == null){
+                afterRegBeer = 0;
+            } else {
+                afterRegBeer = party.getAftRegBeer();
+            }
+            if(party.getAftRegWine() == null){
+                afterRegWine = 0;
+            } else {
+                afterRegWine = party.getAftRegWine();
+            }
+            if(party.getAftRegDrink() == null){
+                afterRegDrink = 0;
+            } else {
+                afterRegDrink = party.getAftRegDrink();
+            }
+            if(party.getAftRegShot() == null){
+                afterRegShot = 0;
+            } else {
+                afterRegShot = party.getAftRegShot();
+            }
+            System.out.println("After Reg beer? ffs" + party.getAftRegBeer());
         }
 
         List<DayAfterBAC> dayAfterList = dayAfterDao.queryBuilder().list();
@@ -305,11 +319,12 @@ public class BacDayAfterFragment extends Fragment {
                 consumShots++;
             }
         }
+        totalConsumed = consumBeers + consumWines + consumDrink + consumShots;
     }
 
     private double getHighestBAC(){
         double tempVal = 0.0;
-        HistoryDao historyDao = getSesDB().getHistoryDao();
+        HistoryDao historyDao = setDaoSessionDB().getHistoryDao();
         if(historyDao == null){
             System.out.println("HISTORIE TOM");
         } else {
@@ -322,7 +337,6 @@ public class BacDayAfterFragment extends Fragment {
 
     private double getCurrentBAC(double weight, String gender, Date firstUnitAddedTimeStamp){
         double sum = 0.0;
-
         consumBeers = 0;
         consumWines = 0;
         consumDrink = 0;
@@ -330,7 +344,6 @@ public class BacDayAfterFragment extends Fragment {
 
         DayAfterBACDao dayAfterDao = setDaoSessionDB().getDayAfterBACDao();
         List<DayAfterBAC> dayAfterBACList = dayAfterDao.queryBuilder().list();
-
         for (DayAfterBAC dayAfter : dayAfterBACList) {
             if(dayAfter.getUnit().equals("Beer")){
                 consumBeers++;
@@ -344,78 +357,37 @@ public class BacDayAfterFragment extends Fragment {
             if(dayAfter.getUnit().equals("Shot")){
                 consumShots++;
             }
-
             double totalGrams = countingGrams(consumBeers, consumWines, consumDrink, consumShots);
-
             Date currentDate = new Date();
-            System.out.println("Nåværende dato: " + currentDate + "\nFirst Unit added ts: " + firstUnitAddedTimeStamp);
-
             long timeDifference = getDateDiff(firstUnitAddedTimeStamp, currentDate, TimeUnit.MINUTES);
-
             double newValueDouble = (double)timeDifference;
             double minToHours = newValueDouble / 60;
-
-            System.out.println("Time Difference: " + timeDifference);
-            System.out.println("Timer: " + minToHours);
-            System.out.println("<---------------------------------------------------->");
             // FROM 0 - 4 mins
             if(minToHours < 0.085){
-                System.out.println("Fra 0-4 minutter...(" + sum + ")");
                 sum = 0;
             }
             // FROM 5 - 15 MIN
             if(minToHours > 0.085 && minToHours <= 0.25){
-                // KALKULER PROMILLE
                 try {
                     sum = totalGrams/(weight * setGenderScore(gender)) - (PartyUtil.intervalCalc(minToHours) * minToHours);
                 } catch (NumberFormatException e){
                     sum = 0;
                 }
-                System.out.println("Fra 5-15 minutter... (" + sum + ")");
             }
             if(minToHours > 0.25){
-                // KALKULER PROMILLE
                 try{
                     sum = Double.parseDouble(calculateBAC(gender, weight, totalGrams, minToHours));
                 } catch (NumberFormatException e){
                     sum = 0;
                 }
-
-                System.out.println("Fra 15 og oppover... (" + sum + ")");
             }
         }
-        System.out.println("LivePromille Promille: " + sum);
-        System.out.println("<---------------------------------------------------->");
-
-
         return sum;
     }
 
-    public String calculateBAC(String gender, double weight, double grams, double hours) {
-        double oppdatertPromille = 0.0;
-        double genderScore = setGenderScore(gender);
-
-        if(grams == 0.0){
-            oppdatertPromille = 0.0;
-        } else {
-            oppdatertPromille = grams/(weight * genderScore) - (0.15 * hours);
-            if(oppdatertPromille < 0.0){
-                oppdatertPromille = 0.0;
-            }
-        }
-        DecimalFormat numberFormat = new DecimalFormat("#.##");
-        String newPromille = numberFormat.format(oppdatertPromille);
-
-        return newPromille;
-    }
-
-    public double countingGrams(double beerUnits, double wineUnits, double drinkUnits, double shotUnits){
-        return (beerUnits * beerGrams) + (wineUnits * wineGrams) + (drinkUnits * drinkGrams) + (shotUnits * shotGrams);
-    }
-
     private void clearDBTables(){
-        PlanPartyElementsDao partyDao = getSesDB().getPlanPartyElementsDao();
-        DayAfterBACDao dayAfterDao = getSesDB().getDayAfterBACDao();
+        PlanPartyElementsDao partyDao = setDaoSessionDB().getPlanPartyElementsDao();
+        DayAfterBACDao dayAfterDao = setDaoSessionDB().getDayAfterBACDao();
 
         List<DayAfterBAC> dayAfterBACList = dayAfterDao.queryBuilder().list();
         for (DayAfterBAC dayAfter : dayAfterBACList) {
@@ -438,6 +410,10 @@ public class BacDayAfterFragment extends Fragment {
         newParty.setPlannedWine(0);
         newParty.setPlannedDrink(0);
         newParty.setPlannedShot(0);
+        newParty.setAftRegBeer(0);
+        newParty.setAftRegWine(0);
+        newParty.setAftRegDrink(0);
+        newParty.setAftRegShot(0);
         newParty.setStatus(status.toString());
         partyDao.insert(newParty);
     }
@@ -447,24 +423,11 @@ public class BacDayAfterFragment extends Fragment {
         return (b * user.getBeerPrice()) + (w * user.getWinePrice()) + (d * user.getDrinkPrice()) + (s * user.getShotPrice());
     }
 
-    public DaoSession setDaoSessionDB(){
-        String DB_NAME = "my-db";
-        SQLiteDatabase db;
-
-        SQLiteDatabase.CursorFactory cursorFactory = null;
-        final DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(getContext(), DB_NAME, cursorFactory);
-        db = helper.getWritableDatabase();
-
-        DaoMaster daoMaster = new DaoMaster(db);
-        DaoSession daoSession = daoMaster.newSession();
-
-        return daoSession;
-    }
-
     private void setStats(){
         costs = calculateCosts(consumBeers, consumWines, consumDrink, consumShots);
         if(getFirstUnAddedStamp() != null){
-            currentBAC = getCurrentBAC(weight, gender, getFirstUnAddedStamp());
+            DecimalFormat numberFormat = new DecimalFormat("#.##");
+            currentBAC = numberFormat.format(getCurrentBAC(weight, gender, getFirstUnAddedStamp()));
         }
         highestBAC = getHighestBAC();
     }
@@ -473,22 +436,12 @@ public class BacDayAfterFragment extends Fragment {
     * REGISTRATION ( OF FORGOTTEN UNITS )
     * */
 
-    private void testingForLoop(){
-        int intervalHours = 0;
-        for(double i = 0; i < 5; i+= 0.5){
-            System.out.println(i);
-            if(i > 0.5 && i < 1){
-                intervalHours = 1;
-            }
-        }
-    }
-
     private int setMaxSeekBarVal(){
         int intervallHours = 0;
 
         // Get length of session ( interval )
 
-        PlanPartyElementsDao partyDao = getSesDB().getPlanPartyElementsDao();
+        PlanPartyElementsDao partyDao = setDaoSessionDB().getPlanPartyElementsDao();
         List<PlanPartyElements> partyList = partyDao.queryBuilder().list();
 
         PlanPartyElements lastElement = partyList.get(partyList.size() -1);
@@ -627,30 +580,62 @@ public class BacDayAfterFragment extends Fragment {
         // refresh graphHistory, by removing all the last values and adding them again with the new unit added
         refreshGraphHist();
 
-        // refresh all visuals
-        dayAfterRunning();
-
         // add number of after registered units
-        int afterRegBeer = 0;
-        int afterRegWine = 0;
-        int afterRegDrink = 0;
-        int afterRegShot = 0;
+        PlanPartyElementsDao partyDao = setDaoSessionDB().getPlanPartyElementsDao();
+        List<PlanPartyElements> plaList = partyDao.queryBuilder().list();
+        PlanPartyElements getLastElement = plaList.get(plaList.size() - 1);
+
+        afterRegBeer = 0;
+        afterRegWine = 0;
+        afterRegDrink = 0;
+        afterRegShot = 0;
 
         // add unitToVariable
-        if(unit == "Beer"){
+        if(unit.equals("Beer")){
             consumBeers++;
-            afterRegBeer++;
-            afterRegBeerLbl.setText(afterRegBeer + "");
+            if(getLastElement.getAftRegBeer() == null){
+                afterRegBeer = 0;
+            } else {
+                afterRegBeer = getLastElement.getAftRegBeer();
+            }
+            afterRegBeer += 1;
+            getLastElement.setAftRegBeer(afterRegBeer);
         }
-        if(unit == "Wine"){
+        if(unit.equals("Wine")){
             consumWines++;
+            if(getLastElement.getAftRegWine() == null){
+                afterRegWine = 0;
+            } else {
+                afterRegWine = getLastElement.getAftRegWine();
+            }
+            afterRegWine++;
+            getLastElement.setAftRegWine(afterRegWine);
         }
-        if(unit == "Drink"){
+        if(unit.equals("Drink")){
             consumDrink++;
+            if(getLastElement.getAftRegDrink() == null){
+                afterRegDrink = 0;
+            } else {
+                afterRegDrink = getLastElement.getAftRegDrink();
+            }
+            afterRegDrink++;
+            getLastElement.setAftRegDrink(afterRegDrink);
         }
-        if(unit == "Shot"){
+        if(unit.equals("Shot")){
             consumShots++;
+            if(getLastElement.getAftRegShot() == null){
+                afterRegShot = 0;
+            } else {
+                afterRegShot = getLastElement.getAftRegShot();
+            }
+            afterRegShot++;
+            getLastElement.setAftRegShot(afterRegShot);
         }
+
+        partyDao.insertOrReplace(getLastElement);
+
+        // refresh all visuals
+        dayAfterRunning();
     }
 
     private void refreshGraphHist(){
@@ -785,19 +770,6 @@ public class BacDayAfterFragment extends Fragment {
         historyDao.insertOrReplace(lastElement);
     }
 
-    private Date setNewUnitDate(int minutes){
-        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
-        Date date = new Date();
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-
-        calendar.add(Calendar.MINUTE, minutes);
-
-        date = calendar.getTime();
-        return date;
-    }
-
     private void updateUnitInHistory(String unit){
         // update highest BAC in History
         HistoryDao historyDao = setDaoSessionDB().getHistoryDao();
@@ -850,7 +822,6 @@ public class BacDayAfterFragment extends Fragment {
             }
         });
 
-        // SEEKBAR
         seekBar = (SeekBar) dialog.findViewById(R.id.seekBar);
         txtView = (TextView) dialog.findViewById(R.id.txtViewTesting);
 
@@ -865,13 +836,10 @@ public class BacDayAfterFragment extends Fragment {
             }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-            }
+            public void onStartTrackingTouch(SeekBar seekBar) { }
 
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
+            public void onStopTrackingTouch(SeekBar seekBar) { }
         });
         dialog.show();
     }
@@ -892,67 +860,90 @@ public class BacDayAfterFragment extends Fragment {
                 dialogInterface.cancel();
             }
         });
-
         AlertDialog alert = alert_builder.create();
         alert.setTitle("Avslutt Dagen Derpå");
         alert.show();
     }
 
     /*
-    * WIDGETS
+    * PIE CHART
     * */
 
-    private void setVisibility(int visibility){
-        // Units
-        beerLbl.setVisibility(visibility);
-        wineLbl.setVisibility(visibility);
-        drinkLbl.setVisibility(visibility);
-        shotLbl.setVisibility(visibility);
+    private void fillPieChart() {
+        ArrayList<Entry> entries = new ArrayList<>();
 
-        // Stats
-        costsLbl.setVisibility(visibility);
-        highBACLbl.setVisibility(visibility);
-        currBACLbl.setVisibility(visibility);
+        entries.add(new Entry((float) consumBeers, 0));
+        entries.add(new Entry((float) consumWines, 1));
+        entries.add(new Entry((float) consumDrink, 2));
+        entries.add(new Entry((float) consumShots, 3));
 
-        // Buttons
-        btnEndDA.setVisibility(visibility);
-        beerBtnAfterReg_DA.setVisibility(visibility);
-        wineBtnAfterReg_DA.setVisibility(visibility);
-        drinkBtnAfterReg_DA.setVisibility(visibility);
-        shotBtnAfterReg_DA.setVisibility(visibility);
+        PieDataSet dataset = new PieDataSet(entries, "# of Calls");
+        dataset.setDrawValues(false);
+        dataset.setColors(getColors());
 
-        // after Reg
-        afterRegBeerLbl.setVisibility(visibility);
-        afterRegWineLbl.setVisibility(visibility);
-        afterRegDrinkLbl.setVisibility(visibility);
-        afterRegShotLbl.setVisibility(visibility);
+        ArrayList<String> labels = new ArrayList<>();
+
+        for (int i = 0; i < 4; i++) labels.add("");
+
+        PieData data = new PieData(labels, dataset); // initialize Piedata
+        pieChart.setData(data);
     }
+
+    private void stylePieChart() {
+        pieChart.setCenterText(totalConsumed + "\nTOTAL");
+        pieChart.setDrawHoleEnabled(true);
+        pieChart.setHoleRadius(70f);
+        pieChart.setHoleColor(Color.TRANSPARENT);
+        pieChart.setCenterTextRadiusPercent(100f);
+        pieChart.setTransparentCircleRadius(60f);
+        pieChart.setDescription("");
+        pieChart.setDrawSliceText(false);
+        pieChart.getLegend().setEnabled(false);
+        pieChart.setRotationEnabled(false);
+        pieChart.setDrawSliceText(false);
+        pieChart.setCenterTextSize(20.0f);
+        pieChart.setCenterTextColor(Color.parseColor("#FFFFFF"));
+        pieChart.animateY(1400, Easing.EasingOption.EaseInOutQuad);
+    }
+
+    private int[] getColors() {
+        return new int[]{
+                ContextCompat.getColor(getContext(), R.color.beerColor),
+                ContextCompat.getColor(getContext(), R.color.wineColor),
+                ContextCompat.getColor(getContext(), R.color.drinkColor),
+                ContextCompat.getColor(getContext(), R.color.shotColor)};
+    }
+
+    /*
+    * WIDGETS
+    * */
 
     private void setVisualsPP(){
         clearUnitVariabels();
         btnEndDA.setVisibility(View.GONE);
-        titleLbl.setVisibility(View.VISIBLE);
-        titleLbl.setText("Planlegg Kvelden pågår");
-        setVisibility(View.GONE);
+        planPaRunning_LinLay.setVisibility(View.VISIBLE);
+        dayAfterRunning_LinLay.setVisibility(View.GONE);
     }
 
     private void setVisualsDA(){
-        setVisibility(View.VISIBLE);
-        titleLbl.setVisibility(View.GONE);
-
         beerLbl.setText(consumBeers + "");
         wineLbl.setText(consumWines + "");
         drinkLbl.setText(consumDrink + "");
         shotLbl.setText(consumShots + "");
-
         costsLbl.setText(costs + ",-");
         highBACLbl.setText(highestBAC + "");
         currBACLbl.setText(currentBAC + "");
+        afterRegBeerLbl.setText(afterRegBeer + "");
+        afterRegWineLbl.setText(afterRegWine + "");
+        afterRegDrinkLbl.setText(afterRegDrink + "");
+        afterRegShotLbl.setText(afterRegShot + "");
+
+        btnEndDA.setVisibility(View.VISIBLE);
+        planPaRunning_LinLay.setVisibility(View.GONE);
+        dayAfterRunning_LinLay.setVisibility(View.VISIBLE);
     }
 
     private void initWidgets(){
-        titleLbl = (TextView) v.findViewById(R.id.txtViewTitleDA);
-
         beerLbl = (TextView) v.findViewById(R.id.txtViewBeerDA);
         wineLbl = (TextView) v.findViewById(R.id.txtViewWineDA);
         drinkLbl = (TextView) v.findViewById(R.id.txtViewDrinkDA);
@@ -962,17 +953,18 @@ public class BacDayAfterFragment extends Fragment {
         highBACLbl = (TextView) v.findViewById(R.id.txtViewHighestBAC_DA);
         currBACLbl = (TextView) v.findViewById(R.id.txtViewCurrBAC_DA);
 
-        // BUTTONS
         btnEndDA = (Button) v.findViewById(R.id.btnEndDayAfter);
         beerBtnAfterReg_DA = (Button) v.findViewById(R.id.btnAfterRegBeer_DA);
         wineBtnAfterReg_DA = (Button) v.findViewById(R.id.btnAfterRegWine_DA);
         drinkBtnAfterReg_DA = (Button) v.findViewById(R.id.btnAfterRegDrink_DA);
         shotBtnAfterReg_DA = (Button) v.findViewById(R.id.btnAfterRegShot_DA);
 
-        // AFTER REG UNITS
         afterRegBeerLbl = (TextView) v.findViewById(R.id.txtViewAfterRegBeerUnit_DA);
         afterRegWineLbl = (TextView) v.findViewById(R.id.txtViewAfterRegWineUnit_DA);
         afterRegDrinkLbl = (TextView) v.findViewById(R.id.txtViewAfterRegDrinkUnit_DA);
         afterRegShotLbl = (TextView) v.findViewById(R.id.txtViewAfterRegShotUnit_DA);
+
+        planPaRunning_LinLay = (LinearLayout) v.findViewById(R.id.planP_running_layout_DA);
+        dayAfterRunning_LinLay = (LinearLayout) v.findViewById(R.id.dayAfterRunning_layout_ID);
     }
 }
