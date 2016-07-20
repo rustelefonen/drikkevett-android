@@ -6,6 +6,8 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +16,8 @@ import android.widget.Toast;
 import java.util.List;
 
 import rustelefonen.no.drikkevett_android.R;
+import rustelefonen.no.drikkevett_android.db.GraphHistory;
+import rustelefonen.no.drikkevett_android.db.GraphHistoryDao;
 import rustelefonen.no.drikkevett_android.db.History;
 import rustelefonen.no.drikkevett_android.db.HistoryDao;
 import rustelefonen.no.drikkevett_android.tabs.home.SuperDao;
@@ -42,9 +46,15 @@ public class BacHistoryFragment extends Fragment {
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        getActivity().getMenuInflater().inflate(R.menu.history_menu, menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.delete_history:
+            case R.id.action_delete:
+                deleteAllHistories();
                 Toast.makeText(getContext(), "Slettet alt as", Toast.LENGTH_SHORT).show();
                 return false;
         }
@@ -91,6 +101,34 @@ public class BacHistoryFragment extends Fragment {
         SuperDao superDao = new SuperDao(getContext());
         HistoryDao historyDao = superDao.getHistoryDao();
         historyList = historyDao.queryBuilder().list();
+        superDao.close();
+    }
+
+    private void deleteAllHistories() {
+        SuperDao superDao = new SuperDao(getContext());
+        HistoryDao historyDao = superDao.getHistoryDao();
+        GraphHistoryDao graphHistoryDao = superDao.getGraphHistoryDao();
+
+        List<GraphHistory> graphHistoryList = graphHistoryDao.queryBuilder().list();
+        List<History> historyList = historyDao.queryBuilder().list();
+
+        for (GraphHistory graphHistory : graphHistoryList) {
+            graphHistoryDao.delete(graphHistory);
+        }
+
+        for (History history : historyList) {
+            historyDao.delete(history);
+        }
+
+        /*for (History history : historyList) {
+            for (GraphHistory graphHistory : graphHistoryList) {
+                if (graphHistory.getHistoryId() == history.getId()) {
+                    history.getGraphHistories().remove(graphHistory);
+                    graphHistoryDao.delete(graphHistory);
+                }
+            }
+            historyDao.delete(history);
+        }*/
         superDao.close();
     }
 }

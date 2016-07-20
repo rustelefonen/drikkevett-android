@@ -257,20 +257,20 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         return false;
     }
 
-    @Override
+    /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.history_menu, menu);
         return true;
-    }
+    }*/
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
+        /*if (id == R.id.action_settings) {
             startActivity(new Intent(this, Settings.class));
             return true;
-        } else if (id == android.R.id.home) {
+        } else*/ if (id == android.R.id.home) {
             mDrawer.openDrawer(GravityCompat.START);
             return true;
         }
