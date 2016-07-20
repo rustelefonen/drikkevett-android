@@ -2,18 +2,23 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group android:checkableBehavior="single">
-        <item android:id="@+id/drawer_view_information" android:title="Informasjon"></item>
+        <item android:id="@+id/drawer_view_information"
+            android:title="Informasjon"
+            android:icon="@drawable/ic_info"/>
         <item
             android:id="@+id/nav_first_fragment"
             android:title="Endre din bruker"
             android:icon="@drawable/ic_person_black_24dp"/>
         <item
             android:id="@+id/nav_second_fragment"
-            android:title="Endre alkoholpriser" />
+            android:title="Endre alkoholpriser"
+            android:icon="@drawable/ic_money"/>
         <item
             android:id="@+id/nav_third_fragment"
-            android:title="Endre ditt mål" />
+            android:title="Endre ditt mål"
+            android:icon="@drawable/ic_goal_bac"/>
         <item android:title="Varslinger"
-            android:id="@+id/drawer_view_switch"/>
+            android:id="@+id/drawer_view_switch"
+            android:icon="@drawable/ic_notification"/>
     </group>
 </menu>

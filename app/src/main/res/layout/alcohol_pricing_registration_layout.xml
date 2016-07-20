@@ -100,7 +100,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Standard"
-                    android:background="#41774A"
+                    android:background="@color/defaultGreen"
                     android:textColor="@color/textColor"
                     android:onClick="setDefault"
                     android:layout_weight="45"/>
@@ -108,7 +108,7 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="5"></LinearLayout>
+                    android:layout_weight="10"></LinearLayout>
 
                 <Button
                     android:layout_width="wrap_content"
