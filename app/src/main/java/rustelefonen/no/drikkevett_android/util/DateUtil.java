@@ -20,6 +20,52 @@ public class DateUtil {
         return cal.getTime().before(dateToTest);
     }
 
+    public static String getMonthShortName(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        int month = cal.get(Calendar.MONTH);
+        String monthString = "";
+        switch (month) {
+            case 0:
+                monthString = "Jan";
+                break;
+            case 1:
+                monthString = "Feb";
+                break;
+            case 2:
+                monthString = "Mar";
+                break;
+            case 3:
+                monthString = "Apr";
+                break;
+            case 4:
+                monthString = "Mai";
+                break;
+            case 5:
+                monthString = "Jun";
+                break;
+            case 6:
+                monthString = "Jul";
+                break;
+            case 7:
+                monthString = "Aug";
+                break;
+            case 8:
+                monthString = "Sep";
+                break;
+            case 9:
+                monthString = "Okt";
+                break;
+            case 10:
+                monthString = "Nov";
+                break;
+            case 11:
+                monthString = "Des";
+                break;
+        }
+        return monthString;
+    }
+
     public static String getMonthName(int month) {
         switch (month) {
             case 0:

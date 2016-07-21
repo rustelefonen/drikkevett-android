@@ -32,7 +32,7 @@
                     android:layout_centerInParent="true">
 
                     <TextView
-                        android:id="@+id/center_text_view"
+                        android:id="@+id/history_row_day"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="15"
@@ -41,6 +41,7 @@
                         android:layout_gravity="center"
                         android:gravity="center"/>
                     <TextView
+                        android:id="@+id/history_row_month"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/greyTextColor"
@@ -80,7 +81,7 @@
                 android:layout_gravity="center">
 
                 <TextView
-                    android:id="@+id/textView"
+                    android:id="@+id/history_row_highest_bac"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="24sp"
@@ -88,7 +89,7 @@
                     android:textColor="@color/historyRed"/>
 
                 <TextView
-                    android:id="@+id/history_total_cost_text_view"
+                    android:id="@+id/history_row_total_cost"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/historyRed"
