@@ -45,6 +45,7 @@ import rustelefonen.no.drikkevett_android.db.History;
 import rustelefonen.no.drikkevett_android.db.HistoryDao;
 import rustelefonen.no.drikkevett_android.db.User;
 import rustelefonen.no.drikkevett_android.db.UserDao;
+import rustelefonen.no.drikkevett_android.util.NavigationUtil;
 
 import static rustelefonen.no.drikkevett_android.tabs.home.HistoryCalculator.getLastMonthAverageBac;
 import static rustelefonen.no.drikkevett_android.tabs.home.HistoryCalculator.getLastMonthCost;
@@ -88,7 +89,24 @@ public class BacHomeFragment extends Fragment{
         fillPieChart();
         stylePieChart();
 
+        setHasOptionsMenu(true);
+
         return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        getActivity().getMenuInflater().inflate(R.menu.simple_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_contact:
+                NavigationUtil.navigateToContactInformation(getContext());
+                return false;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

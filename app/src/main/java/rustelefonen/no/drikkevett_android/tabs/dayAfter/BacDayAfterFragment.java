@@ -10,6 +10,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -32,6 +35,7 @@ import rustelefonen.no.drikkevett_android.db.History;
 import rustelefonen.no.drikkevett_android.db.HistoryDao;
 import rustelefonen.no.drikkevett_android.db.User;
 import rustelefonen.no.drikkevett_android.db.UserDao;
+import rustelefonen.no.drikkevett_android.util.NavigationUtil;
 import rustelefonen.no.drikkevett_android.util.PartyUtil;
 
 import java.text.DecimalFormat;
@@ -145,7 +149,24 @@ public class BacDayAfterFragment extends Fragment {
             }
         });
 
+        setHasOptionsMenu(true);
+
         return v;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        getActivity().getMenuInflater().inflate(R.menu.simple_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_contact:
+                NavigationUtil.navigateToContactInformation(getContext());
+                return false;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

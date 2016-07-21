@@ -9,6 +9,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -41,6 +44,7 @@ import rustelefonen.no.drikkevett_android.db.PlanPartyElements;
 import rustelefonen.no.drikkevett_android.db.PlanPartyElementsDao;
 import rustelefonen.no.drikkevett_android.db.User;
 import rustelefonen.no.drikkevett_android.tabs.calc.fragments.BeerScrollAdapter;
+import rustelefonen.no.drikkevett_android.util.NavigationUtil;
 import rustelefonen.no.drikkevett_android.util.PartyUtil;
 
 import static rustelefonen.no.drikkevett_android.util.DateUtil.setEndOfSesStamp;
@@ -120,7 +124,24 @@ public class BacPlanPartyFragment extends Fragment {
         beerScroll = (ViewPager) v.findViewById(R.id.beer_scroll_plan_party);
         beerScroll.setAdapter(new BeerScrollAdapter(this.getFragmentManager()));
 
+        setHasOptionsMenu(true);
+
         return v;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        getActivity().getMenuInflater().inflate(R.menu.simple_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_contact:
+                NavigationUtil.navigateToContactInformation(getContext());
+                return false;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

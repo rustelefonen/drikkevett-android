@@ -1,6 +1,8 @@
 package rustelefonen.no.drikkevett_android.tabs.history;
 
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -22,7 +24,11 @@ import rustelefonen.no.drikkevett_android.db.GraphHistory;
 import rustelefonen.no.drikkevett_android.db.GraphHistoryDao;
 import rustelefonen.no.drikkevett_android.db.History;
 import rustelefonen.no.drikkevett_android.db.HistoryDao;
+import rustelefonen.no.drikkevett_android.db.Information;
+import rustelefonen.no.drikkevett_android.db.InformationDao;
+import rustelefonen.no.drikkevett_android.information.InformationActivity;
 import rustelefonen.no.drikkevett_android.tabs.home.SuperDao;
+import rustelefonen.no.drikkevett_android.util.NavigationUtil;
 
 public class BacHistoryFragment extends Fragment {
     private static final String TAG = "RecyclerViewFragment";
@@ -71,6 +77,9 @@ public class BacHistoryFragment extends Fragment {
                             }
                         })
                         .show();
+                return false;
+            case R.id.action_contact:
+                NavigationUtil.navigateToContactInformation(getContext());
                 return false;
         }
         return super.onOptionsItemSelected(item);

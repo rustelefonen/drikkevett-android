@@ -27,6 +27,7 @@ import java.util.ArrayList;
 
 import rustelefonen.no.drikkevett_android.R;
 import rustelefonen.no.drikkevett_android.tabs.calc.fragments.BeerScrollAdapter;
+import rustelefonen.no.drikkevett_android.util.NavigationUtil;
 
 public class BacCalcFragment extends android.support.v4.app.Fragment {
 
@@ -134,6 +135,9 @@ public class BacCalcFragment extends android.support.v4.app.Fragment {
             case R.id.action_remove:
                 removeAddedBeverages();
                 refreshFragment();
+                return false;
+            case R.id.action_contact:
+                NavigationUtil.navigateToContactInformation(getContext());
                 return false;
         }
         return super.onOptionsItemSelected(item);
