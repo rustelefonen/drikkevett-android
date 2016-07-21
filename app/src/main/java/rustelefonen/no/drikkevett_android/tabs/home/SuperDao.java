@@ -8,6 +8,7 @@ import rustelefonen.no.drikkevett_android.db.GraphHistoryDao;
 import rustelefonen.no.drikkevett_android.db.HistoryDao;
 import rustelefonen.no.drikkevett_android.db.InformationCategoryDao;
 import rustelefonen.no.drikkevett_android.db.InformationDao;
+import rustelefonen.no.drikkevett_android.db.PlanPartyElementsDao;
 import rustelefonen.no.drikkevett_android.db.UserDao;
 
 /**
@@ -44,6 +45,10 @@ public class SuperDao {
 
     public InformationDao getInformationDao() {
         return daoSession.getInformationDao();
+    }
+
+    public PlanPartyElementsDao getPlanPartyElementsDao() {
+        return daoSession.getPlanPartyElementsDao();
     }
 
 

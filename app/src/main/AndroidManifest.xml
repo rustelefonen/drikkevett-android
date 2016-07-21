@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="rustelefonen.no.drikkevett_android">
 
+
+
     <uses-feature android:name="android.hardware.camera" android:required="true" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -46,5 +48,13 @@
         <activity android:name=".information.InformationActivity"/>
         <activity android:name=".intro.SuperIntro"/>
         <activity android:name=".intro.WelcomeActivity"/>
+
+        <receiver android:name=".BacWidgetProvider">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider"
+                android:resource="@xml/bac_widget_provider" />
+        </receiver>
     </application>
 </manifest>

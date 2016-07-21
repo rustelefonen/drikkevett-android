@@ -109,8 +109,6 @@ public class HistoryActivity extends AppCompatActivity {
         beerCountTextView.setText(history.getDrinkCount() + "");
         beerCountTextView.setText(history.getShotCount() + "");
 
-
-
         historyCostTextView = (TextView) findViewById(R.id.history_cost);
         historyHighestBacTextView = (TextView) findViewById(R.id.history_highest_bac);
 
