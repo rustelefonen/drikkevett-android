@@ -167,23 +167,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         drawerToggle = setupDrawerToggle();
 
 
-        SuperDao superDao = new SuperDao(this);
-        UserDao userDao = superDao.getUserDao();
-        List<User> users = userDao.queryBuilder().list();
-        superDao.close();
-
-        if (users.size() <= 0) {
-            System.out.println("Ingen brukere...");
-        } else {
-            System.out.println("userCount: " + users.size());
-        }
-        User tmpUser = users.get(0);
-        if (tmpUser == null) {
-            System.out.println("Brukern er null");
-        } else {
-            System.out.println("Brukern er ikke null");
-        }
-        user = tmpUser;
+        fetchUser();
 
         LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -220,26 +204,22 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
+    private void fetchUser() {
         SuperDao superDao = new SuperDao(this);
         UserDao userDao = superDao.getUserDao();
         List<User> users = userDao.queryBuilder().list();
         superDao.close();
 
-        if (users.size() <= 0) {
-            System.out.println("Ingen brukere...");
-        } else {
-            System.out.println("userCount: " + users.size());
+        if (users.size() > 0) {
+            User tmpUser = users.get(0);
+            if (tmpUser != null) user = tmpUser;
         }
-        User tmpUser = users.get(0);
-        if (tmpUser == null) {
-            System.out.println("Brukern er null");
-        } else {
-            System.out.println("Brukern er ikke null");
-        }
-        user = tmpUser;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        fetchUser();
 
         //Litt hack?
         nvDrawer.getMenu().getItem(0).setChecked(false);
@@ -264,26 +244,13 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         return false;
     }
 
-    /*@Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.history_menu, menu);
-        return true;
-    }*/
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        /*if (id == R.id.action_settings) {
-            startActivity(new Intent(this, Settings.class));
-            return true;
-        } else*/ if (id == android.R.id.home) {
+        if (id == android.R.id.home) {
             mDrawer.openDrawer(GravityCompat.START);
             return true;
-        }
-        if (drawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        }
+        } else if (drawerToggle.onOptionsItemSelected(item)) return true;
         return super.onOptionsItemSelected(item);
     }
 
@@ -360,75 +327,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     @Override
     public void onPageScrollStateChanged(int state) {}
 
-
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
-        private static final String ARG_SECTION_NUMBER = "section_number";
-
-        public PlaceholderFragment() {
-        }
-
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
-        public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
-            Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
-            return fragment;
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-
-            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
-
-            return rootView;
-        }
-    }
-
-    /**
-     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-     * one of the sections/tabs/pages.
-     */
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
-
-        public SectionsPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            switch(position){
-                case 0: return new BacHomeFragment();
-                case 1: return new BacCalcFragment();
-                case 2: return new BacPlanPartyFragment();
-                case 3: return new BacDayAfterFragment();
-                case 4: return new BacHistoryFragment();
-                default: return PlaceholderFragment.newInstance(position + 1);
-            }
-        }
-
-        @Override
-        public int getCount() { return 5; }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return "";
-        }
-    }
-
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event)  {
         if (Integer.parseInt(android.os.Build.VERSION.SDK) > 5 && keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
@@ -438,9 +336,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         return super.onKeyDown(keyCode, event);
     }
 
-
     @Override
     public void onBackPressed() {}
-
-
 }

@@ -1,7 +1,9 @@
 package rustelefonen.no.drikkevett_android.tabs.history;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -54,8 +56,21 @@ public class BacHistoryFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_delete:
-                deleteAllHistories();
-                Toast.makeText(getContext(), "Slettet alt as", Toast.LENGTH_SHORT).show();
+                new AlertDialog.Builder(getContext())
+                        .setTitle("Slett all historikk")
+                        .setMessage("Er du sikker på at du vil slette all historikk? Handlingen kan ikke angres.")
+                        .setPositiveButton("JA", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                deleteAllHistories();
+                                refreshFragment();
+                            }
+                        })
+                        .setNegativeButton("AVBRYT", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // do nothing
+                            }
+                        })
+                        .show();
                 return false;
         }
         return super.onOptionsItemSelected(item);
@@ -119,16 +134,12 @@ public class BacHistoryFragment extends Fragment {
         for (History history : historyList) {
             historyDao.delete(history);
         }
-
-        /*for (History history : historyList) {
-            for (GraphHistory graphHistory : graphHistoryList) {
-                if (graphHistory.getHistoryId() == history.getId()) {
-                    history.getGraphHistories().remove(graphHistory);
-                    graphHistoryDao.delete(graphHistory);
-                }
-            }
-            historyDao.delete(history);
-        }*/
         superDao.close();
+    }
+
+    private void refreshFragment() {
+        initDataset();
+        mAdapter = new HistoryAdapter(historyList);
+        mRecyclerView.setAdapter(mAdapter);
     }
 }

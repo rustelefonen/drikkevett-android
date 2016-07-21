@@ -6,6 +6,6 @@
         android:id="@+id/action_contact"
         android:title="Kontakt oss"/>
     <item
-        android:id="@+id/action_delete"
-        android:title="Slett"/>
+        android:id="@+id/action_remove"
+        android:title="Fjern alle enheter"/>
 </menu>

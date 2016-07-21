@@ -82,7 +82,7 @@ public class BacHomeFragment extends Fragment{
         View view = inflater.inflate(R.layout.bac_home_frag, container, false);
 
 
-        //addHistory();
+        addHistory();
         initWidgets(view);
         fillWidgets();
         fillPieChart();

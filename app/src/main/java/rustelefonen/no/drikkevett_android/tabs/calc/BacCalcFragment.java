@@ -1,10 +1,15 @@
 package rustelefonen.no.drikkevett_android.tabs.calc;
 
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -72,6 +77,8 @@ public class BacCalcFragment extends android.support.v4.app.Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.bac_calc_frag, container, false);
 
+        setHasOptionsMenu(true);
+
         initVariabels();
 
         addButton.setOnClickListener(new View.OnClickListener() {public void onClick(View v){addBeverage();}});
@@ -114,6 +121,22 @@ public class BacCalcFragment extends android.support.v4.app.Fragment {
 
 
         return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        getActivity().getMenuInflater().inflate(R.menu.bac_calc_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_remove:
+                removeAddedBeverages();
+                refreshFragment();
+                return false;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public void totalPromille(){
@@ -317,6 +340,24 @@ public class BacCalcFragment extends android.support.v4.app.Fragment {
                 break;
             }
         }
+        totalPromille();
+        fillPieChart();
+        pieChart.animateY(1400, Easing.EasingOption.EaseInOutQuad);
+    }
+
+    private void removeAddedBeverages() {
+        labelBeerNrUnits.setText("0");
+        labelWineNrUnits.setText("0");
+        labelDrinkNrUnits.setText("0");
+        labelShotNrUnits.setText("0");
+
+        beer = 0;
+        wine = 0;
+        drink = 0;
+        shot = 0;
+    }
+
+    private void refreshFragment() {
         totalPromille();
         fillPieChart();
         pieChart.animateY(1400, Easing.EasingOption.EaseInOutQuad);
