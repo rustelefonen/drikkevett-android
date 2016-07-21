@@ -6,6 +6,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
@@ -37,6 +38,14 @@ public class HistoryActivity extends AppCompatActivity {
     private List<GraphHistory> graphHistories;
 
     public LineChart lineChart;
+
+    public TextView beerCountTextView;
+    public TextView wineCountTextView;
+    public TextView drinkCountTextView;
+    public TextView shotCountTextView;
+
+    public TextView historyCostTextView;
+    public TextView historyHighestBacTextView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -89,6 +98,24 @@ public class HistoryActivity extends AppCompatActivity {
         lineChart.getLegend().setEnabled(false);
         lineChart.setVisibleXRange(3, 3);
         lineChart.animateY(1400, Easing.EasingOption.EaseInOutQuad);
+
+        beerCountTextView = (TextView) findViewById(R.id.history_beer_count);
+        wineCountTextView = (TextView) findViewById(R.id.history_wine_count);
+        drinkCountTextView = (TextView) findViewById(R.id.history_drink_count);
+        shotCountTextView = (TextView) findViewById(R.id.history_shot_count);
+
+        beerCountTextView.setText(history.getBeerCount() + "");
+        beerCountTextView.setText(history.getWineCount() + "");
+        beerCountTextView.setText(history.getDrinkCount() + "");
+        beerCountTextView.setText(history.getShotCount() + "");
+
+
+
+        historyCostTextView = (TextView) findViewById(R.id.history_cost);
+        historyHighestBacTextView = (TextView) findViewById(R.id.history_highest_bac);
+
+        historyCostTextView.setText(history.getSum() + "");
+        historyHighestBacTextView.setText(history.getHighestBAC() + "");
     }
 
     private Date getDateMinus15Minutes(Date currentDate) {
