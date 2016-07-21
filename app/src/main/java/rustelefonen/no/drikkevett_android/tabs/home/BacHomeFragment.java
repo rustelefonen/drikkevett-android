@@ -1,5 +1,6 @@
 package rustelefonen.no.drikkevett_android.tabs.home;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -39,6 +40,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import rustelefonen.no.drikkevett_android.GoalReachedActivity;
 import rustelefonen.no.drikkevett_android.MainActivity;
 import rustelefonen.no.drikkevett_android.R;
 import rustelefonen.no.drikkevett_android.db.History;
@@ -88,6 +90,7 @@ public class BacHomeFragment extends Fragment{
         fillWidgets();
         fillPieChart();
         stylePieChart();
+        fireGoalDateReachedView();
 
         setHasOptionsMenu(true);
 
@@ -299,5 +302,18 @@ public class BacHomeFragment extends Fragment{
                 graphHomeTextView.setText("Denne grafikken viser hvordan det står til med målet ditt. Ønsker du å vite mer klikk på fargene");
             }
         });
+    }
+
+    /*
+    * GOALDATE REACHED
+    * */
+
+    private void fireGoalDateReachedView(){
+        User user = ((MainActivity)getActivity()).getUser();
+        Date currentDate = new Date();
+        if(currentDate.after(user.getGoalDate())){
+            Intent intent = new Intent(getContext(), GoalReachedActivity.class);
+            startActivity(intent);
+        }
     }
 }

@@ -379,7 +379,6 @@
                                 android:layout_gravity="center"
                                 android:background="@color/wineColor"
                                 />
-
                         </LinearLayout>
                         <LinearLayout
                             android:layout_width="wrap_content"
