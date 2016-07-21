@@ -937,7 +937,7 @@ public class BacDayAfterFragment extends Fragment {
 
     /*
     * WIDGETS
-    * */
+    * **/
 
     private void setVisualsPP(){
         clearUnitVariabels();
