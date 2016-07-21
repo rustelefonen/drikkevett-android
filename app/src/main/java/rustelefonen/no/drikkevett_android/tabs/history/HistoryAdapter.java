@@ -2,6 +2,9 @@ package rustelefonen.no.drikkevett_android.tabs.history;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,19 +23,82 @@ import rustelefonen.no.drikkevett_android.util.DateUtil;
  */
 
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHolder> {
-    private static final String TAG = "HistoryAdapter";
 
     private List<History> historyList;
+    private double goalBac;
 
-    /**
-     * Provide a reference to the type of views that you are using (custom ViewHolder)
-     */
+    public HistoryAdapter(List<History> historyList, double goalBac) {
+        this.historyList = historyList;
+        this.goalBac = goalBac;
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.history_row, viewGroup, false);
+        return new ViewHolder(v, v.getContext());
+    }
+
+    @Override
+    public void onBindViewHolder(ViewHolder viewHolder, final int position) {
+        History history = historyList.get(position);
+        viewHolder.getDayTextView().setText(DateUtil.getDayOfMonth(history.getStartDate()) + "");
+        viewHolder.getMonthTextView().setText(DateUtil.getMonthShortName(history.getStartDate()) + "");
+
+        String perMille = "\u2030";
+        viewHolder.getHighestBacTextView().setText(history.getHighestBAC() + perMille);
+        String cashIndicator = ",-";
+        viewHolder.getTotalCostTextView().setText(history.getSum() + cashIndicator);
+
+        final View view = viewHolder.getView();
+
+        if (history.getHighestBAC() > goalBac) {
+            int red = ContextCompat.getColor(view.getContext(), R.color.historyRed);
+            ((GradientDrawable)viewHolder.getShapeView().getBackground())
+                    .setColor(red);
+            viewHolder.getHighestBacTextView().setTextColor(red);
+            viewHolder.getTotalCostTextView().setTextColor(red);
+        } else {
+            int green = ContextCompat.getColor(view.getContext(), R.color.historyLineChartGreen);
+            ((GradientDrawable)viewHolder.getShapeView().getBackground())
+                    .setColor(green);
+            viewHolder.getHighestBacTextView().setTextColor(green);
+            viewHolder.getTotalCostTextView().setTextColor(green);
+        }
+
+
+
+
+
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Context context = view.getContext();
+                Intent intent = new Intent(context, HistoryActivity.class);
+                intent.putExtra(HistoryActivity.ID, historyList.get(position));
+
+                context.startActivity(intent);
+            }
+        });
+    }
+
+    @Override
+    public int getItemCount() {
+        return historyList.size();
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         private final TextView dayTextView;
         private final TextView monthTextView;
         private final TextView highestBacTextView;
         private final TextView totalCostTextView;
+
+        private final View shapeView;
 
         private View view;
 
@@ -46,6 +112,8 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
             monthTextView = (TextView) v.findViewById(R.id.history_row_month);
             highestBacTextView = (TextView) v.findViewById(R.id.history_row_highest_bac);
             totalCostTextView = (TextView) v.findViewById(R.id.history_row_total_cost);
+
+            shapeView = v.findViewById(R.id.history_row_circle);
         }
 
         public View getView() {
@@ -71,47 +139,9 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         public TextView getTotalCostTextView() {
             return totalCostTextView;
         }
-    }
 
-    public HistoryAdapter(List<History> historyList) {
-        this.historyList = historyList;
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-    @Override
-    public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.history_row, viewGroup, false);
-        return new ViewHolder(v, v.getContext());
-    }
-
-    @Override
-    public void onBindViewHolder(ViewHolder viewHolder, final int position) {
-        History history = historyList.get(position);
-        viewHolder.getDayTextView().setText(DateUtil.getDayOfMonth(history.getStartDate()) + "");
-        viewHolder.getMonthTextView().setText(DateUtil.getMonthShortName(history.getStartDate()) + "");
-        viewHolder.getHighestBacTextView().setText(history.getHighestBAC() + "");
-        viewHolder.getTotalCostTextView().setText(history.getSum() + "");
-        
-        final View view = viewHolder.getView();
-
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Context context = view.getContext();
-                Intent intent = new Intent(context, HistoryActivity.class);
-                intent.putExtra(HistoryActivity.ID, historyList.get(position));
-
-                context.startActivity(intent);
-            }
-        });
-    }
-
-    @Override
-    public int getItemCount() {
-        return historyList.size();
+        public View getShapeView() {
+            return shapeView;
+        }
     }
 }

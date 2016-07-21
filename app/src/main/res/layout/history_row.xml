@@ -17,56 +17,69 @@
             android:layout_height="match_parent"
             android:padding="16dp">
 
-            <RelativeLayout
-                android:layout_width="75dp"
-                android:layout_height="75dp"
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_weight="33">
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/shape"/>
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_centerInParent="true">
 
-                    <TextView
-                        android:id="@+id/history_row_day"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="15"
-                        android:textSize="32sp"
-                        android:textColor="@color/textColor"
-                        android:layout_gravity="center"
-                        android:gravity="center"/>
-                    <TextView
-                        android:id="@+id/history_row_month"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/greyTextColor"
-                        android:text="Jan"
-                        android:layout_gravity="center"
-                        android:gravity="center"/>
-                </LinearLayout>
-            </RelativeLayout>
+                <RelativeLayout
+                    android:layout_width="75dp"
+                    android:layout_height="75dp">
+                    <View
+                        android:id="@+id/history_row_circle"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/shape"
+                        android:layout_centerInParent="true"/>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:gravity="center">
+
+                        <TextView
+                            android:paddingTop="4dp"
+                            android:id="@+id/history_row_day"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:layout_gravity="center"
+                            android:text="15"
+                            android:textSize="32sp"
+                            android:textColor="@color/textColor"
+                            android:layout_marginBottom="-6dp"/>
+                        <TextView
+                            android:id="@+id/history_row_month"
+                            android:layout_gravity="center"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/greyTextColor"
+                            android:gravity="center"
+                            android:textSize="12sp"
+                            android:text="Jan"/>
+                    </LinearLayout>
+                </RelativeLayout>
+            </LinearLayout>
+
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_gravity="center"
-                android:layout_weight="33">
+                android:layout_weight="33"
+                android:layout_gravity="center">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/textColor"
-                    android:textSize="20sp"
-                    android:text="Høyeste promille"/>
+                    android:textSize="16sp"
+                    android:text="Høyeste promille:"
+                    android:layout_marginBottom="8dp"/>
 
                 <TextView
                     android:id="@+id/history_day_text_view"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/greyTextColor"
                     android:text="Tirsdag brukte du:"
@@ -82,18 +95,19 @@
 
                 <TextView
                     android:id="@+id/history_row_highest_bac"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="24sp"
+                    android:textSize="16sp"
                     android:text="95,0‰"
-                    android:textColor="@color/historyRed"/>
+                    android:textColor="@color/historyRed"
+                    android:layout_marginBottom="8dp"/>
 
                 <TextView
                     android:id="@+id/history_row_total_cost"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/historyRed"
-                    android:textSize="16sp"
+                    android:textSize="12sp"
                     android:text="150,-"/>
             </LinearLayout>
         </LinearLayout>

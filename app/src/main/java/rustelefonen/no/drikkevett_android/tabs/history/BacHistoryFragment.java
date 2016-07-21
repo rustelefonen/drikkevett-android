@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import java.util.List;
 
+import rustelefonen.no.drikkevett_android.MainActivity;
 import rustelefonen.no.drikkevett_android.R;
 import rustelefonen.no.drikkevett_android.db.GraphHistory;
 import rustelefonen.no.drikkevett_android.db.GraphHistoryDao;
@@ -33,6 +34,7 @@ import rustelefonen.no.drikkevett_android.util.NavigationUtil;
 public class BacHistoryFragment extends Fragment {
     private static final String TAG = "RecyclerViewFragment";
     private static final int SPAN_COUNT = 2;
+
 
     private enum LayoutManagerType {
         GRID_LAYOUT_MANAGER,
@@ -96,7 +98,8 @@ public class BacHistoryFragment extends Fragment {
 
         setRecyclerViewLayoutManager(mCurrentLayoutManagerType);
 
-        mAdapter = new HistoryAdapter(historyList);
+        double goalBac = ((MainActivity)getActivity()).getUser().getGoalBAC();
+        mAdapter = new HistoryAdapter(historyList, goalBac);
         mRecyclerView.setAdapter(mAdapter);
 
         return rootView;
@@ -148,7 +151,8 @@ public class BacHistoryFragment extends Fragment {
 
     private void refreshFragment() {
         initDataset();
-        mAdapter = new HistoryAdapter(historyList);
+        double goalBac = ((MainActivity)getActivity()).getUser().getGoalBAC();
+        mAdapter = new HistoryAdapter(historyList, goalBac);
         mRecyclerView.setAdapter(mAdapter);
     }
 }
