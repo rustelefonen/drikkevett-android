@@ -12,16 +12,6 @@
         android:orientation="vertical"
         >
         <TextView
-            android:text="@string/custom_pop_up_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/txtViewTitle_CustPup"
-            android:layout_weight="1"
-            android:layout_gravity="left"
-            android:textSize="25sp"
-            android:textStyle="bold"
-            />
-        <TextView
             android:text="@string/custom_pop_up_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

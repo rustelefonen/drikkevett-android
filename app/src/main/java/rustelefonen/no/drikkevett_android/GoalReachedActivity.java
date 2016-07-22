@@ -92,7 +92,7 @@ public class GoalReachedActivity extends Activity {
         txtViewCosts.setText(getTotalCost(historyList) + ",-");
         txtViewHighestBAC.setText(getTotalHighestBac(historyList) + "");
         txtViewHighestAverageBAC.setText(getTotalAverageHighestBac(historyList) + "");
-        txtViewGreeting.setText(didUserReachGoal(getTotalAverageHighestBac(historyList), user) + "");
+        txtViewGreeting.setText(" hva fen ? ");
 
         BarChartController chartController = new BarChartController(historyBarChart, user, getHistoryList());
         chartController.setData();
@@ -160,11 +160,10 @@ public class GoalReachedActivity extends Activity {
     }
 
     private void haveUserSetNewGoal(){
-        /*
         Date currentDate = new Date();
         if(user.getGoalDate().after(currentDate)){
             finish();
-        }*/
+        }
     }
 
     @Override

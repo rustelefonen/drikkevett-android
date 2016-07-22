@@ -73,9 +73,9 @@ public class BacDayAfterFragment extends Fragment {
     private String currentBAC = "";
     private double highestBAC = 0.0;
 
-    public Status status;
+    private Status status;
 
-    public Date startStamp = new Date(), endStamp = new Date();
+    private Date startStamp = new Date(), endStamp = new Date();
 
     /*
     * WIDGETS
@@ -97,7 +97,6 @@ public class BacDayAfterFragment extends Fragment {
     public PieChart pieChart;
     private static final String PER_MILLE = "\u2030";
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.bac_day_after_frag, container, false);
@@ -105,7 +104,6 @@ public class BacDayAfterFragment extends Fragment {
         setUserData();
 
         status = getStatus();
-        System.out.println("Status DA: " + status);
         statusHandler(status);
 
         btnEndDA.setOnClickListener(new View.OnClickListener() {
@@ -258,6 +256,29 @@ public class BacDayAfterFragment extends Fragment {
         consumDrink = 0;
         consumShots = 0;
         costs = 0;
+    }
+
+    private void colorsUnitLabels(){
+        if(planBeers < consumBeers){
+            beerLbl.setTextColor(Color.rgb(255, 0, 0));
+        } else {
+            beerLbl.setTextColor(Color.rgb(255, 255, 255));
+        }
+        if(planWines < consumWines){
+            wineLbl.setTextColor(Color.rgb(255, 0, 0));
+        } else {
+            wineLbl.setTextColor(Color.rgb(255, 255, 255));
+        }
+        if(planDrink < consumDrink){
+            drinkLbl.setTextColor(Color.rgb(255, 0, 0));
+        } else {
+            drinkLbl.setTextColor(Color.rgb(255, 255, 255));
+        }
+        if(planShots < consumShots){
+            shotLbl.setTextColor(Color.rgb(255, 0, 0));
+        } else {
+            shotLbl.setTextColor(Color.rgb(255, 255, 255));
+        }
     }
 
     /*
@@ -427,6 +448,9 @@ public class BacDayAfterFragment extends Fragment {
 
         // Inserting new planned elements
         PlanPartyElements newParty = new PlanPartyElements();
+        newParty.setFirstUnitAddedDate(null);
+        newParty.setStartTimeStamp(null);
+        newParty.setEndTimeStamp(null);
         newParty.setPlannedBeer(0);
         newParty.setPlannedWine(0);
         newParty.setPlannedDrink(0);
@@ -817,7 +841,7 @@ public class BacDayAfterFragment extends Fragment {
         // custom dialog
         final Dialog dialog = new Dialog(getContext());
         dialog.setContentView(R.layout.custom_day_a_pop_up);
-        dialog.setTitle("Title...");
+        dialog.setTitle("Etterregistrer enhet");
 
         Button dialogButton = (Button) dialog.findViewById(R.id.dialogButtonOK);
         Button dialogCancel = (Button) dialog.findViewById(R.id.dialogCancel);
@@ -935,15 +959,12 @@ public class BacDayAfterFragment extends Fragment {
                 ContextCompat.getColor(getContext(), R.color.shotColor)};
     }
 
-    /*
-    * WIDGETS
-    **/
-
     private void setVisualsPP(){
         clearUnitVariabels();
         btnEndDA.setVisibility(View.GONE);
         planPaRunning_LinLay.setVisibility(View.VISIBLE);
         dayAfterRunning_LinLay.setVisibility(View.GONE);
+        colorsUnitLabels();
     }
 
     private void setVisualsDA(){
@@ -958,10 +979,10 @@ public class BacDayAfterFragment extends Fragment {
         afterRegWineLbl.setText(afterRegWine + "");
         afterRegDrinkLbl.setText(afterRegDrink + "");
         afterRegShotLbl.setText(afterRegShot + "");
-
         btnEndDA.setVisibility(View.VISIBLE);
         planPaRunning_LinLay.setVisibility(View.GONE);
         dayAfterRunning_LinLay.setVisibility(View.VISIBLE);
+        colorsUnitLabels();
     }
 
     private void initWidgets(){
@@ -969,22 +990,18 @@ public class BacDayAfterFragment extends Fragment {
         wineLbl = (TextView) v.findViewById(R.id.txtViewWineDA);
         drinkLbl = (TextView) v.findViewById(R.id.txtViewDrinkDA);
         shotLbl = (TextView) v.findViewById(R.id.txtViewShotDA);
-
         costsLbl = (TextView) v.findViewById(R.id.txtViewCosts_DA);
         highBACLbl = (TextView) v.findViewById(R.id.txtViewHighestBAC_DA);
         currBACLbl = (TextView) v.findViewById(R.id.txtViewCurrBAC_DA);
-
         btnEndDA = (Button) v.findViewById(R.id.btnEndDayAfter);
         beerBtnAfterReg_DA = (Button) v.findViewById(R.id.btnAfterRegBeer_DA);
         wineBtnAfterReg_DA = (Button) v.findViewById(R.id.btnAfterRegWine_DA);
         drinkBtnAfterReg_DA = (Button) v.findViewById(R.id.btnAfterRegDrink_DA);
         shotBtnAfterReg_DA = (Button) v.findViewById(R.id.btnAfterRegShot_DA);
-
         afterRegBeerLbl = (TextView) v.findViewById(R.id.txtViewAfterRegBeerUnit_DA);
         afterRegWineLbl = (TextView) v.findViewById(R.id.txtViewAfterRegWineUnit_DA);
         afterRegDrinkLbl = (TextView) v.findViewById(R.id.txtViewAfterRegDrinkUnit_DA);
         afterRegShotLbl = (TextView) v.findViewById(R.id.txtViewAfterRegShotUnit_DA);
-
         planPaRunning_LinLay = (LinearLayout) v.findViewById(R.id.planP_running_layout_DA);
         dayAfterRunning_LinLay = (LinearLayout) v.findViewById(R.id.dayAfterRunning_layout_ID);
     }
