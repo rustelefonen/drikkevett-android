@@ -163,7 +163,7 @@ public class BacCalcFragment extends android.support.v4.app.Fragment
     }
 
     private void fillWidgets() {
-        beerScroll.setAdapter(new BeerScrollAdapter(this.getFragmentManager()));
+        beerScroll.setAdapter(new BeerScrollAdapter(this.getChildFragmentManager()));
         beerScroll.setCurrentItem(0);
         pageIndicatorGroup.check(pageIndicatorGroup.getChildAt(0).getId());
         fillPieChart();

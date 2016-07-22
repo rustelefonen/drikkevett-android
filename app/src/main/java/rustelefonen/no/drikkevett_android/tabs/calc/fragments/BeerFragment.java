@@ -18,6 +18,5 @@ public class BeerFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         return inflater.inflate(R.layout.beer_fragment, container, false);
-
     }
 }
