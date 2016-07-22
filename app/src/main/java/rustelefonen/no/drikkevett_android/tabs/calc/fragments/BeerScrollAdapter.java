@@ -14,23 +14,17 @@ public class BeerScrollAdapter extends FragmentPagerAdapter {
         super(fm);
     }
 
+    private Fragment[] fragments = new Fragment[] {
+            new BeerFragment(), new WineFragment(), new DrinkFragment(), new ShotFragment()
+    };
+
     @Override
     public Fragment getItem(int position) {
-        if (position == 0) {
-            return new BeerFragment();
-        } else if (position == 1){
-            return new WineFragment();
-        } else if (position == 2) {
-            return new DrinkFragment();
-        } else if (position == 3) {
-            return new ShotFragment();
-        } else {
-            return new BeerFragment();
-        }
+        return fragments[position];
     }
 
     @Override
     public int getCount() {
-        return 4;
+        return fragments.length;
     }
 }

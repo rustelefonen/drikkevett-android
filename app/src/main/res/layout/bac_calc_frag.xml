@@ -22,25 +22,79 @@
 
 
         <LinearLayout
+            android:id="@+id/view_pager_scroller"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_below="@+id/pie_chart_bac_calc">
 
             <android.support.v4.view.ViewPager
                 android:padding="16dp"
                 android:id="@+id/beer_scroll"
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
-                android:layout_below="@+id/pie_chart_bac_calc">
+                android:layout_height="150dp">
             </android.support.v4.view.ViewPager>
 
             <RadioGroup
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"></RadioGroup>
+                android:id="@+id/page_indicator_radio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_gravity="center">
 
+                <RadioButton
+                    android:id="@+id/radio_one"
+                    android:layout_weight="20"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:button="@android:color/transparent"
+                    android:background="@drawable/page_indicator_background"/>
+
+                <LinearLayout
+                    android:layout_width="5dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="5"/>
+
+                <RadioButton
+                    android:id="@+id/radio_two"
+                    android:layout_weight="20"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:button="@android:color/transparent"
+                    android:background="@drawable/page_indicator_background"/>
+
+                <LinearLayout
+                    android:layout_width="5dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="5"/>
+
+                <RadioButton
+                    android:id="@+id/radio_three"
+                    android:layout_weight="20"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:button="@android:color/transparent"
+                    android:background="@drawable/page_indicator_background"/>
+
+                <LinearLayout
+                    android:layout_width="5dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="5"/>
+
+                <RadioButton
+                    android:id="@+id/radio_four"
+                    android:layout_weight="20"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:button="@android:color/transparent"
+                    android:background="@drawable/page_indicator_background"/>
+
+                <LinearLayout
+                    android:layout_width="5dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="5"/>
+            </RadioGroup>
         </LinearLayout>
-
-
         <!--<TextView-->
             <!--android:padding="16dp"-->
             <!--android:text="Kos deg"-->
@@ -60,7 +114,7 @@
             android:orientation="horizontal"
             android:padding="16dp"
             android:gravity="center"
-            android:layout_below="@+id/beer_scroll">
+            android:layout_below="@+id/view_pager_scroller">
             <Button
                 android:text="Fjern"
                 android:layout_width="wrap_content"

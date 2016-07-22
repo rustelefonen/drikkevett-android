@@ -5,7 +5,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import rustelefonen.no.drikkevett_android.R;
 
@@ -15,13 +14,9 @@ import rustelefonen.no.drikkevett_android.R;
 
 public class DrinkFragment extends Fragment {
 
-    public ImageView image;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        View view = inflater.inflate(R.layout.drink_fragment, container, false);
-        return view;
-
+        return inflater.inflate(R.layout.drink_fragment, container, false);
     }
 }

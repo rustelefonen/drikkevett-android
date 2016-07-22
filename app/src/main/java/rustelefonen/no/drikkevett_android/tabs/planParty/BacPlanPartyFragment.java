@@ -87,11 +87,12 @@ public class BacPlanPartyFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.bac_plan_party_frag, container, false);
 
+        planPartyDB = new PlanPartyDB(getContext());
         initWidgets();
         setUserData();
         status = isSessionOver();
         stateHandler(status);
-        planPartyDB = new PlanPartyDB(getContext());
+
 
 
         addBtn.setOnClickListener(new View.OnClickListener() {

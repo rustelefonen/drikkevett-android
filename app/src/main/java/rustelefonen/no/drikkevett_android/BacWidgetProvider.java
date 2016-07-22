@@ -7,24 +7,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
 
-import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
-import rustelefonen.no.drikkevett_android.db.DayAfterBAC;
-import rustelefonen.no.drikkevett_android.db.DayAfterBACDao;
 import rustelefonen.no.drikkevett_android.db.PlanPartyElements;
 import rustelefonen.no.drikkevett_android.db.PlanPartyElementsDao;
-import rustelefonen.no.drikkevett_android.tabs.dayAfter.BacDayAfterFragment;
+import rustelefonen.no.drikkevett_android.db.User;
+import rustelefonen.no.drikkevett_android.db.UserDao;
 import rustelefonen.no.drikkevett_android.tabs.home.SuperDao;
 import rustelefonen.no.drikkevett_android.tabs.planParty.BacPlanPartyFragment;
-import rustelefonen.no.drikkevett_android.util.PartyUtil;
-
-import static rustelefonen.no.drikkevett_android.util.PartyUtil.calculateBAC;
-import static rustelefonen.no.drikkevett_android.util.PartyUtil.countingGrams;
-import static rustelefonen.no.drikkevett_android.util.PartyUtil.getDateDiff;
-import static rustelefonen.no.drikkevett_android.util.PartyUtil.setGenderScore;
+import rustelefonen.no.drikkevett_android.tabs.planParty.PlanPartyDB;
 
 /**
  * Created by simenfonnes on 21.07.2016.
@@ -39,7 +31,13 @@ public class BacWidgetProvider extends AppWidgetProvider {
 
             if (isRunning(context)) {
                 views.setTextViewText(R.id.widget_header, "Kvelden er i gang!");
-                views.setTextViewText(R.id.widget_bac, getCurrentBac(context) + "");
+
+                PlanPartyDB planPartyDB = new PlanPartyDB(context);
+                User user = getUser(context);
+                Date firstUnitAddedDate = planPartyDB.getFirstUnitAddedStamp();
+                String currentBac = planPartyDB.liveUpdatePromille(user.getWeight(), user.getGender(), firstUnitAddedDate);
+
+                views.setTextViewText(R.id.widget_bac, currentBac);
 
                 Intent intent = new Intent(context, BacPlanPartyFragment.class);
                 PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
@@ -65,8 +63,11 @@ public class BacWidgetProvider extends AppWidgetProvider {
         return false;
     }
 
-    private double getCurrentBac(Context context) {
-        return 0.0;
+    private User getUser(Context context) {
+        SuperDao superDao = new SuperDao(context);
+        UserDao userDao = superDao.getUserDao();
+        List<User> users = userDao.queryBuilder().list();
+        superDao.close();
+        return users.get(0);
     }
-
 }

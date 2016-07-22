@@ -1,11 +1,9 @@
 package rustelefonen.no.drikkevett_android.tabs.calc;
 
-import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,6 +11,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -29,7 +29,7 @@ import rustelefonen.no.drikkevett_android.R;
 import rustelefonen.no.drikkevett_android.tabs.calc.fragments.BeerScrollAdapter;
 import rustelefonen.no.drikkevett_android.util.NavigationUtil;
 
-public class BacCalcFragment extends android.support.v4.app.Fragment {
+public class BacCalcFragment extends android.support.v4.app.Fragment implements ViewPager.OnPageChangeListener, RadioGroup.OnCheckedChangeListener {
 
     private int age = 22;
     private int weight = 80;
@@ -73,6 +73,8 @@ public class BacCalcFragment extends android.support.v4.app.Fragment {
     public ViewPager beerScroll;
 
     private static final String PER_MILLE = "\u2030";
+
+    public RadioGroup pageIndicatorGroup;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -118,7 +120,12 @@ public class BacCalcFragment extends android.support.v4.app.Fragment {
 
 
         beerScroll = (ViewPager) view.findViewById(R.id.beer_scroll);
+        beerScroll.addOnPageChangeListener(this);
         beerScroll.setAdapter(new BeerScrollAdapter(this.getFragmentManager()));
+
+        beerScroll.setCurrentItem(0);
+        pageIndicatorGroup.check(pageIndicatorGroup.getChildAt(0).getId());
+
 
 
         return view;
@@ -228,6 +235,13 @@ public class BacCalcFragment extends android.support.v4.app.Fragment {
     }
 
     public void initVariabels(){
+        pageIndicatorGroup = (RadioGroup) view.findViewById(R.id.page_indicator_radio);
+        pageIndicatorGroup.setOnCheckedChangeListener(this);
+
+
+
+
+
         // BUTTONS
         addButton = (Button) view.findViewById(R.id.addBtn);
         removeButton = (Button) view.findViewById(R.id.btnRemove);
@@ -365,5 +379,30 @@ public class BacCalcFragment extends android.support.v4.app.Fragment {
         totalPromille();
         fillPieChart();
         pieChart.animateY(1400, Easing.EasingOption.EaseInOutQuad);
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        if (position == 0) pageIndicatorGroup.check(R.id.radio_one);
+        else if (position == 1) pageIndicatorGroup.check(R.id.radio_two);
+        else if (position == 2) pageIndicatorGroup.check(R.id.radio_three);
+        else if (position == 3) pageIndicatorGroup.check(R.id.radio_four);
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {}
+
+    @Override
+    public void onCheckedChanged(RadioGroup group, int checkedId) {
+        int id = group.getCheckedRadioButtonId();
+        if (id == R.id.radio_one) beerScroll.setCurrentItem(0);
+        else if (id == R.id.radio_two) beerScroll.setCurrentItem(1);
+        else if (id == R.id.radio_three) beerScroll.setCurrentItem(2);
+        else if (id == R.id.radio_four) beerScroll.setCurrentItem(3);
     }
 }

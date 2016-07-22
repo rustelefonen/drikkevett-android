@@ -47,7 +47,7 @@ public class PlanPartyDB {
         return firstAdded;
     }
 
-    private String liveUpdatePromille(double weight, String gender, Date firstUnitAddedTimeStamp){
+    public String liveUpdatePromille(double weight, String gender, Date firstUnitAddedTimeStamp){
         SuperDao superDao = new SuperDao(context);
         double sum = 0.0;
 
