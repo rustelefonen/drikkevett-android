@@ -45,7 +45,13 @@ public class BacWidgetProvider extends AppWidgetProvider {
 
 
                 //get user
-                views.setTextViewText(R.id.per_mille_widget, "");
+                PlanPartyElements planPartyElements = getCurrentPlanPartyElement(context);
+                User user = getUser(context);
+                if (user != null) {
+                    String bac = liveUpdatePromille(user.getWeight(), user.getGender(), planPartyElements.getStartTimeStamp(), context);
+                    views.setTextViewText(R.id.per_mille_widget, bac);
+                }
+
 
 
                 Intent intent = new Intent(context, MainActivity.class);
@@ -66,6 +72,16 @@ public class BacWidgetProvider extends AppWidgetProvider {
             }
             appWidgetManager.updateAppWidget(appWidgetIds[i], views);
         }
+    }
+
+    private PlanPartyElements getCurrentPlanPartyElement(Context context) {
+        SuperDao superDao = new SuperDao(context);
+        PlanPartyElementsDao planPartyElementsDao = superDao.getPlanPartyElementsDao();
+        List<PlanPartyElements> partyList = planPartyElementsDao.queryBuilder()
+                .where(PlanPartyElementsDao.Properties.Status.eq("RUNNING")).list();
+        superDao.close();
+        if (partyList.size() > 0) return partyList.get(0);
+        else return null;
     }
 
     private String getPlannedUnits(Context context) {
