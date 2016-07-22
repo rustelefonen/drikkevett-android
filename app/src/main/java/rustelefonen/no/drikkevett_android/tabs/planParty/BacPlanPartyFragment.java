@@ -274,21 +274,34 @@ public class BacPlanPartyFragment extends Fragment {
         int limit = 30;
 
         if(unit.equals("Beer")){
-            plannedBeers++;
-            totalUnits++;
+            if(totalUnits >= limit){
+                totalUnits = limit;
+            } else {
+                plannedBeers++;
+                totalUnits++;
+            }
         }
         if(unit.equals("Wine")){
-            plannedWines++;
-            totalUnits++;
+            if(totalUnits >= limit){
+                totalUnits = limit;
+            } else {
+                plannedWines++;
+                totalUnits++;
+            }
         }
         if(unit.equals("Drink")){
-            plannedDrinks++;
-            totalUnits++;
+            if(totalUnits >= limit){
+                totalUnits = limit;
+            } else {
+                plannedDrinks++;
+                totalUnits++;
+            }
         }
         if(unit.equals("Shot")){
-            totalUnits++;
-            if(totalUnits <= limit){
+            if(totalUnits >= limit){
                 totalUnits = limit;
+            } else {
+                totalUnits++;
                 plannedShots++;
             }
         }
@@ -300,6 +313,7 @@ public class BacPlanPartyFragment extends Fragment {
                 plannedBeers = 0;
             } else {
                 plannedBeers--;
+                totalUnits--;
             }
         }
         if(unit.equals("Wine")){
@@ -307,6 +321,7 @@ public class BacPlanPartyFragment extends Fragment {
                 plannedWines = 0;
             } else {
                 plannedWines--;
+                totalUnits--;
             }
         }
         if(unit.equals("Drink")){
@@ -314,6 +329,7 @@ public class BacPlanPartyFragment extends Fragment {
                 plannedDrinks = 0;
             } else {
                 plannedDrinks--;
+                totalUnits--;
             }
         }
         if(unit.equals("Shot")){
@@ -321,6 +337,7 @@ public class BacPlanPartyFragment extends Fragment {
                 plannedShots = 0;
             } else {
                 plannedShots--;
+                totalUnits--;
             }
         }
     }

@@ -19,6 +19,7 @@
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity android:name=".Settings"/>
+        <activity android:name=".GoalReachedActivity"/>
         <activity
             android:name=".tabs.history.HistoryActivity"
             android:label="Historikk"/>
