@@ -37,9 +37,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".TestHamburgerActivity">
-
-        </activity>
         <activity android:name=".settings.UserSettingsActivity"
             android:label="Brukerinnstillinger"/>
         <activity android:name=".settings.AlcoholPricingSettingsActivity"/>
