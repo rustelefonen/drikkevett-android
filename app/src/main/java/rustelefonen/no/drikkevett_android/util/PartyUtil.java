@@ -1,5 +1,8 @@
 package rustelefonen.no.drikkevett_android.util;
 
+import android.content.Context;
+import android.graphics.Color;
+
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -17,6 +20,12 @@ public class PartyUtil {
     private static double wineGrams = 14.0;
     private static double drinkGrams = 15.0;
     private static double shotGrams = 16.0;
+
+    private Context context;
+
+    public PartyUtil(Context context) {
+        this.context = context;
+    }
 
     public static double intervalCalc(double timeDifference){
         double BACDownPerHour = 0.0;
@@ -134,5 +143,69 @@ public class PartyUtil {
         }
         DecimalFormat numberFormat = new DecimalFormat("#.##");
         return numberFormat.format(oppdatertPromille);
+    }
+
+    public String textQuote(double bac){
+        String output = "";
+        if(bac >= 0 && bac < 0.4){
+            output = "Kos deg";
+        }
+        if(bac >= 0.4 && bac < 0.8){
+            output = "Lykkepromille";
+        }
+        if(bac >= 0.8 && bac < 1.0){
+            output = "Du blir mer kritikkløs og risikovillig";
+        }
+        if(bac >= 1.0 && bac < 1.2){
+            output = "Balansen blir dårligere";
+        }
+        if(bac >= 1.2 && bac < 1.4){
+            output = "Talen snøvlete og \nkontroll på bevegelser forverres";
+        }
+        if(bac >= 1.4 && bac < 1.8){
+            output = "Man blir trøtt, sløv og \nkan bli kvalm";
+        }
+        if(bac >= 1.8 && bac < 3.0){
+            output = "Hukommelsen sliter";
+        }
+        if(bac >= 3.0 && bac < 5.0){
+            output = "Svært høy promille! \nMan kan bli bevisstløs";
+        }
+        if(bac >= 5.0){
+            output = "Du kan dø ved en så høy promille!";
+        }
+        return output;
+    }
+
+    public int colorQuote(double bac){
+        int color = 0;
+        if(bac >= 0 && bac < 0.4){
+            color = Color.rgb(255, 255, 255);
+        }
+        if(bac >= 0.4 && bac < 0.8){
+            color = Color.rgb(26, 193, 73);
+        }
+        if(bac >= 0.8 && bac < 1.0){
+            color = Color.rgb(255, 180, 10);
+        }
+        if(bac >= 1.0 && bac < 1.2){
+            color = Color.rgb(255, 180, 10);
+        }
+        if(bac >= 1.2 && bac < 1.4){
+            color = Color.rgb(255, 160, 0);
+        }
+        if(bac >= 1.4 && bac < 1.8){
+            color = Color.rgb(255, 160, 0);
+        }
+        if(bac >= 1.8 && bac < 3.0){
+            color = Color.rgb(255, 55, 55);
+        }
+        if(bac >= 3.0 && bac < 5.0){
+            color = Color.rgb(255, 55, 55);
+        }
+        if(bac >= 5.0){
+            color = Color.rgb(255, 0, 0);
+        }
+        return color;
     }
 }

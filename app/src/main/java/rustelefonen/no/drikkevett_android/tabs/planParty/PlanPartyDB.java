@@ -9,6 +9,10 @@ import java.util.concurrent.TimeUnit;
 
 import rustelefonen.no.drikkevett_android.db.DayAfterBAC;
 import rustelefonen.no.drikkevett_android.db.DayAfterBACDao;
+import rustelefonen.no.drikkevett_android.db.GraphHistory;
+import rustelefonen.no.drikkevett_android.db.GraphHistoryDao;
+import rustelefonen.no.drikkevett_android.db.History;
+import rustelefonen.no.drikkevett_android.db.HistoryDao;
 import rustelefonen.no.drikkevett_android.db.PlanPartyElements;
 import rustelefonen.no.drikkevett_android.db.PlanPartyElementsDao;
 import rustelefonen.no.drikkevett_android.tabs.home.SuperDao;
@@ -20,7 +24,7 @@ import static rustelefonen.no.drikkevett_android.util.PartyUtil.getDateDiff;
 import static rustelefonen.no.drikkevett_android.util.PartyUtil.setGenderScore;
 
 /**
- * Created by LarsPetterKristiansen on 22.07.2016.
+ * Created by RUStelefonen on 22.07.2016.
  */
 
 public class PlanPartyDB {
@@ -32,19 +36,38 @@ public class PlanPartyDB {
     }
 
     public Date getFirstUnitAddedStamp(){
+        System.out.println("Hæ? ");
         SuperDao superDao = new SuperDao(context);
 
         PlanPartyElementsDao partyDao = superDao.getPlanPartyElementsDao();
         List<PlanPartyElements> planPartyList = partyDao.queryBuilder().list();
-        superDao.close();
+
         PlanPartyElements lastElement = planPartyList.get(planPartyList.size() -1);
         Date firstAdded;
+
         if(lastElement.getFirstUnitAddedDate() == null){
             firstAdded = null;
         } else {
             firstAdded = lastElement.getFirstUnitAddedDate();
         }
+        System.out.println("FIRST ADDED: " + firstAdded);
+        superDao.close();
         return firstAdded;
+    }
+
+    public boolean isFirstUnitAdded(){
+        SuperDao superDao = new SuperDao(context);
+        boolean bool = false;
+        PlanPartyElementsDao partyDao = superDao.getPlanPartyElementsDao();
+        List<PlanPartyElements> partyList = partyDao.queryBuilder().list();
+        for (PlanPartyElements party : partyList) {
+            if(party.getFirstUnitAddedDate() != null){
+                bool = true;
+            } else {
+                bool = false;
+            }
+        }
+        return bool;
     }
 
     public String liveUpdatePromille(double weight, String gender, Date firstUnitAddedTimeStamp){
@@ -59,6 +82,7 @@ public class PlanPartyDB {
         DayAfterBACDao dayAfterDao = superDao.getDayAfterBACDao();
 
         List<DayAfterBAC> dayAfterBACList = dayAfterDao.queryBuilder().list();
+        superDao.close();
 
         for (DayAfterBAC dayAfter : dayAfterBACList) {
             if(dayAfter.getUnit().equals("Beer")){
@@ -94,5 +118,95 @@ public class PlanPartyDB {
         }
         DecimalFormat numberFormat = new DecimalFormat("#.##");
         return numberFormat.format(sum);
+    }
+
+    public void addConsumedUnits(String unit){
+        SuperDao superDao = new SuperDao(context);
+        DayAfterBACDao dayAfterDao = superDao.getDayAfterBACDao();
+        DayAfterBAC newTS = new DayAfterBAC();
+
+        newTS.setTimestamp(new Date());
+        newTS.setUnit(unit);
+
+        dayAfterDao.insert(newTS);
+        superDao.close();
+    }
+
+    public void setPlannedPartyElementsDB(Date sDate, Date eDate, Date fDate, int pB, int pW, int pD, int pS, int aB, int aW, int aD, int aS, String status){
+        SuperDao superDao = new SuperDao(context);
+        PlanPartyElementsDao partyDao = superDao.getPlanPartyElementsDao();
+        PlanPartyElements newParty = new PlanPartyElements();
+        newParty.setPlannedBeer(pB);
+        newParty.setPlannedWine(pW);
+        newParty.setPlannedDrink(pD);
+        newParty.setPlannedShot(pS);
+        newParty.setAftRegBeer(aB);
+        newParty.setAftRegWine(aW);
+        newParty.setAftRegDrink(aD);
+        newParty.setAftRegShot(aS);
+        newParty.setStatus(status);
+        newParty.setStartTimeStamp(sDate);
+        newParty.setEndTimeStamp(eDate);
+        newParty.setFirstUnitAddedDate(fDate);
+        partyDao.insert(newParty);
+        superDao.close();
+    }
+
+    public void insertHistoryDB(int b, int w, int d, int s, Date startD, Date endD, int totalCosts, double highBAC){
+        SuperDao superDao = new SuperDao(context);
+        HistoryDao historyDao = superDao.getHistoryDao();
+        History hist = new History();
+
+        // units (4)
+        hist.setBeerCount(b);
+        hist.setWineCount(w);
+        hist.setDrinkCount(d);
+        hist.setShotCount(s);
+
+        // dates (2)
+        hist.setStartDate(startD);
+        hist.setEndDate(endD);
+
+        // costs (1)
+        hist.setSum(totalCosts);
+
+        // highest BAC (1)
+        hist.setHighestBAC(highBAC);
+
+        // insert to DB
+        historyDao.insert(hist);
+        superDao.close();
+    }
+
+    public void updateHighestBac(double highestBAC){
+        SuperDao superDao = new SuperDao(context);
+        // update highest BAC in History
+        HistoryDao historyDao = superDao.getHistoryDao();
+        List<History> histories = historyDao.queryBuilder().list();
+        History lastElement = histories.get(histories.size() -1);
+        lastElement.setHighestBAC(highestBAC);
+        historyDao.insertOrReplace(lastElement);
+        superDao.close();
+    }
+
+    public void addGraphValues(double currentBAC, Date timeStamp, int id){
+        SuperDao superDao = new SuperDao(context);
+        GraphHistoryDao graphHistoryDao = superDao.getGraphHistoryDao();
+        GraphHistory newGraphVal = new GraphHistory();
+        newGraphVal.setHistoryId(id);
+        newGraphVal.setCurrentBAC(currentBAC);
+        newGraphVal.setTimestamp(timeStamp);
+        graphHistoryDao.insert(newGraphVal);
+        superDao.close();
+    }
+
+    public int fetchHistoryID_DB(){
+        SuperDao superDao = new SuperDao(context);
+        HistoryDao historyDao = superDao.getHistoryDao();
+        List<History> historyList = historyDao.queryBuilder().list();
+        History lastElement = historyList.get(historyList.size() -1);
+        double tempID = lastElement.getId();
+        superDao.close();
+        return (int) tempID;
     }
 }

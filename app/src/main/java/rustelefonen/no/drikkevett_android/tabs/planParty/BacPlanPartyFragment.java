@@ -44,6 +44,7 @@ import rustelefonen.no.drikkevett_android.db.PlanPartyElements;
 import rustelefonen.no.drikkevett_android.db.PlanPartyElementsDao;
 import rustelefonen.no.drikkevett_android.db.User;
 import rustelefonen.no.drikkevett_android.tabs.calc.fragments.BeerScrollAdapter;
+import rustelefonen.no.drikkevett_android.tabs.home.SuperDao;
 import rustelefonen.no.drikkevett_android.util.NavigationUtil;
 import rustelefonen.no.drikkevett_android.util.PartyUtil;
 
@@ -82,25 +83,29 @@ public class BacPlanPartyFragment extends Fragment {
     private ViewPager beerScroll;
 
     private PlanPartyDB planPartyDB;
+    private Status_DB status_DB;
+    private PartyUtil partyUtil;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.bac_plan_party_frag, container, false);
 
         planPartyDB = new PlanPartyDB(getContext());
+        status_DB = new Status_DB(getContext());
+        partyUtil = new PartyUtil(getContext());
+
         initWidgets();
         setUserData();
         status = isSessionOver();
         stateHandler(status);
 
 
-
         addBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(status.equals(Status.RUNNING)){
-                    addConsumedUnits(getUnitId());
-                    if(!isFirstUnitAdded()){
+                    planPartyDB.addConsumedUnits(getUnitId());
+                    if(!planPartyDB.isFirstUnitAdded()){
                         setFirstUnitAdded();
                     }
                 }
@@ -114,8 +119,7 @@ public class BacPlanPartyFragment extends Fragment {
         removeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                removePlannedUnits(getUnitId());
-                stateHandler(status);
+                removeBtnHandler();
             }
         });
 
@@ -188,21 +192,18 @@ public class BacPlanPartyFragment extends Fragment {
 
     private void partyRunning(){
         statusBtn.setText("Avslutt Kvelden");
-        removeBtn.setVisibility(View.GONE);
         addBtn.setText("Drikk");
-
         firstUnitAdded = planPartyDB.getFirstUnitAddedStamp();
 
         // calculate BAC
         if(firstUnitAdded != null){
             try{
-                promilleBAC = Double.parseDouble(liveUpdatePromille(weight, gender, firstUnitAdded));
-                System.out.println("PromilleBAC: " + promilleBAC);
+                promilleBAC = Double.parseDouble(planPartyDB.liveUpdatePromille(weight, gender, firstUnitAdded));
+                populateConsumtion();
             } catch(NumberFormatException e){
                 promilleBAC = 0;
             }
         }
-
         getUnitsPlanned();
 
         // Layout
@@ -219,11 +220,37 @@ public class BacPlanPartyFragment extends Fragment {
         pieChart = (PieChart) v.findViewById(R.id.pie_chart_bac_plan_party);
         fillPieChart(beersConsumed, winesConsumed, drinksConsumed, shotsConsumed);
         stylePieChart();
-        textQuoteLbl.setText(textInQuote(promilleBAC));
+
+        textQuoteLbl.setText(partyUtil.textQuote(promilleBAC));
+        textQuoteLbl.setTextColor(partyUtil.colorQuote(promilleBAC));
+        pieChart.setCenterTextColor(partyUtil.colorQuote(promilleBAC));
+        colorsUnitLabels();
+    }
+
+    private void colorsUnitLabels(){
+        if(plannedBeers < beersConsumed){
+            beerLbl.setTextColor(Color.rgb(255, 0, 0));
+        } else {
+            beerLbl.setTextColor(Color.rgb(255, 255, 255));
+        }
+        if(plannedWines < winesConsumed){
+            wineLbl.setTextColor(Color.rgb(255, 0, 0));
+        } else {
+            wineLbl.setTextColor(Color.rgb(255, 255, 255));
+        }
+        if(plannedDrinks < drinksConsumed){
+            drinkLbl.setTextColor(Color.rgb(255, 0, 0));
+        } else {
+            drinkLbl.setTextColor(Color.rgb(255, 255, 255));
+        }
+        if(plannedShots < shotsConsumed){
+            shotLbl.setTextColor(Color.rgb(255, 0, 0));
+        } else {
+            shotLbl.setTextColor(Color.rgb(255, 255, 255));
+        }
     }
 
     private void partyNotRunning(){
-        removeBtn.setVisibility(View.VISIBLE);
         addBtn.setText("Legg til");
 
         textQuoteLbl.setText("Planlegg kvelden!");
@@ -235,6 +262,7 @@ public class BacPlanPartyFragment extends Fragment {
         wineLbl.setText(plannedWines + "");
         drinkLbl.setText(plannedDrinks + "");
         shotLbl.setText(plannedShots + "");
+        colorsUnitLabels();
 
         // Visibility
         dayAfterRunning_LinLay.setVisibility(View.GONE);
@@ -244,6 +272,10 @@ public class BacPlanPartyFragment extends Fragment {
         pieChart = (PieChart) v.findViewById(R.id.pie_chart_bac_plan_party);
         fillPieChart(plannedBeers, plannedWines, plannedDrinks, plannedShots);
         stylePieChart();
+
+        textQuoteLbl.setText(partyUtil.textQuote(promilleBAC));
+        textQuoteLbl.setTextColor(partyUtil.colorQuote(promilleBAC));
+        pieChart.setCenterTextColor(partyUtil.colorQuote(promilleBAC));
     }
 
     private void dayAfterRunning(){
@@ -255,25 +287,6 @@ public class BacPlanPartyFragment extends Fragment {
     /*
     * ADDING UNITS ( CONSUMED AND PLANNED )
     * */
-    private void addConsumedUnits(String unit){
-        String DB_NAME = "my-db";
-        SQLiteDatabase db;
-
-        SQLiteDatabase.CursorFactory cursorFactory = null;
-        final DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(getContext(), DB_NAME, cursorFactory);
-        db = helper.getWritableDatabase();
-
-        DaoMaster daoMaster = new DaoMaster(db);
-        DaoSession daoSession = daoMaster.newSession();
-
-        DayAfterBACDao dayAfterDao = daoSession.getDayAfterBACDao();
-        DayAfterBAC newTS = new DayAfterBAC();
-
-        newTS.setTimestamp(new Date());
-        newTS.setUnit(unit);
-
-        dayAfterDao.insert(newTS);
-    }
 
     private void addPlannedUnits(String unit){
         int limit = 30;
@@ -347,6 +360,48 @@ public class BacPlanPartyFragment extends Fragment {
         }
     }
 
+    private void removeConsumedUnits(String unit){
+        if(unit.equals("Beer")){
+            if(beersConsumed == 0){
+                beersConsumed = 0;
+            } else {
+                beersConsumed--;
+                removeUnitConsumedDB(unit);
+            }
+        }
+        if(unit.equals("Wine")){
+            if(winesConsumed == 0){
+                winesConsumed = 0;
+            } else {
+                winesConsumed--;
+                removeUnitConsumedDB(unit);
+            }
+        }
+        if(unit.equals("Drink")){
+            if (drinksConsumed == 0){
+                drinksConsumed = 0;
+            } else {
+                drinksConsumed--;
+                removeUnitConsumedDB(unit);
+            }
+        }
+        if(unit.equals("Shot")){
+            if(shotsConsumed == 0){
+                shotsConsumed = 0;
+            } else {
+                shotsConsumed--;
+                removeUnitConsumedDB(unit);
+            }
+        }
+    }
+
+    private void removeUnitConsumedDB(String unit){
+        DayAfterBACDao dayAfterBACDao = setDaoSessionDB().getDayAfterBACDao();
+        List<DayAfterBAC> dayAfterBACList = dayAfterBACDao.queryBuilder().where(DayAfterBACDao.Properties.Unit.eq(unit)).list();
+        DayAfterBAC lastElement = dayAfterBACList.get(dayAfterBACList.size() - 1);
+        dayAfterBACDao.deleteByKey(lastElement.getId());
+    }
+
     private void updateStatusBtn(String status){
         PlanPartyElementsDao partyDao = setDaoSessionDB().getPlanPartyElementsDao();
 
@@ -360,26 +415,7 @@ public class BacPlanPartyFragment extends Fragment {
             statusDA_Running(partyDao);
         }
         partyDao.deleteAll();
-        setPlannedPartyElementsDB(startTimeStamp, endTimeStamp, firstUnitAdded, plannedBeers, plannedWines, plannedDrinks, plannedShots, 0, 0, 0, 0, status);
-    }
-
-    private void setPlannedPartyElementsDB(Date sDate, Date eDate, Date fDate, int pB, int pW, int pD, int pS, int aB, int aW, int aD, int aS, String status){
-        PlanPartyElementsDao partyDao = setDaoSessionDB().getPlanPartyElementsDao();
-        PlanPartyElements newParty = new PlanPartyElements();
-        newParty.setPlannedBeer(pB);
-        newParty.setPlannedWine(pW);
-        newParty.setPlannedDrink(pD);
-        newParty.setPlannedShot(pS);
-        newParty.setAftRegBeer(aB);
-        newParty.setAftRegWine(aW);
-        newParty.setAftRegDrink(aD);
-        newParty.setAftRegShot(aS);
-        newParty.setStatus(status);
-        newParty.setStartTimeStamp(sDate);
-        newParty.setEndTimeStamp(eDate);
-        newParty.setFirstUnitAddedDate(fDate);
-
-        partyDao.insert(newParty);
+        planPartyDB.setPlannedPartyElementsDB(startTimeStamp, endTimeStamp, firstUnitAdded, plannedBeers, plannedWines, plannedDrinks, plannedShots, 0, 0, 0, 0, status);
     }
 
     private void statusRunning(PlanPartyElementsDao partyDao){
@@ -387,12 +423,14 @@ public class BacPlanPartyFragment extends Fragment {
         startTimeStamp = new Date();
 
         // set sessionLength in the parameter
-        endTimeStamp = setEndOfSesStamp(12);
+        endTimeStamp = setEndOfSesStamp(15);
 
         List<PlanPartyElements> PlanPartyList = partyDao.queryBuilder().list();
 
         for (PlanPartyElements party : PlanPartyList) {
-            firstUnitAdded = party.getFirstUnitAddedDate();
+            if(party.getFirstUnitAddedDate() != null){
+                firstUnitAdded = party.getFirstUnitAddedDate();
+            }
         }
     }
 
@@ -441,6 +479,17 @@ public class BacPlanPartyFragment extends Fragment {
         }
     }
 
+    private void removeBtnHandler(){
+        String textOnBtn = (String) statusBtn.getText();
+        if(textOnBtn.equals("Avslutt Kvelden")){
+            removeConsumedUnits(getUnitId());
+        }
+        if(textOnBtn.equals("Start Kvelden")){
+            removePlannedUnits(getUnitId());
+        }
+        stateHandler(status);
+    }
+
     private void setUserData(){
         User user = ((MainActivity)getActivity()).getUser();
         weight = user.getWeight();
@@ -460,18 +509,14 @@ public class BacPlanPartyFragment extends Fragment {
         return daoMaster.newSession();
     }
 
-    private String liveUpdatePromille(double weight, String gender, Date firstUnitAddedTimeStamp){
-        double sum = 0.0;
-        System.out.println("s");
+    private void populateConsumtion(){
         beersConsumed = 0;
         winesConsumed = 0;
         drinksConsumed = 0;
         shotsConsumed = 0;
 
         DayAfterBACDao dayAfterDao = setDaoSessionDB().getDayAfterBACDao();
-
         List<DayAfterBAC> dayAfterBACList = dayAfterDao.queryBuilder().list();
-
         for (DayAfterBAC dayAfter : dayAfterBACList) {
             if(dayAfter.getUnit().equals("Beer")){
                 beersConsumed++;
@@ -485,27 +530,7 @@ public class BacPlanPartyFragment extends Fragment {
             if(dayAfter.getUnit().equals("Shot")){
                 shotsConsumed++;
             }
-            double totalGrams = countingGrams(beersConsumed, winesConsumed, drinksConsumed, shotsConsumed);
-
-            Date currentDate = new Date();
-            long timeDifference = getDateDiff(firstUnitAddedTimeStamp, currentDate, TimeUnit.MINUTES);
-            double newValueDouble = (double)timeDifference;
-            double minToHours = newValueDouble / 60;
-
-            // FROM 0 - 4 mins
-            if(minToHours < 0.085){
-                sum = 0;
-            }
-            // FROM 5 - 15 MIN
-            if(minToHours > 0.085 && minToHours <= 0.25){
-                sum = totalGrams/(weight * setGenderScore(gender)) - (PartyUtil.intervalCalc(minToHours) * minToHours);
-            }
-            if(minToHours > 0.25){
-                sum = Double.parseDouble(calculateBAC(gender, weight, totalGrams, minToHours));
-            }
         }
-        DecimalFormat numberFormat = new DecimalFormat("#.##");
-        return numberFormat.format(sum);
     }
 
     private void getUnitsPlanned() {
@@ -538,40 +563,6 @@ public class BacPlanPartyFragment extends Fragment {
         promilleBAC = 0;
     }
 
-    public Status getStatus(){
-        Status tempStatus = Status.DEFAULT;
-        PlanPartyElementsDao partyDao = setDaoSessionDB().getPlanPartyElementsDao();
-
-        // GET elements to temporary store them in variables then re-saving them
-        List<PlanPartyElements> partyList = partyDao.queryBuilder().list();
-        for (PlanPartyElements party : partyList) {
-            if(party.getStatus().equals("NOT_RUNNING")){
-                tempStatus = Status.NOT_RUNNING;
-            }
-            if(party.getStatus().equals("RUNNING")){
-                tempStatus = Status.RUNNING;
-            }
-            if(party.getStatus().equals("DA_RUNNING")){
-                tempStatus = Status.DA_RUNNING;
-            }
-        }
-        return tempStatus;
-    }
-
-    private boolean isFirstUnitAdded(){
-        boolean bool = false;
-        PlanPartyElementsDao partyDao = setDaoSessionDB().getPlanPartyElementsDao();
-        List<PlanPartyElements> partyList = partyDao.queryBuilder().list();
-        for (PlanPartyElements party : partyList) {
-            if(party.getFirstUnitAddedDate() != null){
-                bool = true;
-            } else {
-                bool = false;
-            }
-        }
-        return bool;
-    }
-
     private void setFirstUnitAdded(){
         PlanPartyElementsDao partyDao = setDaoSessionDB().getPlanPartyElementsDao();
         List<PlanPartyElements> PlanPartyList = partyDao.queryBuilder().list();
@@ -588,7 +579,7 @@ public class BacPlanPartyFragment extends Fragment {
             state = party.getStatus();
         }
         firstUnitAdded = new Date();
-        setPlannedPartyElementsDB(startTimeStamp, endTimeStamp, firstUnitAdded, plannedBeers, plannedWines, plannedDrinks, plannedShots, 0, 0, 0, 0, state);
+        planPartyDB.setPlannedPartyElementsDB(startTimeStamp, endTimeStamp, firstUnitAdded, plannedBeers, plannedWines, plannedDrinks, plannedShots, 0, 0, 0, 0, state);
     }
 
     private Status isSessionOver(){
@@ -603,8 +594,6 @@ public class BacPlanPartyFragment extends Fragment {
         for (PlanPartyElements party : partyList) {
             endSes = party.getEndTimeStamp();
         }
-        System.out.println("Current Dato: " + currentDate);
-        System.out.println("End of session: " + endSes);
 
         if(endSes == null){
             return Status.NOT_RUNNING;
@@ -619,14 +608,15 @@ public class BacPlanPartyFragment extends Fragment {
     }
 
     private void updateStateWhenSessionIsOver(String status){
-        PlanPartyElementsDao partyDao = setDaoSessionDB().getPlanPartyElementsDao();
+        SuperDao superDao = new SuperDao(getContext());
+
+        PlanPartyElementsDao partyDao = superDao.getPlanPartyElementsDao();
         List<PlanPartyElements> PlanPartyList = partyDao.queryBuilder().list();
 
         int tempAfterB = 0;
         int tempAfterW = 0;
         int tempAfterD = 0;
         int tempAfterS = 0;
-
 
         for(PlanPartyElements parEl : PlanPartyList){
             plannedBeers = parEl.getPlannedBeer();
@@ -658,22 +648,24 @@ public class BacPlanPartyFragment extends Fragment {
             }
         }
         partyDao.deleteAll();
-        setPlannedPartyElementsDB(startTimeStamp, endTimeStamp, firstUnitAdded, plannedBeers, plannedWines, plannedDrinks, plannedShots, tempAfterB, tempAfterW, tempAfterD, tempAfterS, status);
+        if(firstUnitAdded != null){
+            planPartyDB.setPlannedPartyElementsDB(startTimeStamp, endTimeStamp, firstUnitAdded, plannedBeers, plannedWines, plannedDrinks, plannedShots, tempAfterB, tempAfterW, tempAfterD, tempAfterS, status);
+        }
         Date tempStartDate = null;
 
-        HistoryDao histDao = setDaoSessionDB().getHistoryDao();
+        superDao.close();
+
+        SuperDao superDao2 = new SuperDao(getContext());
+        HistoryDao histDao = superDao2.getHistoryDao();
         List<History> histList = histDao.queryBuilder().list();
-        for(History histItems : histList){
-            tempStartDate = histItems.getStartDate();
-        }
+        History lastElementHist = histList.get(histList.size() - 1);
+        tempStartDate = lastElementHist.getStartDate();
+
         if(!startTimeStamp.equals(tempStartDate)){
             setHistory();
             handleGraphHistory();
         }
-        beersConsumed = 0;
-        winesConsumed = 0;
-        drinksConsumed = 0;
-        shotsConsumed = 0;
+        superDao2.close();
     }
 
     private int calculateCosts(int b, int w, int d, int s){
@@ -681,76 +673,10 @@ public class BacPlanPartyFragment extends Fragment {
         return (b * user.getBeerPrice()) + (w * user.getWinePrice()) + (d * user.getDrinkPrice()) + (s * user.getShotPrice());
     }
 
-    private void insertHistoryDB(int b, int w, int d, int s, Date startD, Date endD, int totalCosts, double highBAC){
-        HistoryDao historyDao = setDaoSessionDB().getHistoryDao();
-        History hist = new History();
-
-        // units (4)
-        hist.setBeerCount(b);
-        hist.setWineCount(w);
-        hist.setDrinkCount(d);
-        hist.setShotCount(s);
-
-        // dates (2)
-        hist.setStartDate(startD);
-        hist.setEndDate(endD);
-
-        // costs (1)
-        hist.setSum(totalCosts);
-
-        // highest BAC (1)
-        hist.setHighestBAC(highBAC);
-
-        // insert to DB
-        historyDao.insert(hist);
-    }
-
     private void setHistory(){
-        DayAfterBACDao dayDao = setDaoSessionDB().getDayAfterBACDao();
-        List<DayAfterBAC> dayAfterBACList = dayDao.queryBuilder().list();
-        beersConsumed = 0;
-        winesConsumed = 0;
-        drinksConsumed = 0;
-        shotsConsumed = 0;
-
-        for (DayAfterBAC dayAfter : dayAfterBACList) {
-            String unit = dayAfter.getUnit();
-            if(unit.equals("Beer")){
-                beersConsumed++;
-            }
-            if(unit.equals("Wine")){
-                winesConsumed++;
-            }
-            if(unit.equals("Drink")){
-                drinksConsumed++;
-            }
-            if(unit.equals("Shot")){
-                shotsConsumed++;
-            }
-        }
+        populateConsumtion();
         int totalCosts = calculateCosts(beersConsumed, winesConsumed, drinksConsumed, shotsConsumed);
-        insertHistoryDB(beersConsumed, winesConsumed, drinksConsumed, shotsConsumed, startTimeStamp, endTimeStamp, totalCosts, 0.0);
-    }
-
-    private int fetchHistoryID_DB(){
-        double tempID = 0;
-        HistoryDao historyDao = setDaoSessionDB().getHistoryDao();
-        List<History> historyList = historyDao.queryBuilder().list();
-        History lastElement = historyList.get(historyList.size() -1);
-        tempID = lastElement.getId();
-        System.out.println("Temp ID: " + tempID);
-        return (int) tempID;
-    }
-
-    private void addGraphValues(double currentBAC, Date timeStamp, int id){
-        GraphHistoryDao graphHistoryDao = setDaoSessionDB().getGraphHistoryDao();
-        GraphHistory newGraphVal = new GraphHistory();
-        System.out.println("Id som blir sendt inn til G HIST: " + id);
-        newGraphVal.setHistoryId(id);
-        newGraphVal.setCurrentBAC(currentBAC);
-        newGraphVal.setTimestamp(timeStamp);
-
-        graphHistoryDao.insert(newGraphVal);
+        planPartyDB.insertHistoryDB(beersConsumed, winesConsumed, drinksConsumed, shotsConsumed, startTimeStamp, endTimeStamp, totalCosts, 0.0);
     }
 
     private void simulateBAC(int id){
@@ -802,65 +728,13 @@ public class BacPlanPartyFragment extends Fragment {
                 // Add 15 minutes to simulator
                 tempTimeStamp = setNewUnitDate((int) tempInterval);
             }
-            addGraphValues(promille, tempTimeStamp, id);
+            planPartyDB.addGraphValues(promille, tempTimeStamp, id);
         }
-        updateHighestBac(highestBAC);
-    }
-
-    private void updateHighestBac(double highestBAC){
-        // update highest BAC in History
-        HistoryDao historyDao = setDaoSessionDB().getHistoryDao();
-        List<History> histories = historyDao.queryBuilder().list();
-        History lastElement = histories.get(histories.size() -1);
-        lastElement.setHighestBAC(highestBAC);
-        historyDao.insertOrReplace(lastElement);
+        planPartyDB.updateHighestBac(highestBAC);
     }
 
     private void handleGraphHistory(){
-        int historyID = fetchHistoryID_DB();
-        System.out.println("Last ID added: " + historyID);
-        simulateBAC(historyID);
-    }
-
-    public String textInQuote(double bac){
-        String output = "";
-        if(bac >= 0 && bac < 0.4){
-            output = "Kos deg";
-            pieChart.setCenterTextColor((Color.rgb(255, 255, 255)));
-        }
-        if(bac >= 0.4 && bac < 0.8){
-            output = "Lykkepromille";
-            pieChart.setCenterTextColor((Color.rgb(26, 193, 73)));
-        }
-        if(bac >= 0.8 && bac < 1.0){
-            output = "Du blir mer kritikkløs og risikovillig";
-            pieChart.setCenterTextColor((Color.rgb(255, 180, 10)));
-        }
-        if(bac >= 1.0 && bac < 1.2){
-            output = "Balansen blir dårligere";
-            pieChart.setCenterTextColor((Color.rgb(255, 180, 10)));
-        }
-        if(bac >= 1.2 && bac < 1.4){
-            output = "Talen snøvlete og \nkontroll på bevegelser forverres";
-            pieChart.setCenterTextColor((Color.rgb(255, 160, 0)));
-        }
-        if(bac >= 1.4 && bac < 1.8){
-            output = "Man blir trøtt, sløv og \nkan bli kvalm";
-            pieChart.setCenterTextColor((Color.rgb(255, 160, 0)));
-        }
-        if(bac >= 1.8 && bac < 3.0){
-            output = "Hukommelsen sliter";
-            pieChart.setCenterTextColor((Color.rgb(255, 55, 55)));
-        }
-        if(bac >= 3.0 && bac < 5.0){
-            output = "Svært høy promille! \nMan kan bli bevisstløs";
-            pieChart.setCenterTextColor((Color.rgb(255, 55, 55)));
-        }
-        if(bac >= 5.0){
-            output = "Du kan dø ved en så høy promille!";
-            pieChart.setCenterTextColor((Color.rgb(255, 0, 0)));
-        }
-        return output;
+        simulateBAC(planPartyDB.fetchHistoryID_DB());
     }
 
     private String getUnitId(){
@@ -903,7 +777,6 @@ public class BacPlanPartyFragment extends Fragment {
                 dialogInterface.cancel();
             }
         });
-
         AlertDialog alert = alert_builder.create();
         alert.setTitle("Start Kvelden");
         alert.show();
@@ -925,7 +798,6 @@ public class BacPlanPartyFragment extends Fragment {
                 dialogInterface.cancel();
             }
         });
-
         AlertDialog alert = alert_builder.create();
         alert.setTitle("Avslutt Kvelden");
         alert.show();
@@ -951,15 +823,11 @@ public class BacPlanPartyFragment extends Fragment {
                 dialogInterface.cancel();
             }
         });
-
         AlertDialog alert = alert_builder.create();
         alert.setTitle("Avslutt Dagen Derpå");
         alert.show();
     }
 
-    /*
-    * PIE CHART
-    * */
     private void fillPieChart(int b, int w, int d, int s) {
         ArrayList<Entry> entries = new ArrayList<>();
 
@@ -1005,21 +873,15 @@ public class BacPlanPartyFragment extends Fragment {
                 ContextCompat.getColor(getContext(), R.color.shotColor)};
     }
 
-    /*
-    * WIDGETS
-    * */
     private void initWidgets(){
         beerLbl = (TextView) v.findViewById(R.id.textViewBeerPP);
         wineLbl = (TextView) v.findViewById(R.id.textViewWinePP);
         drinkLbl = (TextView) v.findViewById(R.id.textViewDrinkPP);
         shotLbl = (TextView) v.findViewById(R.id.textViewShotPP);
-
         textQuoteLbl = (TextView) v.findViewById(R.id.textViewQuotesPP);
-
         addBtn = (Button) v.findViewById(R.id.buttonAddPP);
         removeBtn = (Button) v.findViewById(R.id.buttonRemovePP);
         statusBtn = (Button) v.findViewById(R.id.buttonStatusPP);
-
         planPartyRunning_LinLay = (LinearLayout) v.findViewById(R.id.layout_planPartyRunning_ID_PP);
         dayAfterRunning_LinLay = (LinearLayout) v.findViewById(R.id.layout_dayAfterRunning_ID_PP);
     }

@@ -85,7 +85,7 @@ public class BacHomeFragment extends Fragment{
         View view = inflater.inflate(R.layout.bac_home_frag, container, false);
 
 
-        addHistory();
+        //addHistory();
         initWidgets(view);
         fillWidgets();
         fillPieChart();
@@ -313,6 +313,7 @@ public class BacHomeFragment extends Fragment{
         Date currentDate = new Date();
         if(currentDate.after(user.getGoalDate())){
             Intent intent = new Intent(getContext(), GoalReachedActivity.class);
+            intent.putExtra(GoalReachedActivity.ID, user);
             startActivity(intent);
         }
     }
