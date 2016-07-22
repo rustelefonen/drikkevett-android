@@ -21,13 +21,25 @@
         </com.github.mikephil.charting.charts.PieChart>
 
 
-        <android.support.v4.view.ViewPager
-            android:padding="16dp"
-            android:id="@+id/beer_scroll"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:layout_below="@+id/pie_chart_bac_calc">
-        </android.support.v4.view.ViewPager>
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <android.support.v4.view.ViewPager
+                android:padding="16dp"
+                android:id="@+id/beer_scroll"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:layout_below="@+id/pie_chart_bac_calc">
+            </android.support.v4.view.ViewPager>
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"></RadioGroup>
+
+        </LinearLayout>
+
 
         <!--<TextView-->
             <!--android:padding="16dp"-->
