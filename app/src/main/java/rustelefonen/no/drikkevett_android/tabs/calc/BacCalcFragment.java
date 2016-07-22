@@ -11,7 +11,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -25,21 +24,18 @@ import com.github.mikephil.charting.data.PieDataSet;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
+import rustelefonen.no.drikkevett_android.MainActivity;
 import rustelefonen.no.drikkevett_android.R;
+import rustelefonen.no.drikkevett_android.db.User;
 import rustelefonen.no.drikkevett_android.tabs.calc.fragments.BeerScrollAdapter;
+import rustelefonen.no.drikkevett_android.util.Gender;
 import rustelefonen.no.drikkevett_android.util.NavigationUtil;
 
-public class BacCalcFragment extends android.support.v4.app.Fragment implements ViewPager.OnPageChangeListener, RadioGroup.OnCheckedChangeListener {
-
-    private int age = 22;
-    private int weight = 80;
-    private String gender = "Mann";
-
-    // ALKOHOL I GRAM:
-    private double beerGrams = 12.6;
-    private double wineGrams = 14.0;
-    private double drinkGrams = 15.0;
-    private double shotGrams = 14.2;
+public class BacCalcFragment extends android.support.v4.app.Fragment
+        implements ViewPager.OnPageChangeListener,
+        RadioGroup.OnCheckedChangeListener,
+        SeekBar.OnSeekBarChangeListener,
+        View.OnClickListener {
 
     // ENHETER
     private int beer = 0;
@@ -63,12 +59,7 @@ public class BacCalcFragment extends android.support.v4.app.Fragment implements 
     public TextView labelDrinkNrUnits;
     public TextView labelShotNrUnits;
 
-    // SEEKBAR
     private SeekBar seekBar;
-
-    // VIEWS
-    private View view;
-
     public PieChart pieChart;
     public ViewPager beerScroll;
 
@@ -76,58 +67,16 @@ public class BacCalcFragment extends android.support.v4.app.Fragment implements 
 
     public RadioGroup pageIndicatorGroup;
 
+    private User user;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.bac_calc_frag, container, false);
-
+        View view = inflater.inflate(R.layout.bac_calc_frag, container, false);
+        user = ((MainActivity)getActivity()).getUser();
         setHasOptionsMenu(true);
-
-        initVariabels();
-
-        addButton.setOnClickListener(new View.OnClickListener() {public void onClick(View v){addBeverage();}});
-        removeButton.setOnClickListener(new View.OnClickListener() {public void onClick(View v){removeBeverage();}});
-
-        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                if (i < 1 && i > 24) hours = 1;
-                hours = i;
-
-                if(hours == 1){
-                    labelHours.setText("Promillen om " + hours + " time");
-                } else {
-                    labelHours.setText("Promillen om " + hours + " timer");
-                }
-                totalPromille();
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-                System.out.println("kek");
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                fillPieChart();
-                pieChart.animateY(1400, Easing.EasingOption.EaseInOutQuad);
-            }
-        });
-
-        pieChart = (PieChart) view.findViewById(R.id.pie_chart_bac_calc);
-        fillPieChart();
-        stylePieChart();
-
-
-
-        beerScroll = (ViewPager) view.findViewById(R.id.beer_scroll);
-        beerScroll.addOnPageChangeListener(this);
-        beerScroll.setAdapter(new BeerScrollAdapter(this.getFragmentManager()));
-
-        beerScroll.setCurrentItem(0);
-        pageIndicatorGroup.check(pageIndicatorGroup.getChildAt(0).getId());
-
-
-
+        initWidgets(view);
+        setListeners();
+        fillWidgets();
         return view;
     }
 
@@ -151,55 +100,19 @@ public class BacCalcFragment extends android.support.v4.app.Fragment implements 
     }
 
     public void totalPromille(){
-        String bac = calculateBAC("Mann", 80, countingGrams(beer, wine, drink, shot), hours);
+        String tmpGender = user.getGender();
+        Gender gender = null;
+        if (tmpGender.equals("Mann")) gender = Gender.MALE;
+        else if (tmpGender.equals("Kvinne")) gender = Gender.FEMALE;
+
+        String bac = calculateBAC(gender, user.getWeight(), countingGrams(beer, wine, drink, shot), hours);
         //labelPromille.setText("" + bac);
         pieChart.setCenterText(Double.valueOf(bac) + PER_MILLE);
         pieChart.animateY(0, Easing.EasingOption.EaseInOutQuad);
         //labelQuotes.setText(textInQuote(Double.valueOf(bac)));
     }
 
-    public String textInQuote(double bac){
-        String output = "";
-        if(bac >= 0 && bac < 0.4){
-            output = "Kos deg";
-            //labelPromille.setTextColor(Color.rgb(0, 0, 0));
-        }
-        if(bac >= 0.4 && bac < 0.8){
-            output = "Lykkepromille";
-            //labelPromille.setTextColor(Color.rgb(26, 193, 73));
-        }
-        if(bac >= 0.8 && bac < 1.0){
-            output = "Du blir mer kritikkløs og risikovillig";
-            //labelPromille.setTextColor(Color.rgb(255, 180, 10));
-        }
-        if(bac >= 1.0 && bac < 1.2){
-            output = "Balansen blir dårligere";
-            //labelPromille.setTextColor(Color.rgb(255, 180, 10));
-        }
-        if(bac >= 1.2 && bac < 1.4){
-            output = "Talen snøvlete og \nkontroll på bevegelser forverres";
-            //labelPromille.setTextColor(Color.rgb(255, 160, 0));
-        }
-        if(bac >= 1.4 && bac < 1.8){
-            output = "Man blir trøtt, sløv og \nkan bli kvalm";
-            //labelPromille.setTextColor(Color.rgb(255, 160, 0));
-        }
-        if(bac >= 1.8 && bac < 3.0){
-            output = "Hukommelsen sliter";
-            //labelPromille.setTextColor(Color.rgb(255, 55, 55));
-        }
-        if(bac >= 3.0 && bac < 5.0){
-            output = "Svært høy promille! \nMan kan bli bevisstløs";
-            //labelPromille.setTextColor(Color.rgb(255, 55, 55));
-        }
-        if(bac >= 5.0){
-            output = "Du kan dø ved en så høy promille!";
-            //labelPromille.setTextColor(Color.rgb(255, 0, 0));
-        }
-        return output;
-    }
-
-    public String calculateBAC(String gender, double weight, double grams, double hours) {
+    public String calculateBAC(Gender gender, double weight, double grams, double hours) {
         double oppdatertPromille = 0.0;
         double genderScore = setGenderScore(gender);
 
@@ -218,47 +131,43 @@ public class BacCalcFragment extends android.support.v4.app.Fragment implements 
     }
 
     public double countingGrams(double beerUnits, double wineUnits, double drinkUnits, double shotUnits){
-        return (beerUnits * beerGrams) + (wineUnits * wineGrams) + (drinkUnits * drinkGrams) + (shotUnits * shotGrams);
+        return (beerUnits * 12.6) + (wineUnits * 14.0) + (drinkUnits * 15.0) + (shotUnits * 14.2);
     }
 
-    public double setGenderScore(String gender){
-        double genderScore = 0.0;
-
-        if(gender.equals("Mann")){
-            genderScore = 0.70;
-        }
-        if(gender.equals("Kvinne")){
-            genderScore = 0.60;
-        }
-
-        return genderScore;
+    public double setGenderScore(Gender gender){
+        if(gender == Gender.MALE)return 0.70;
+        else if(gender == Gender.FEMALE)return 0.60;
+        return 0.0;
     }
 
-    public void initVariabels(){
+    private void initWidgets(View view){
         pageIndicatorGroup = (RadioGroup) view.findViewById(R.id.page_indicator_radio);
-        pageIndicatorGroup.setOnCheckedChangeListener(this);
-
-
-
-
-
-        // BUTTONS
         addButton = (Button) view.findViewById(R.id.addBtn);
         removeButton = (Button) view.findViewById(R.id.btnRemove);
-
-        // TEXTVIEWS
-        //labelPromille = (TextView) view.findViewById(R.id.promilleLbl);
         labelHours = (TextView) view.findViewById(R.id.textViewHours);
-        //labelQuotes = (TextView) view.findViewById(R.id.text_view_quotes);
-
-        // SEEKBAR
         seekBar = (SeekBar) view.findViewById(R.id.seekBarBacCalc);
-
-        //
         labelBeerNrUnits = (TextView) view.findViewById(R.id.textViewBeerUnits);
         labelWineNrUnits = (TextView) view.findViewById(R.id.textViewWineUnits);
         labelDrinkNrUnits = (TextView) view.findViewById(R.id.textViewDrinkUnits);
         labelShotNrUnits = (TextView) view.findViewById(R.id.textViewShotUnits);
+        pieChart = (PieChart) view.findViewById(R.id.pie_chart_bac_calc);
+        beerScroll = (ViewPager) view.findViewById(R.id.beer_scroll);
+    }
+
+    private void setListeners() {
+        pageIndicatorGroup.setOnCheckedChangeListener(this);
+        seekBar.setOnSeekBarChangeListener(this);
+        beerScroll.addOnPageChangeListener(this);
+        addButton.setOnClickListener(this);
+        removeButton.setOnClickListener(this);
+    }
+
+    private void fillWidgets() {
+        beerScroll.setAdapter(new BeerScrollAdapter(this.getFragmentManager()));
+        beerScroll.setCurrentItem(0);
+        pageIndicatorGroup.check(pageIndicatorGroup.getChildAt(0).getId());
+        fillPieChart();
+        stylePieChart();
     }
 
 
@@ -382,9 +291,7 @@ public class BacCalcFragment extends android.support.v4.app.Fragment implements 
     }
 
     @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-    }
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
 
     @Override
     public void onPageSelected(int position) {
@@ -404,5 +311,34 @@ public class BacCalcFragment extends android.support.v4.app.Fragment implements 
         else if (id == R.id.radio_two) beerScroll.setCurrentItem(1);
         else if (id == R.id.radio_three) beerScroll.setCurrentItem(2);
         else if (id == R.id.radio_four) beerScroll.setCurrentItem(3);
+    }
+
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+        if (i < 1 && i > 24) hours = 1;
+        hours = i;
+
+        if(hours == 1){
+            labelHours.setText("Promillen om " + hours + " time");
+        } else {
+            labelHours.setText("Promillen om " + hours + " timer");
+        }
+        totalPromille();
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {}
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+        fillPieChart();
+        pieChart.animateY(1400, Easing.EasingOption.EaseInOutQuad);
+    }
+
+    @Override
+    public void onClick(View view) {
+        int id = view.getId();
+        if (id == R.id.addBtn) addBeverage();
+        else if (id == R.id.btnRemove) removeBeverage();
     }
 }

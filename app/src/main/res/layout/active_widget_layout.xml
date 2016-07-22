@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/backgroundColor"
+    android:padding="16dp"
+    android:id="@+id/widget_complete">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="28.Juni"
+            android:textColor="@color/textColor"
+            android:textSize="32dp"
+            android:layout_marginBottom="8dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2016"
+            android:textSize="16sp"
+            android:textColor="@color/greyTextColor"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp">
+
+        <LinearLayout
+            android:layout_weight="25"
+            android:layout_width="0dp"
+            android:layout_height="5dp"
+            android:background="@color/beerColor"/>
+        <LinearLayout
+            android:layout_weight="25"
+            android:layout_width="0dp"
+            android:layout_height="5dp"
+            android:background="@color/wineColor"/>
+        <LinearLayout
+            android:layout_weight="25"
+            android:layout_width="0dp"
+            android:layout_height="5dp"
+            android:background="@color/drinkColor"/>
+        <LinearLayout
+            android:layout_weight="25"
+            android:layout_width="0dp"
+            android:layout_height="5dp"
+            android:background="@color/shotColor"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="33">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Planlagt"
+                android:textColor="@color/textColor"
+                android:layout_gravity="center"/>
+            <TextView
+                android:id="@+id/widget_planned_total"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="56"
+                android:textColor="@color/textColor"
+                android:textSize="64sp"
+                android:layout_gravity="center"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/greyTextColor"
+                android:text="Enheter"
+                android:layout_gravity="center"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="33">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Promille"
+                android:textColor="@color/textColor"
+                android:layout_gravity="center"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center">
+                <TextView
+                    android:id="@+id/per_mille_widget"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0,6"
+                    android:textColor="@color/textColor"
+                    android:textSize="64sp"
+                    android:layout_gravity="bottom"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="‰"
+                    android:textSize="32sp"
+                    android:layout_gravity="bottom"
+                    android:textColor="@color/textColor"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="33">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Registrert"
+                android:textColor="@color/textColor"
+                android:layout_gravity="center"/>
+            <TextView
+                android:id="@+id/registered_widget"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2"
+                android:textColor="@color/textColor"
+                android:textSize="64sp"
+                android:layout_gravity="center"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/greyTextColor"
+                android:text="Enheter"
+                android:layout_gravity="center"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        android:text="Dagens tips:"
+        android:textColor="@color/greyTextColor"
+        android:gravity="center"
+        android:layout_marginBottom="16dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Husk å drikke vann!"
+        android:textColor="@color/textColor"
+        android:textSize="24sp"
+        android:gravity="center"/>
+</LinearLayout>

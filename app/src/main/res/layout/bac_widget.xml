@@ -1,29 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/backgroundColor"
+    android:padding="16dp">
 
-    <TextView
-        android:id="@+id/widget_header"
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="28.Juni"
+            android:textColor="@color/textColor"
+            android:textSize="32dp"
+            android:layout_marginBottom="8dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2016"
+            android:textSize="16sp"
+            android:textColor="@color/greyTextColor"/>
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp">
+
+        <LinearLayout
+            android:layout_weight="25"
+            android:layout_width="0dp"
+            android:layout_height="5dp"
+            android:background="@color/beerColor"/>
+        <LinearLayout
+            android:layout_weight="25"
+            android:layout_width="0dp"
+            android:layout_height="5dp"
+            android:background="@color/wineColor"/>
+        <LinearLayout
+            android:layout_weight="25"
+            android:layout_width="0dp"
+            android:layout_height="5dp"
+            android:background="@color/drinkColor"/>
+        <LinearLayout
+            android:layout_weight="25"
+            android:layout_width="0dp"
+            android:layout_height="5dp"
+            android:background="@color/shotColor"/>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Du har ingen aktiv kveld"
+        android:textColor="@color/textColor"
+        android:textSize="24sp"
         android:gravity="center"
-        android:textSize="32sp"
-        android:text="Din promille er:"/>
+        android:layout_marginBottom="16dp"/>
 
     <TextView
-        android:id="@+id/widget_bac"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="32sp"/>
+        android:textSize="24sp"
+        android:text="Åpne Drikkevett for å starte en kveld"
+        android:textColor="@color/greyTextColor"
+        android:gravity="center"
+        android:layout_marginBottom="16dp"/>
 
     <Button
-        android:id="@+id/widget_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:id="@+id/start_evening_button"
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:background="@drawable/round_button"
         android:textColor="@color/textColor"
-        android:background="@color/greenSuper"
-        android:textSize="32sp"
-        android:text="lol"/>
-
+        android:text="Start"
+        android:layout_gravity="center"
+        style="button"/>
 </LinearLayout>
