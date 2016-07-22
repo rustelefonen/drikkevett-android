@@ -81,6 +81,8 @@ public class BacPlanPartyFragment extends Fragment {
 
     private ViewPager beerScroll;
 
+    private PlanPartyDB planPartyDB;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.bac_plan_party_frag, container, false);
@@ -89,6 +91,8 @@ public class BacPlanPartyFragment extends Fragment {
         setUserData();
         status = isSessionOver();
         stateHandler(status);
+        planPartyDB = new PlanPartyDB(getContext());
+
 
         addBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -186,7 +190,7 @@ public class BacPlanPartyFragment extends Fragment {
         removeBtn.setVisibility(View.GONE);
         addBtn.setText("Drikk");
 
-        firstUnitAdded = getFirstUnitAddedStamp();
+        firstUnitAdded = planPartyDB.getFirstUnitAddedStamp();
 
         // calculate BAC
         if(firstUnitAdded != null){
@@ -457,7 +461,7 @@ public class BacPlanPartyFragment extends Fragment {
 
     private String liveUpdatePromille(double weight, String gender, Date firstUnitAddedTimeStamp){
         double sum = 0.0;
-
+        System.out.println("s");
         beersConsumed = 0;
         winesConsumed = 0;
         drinksConsumed = 0;
@@ -584,19 +588,6 @@ public class BacPlanPartyFragment extends Fragment {
         }
         firstUnitAdded = new Date();
         setPlannedPartyElementsDB(startTimeStamp, endTimeStamp, firstUnitAdded, plannedBeers, plannedWines, plannedDrinks, plannedShots, 0, 0, 0, 0, state);
-    }
-
-    private Date getFirstUnitAddedStamp(){
-        PlanPartyElementsDao partyDao = setDaoSessionDB().getPlanPartyElementsDao();
-        List<PlanPartyElements> planPartyList = partyDao.queryBuilder().list();
-        PlanPartyElements lastElement = planPartyList.get(planPartyList.size() -1);
-        Date firstAdded;
-        if(lastElement.getFirstUnitAddedDate() == null){
-            firstAdded = null;
-        } else {
-            firstAdded = lastElement.getFirstUnitAddedDate();
-        }
-        return firstAdded;
     }
 
     private Status isSessionOver(){

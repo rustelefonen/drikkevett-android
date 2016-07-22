@@ -4,10 +4,12 @@ import android.content.Context;
 
 import rustelefonen.no.drikkevett_android.db.DaoMaster;
 import rustelefonen.no.drikkevett_android.db.DaoSession;
+import rustelefonen.no.drikkevett_android.db.DayAfterBACDao;
 import rustelefonen.no.drikkevett_android.db.GraphHistoryDao;
 import rustelefonen.no.drikkevett_android.db.HistoryDao;
 import rustelefonen.no.drikkevett_android.db.InformationCategoryDao;
 import rustelefonen.no.drikkevett_android.db.InformationDao;
+import rustelefonen.no.drikkevett_android.db.PlanPartyElements;
 import rustelefonen.no.drikkevett_android.db.PlanPartyElementsDao;
 import rustelefonen.no.drikkevett_android.db.UserDao;
 
@@ -47,10 +49,9 @@ public class SuperDao {
         return daoSession.getInformationDao();
     }
 
-    public PlanPartyElementsDao getPlanPartyElementsDao() {
-        return daoSession.getPlanPartyElementsDao();
-    }
+    public PlanPartyElementsDao getPlanPartyElementsDao(){ return daoSession.getPlanPartyElementsDao(); }
 
+    public DayAfterBACDao getDayAfterBACDao() { return daoSession.getDayAfterBACDao(); }
 
     public void close() {
         helper.close();
