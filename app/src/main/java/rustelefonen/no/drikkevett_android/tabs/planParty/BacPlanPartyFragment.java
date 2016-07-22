@@ -461,7 +461,7 @@ public class BacPlanPartyFragment extends Fragment {
 
     private String liveUpdatePromille(double weight, String gender, Date firstUnitAddedTimeStamp){
         double sum = 0.0;
-
+        System.out.println("s");
         beersConsumed = 0;
         winesConsumed = 0;
         drinksConsumed = 0;
