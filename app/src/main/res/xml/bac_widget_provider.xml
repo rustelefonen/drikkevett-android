@@ -7,6 +7,5 @@
     android:updatePeriodMillis="180000"
     android:resizeMode="horizontal|vertical"
     android:previewImage="@drawable/beer">
-    <!--android:widgetCategory="keyguard"-->
 
 </appwidget-provider>
