@@ -4,17 +4,20 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.OpenableColumns;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.CursorLoader;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -36,6 +39,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.URI;
+import java.nio.channels.FileChannel;
 import java.util.List;
 
 import rustelefonen.no.drikkevett_android.db.User;
@@ -234,16 +242,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         super.onStart();
     }
 
-    private boolean hasImageAtPath (String path) {
-        File file = new File(path);
-        String[] okFileExtensions =  new String[] {"jpg", "png", "gif","jpeg"};
-
-        for (String extension : okFileExtensions) {
-            if (file.getName().toLowerCase().endsWith(extension)) return true;
-        }
-        return false;
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -254,10 +252,29 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         return super.onOptionsItemSelected(item);
     }
 
+    private static final int SELECT_IMAGE = 987;
+
     private void onLaunchGallery(View view) {
-        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        if (intent.resolveActivity(getPackageManager()) != null)
-            startActivityForResult(intent, 0);
+        Intent getImageFromGalleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+        startActivityForResult(getImageFromGalleryIntent, SELECT_IMAGE);
+    }
+
+    private void copyFile(File sourceFile, File destFile) {
+        if (!sourceFile.exists()) return;
+
+        FileChannel source;
+        FileChannel destination;
+        try {
+            source = new FileInputStream(sourceFile).getChannel();
+            destination = new FileOutputStream(destFile).getChannel();
+            if (source != null) {
+                destination.transferFrom(source, 0, source.size());
+            }
+            if (source != null) {
+                source.close();
+            }
+            destination.close();
+        } catch (IOException ignored) {}
     }
 
     public void onLaunchCamera(View view) {
@@ -275,10 +292,19 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
             Bitmap takenImage = BitmapFactory.decodeFile(takenPhotoUri.getPath());
             ImageView ivPreview = (ImageView) findViewById(R.id.profile_image);
             ivPreview.setImageBitmap(takenImage);
-        } else if (requestCode == 0) {
-            if (resultCode == RESULT_OK) {
+        } else if (requestCode == 987) {
+            Uri selectedImage = data.getData();
+            String[] filePathColumn = { MediaStore.Images.Media.DATA };
 
+            Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
+            String picturePath = null;
+            if (cursor != null) {
+                cursor.moveToFirst();
+                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                picturePath = cursor.getString(columnIndex);
+                cursor.close();
             }
+            if (picturePath != null) copyFile(new File(picturePath), new File(getPhotoFileUri(photoFileName).getPath()));
         }
     }
 

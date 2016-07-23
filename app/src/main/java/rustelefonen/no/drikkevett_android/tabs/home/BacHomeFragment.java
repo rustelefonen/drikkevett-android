@@ -81,26 +81,16 @@ public class BacHomeFragment extends Fragment{
     public TextView avgBacCountTextView;
     public TextView imageTextView;
 
-    public NestedScrollView nestedScrollView;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.bac_home_frag, container, false);
-
-        nestedScrollView = (NestedScrollView) view.findViewById(R.id.home_fragment_nested_scroll_view);
-        nestedScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
-            @Override
-            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-
-            }
-        });
 
         //addHistory();
         initWidgets(view);
         fillWidgets();
         fillPieChart();
         stylePieChart();
-        fireGoalDateReachedView();
+        //fireGoalDateReachedView();
 
         setHasOptionsMenu(true);
 
@@ -169,6 +159,12 @@ public class BacHomeFragment extends Fragment{
         }
     }
 
+    private boolean imageExist() {
+        Uri photoToInsert = getPhotoFileUri(photoFileName);
+        File file = new File(photoToInsert.getPath());
+        return file.exists();
+    }
+
     private String getUsername() {
         User user = ((MainActivity)getActivity()).getUser();
         if (user == null) return "Tom bruker";
@@ -199,7 +195,10 @@ public class BacHomeFragment extends Fragment{
     private void fillWidgets() {
         User user = ((MainActivity)getActivity()).getUser();
         quoteTextView.setText(getRandomQuote());
-        imageTextView.setText(user.getNickname());
+        if (imageExist()) {
+            imageTextView.setText(user.getNickname());
+        }
+
         insertImageIfExists();
 
         List<History> historyList = getHistoryList();
