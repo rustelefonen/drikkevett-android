@@ -318,7 +318,8 @@ public class BacCalcFragment extends android.support.v4.app.Fragment
         if (i < 1 && i > 24) hours = 1;
         hours = i;
 
-        if(hours == 1){
+        if(hours <= 1){
+            hours = 1;
             labelHours.setText("Promillen om " + hours + " time");
         } else {
             labelHours.setText("Promillen om " + hours + " timer");

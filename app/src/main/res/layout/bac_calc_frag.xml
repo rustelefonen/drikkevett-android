@@ -1,290 +1,329 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:background="@color/backgroundColor">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_marginTop="16dp"
         android:layout_height="match_parent"
         android:id="@+id/bacCalc"
         android:orientation="vertical"
         android:gravity="center">
-
-        <com.github.mikephil.charting.charts.PieChart
-            android:padding="16dp"
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:id="@+id/pie_chart_bac_calc">
-        </com.github.mikephil.charting.charts.PieChart>
-
-
-        <LinearLayout
-            android:id="@+id/view_pager_scroller"
+        <android.support.v7.widget.CardView
+            card_view:cardBackgroundColor="@color/cardColor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_below="@+id/pie_chart_bac_calc">
-
-            <android.support.v4.view.ViewPager
-                android:padding="16dp"
-                android:id="@+id/beer_scroll"
+            android:id="@+id/card_one_bacCALC"
+            card_view:cardUseCompatPadding="true"
+            card_view:cardElevation="4dp">
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="150dp">
-            </android.support.v4.view.ViewPager>
-
-            <RadioGroup
-                android:id="@+id/page_indicator_radio"
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_gravity="center">
-
-                <RadioButton
-                    android:id="@+id/radio_one"
-                    android:layout_weight="20"
-                    android:layout_width="10dp"
-                    android:layout_height="10dp"
-                    android:button="@android:color/transparent"
-                    android:background="@drawable/page_indicator_background"/>
-
+                android:gravity="center"
+                >
                 <LinearLayout
-                    android:layout_width="5dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="5"/>
+                    android:orientation="vertical"
+                    >
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_weight="25">
+                        <TextView
+                            android:textColor="@color/textColor"
+                            android:text="0"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/textViewBeerUnits"
+                            android:gravity="center"
+                            android:layout_gravity="center"
+                            android:textSize="32sp"
+                            android:minWidth="75dp"
+                            />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/greyTextColor"
+                            android:textSize="10sp"
+                            android:layout_gravity="center"
+                            android:text="Øl"/>
+                        <LinearLayout
+                            android:layout_marginTop="8dp"
+                            android:layout_width="10dp"
+                            android:layout_height="3dp"
+                            android:layout_gravity="center"
+                            android:background="@color/beerColor"
+                            />
 
-                <RadioButton
-                    android:id="@+id/radio_two"
-                    android:layout_weight="20"
-                    android:layout_width="10dp"
-                    android:layout_height="10dp"
-                    android:button="@android:color/transparent"
-                    android:background="@drawable/page_indicator_background"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="25"
+                        android:orientation="vertical">
 
+                        <TextView
+                            android:textColor="@color/textColor"
+                            android:text="0"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/textViewWineUnits"
+                            android:gravity="center"
+                            android:layout_gravity="center"
+                            android:textSize="32sp"
+                            android:minWidth="75dp"
+                            />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="Vin"
+                            android:textSize="10sp"
+                            android:textColor="@color/greyTextColor"/>
+                        <LinearLayout
+                            android:layout_marginTop="8dp"
+                            android:layout_width="10dp"
+                            android:layout_height="3dp"
+                            android:layout_gravity="center"
+                            android:background="@color/wineColor"/>
+                    </LinearLayout>
+                </LinearLayout>
                 <LinearLayout
-                    android:layout_width="5dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="5"/>
+                    android:orientation="vertical">
+                    <com.github.mikephil.charting.charts.PieChart
+                        android:padding="16dp"
+                        android:layout_width="175dp"
+                        android:layout_height="175dp"
+                        android:id="@+id/pie_chart_bac_calc">
+                    </com.github.mikephil.charting.charts.PieChart>
+                    <TextView
+                    android:text="Kos deg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/text_view_quotes"
+                    android:layout_gravity="center"
+                    android:textColor="@color/textColor"
+                    android:textSize="16sp"
+                    />
 
-                <RadioButton
-                    android:id="@+id/radio_three"
-                    android:layout_weight="20"
-                    android:layout_width="10dp"
-                    android:layout_height="10dp"
-                    android:button="@android:color/transparent"
-                    android:background="@drawable/page_indicator_background"/>
-
+                </LinearLayout>
                 <LinearLayout
-                    android:layout_width="5dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="5"/>
+                    android:orientation="vertical"
+                    >
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="25"
+                        android:orientation="vertical">
 
-                <RadioButton
-                    android:id="@+id/radio_four"
-                    android:layout_weight="20"
-                    android:layout_width="10dp"
-                    android:layout_height="10dp"
-                    android:button="@android:color/transparent"
-                    android:background="@drawable/page_indicator_background"/>
+                        <TextView
+                            android:textColor="@color/textColor"
+                            android:text="0"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/textViewDrinkUnits"
+                            android:gravity="center"
+                            android:layout_gravity="center"
+                            android:textSize="32sp"
+                            android:minWidth="75dp"
+                            />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/greyTextColor"
+                            android:layout_gravity="center"
+                            android:text="Drink" />
+                        <LinearLayout
+                            android:layout_marginTop="8dp"
+                            android:layout_width="10dp"
+                            android:layout_height="3dp"
+                            android:layout_gravity="center"
+                            android:background="@color/drinkColor"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="25"
+                        android:orientation="vertical">
 
-                <LinearLayout
-                    android:layout_width="5dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="5"/>
-            </RadioGroup>
-        </LinearLayout>
-        <!--<TextView-->
-            <!--android:padding="16dp"-->
-            <!--android:text="Kos deg"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_centerHorizontal="true"-->
-            <!--android:id="@+id/text_view_quotes"-->
-            <!--android:gravity="center"-->
-            <!--android:textColor="@color/textColor"-->
-            <!--android:textSize="16sp"-->
-            <!--android:layout_below="@+id/beer_scroll"-->
-            <!--/>-->
-
-        <LinearLayout
+                        <TextView
+                            android:textColor="@color/textColor"
+                            android:text="0"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/textViewShotUnits"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:textSize="32sp"
+                            android:minWidth="75dp"
+                            />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/greyTextColor"
+                            android:layout_gravity="center"
+                            android:text="Shot"/>
+                        <LinearLayout
+                            android:layout_marginTop="8dp"
+                            android:layout_width="10dp"
+                            android:layout_height="3dp"
+                            android:layout_gravity="center"
+                            android:background="@color/shotColor"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+            </android.support.v7.widget.CardView>
+        <android.support.v7.widget.CardView
+            card_view:cardBackgroundColor="@color/cardColor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="16dp"
-            android:gravity="center"
-            android:layout_below="@+id/view_pager_scroller">
-            <Button
-                android:text="Fjern"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/btnRemove"
-                android:layout_marginRight="50dp"
-                android:background="@color/redSuper"
-                android:textColor="@color/textColor"/>
-
-            <Button
-                android:text="Legg til"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/addBtn"
-                android:background="@color/greenSuper"
-                android:textColor="@color/textColor"/>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:layout_marginTop="20dp">
+            android:id="@+id/card_two_bacCALC"
+            card_view:cardUseCompatPadding="true"
+            card_view:cardElevation="4dp">
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:id="@+id/view_pager_scroller"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_weight="25">
+                android:layout_below="@+id/pie_chart_bac_calc">
 
-                <TextView
-                    android:textColor="@color/textColor"
-                    android:text="0"
+                <android.support.v4.view.ViewPager
+                    android:padding="16dp"
+                    android:id="@+id/beer_scroll"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp">
+                </android.support.v4.view.ViewPager>
+
+                <RadioGroup
+                    android:id="@+id/page_indicator_radio"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/textViewBeerUnits"
-                    android:gravity="center"
-                    android:layout_gravity="center"
-                    android:textSize="32sp"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/greyTextColor"
-                    android:textSize="10sp"
-                    android:layout_gravity="center"
-                    android:text="Øl"/>
-                <LinearLayout
-                    android:layout_marginTop="8dp"
-                    android:layout_width="10dp"
-                    android:layout_height="3dp"
-                    android:layout_gravity="center"
-                    android:background="@color/beerColor"/>
+                    android:orientation="horizontal"
+                    android:layout_gravity="center">
 
+                    <RadioButton
+                        android:id="@+id/radio_one"
+                        android:layout_weight="20"
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"
+                        android:button="@android:color/transparent"
+                        android:background="@drawable/page_indicator_background"/>
+
+                    <LinearLayout
+                        android:layout_width="5dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="5"/>
+
+                    <RadioButton
+                        android:id="@+id/radio_two"
+                        android:layout_weight="20"
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"
+                        android:button="@android:color/transparent"
+                        android:background="@drawable/page_indicator_background"/>
+
+                    <LinearLayout
+                        android:layout_width="5dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="5"/>
+
+                    <RadioButton
+                        android:id="@+id/radio_three"
+                        android:layout_weight="20"
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"
+                        android:button="@android:color/transparent"
+                        android:background="@drawable/page_indicator_background"/>
+
+                    <LinearLayout
+                        android:layout_width="5dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="5"/>
+
+                    <RadioButton
+                        android:id="@+id/radio_four"
+                        android:layout_weight="20"
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"
+                        android:button="@android:color/transparent"
+                        android:background="@drawable/page_indicator_background"/>
+
+                    <LinearLayout
+                        android:layout_width="5dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="5"/>
+                </RadioGroup>
             </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="25"
-                android:orientation="vertical">
-
-                <TextView
-                    android:textColor="@color/textColor"
-                    android:text="0"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/textViewWineUnits"
-                    android:gravity="center"
-                    android:layout_gravity="center"
-                    android:textSize="32sp"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="Vin"
-                    android:textSize="10sp"
-                    android:textColor="@color/greyTextColor"/>
-                <LinearLayout
-                    android:layout_marginTop="8dp"
-                    android:layout_width="10dp"
-                    android:layout_height="3dp"
-                    android:layout_gravity="center"
-                    android:background="@color/wineColor"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="25"
-                android:orientation="vertical">
-
-                <TextView
-                    android:textColor="@color/textColor"
-                    android:text="0"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/textViewDrinkUnits"
-                    android:gravity="center"
-                    android:layout_gravity="center"
-                    android:textSize="32sp"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/greyTextColor"
-                    android:layout_gravity="center"
-                    android:text="Drink" />
-                <LinearLayout
-                    android:layout_marginTop="8dp"
-                    android:layout_width="10dp"
-                    android:layout_height="3dp"
-                    android:layout_gravity="center"
-                    android:background="@color/drinkColor"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="25"
-                android:orientation="vertical">
-
-                <TextView
-                    android:textColor="@color/textColor"
-                    android:text="0"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/textViewShotUnits"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:textSize="32sp"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/greyTextColor"
-                    android:layout_gravity="center"
-                    android:text="Shot"/>
-                <LinearLayout
-                    android:layout_marginTop="8dp"
-                    android:layout_width="10dp"
-                    android:layout_height="3dp"
-                    android:layout_gravity="center"
-                    android:background="@color/shotColor"/>
-            </LinearLayout>
-        </LinearLayout>
-
-        <TextView
-            android:textColor="@color/textColor"
-            android:text="Promillen om 1 time"
-            android:layout_width="wrap_content"
+            </android.support.v7.widget.CardView>
+        <android.support.v7.widget.CardView
+            card_view:cardBackgroundColor="@color/cardColor"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/textViewHours"
-            android:layout_above="@+id/seekBarBacCalc"
-            android:layout_centerHorizontal="true"
-            android:gravity="center"
-            android:layout_marginTop="40dp"
-            />
+            android:id="@+id/card_three_bacCALC"
+            card_view:cardUseCompatPadding="true"
+            card_view:cardElevation="4dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                >
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="16dp"
+                    android:gravity="center"
+                    >
+                    <Button
+                        android:text="Fjern"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/btnRemove"
+                        android:layout_marginRight="50dp"
+                        android:background="@color/redSuper"
+                        android:textColor="@color/textColor"/>
 
-        <SeekBar
-            android:layout_width="272dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/seekBarBacCalc"
-            android:layout_marginBottom="67dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignLeft="@+id/btnRemove"
-            android:layout_alignStart="@+id/btnRemove"
-            android:layout_alignRight="@+id/addBtn"
-            android:layout_alignEnd="@+id/addBtn"
-            android:max="24"
-            />
-
+                    <Button
+                        android:text="Legg til"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/addBtn"
+                        android:background="@color/greenSuper"
+                        android:textColor="@color/textColor"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+                        android:textColor="@color/textColor"
+                        android:text="Promillen om 1 time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/textViewHours"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="15dp"
+                        />
+                    <SeekBar
+                        android:layout_width="272dp"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/seekBarBacCalc"
+                        android:layout_marginBottom="20dp"
+                        android:max="24"
+                        />
+                </LinearLayout>
+            </LinearLayout>
+            </android.support.v7.widget.CardView>
     </LinearLayout>
-
-
 </android.support.v4.widget.NestedScrollView>
