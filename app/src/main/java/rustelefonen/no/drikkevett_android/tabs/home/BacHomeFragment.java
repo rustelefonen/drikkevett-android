@@ -8,8 +8,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.NestedScrollView;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -23,31 +21,25 @@ import android.widget.TextView;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
-import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.highlight.Highlight;
-import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
 import java.io.File;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import rustelefonen.no.drikkevett_android.GoalReachedActivity;
+import rustelefonen.no.drikkevett_android.GoalReached.GoalReachedActivity;
 import rustelefonen.no.drikkevett_android.MainActivity;
 import rustelefonen.no.drikkevett_android.R;
 import rustelefonen.no.drikkevett_android.db.History;
 import rustelefonen.no.drikkevett_android.db.HistoryDao;
 import rustelefonen.no.drikkevett_android.db.User;
-import rustelefonen.no.drikkevett_android.db.UserDao;
 import rustelefonen.no.drikkevett_android.util.NavigationUtil;
 
 import static rustelefonen.no.drikkevett_android.tabs.home.HistoryCalculator.getLastMonthAverageBac;
@@ -56,7 +48,6 @@ import static rustelefonen.no.drikkevett_android.tabs.home.HistoryCalculator.get
 import static rustelefonen.no.drikkevett_android.tabs.home.HistoryCalculator.getTotalAverageHighestBac;
 import static rustelefonen.no.drikkevett_android.tabs.home.HistoryCalculator.getTotalCost;
 import static rustelefonen.no.drikkevett_android.tabs.home.HistoryCalculator.getTotalHighestBac;
-import static rustelefonen.no.drikkevett_android.util.DateUtil.getMonthName;
 
 public class BacHomeFragment extends Fragment{
 
@@ -90,9 +81,11 @@ public class BacHomeFragment extends Fragment{
         fillWidgets();
         fillPieChart();
         stylePieChart();
-        //fireGoalDateReachedView();
+        fireGoalDateReachedView();
 
         setHasOptionsMenu(true);
+
+
 
         return view;
     }
@@ -320,10 +313,14 @@ public class BacHomeFragment extends Fragment{
     private void fireGoalDateReachedView(){
         User user = ((MainActivity)getActivity()).getUser();
         Date currentDate = new Date();
+
         if(currentDate.after(user.getGoalDate())){
             Intent intent = new Intent(getContext(), GoalReachedActivity.class);
             intent.putExtra(GoalReachedActivity.ID, user);
             startActivity(intent);
         }
+        //Intent intent = new Intent(getContext(), GoalReachedActivity.class);
+        //intent.putExtra(GoalReachedActivity.ID, user);
+        //startActivity(intent);
     }
 }
