@@ -61,7 +61,6 @@
                     card_view:cardBackgroundColor="@color/cardColor"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/image_with_text"
                     android:id="@+id/greeting_card_view"
                     card_view:cardUseCompatPadding="true"
                     card_view:cardElevation="4dp">
@@ -73,6 +72,24 @@
                         android:textColor="@color/textColor"
                         android:layout_height="match_parent"
                         android:id="@+id/quote_text_view"/>
+
+                </android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView
+                    android:id="@+id/home_no_data_pie_chart"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    card_view:cardUseCompatPadding="true"
+                    card_view:cardElevation="4dp"
+                    card_view:cardBackgroundColor="@color/cardColor"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:padding="16dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Her vil det vises en oversikt over ditt mål, når noen kvelder har blitt lagt til."
+                        android:textColor="@color/textColor"/>
 
                 </android.support.v7.widget.CardView>
 
@@ -103,26 +120,25 @@
                             android:id="@+id/graph_home_text_view"
                             android:layout_toLeftOf="@+id/goal_pie_chart"
                             android:layout_centerVertical="true"/>
-
-
-
-                        <!--<LinearLayout-->
-                            <!--android:layout_width="wrap_content"-->
-                            <!--android:layout_height="wrap_content">-->
-                            <!--<TextView-->
-                                <!--android:layout_width="wrap_content"-->
-                                <!--android:layout_height="wrap_content"-->
-                                <!--android:textColor="@color/textColor"-->
-                                <!--android:text="Denne grafen viser hvordan det står til med målet ditt. Ønsker du å vite mer klikk på fargene"-->
-                                <!--android:id="@+id/graph_home_text_view" />-->
-                        <!--</LinearLayout>-->
-                        <!--<LinearLayout-->
-                            <!--android:layout_width="100dp"-->
-                            <!--android:layout_height="100dp">-->
-
-                            <!---->
-                        <!--</LinearLayout>-->
                     </RelativeLayout>
+                </android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView
+                    android:id="@+id/home_no_data_bar_chart"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    card_view:cardUseCompatPadding="true"
+                    card_view:cardElevation="4dp"
+                    card_view:cardBackgroundColor="@color/cardColor"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:padding="16dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Her vil det vises en oversikt over dine kvelder når de har blitt lagt til."
+                        android:textColor="@color/textColor"/>
+
                 </android.support.v7.widget.CardView>
 
                 <android.support.v7.widget.CardView
@@ -133,44 +149,40 @@
                     card_view:cardBackgroundColor="@color/cardColor"
                     card_view:cardElevation="4dp">
 
-                    <RelativeLayout
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
 
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
-                            android:id="@+id/bar_chart_month"
-                            android:paddingLeft="16dp"
-                            android:paddingTop="16dp">
+                            android:id="@+id/bar_chart_month">
 
                             <TextView
+                                android:id="@+id/home_bar_chart_year"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textSize="24sp"
-                                android:text="Juni"
                                 android:textColor="@color/textColor"
                                 android:fontFamily="sans-serif-light"/>
                             <TextView
+                                android:id="@+id/home_bar_chart_month"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="8dp"
-                                android:text="2016"
                                 android:textColor="@color/textColor"
                                 android:textSize="10sp"
                                 />
                         </LinearLayout>
-
                         <com.github.mikephil.charting.charts.BarChart
-                            android:layout_below="@id/bar_chart_month"
                             android:layout_width="match_parent"
                             android:layout_height="200dp"
-                            android:id="@+id/history_bar_chart"
-                            android:layout_margin="16dp">
+                            android:id="@+id/history_bar_chart">
                         </com.github.mikephil.charting.charts.BarChart>
-
-                    </RelativeLayout>
+                    </LinearLayout>
                 </android.support.v7.widget.CardView>
 
                 <android.support.v7.widget.CardView
@@ -221,7 +233,7 @@
                                     android:textSize="24sp"
                                     android:layout_gravity="center"
                                     android:fontFamily="sans-serif-light"
-                                    android:text="2000,-"
+                                    android:text="0,-"
                                     android:id="@+id/total_count_text_view"
                                     />
                                 <TextView
@@ -248,7 +260,7 @@
                                     android:layout_gravity="center"
                                     android:textSize="24sp"
                                     android:fontFamily="sans-serif-light"
-                                    android:text="2,3"
+                                    android:text="0.0"
                                     android:id="@+id/total_bac_count_text_view"
                                     />
                                 <TextView
@@ -272,7 +284,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:textColor="@color/textColor"
-                                    android:text="0,4"
+                                    android:text="0.0"
                                     android:textSize="24sp"
                                     android:fontFamily="sans-serif-light"
                                     android:id="@+id/avg_bac_count_text_view"
@@ -341,7 +353,7 @@
                                     android:textSize="24sp"
                                     android:layout_gravity="center"
                                     android:fontFamily="sans-serif-light"
-                                    android:text="2000,-"
+                                    android:text="0,-"
                                     android:id="@+id/last_month_cost_text_view"
                                     />
                                 <TextView
@@ -367,7 +379,7 @@
                                     android:layout_gravity="center"
                                     android:textSize="24sp"
                                     android:fontFamily="sans-serif-light"
-                                    android:text="2,3"
+                                    android:text="0.0"
                                     android:id="@+id/last_month_highest_bac_text_view"
                                     />
                                 <TextView
@@ -390,7 +402,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:textColor="@color/textColor"
-                                    android:text="0,4"
+                                    android:text="0.0"
                                     android:textSize="24sp"
                                     android:fontFamily="sans-serif-light"
                                     android:id="@+id/last_month_avg_bac_text_view"

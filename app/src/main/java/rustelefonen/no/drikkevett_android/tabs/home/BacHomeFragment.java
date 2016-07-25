@@ -8,8 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.NestedScrollView;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -23,14 +22,10 @@ import android.widget.TextView;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
-import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.highlight.Highlight;
-import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
 import java.io.File;
@@ -47,7 +42,7 @@ import rustelefonen.no.drikkevett_android.R;
 import rustelefonen.no.drikkevett_android.db.History;
 import rustelefonen.no.drikkevett_android.db.HistoryDao;
 import rustelefonen.no.drikkevett_android.db.User;
-import rustelefonen.no.drikkevett_android.db.UserDao;
+import rustelefonen.no.drikkevett_android.util.DateUtil;
 import rustelefonen.no.drikkevett_android.util.NavigationUtil;
 
 import static rustelefonen.no.drikkevett_android.tabs.home.HistoryCalculator.getLastMonthAverageBac;
@@ -56,7 +51,6 @@ import static rustelefonen.no.drikkevett_android.tabs.home.HistoryCalculator.get
 import static rustelefonen.no.drikkevett_android.tabs.home.HistoryCalculator.getTotalAverageHighestBac;
 import static rustelefonen.no.drikkevett_android.tabs.home.HistoryCalculator.getTotalCost;
 import static rustelefonen.no.drikkevett_android.tabs.home.HistoryCalculator.getTotalHighestBac;
-import static rustelefonen.no.drikkevett_android.util.DateUtil.getMonthName;
 
 public class BacHomeFragment extends Fragment{
 
@@ -81,11 +75,19 @@ public class BacHomeFragment extends Fragment{
     public TextView avgBacCountTextView;
     public TextView imageTextView;
 
+    public CardView noDataBarChartCardView;
+    public CardView historyCardView;
+    public CardView noDataPieChart;
+    public CardView goalCardView;
+
+    public TextView barChartMonth;
+    public TextView barChartYear;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.bac_home_frag, container, false);
 
-        //addHistory();
+        addHistory();
         initWidgets(view);
         fillWidgets();
         fillPieChart();
@@ -190,6 +192,12 @@ public class BacHomeFragment extends Fragment{
         totalBacCountTextView = (TextView) view.findViewById(R.id.total_bac_count_text_view);
         avgBacCountTextView = (TextView) view.findViewById(R.id.avg_bac_count_text_view);
         imageTextView = (TextView) view.findViewById(R.id.myImageViewText);
+        noDataBarChartCardView = (CardView) view.findViewById(R.id.home_no_data_bar_chart);
+        historyCardView = (CardView) view.findViewById(R.id.history_card_view);
+        noDataPieChart = (CardView) view.findViewById(R.id.home_no_data_pie_chart);
+        goalCardView = (CardView) view.findViewById(R.id.goal_card_view);
+        barChartYear = (TextView) view.findViewById(R.id.home_bar_chart_year);
+        barChartMonth = (TextView) view.findViewById(R.id.home_bar_chart_month);
     }
 
     private void fillWidgets() {
@@ -219,6 +227,27 @@ public class BacHomeFragment extends Fragment{
         BarChartController chartController = new BarChartController(historyBarChart, user, getHistoryList());
         chartController.setData();
         chartController.styleBarChart();
+
+        if (historyList.size() > 0) {
+            noDataBarChartCardView.setVisibility(View.GONE);
+            noDataPieChart.setVisibility(View.GONE);
+            historyCardView.setVisibility(View.VISIBLE);
+            goalCardView.setVisibility(View.VISIBLE);
+            Date now = new Date();
+            barChartMonth.setText(DateUtil.getMonthOfDate(now));
+            barChartYear.setText(DateUtil.getYearOfDate(now));
+        } else {
+            noDataBarChartCardView.setVisibility(View.VISIBLE);
+            noDataPieChart.setVisibility(View.VISIBLE);
+            historyCardView.setVisibility(View.GONE);
+            goalCardView.setVisibility(View.GONE);
+        }
+    }
+
+    private int getCurrentMonth() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        return calendar.get(Calendar.MONTH);
     }
 
     private List<History> getHistoryList() {
@@ -226,7 +255,16 @@ public class BacHomeFragment extends Fragment{
         HistoryDao historyDao = superDao.getHistoryDao();
         List<History> historyList = historyDao.queryBuilder().list();
         superDao.close();
-        return historyList;
+
+        List<History> historiesInThisMonth = new ArrayList<>();
+        int currentMonth = getCurrentMonth();
+
+        for (History history : historyList) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(history.getStartDate());
+            if (calendar.get(Calendar.MONTH) == currentMonth) historiesInThisMonth.add(history);
+        }
+        return historiesInThisMonth;
     }
 
     private void addHistory() {

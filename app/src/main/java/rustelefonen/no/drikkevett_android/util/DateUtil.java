@@ -66,6 +66,18 @@ public class DateUtil {
         return monthString;
     }
 
+    public static String getYearOfDate(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        return cal.get(Calendar.YEAR) + "";
+    }
+
+    public static String getMonthOfDate(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        return getMonthName(cal.get(Calendar.MONTH));
+    }
+
     public static String getMonthName(int month) {
         switch (month) {
             case 0:

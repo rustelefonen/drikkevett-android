@@ -60,6 +60,7 @@ public class BarChartController {
         barChart.getAxisLeft().setDrawAxisLine(false);
         barChart.getXAxis().setDrawAxisLine(false);
 
+        barChart.setVisibleXRange(6, 8);
 
 
         barChart.getXAxis().setAvoidFirstLastClipping(true);
