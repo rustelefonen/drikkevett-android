@@ -36,7 +36,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import rustelefonen.no.drikkevett_android.GoalReachedActivity;
+import rustelefonen.no.drikkevett_android.GoalReached.GoalReachedActivity;
 import rustelefonen.no.drikkevett_android.MainActivity;
 import rustelefonen.no.drikkevett_android.R;
 import rustelefonen.no.drikkevett_android.db.History;

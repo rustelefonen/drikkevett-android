@@ -47,6 +47,8 @@ public class HistoryActivity extends AppCompatActivity {
     public TextView historyCostTextView;
     public TextView historyHighestBacTextView;
 
+    public TextView historyHeader;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -114,6 +116,31 @@ public class HistoryActivity extends AppCompatActivity {
 
         historyCostTextView.setText(history.getSum() + "");
         historyHighestBacTextView.setText(history.getHighestBAC() + "");
+
+        historyHeader = (TextView) findViewById(R.id.history_header);
+        historyHeader.setText(getGraphTitle(history.getStartDate()));
+    }
+
+    private String getNorwegianDayOfWeek(int day) {
+        if (day == 1) return "Søndag";
+        else if (day == 2) return "Mandag";
+        else if (day == 3) return "Tirsdag";
+        else if (day == 4) return "Onsdag";
+        else if (day == 5) return "Torsdag";
+        else if (day == 6) return "Fredag";
+        else if (day == 7) return "Lørdag";
+        return "";
+    }
+
+    private String getGraphTitle(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        int weekDay = calendar.get(Calendar.DAY_OF_WEEK);
+        int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+        int month = calendar.get(Calendar.MONTH);
+        int year = calendar.get(Calendar.YEAR);
+
+        return getNorwegianDayOfWeek(weekDay) + " - " + dayOfMonth + "/" + month + "-" + year;
     }
 
     private Date getDateMinus15Minutes(Date currentDate) {

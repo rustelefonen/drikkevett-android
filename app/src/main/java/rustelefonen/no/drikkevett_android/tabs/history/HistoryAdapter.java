@@ -7,11 +7,14 @@ import android.graphics.drawable.GradientDrawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.Calendar;
 import java.util.List;
 
 import rustelefonen.no.drikkevett_android.R;
@@ -43,6 +46,17 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         return new ViewHolder(v, v.getContext());
     }
 
+    private String getNorwegianDayOfWeek(int day) {
+        if (day == 1) return "Søndag";
+        else if (day == 2) return "Mandag";
+        else if (day == 3) return "Tirsdag";
+        else if (day == 4) return "Onsdag";
+        else if (day == 5) return "Torsdag";
+        else if (day == 6) return "Fredag";
+        else if (day == 7) return "Lørdag";
+        return "";
+    }
+
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
         History history = historyList.get(position);
@@ -54,25 +68,23 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         String cashIndicator = ",-";
         viewHolder.getTotalCostTextView().setText(history.getSum() + cashIndicator);
 
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(history.getStartDate());
+        viewHolder.getDayOfWeekTextView().setText(getNorwegianDayOfWeek(calendar.get(Calendar.DAY_OF_WEEK)) + " brukte du");
+
         final View view = viewHolder.getView();
 
         if (history.getHighestBAC() > goalBac) {
             int red = ContextCompat.getColor(view.getContext(), R.color.historyRed);
-            ((GradientDrawable)viewHolder.getShapeView().getBackground())
-                    .setColor(red);
+            ((GradientDrawable)viewHolder.getShapeView().getBackground()).setColor(red);
             viewHolder.getHighestBacTextView().setTextColor(red);
             viewHolder.getTotalCostTextView().setTextColor(red);
         } else {
             int green = ContextCompat.getColor(view.getContext(), R.color.historyLineChartGreen);
-            ((GradientDrawable)viewHolder.getShapeView().getBackground())
-                    .setColor(green);
+            ((GradientDrawable)viewHolder.getShapeView().getBackground()).setColor(green);
             viewHolder.getHighestBacTextView().setTextColor(green);
             viewHolder.getTotalCostTextView().setTextColor(green);
         }
-
-
-
-
 
         view.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,6 +109,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         private final TextView monthTextView;
         private final TextView highestBacTextView;
         private final TextView totalCostTextView;
+        private final TextView dayOfWeekTextView;
 
         private final View shapeView;
 
@@ -112,6 +125,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
             monthTextView = (TextView) v.findViewById(R.id.history_row_month);
             highestBacTextView = (TextView) v.findViewById(R.id.history_row_highest_bac);
             totalCostTextView = (TextView) v.findViewById(R.id.history_row_total_cost);
+            dayOfWeekTextView = (TextView) v.findViewById(R.id.history_day_text_view);
 
             shapeView = v.findViewById(R.id.history_row_circle);
         }
@@ -138,6 +152,10 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
 
         public TextView getTotalCostTextView() {
             return totalCostTextView;
+        }
+
+        public TextView getDayOfWeekTextView() {
+            return dayOfWeekTextView;
         }
 
         public View getShapeView() {
