@@ -5,11 +5,14 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import rustelefonen.no.drikkevett_android.R;
@@ -34,6 +37,8 @@ public class UserRegistrationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.user_registration_layout);
         nicknameEditText = (EditText) findViewById(R.id.user_reg_nickname_edit_text);
+
+
         genderAutoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.user_reg_gender_auto_complete_text_view);
         genderAutoCompleteTextView.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, GENDERS));
 

@@ -46,7 +46,7 @@
                 android:id="@+id/user_reg_nickname_edit_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/beer"
+                android:drawableLeft="@drawable/ic_action_ic_person_48px"
                 android:hint="Kallenavn"
                 android:textColorHint="@color/greyTextColor"
                 android:textColor="@color/backgroundColor"
@@ -54,47 +54,52 @@
                 android:textSize="16sp"
                 android:layout_marginBottom="32dp"
                 android:maxLines="1"
-                android:imeOptions="actionNext"
-                android:lines="1" />
+                android:scrollHorizontally="false"
+                android:minLines="1"
+                android:inputType="textEmailAddress|textEmailSubject"
+                android:imeOptions="actionDone"
+                android:windowSoftInputMode="adjustResize"/>
 
             <AutoCompleteTextView
                 android:padding="8dp"
                 android:id="@+id/user_reg_gender_auto_complete_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/beer"
+                android:drawableLeft="@drawable/ic_action_gender_symbol"
                 android:background="@color/textColor"
                 android:hint="Kjønn"
                 android:textColorHint="@color/greyTextColor"
                 android:textSize="16sp"
                 android:layout_marginBottom="32dp"
                 android:focusable="false"
-                android:drawableRight="@drawable/beer"/>
+                android:drawableRight="@drawable/ic_action_ic_arrow_drop_down_48px"/>
 
             <EditText
                 android:padding="8dp"
                 android:id="@+id/user_reg_weight_edit_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/beer"
+                android:drawableLeft="@drawable/ic_action_weight_tool"
                 android:background="@color/textColor"
                 android:hint="Vekt"
                 android:textColorHint="@color/greyTextColor"
                 android:textSize="16sp"
                 android:layout_marginBottom="32dp"
-                android:inputType="numberDecimal"/>
+                android:inputType="numberDecimal"
+                android:windowSoftInputMode="adjustResize"/>
             <EditText
                 android:padding="8dp"
                 android:id="@+id/user_reg_age_edit_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/beer"
+                android:drawableLeft="@drawable/ic_action_events_calendar"
                 android:background="@color/textColor"
                 android:hint="Alder"
                 android:textColorHint="@color/greyTextColor"
                 android:textSize="16sp"
                 android:layout_marginBottom="32dp"
-                android:inputType="number"/>
+                android:inputType="number"
+                android:windowSoftInputMode="adjustResize"/>
 
             <Button
                 android:layout_width="match_parent"

@@ -18,7 +18,6 @@
             android:label="@string/title_activity_main"
             android:theme="@style/Theme.AppCompat.NoActionBar">
         </activity>
-        <activity android:name=".Settings"/>
         <activity android:name=".GoalReached.GoalReachedActivity"/>
         <activity android:name=".GoalReached.SetNewGoalActivity"/>
         <activity
