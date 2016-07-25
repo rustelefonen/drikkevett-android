@@ -5,6 +5,7 @@ import android.graphics.Color;
 
 import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -27,69 +28,136 @@ public class PartyUtil {
         this.context = context;
     }
 
+    public static double intervalCalc2(double timeDifference, int totalUnits){
+        double BACDownPerHour = 0.0;
+        double minute = (1.0 / 60.0);
+
+        // 1 MIN
+        if(timeDifference >= 0.0 && timeDifference <= minute){
+            BACDownPerHour = totalUnits * 0.01; // 50
+        }
+        // 2 MIN
+        if(timeDifference > (minute) && timeDifference <= (minute * 2)){
+            BACDownPerHour = totalUnits * 0.02; // 23.5
+        }
+        // 3 MIN
+        if(timeDifference > (minute * 2) && timeDifference <= (minute * 3)){
+            BACDownPerHour = totalUnits * 0.03; // 11.5
+        }
+        // 4 MIN
+        if(timeDifference > (minute * 3) && timeDifference <= (minute * 4)){
+            BACDownPerHour = totalUnits * 0.04; // 6.8
+        }
+        // 5 MIN
+        if(timeDifference > (minute * 4) && timeDifference <= (minute * 5)){
+            BACDownPerHour = totalUnits * 0.05; // 4.8
+        }
+        // 6 MIN
+        if(timeDifference > (minute * 5) && timeDifference <= (minute * 6)){
+            BACDownPerHour = totalUnits * 0.06; // 3.5
+        }
+        // 7 MIN
+        if(timeDifference > (minute * 6) && timeDifference <= (minute * 7)){
+            BACDownPerHour = totalUnits * 0.07; // 2.55
+        }
+        // 8 MIN
+        if(timeDifference > (minute * 7) && timeDifference <= (minute * 8)){
+            BACDownPerHour = totalUnits * 0.08; // 2.0
+        }
+        // 9 MIN
+        if(timeDifference > (minute * 8) && timeDifference <= (minute * 9)){
+            BACDownPerHour = totalUnits * 0.09; // 1.5
+        }
+        // 10 MIN
+        if(timeDifference > (minute * 9) && timeDifference <= (minute * 10)){
+            BACDownPerHour = totalUnits * 0.10; // 1.15
+        }
+        // 11 MIN
+        if(timeDifference > (minute * 10) && timeDifference <= (minute * 11)){
+            BACDownPerHour = totalUnits * 0.11; // 0.85
+        }
+        // 12 MIN
+        if(timeDifference > (minute * 11) && timeDifference <= (minute * 12)){
+            BACDownPerHour = totalUnits * 0.12; // 0.53
+        }
+        // 13 MIN
+        if(timeDifference > (minute * 12) && timeDifference <= (minute * 13)){
+            BACDownPerHour = totalUnits * 0.13; // 0.33
+        }
+        // 14 MIN
+        if(timeDifference > (minute * 13) && timeDifference <= (minute * 14)){
+            BACDownPerHour = totalUnits * 0.14; // 0.28
+        }
+        // 15 MIN
+        if(timeDifference > (minute * 14) && timeDifference <= (minute * 15)){
+            BACDownPerHour = totalUnits * 0.15; // 0.20
+        }
+        return BACDownPerHour;
+    }
+
     public static double intervalCalc(double timeDifference){
         double BACDownPerHour = 0.0;
         double minute = 1 / 60;
 
         // 1 MIN
         if(timeDifference >= 0.0 && timeDifference <= minute){
-            BACDownPerHour = 50.0;
+            BACDownPerHour = 0.01; // 50
         }
         // 2 MIN
         if(timeDifference > (minute) && timeDifference <= (minute * 2)){
-            BACDownPerHour = 23.5;
+            BACDownPerHour = 0.02; // 23.5
         }
         // 3 MIN
         if(timeDifference > (minute * 2) && timeDifference <= (minute * 3)){
-            BACDownPerHour = 11.5;
+            BACDownPerHour = 0.03; // 11.5
         }
         // 4 MIN
         if(timeDifference > (minute * 3) && timeDifference <= (minute * 4)){
-            BACDownPerHour = 6.8;
+            BACDownPerHour = 0.04; // 6.8
         }
         // 5 MIN
         if(timeDifference > (minute * 4) && timeDifference <= (minute * 5)){
-            BACDownPerHour = 4.8;
+            BACDownPerHour = 0.05; // 4.8
         }
         // 6 MIN
         if(timeDifference > (minute * 5) && timeDifference <= (minute * 6)){
-            BACDownPerHour = 3.5;
+            BACDownPerHour = 0.06; // 3.5
         }
         // 7 MIN
         if(timeDifference > (minute * 6) && timeDifference <= (minute * 7)){
-            BACDownPerHour = 2.55;
+            BACDownPerHour = 0.07; // 2.55
         }
         // 8 MIN
         if(timeDifference > (minute * 7) && timeDifference <= (minute * 8)){
-            BACDownPerHour = 2.0;
+            BACDownPerHour = 0.08; // 2.0
         }
         // 9 MIN
         if(timeDifference > (minute * 8) && timeDifference <= (minute * 9)){
-            BACDownPerHour = 1.5;
+            BACDownPerHour = 0.09; // 1.5
         }
         // 10 MIN
         if(timeDifference > (minute * 9) && timeDifference <= (minute * 10)){
-            BACDownPerHour = 1.15;
+            BACDownPerHour = 0.09; // 1.15
         }
         // 11 MIN
         if(timeDifference > (minute * 10) && timeDifference <= (minute * 11)){
-            BACDownPerHour = 0.85;
+            BACDownPerHour = 0.10; // 0.85
         }
         // 12 MIN
         if(timeDifference > (minute * 11) && timeDifference <= (minute * 12)){
-            BACDownPerHour = 0.53;
+            BACDownPerHour = 0.11; // 0.53
         }
         // 13 MIN
         if(timeDifference > (minute * 12) && timeDifference <= (minute * 13)){
-            BACDownPerHour = 0.33;
+            BACDownPerHour = 0.12; // 0.33
         }
         // 14 MIN
         if(timeDifference > (minute * 13) && timeDifference <= (minute * 14)){
-            BACDownPerHour = 0.28;
+            BACDownPerHour = 0.13; // 0.28
         }
         // 15 MIN
         if(timeDifference > (minute * 14) && timeDifference <= (minute * 15)){
-            BACDownPerHour = 0.20;
+            BACDownPerHour = 0.14; // 0.20
         }
         return BACDownPerHour;
     }
