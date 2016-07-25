@@ -103,4 +103,11 @@
         Hvis du ønsker å fortsette med de samme statistikkene som før klikk på "Fortsett".\n\n
         Hvis ikke kan du starte applikasjonen helt på nytt ved å klikke på "Start på nytt".
     </string>
+    <string name="textNewGoal">
+        Her setter du deg et nytt mål og en ny ønsket promille!
+    </string>
+    <string name="underPlanParty_DA">
+        Her vil du se statistikk over den siste kvelden du har registrert i Planlegg Kvelden.\n\n
+        Gjennomfør en kveld for å se statistikk.
+    </string>
 </resources>

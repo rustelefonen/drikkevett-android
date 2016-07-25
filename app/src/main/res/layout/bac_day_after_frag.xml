@@ -468,15 +468,17 @@
                 android:layout_gravity="center"
                 android:textAlignment="center"
                 android:textSize="25dp"
+                android:padding="20dp"
                 />
             <TextView
-                android:text="Forklaring på blahlbaldflaglgsdalfds\ngasgasfa"
+                android:text="@string/underPlanParty_DA"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/textColor"
                 android:layout_gravity="center"
                 android:textAlignment="center"
                 android:textSize="15dp"
+                android:padding="20dp"
                 />
         </LinearLayout>
     </LinearLayout>

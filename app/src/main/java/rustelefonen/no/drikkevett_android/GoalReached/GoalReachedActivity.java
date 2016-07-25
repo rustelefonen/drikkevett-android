@@ -1,4 +1,4 @@
-package rustelefonen.no.drikkevett_android;
+package rustelefonen.no.drikkevett_android.GoalReached;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -16,12 +16,11 @@ import java.io.FileOutputStream;
 import java.util.Date;
 import java.util.List;
 
+import rustelefonen.no.drikkevett_android.R;
 import rustelefonen.no.drikkevett_android.db.History;
 import rustelefonen.no.drikkevett_android.db.HistoryDao;
 import rustelefonen.no.drikkevett_android.db.User;
-import rustelefonen.no.drikkevett_android.db.UserDao;
 import rustelefonen.no.drikkevett_android.settings.GoalSettingsActivity;
-import rustelefonen.no.drikkevett_android.tabs.home.BacHomeFragment;
 import rustelefonen.no.drikkevett_android.tabs.home.BarChartController;
 import rustelefonen.no.drikkevett_android.tabs.home.SuperDao;
 
@@ -57,7 +56,6 @@ public class GoalReachedActivity extends Activity {
         }
 
         fillWidgets();
-        haveUserSetNewGoal();
 
         btnScreenshot.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,7 +90,7 @@ public class GoalReachedActivity extends Activity {
         txtViewCosts.setText(getTotalCost(historyList) + ",-");
         txtViewHighestBAC.setText(getTotalHighestBac(historyList) + "");
         txtViewHighestAverageBAC.setText(getTotalAverageHighestBac(historyList) + "");
-        txtViewGreeting.setText(" hva fen ? ");
+        txtViewGreeting.setText(didUserReachGoal(getTotalAverageHighestBac(historyList), user));
 
         BarChartController chartController = new BarChartController(historyBarChart, user, getHistoryList());
         chartController.setData();
@@ -127,14 +125,14 @@ public class GoalReachedActivity extends Activity {
     }
 
     private void restartSettings(){
-        Intent intent = new Intent(this, GoalSettingsActivity.class);
-        intent.putExtra(GoalSettingsActivity.ID, user);
+        Intent intent = new Intent(this, SetNewGoalActivity.class);
+        intent.putExtra(SetNewGoalActivity.ID, user);
         startActivity(intent);
     }
 
     private void continueWithNewDate(){
-        Intent intent = new Intent(this, GoalSettingsActivity.class);
-        intent.putExtra(GoalSettingsActivity.ID, user);
+        Intent intent = new Intent(this, SetNewGoalActivity.class);
+        intent.putExtra(SetNewGoalActivity.ID, user);
         startActivity(intent);
     }
 

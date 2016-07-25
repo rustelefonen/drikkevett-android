@@ -19,7 +19,8 @@
             android:theme="@style/Theme.AppCompat.NoActionBar">
         </activity>
         <activity android:name=".Settings"/>
-        <activity android:name=".GoalReachedActivity"/>
+        <activity android:name=".GoalReached.GoalReachedActivity"/>
+        <activity android:name=".GoalReached.SetNewGoalActivity"/>
         <activity
             android:name=".tabs.history.HistoryActivity"
             android:label="Historikk"/>
