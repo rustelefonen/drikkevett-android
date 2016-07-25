@@ -78,6 +78,7 @@ public class PlanPartyDB {
         int w = 0;
         int d = 0;
         int s = 0;
+        int totalUnits = 0;
 
         DayAfterBACDao dayAfterDao = superDao.getDayAfterBACDao();
 
@@ -87,15 +88,19 @@ public class PlanPartyDB {
         for (DayAfterBAC dayAfter : dayAfterBACList) {
             if(dayAfter.getUnit().equals("Beer")){
                 b++;
+                totalUnits++;
             }
             if(dayAfter.getUnit().equals("Wine")){
                 w++;
+                totalUnits++;
             }
             if(dayAfter.getUnit().equals("Drink")){
                 d++;
+                totalUnits++;
             }
             if(dayAfter.getUnit().equals("Shot")){
                 s++;
+                totalUnits++;
             }
             double totalGrams = countingGrams(b, w, d, s);
 
@@ -104,19 +109,24 @@ public class PlanPartyDB {
             double newValueDouble = (double)timeDifference;
             double minToHours = newValueDouble / 60;
 
-            // FROM 0 - 4 mins
-            if(minToHours < 0.085){
-                sum = 0;
-            }
-            // FROM 5 - 15 MIN
-            if(minToHours > 0.085 && minToHours <= 0.25){
-                sum = totalGrams/(weight * setGenderScore(gender)) - (PartyUtil.intervalCalc(minToHours) * minToHours);
+            // FROM 0 - 15 MIN
+            if(minToHours <= 0.25){
+                try{
+                    sum = PartyUtil.intervalCalc2(minToHours, totalUnits);
+                    //sum = totalGrams/(weight * setGenderScore(gender)) - (PartyUtil.intervalCalc(minToHours) * minToHours);
+                } catch (NumberFormatException n){
+                    sum = 0;
+                }
             }
             if(minToHours > 0.25){
-                sum = Double.parseDouble(calculateBAC(gender, weight, totalGrams, minToHours));
+                try{
+                    sum = Double.parseDouble(calculateBAC(gender, weight, totalGrams, minToHours));
+                } catch(NumberFormatException e){
+                    sum = 0;
+                }
             }
         }
-        DecimalFormat numberFormat = new DecimalFormat("#.##");
+        DecimalFormat numberFormat = new DecimalFormat("#.###");
         return numberFormat.format(sum);
     }
 

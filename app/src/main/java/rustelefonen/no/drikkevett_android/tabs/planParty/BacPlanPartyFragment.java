@@ -140,14 +140,23 @@ public class BacPlanPartyFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        getActivity().getMenuInflater().inflate(R.menu.simple_menu, menu);
+        getActivity().getMenuInflater().inflate(R.menu.plan_party_menu, menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_contact:
+            case R.id.action_contact_PP:
                 NavigationUtil.navigateToContactInformation(getContext());
+                return false;
+            case R.id.action_clear_PP:
+                if(status == Status.NOT_RUNNING){
+                    emptyAllPlannedUnits();
+                }
+                if(status == Status.RUNNING){
+                    emptyAllConsumedUnits();
+                }
+                stateHandler(status);
                 return false;
         }
         return super.onOptionsItemSelected(item);
@@ -450,6 +459,24 @@ public class BacPlanPartyFragment extends Fragment {
         handleGraphHistory();
     }
 
+    private void emptyAllPlannedUnits(){
+        plannedBeers = 0;
+        plannedWines = 0;
+        plannedDrinks = 0;
+        plannedShots = 0;
+    }
+
+    private void emptyAllConsumedUnits(){
+        beersConsumed = 0;
+        winesConsumed = 0;
+        drinksConsumed = 0;
+        shotsConsumed = 0;
+
+        SuperDao superDao = new SuperDao(getContext());
+        DayAfterBACDao dayAfterBACDao = superDao.getDayAfterBACDao();
+        dayAfterBACDao.deleteAll();
+    }
+
     private void statusNotRunning(){
         // Reset all values
         plannedBeers = 0;
@@ -561,6 +588,9 @@ public class BacPlanPartyFragment extends Fragment {
         drinksConsumed = 0;
         shotsConsumed = 0;
         promilleBAC = 0;
+        firstUnitAdded = null;
+        startTimeStamp = null;
+        endTimeStamp = null;
     }
 
     private void setFirstUnitAdded(){

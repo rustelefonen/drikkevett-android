@@ -379,6 +379,7 @@ public class BacDayAfterFragment extends Fragment {
 
     private double getCurrentBAC(double weight, String gender, Date firstUnitAddedTimeStamp){
         double sum = 0.0;
+        int totalUnits = 0;
         consumBeers = 0;
         consumWines = 0;
         consumDrink = 0;
@@ -389,29 +390,31 @@ public class BacDayAfterFragment extends Fragment {
         for (DayAfterBAC dayAfter : dayAfterBACList) {
             if(dayAfter.getUnit().equals("Beer")){
                 consumBeers++;
+                totalUnits++;
             }
             if(dayAfter.getUnit().equals("Wine")){
                 consumWines++;
+                totalUnits++;
             }
             if(dayAfter.getUnit().equals("Drink")){
                 consumDrink++;
+                totalUnits++;
             }
             if(dayAfter.getUnit().equals("Shot")){
                 consumShots++;
+                totalUnits++;
             }
             double totalGrams = countingGrams(consumBeers, consumWines, consumDrink, consumShots);
             Date currentDate = new Date();
             long timeDifference = getDateDiff(firstUnitAddedTimeStamp, currentDate, TimeUnit.MINUTES);
             double newValueDouble = (double)timeDifference;
             double minToHours = newValueDouble / 60;
-            // FROM 0 - 4 mins
-            if(minToHours < 0.085){
-                sum = 0;
-            }
-            // FROM 5 - 15 MIN
-            if(minToHours > 0.085 && minToHours <= 0.25){
+
+            // FROM 0 - 15 MIN
+            if(minToHours <= 0.25){
                 try {
-                    sum = totalGrams/(weight * setGenderScore(gender)) - (PartyUtil.intervalCalc(minToHours) * minToHours);
+                    sum = PartyUtil.intervalCalc2(minToHours, totalUnits);
+                    //sum = totalGrams/(weight * setGenderScore(gender)) - (PartyUtil.intervalCalc(minToHours) * minToHours);
                 } catch (NumberFormatException e){
                     sum = 0;
                 }
