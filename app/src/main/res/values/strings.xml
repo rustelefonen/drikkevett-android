@@ -110,4 +110,39 @@
         Her vil du se statistikk over den siste kvelden du har registrert i Planlegg Kvelden.\n\n
         Gjennomfør en kveld for å se statistikk.
     </string>
+    <string name="home_guidance_title">Hjem</string>
+    <string name="home_guidance_text">
+        På hjemskjermen din vil du ha muligheten til å se hvordan du ligger ann med målene dine, sjekke statistikk over dine kvelder og sette et profilbilde
+    </string>
+    <string name="bac_calc_guidance_title">Promillekalkulator</string>
+    <string name="bac_calc_guidance_text">
+        Promillekalkulatoren gjør at du kan regne ut promillen din her og nå ved å stille inn antall timer fra start tidspunkt drikking til hvor du tror du er etter så så mange timer
+    </string>
+    <string name="plan_party_guidance_title">Planlegg Kvelden</string>
+    <string name="plan_party_guidance_text">
+        Denne funksjonen skal hjelpe deg med å planlegge kvelden din. Du skal kunne legge inn antall enheter du planlegger å drikke for så å "drikke" dem underveis
+    </string>
+    <string name="day_after_guidance_title">Dagen Derpå</string>
+    <string name="day_after_guidance_text">
+        Med funksjonen dagen derpå kan du se oversikt over forrige kvelds aktiviteter. Du kan også etterregistrere enheter.
+    </string>
+    <string name="history_guidance_title">Historikk</string>
+    <string name="history_guidance_text">
+        Historikken viser en oversikt over alle kveldene du har registrert med applikasjonen. Klikk på en enkelt kveld for mer detaljert data om kvelden din.
+    </string>
+    <string name="calculation_guidance_title">Utregning</string>
+    <string name="calculation_guidance_text">
+        Kvinner:
+        \nAlkohol i gram / (kroppsvekt i kg x 0,60) - \n(0,15 x timer fra drikkestart) = promille
+        \n\nMenn:
+        \nAlkohol i gram / (kroppsvekt i kg x 0,70) - \n(0,15 x timer fra drikkestart) = promille
+    </string>
+    <string name="info_units_guidance_title">Enheter</string>
+    <string name="info_widgets_guidance_title">Widgets</string>
+    <string name="info_widgets_guidance_text">
+        For å legge til widgets gjør du følgende:
+        1. blahblah
+        2. baagasdf
+        3. asdf as
+    </string>
 </resources>

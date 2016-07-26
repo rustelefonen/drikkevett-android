@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
 
+import rustelefonen.no.drikkevett_android.Guidance.Guidance;
 import rustelefonen.no.drikkevett_android.R;
 
 /**
@@ -26,6 +27,6 @@ public class WelcomeActivity extends AppCompatActivity {
     }
 
     public void guide(View view) {
-        Toast.makeText(this, "Her kommer det veiledning!", Toast.LENGTH_SHORT).show();
+        startActivity(new Intent(this, Guidance.class));
     }
 }
