@@ -110,10 +110,10 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
     public void selectDrawerItem(MenuItem menuItem) {
         int itemId = menuItem.getItemId();
-        if (itemId == R.id.drawer_view_switch) {
+        /*if (itemId == R.id.drawer_view_switch) {
             menuItem.setChecked(false);
             return;
-        }
+        }*/
         //menuItem.setChecked(true);
         mDrawer.closeDrawers();
         if (itemId == R.id.drawer_view_information) {
@@ -163,14 +163,14 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
         setupDrawerContent(nvDrawer);
 
-        nvDrawer.getMenu().findItem(R.id.drawer_view_switch).setActionView(new Switch(this));
+        /*nvDrawer.getMenu().findItem(R.id.drawer_view_switch).setActionView(new Switch(this));
         ((Switch) nvDrawer.getMenu().findItem(R.id.drawer_view_switch).getActionView()).setChecked(NotificationUtil.getSelected(this));
         ((Switch) nvDrawer.getMenu().findItem(R.id.drawer_view_switch).getActionView()).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 NotificationUtil.setSelected(getBaseContext(), isChecked);
             }
-        });
+        });*/
 
         drawerToggle = setupDrawerToggle();
 
