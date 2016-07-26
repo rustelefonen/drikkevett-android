@@ -18,9 +18,9 @@
             android:label="@string/title_activity_main"
             android:theme="@style/Theme.AppCompat.NoActionBar">
         </activity>
-        <activity android:name=".GoalReached.GoalReachedActivity"/>
-        <activity android:name=".GoalReached.SetNewGoalActivity"/>
-        <activity android:name=".Guidance.Guidance"/>
+        <activity android:name=".goalreached.GoalReachedActivity"/>
+        <activity android:name=".goalreached.SetNewGoalActivity"/>
+        <activity android:name=".extra.guidance.Guidance"/>
         <activity
             android:name=".tabs.history.HistoryActivity"
             android:label="Historikk"/>
