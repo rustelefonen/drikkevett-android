@@ -16,6 +16,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RadioGroup;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.animation.Easing;
@@ -55,7 +57,8 @@ import static rustelefonen.no.drikkevett_android.util.PartyUtil.countingGrams;
 import static rustelefonen.no.drikkevett_android.util.PartyUtil.getDateDiff;
 import static rustelefonen.no.drikkevett_android.util.PartyUtil.setGenderScore;
 
-public class BacPlanPartyFragment extends Fragment {
+public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageChangeListener,
+        RadioGroup.OnCheckedChangeListener {
 
     private double weight = 0;
     private String gender = "";
@@ -86,6 +89,8 @@ public class BacPlanPartyFragment extends Fragment {
     private Status_DB status_DB;
     private PartyUtil partyUtil;
 
+    public RadioGroup pageIndicatorGroup;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.bac_plan_party_frag, container, false);
@@ -95,6 +100,10 @@ public class BacPlanPartyFragment extends Fragment {
         partyUtil = new PartyUtil(getContext());
 
         initWidgets();
+        beerScroll = (ViewPager) v.findViewById(R.id.beer_scroll_plan_party);
+        beerScroll.setAdapter(new BeerScrollAdapter(getChildFragmentManager()));
+
+        setListeners();
         setUserData();
         status = isSessionOver();
         stateHandler(status);
@@ -130,8 +139,8 @@ public class BacPlanPartyFragment extends Fragment {
             }
         });
 
-        beerScroll = (ViewPager) v.findViewById(R.id.beer_scroll_plan_party);
-        beerScroll.setAdapter(new BeerScrollAdapter(this.getFragmentManager()));
+
+        pageIndicatorGroup.check(pageIndicatorGroup.getChildAt(0).getId());
 
         setHasOptionsMenu(true);
 
@@ -903,6 +912,38 @@ public class BacPlanPartyFragment extends Fragment {
                 ContextCompat.getColor(getContext(), R.color.shotColor)};
     }
 
+    /*
+    * PAGE INDICATOR
+    * */
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
+
+    @Override
+    public void onPageSelected(int position) {
+        if (position == 0) pageIndicatorGroup.check(R.id.radio_one_PP);
+        else if (position == 1) pageIndicatorGroup.check(R.id.radio_two_PP);
+        else if (position == 2) pageIndicatorGroup.check(R.id.radio_three_PP);
+        else if (position == 3) pageIndicatorGroup.check(R.id.radio_four__PP);
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {}
+
+    @Override
+    public void onCheckedChanged(RadioGroup group, int checkedId) {
+        int id = group.getCheckedRadioButtonId();
+        if (id == R.id.radio_one_PP) beerScroll.setCurrentItem(0);
+        else if (id == R.id.radio_two_PP) beerScroll.setCurrentItem(1);
+        else if (id == R.id.radio_three_PP) beerScroll.setCurrentItem(2);
+        else if (id == R.id.radio_four__PP) beerScroll.setCurrentItem(3);
+    }
+
+    private void setListeners() {
+        pageIndicatorGroup.setOnCheckedChangeListener(this);
+        beerScroll.addOnPageChangeListener(this);
+    }
+
     private void initWidgets(){
         beerLbl = (TextView) v.findViewById(R.id.textViewBeerPP);
         wineLbl = (TextView) v.findViewById(R.id.textViewWinePP);
@@ -914,5 +955,6 @@ public class BacPlanPartyFragment extends Fragment {
         statusBtn = (Button) v.findViewById(R.id.buttonStatusPP);
         planPartyRunning_LinLay = (LinearLayout) v.findViewById(R.id.layout_planPartyRunning_ID_PP);
         dayAfterRunning_LinLay = (LinearLayout) v.findViewById(R.id.layout_dayAfterRunning_ID_PP);
+        pageIndicatorGroup = (RadioGroup) v.findViewById(R.id.page_indicator_radio_PP);
     }
 }

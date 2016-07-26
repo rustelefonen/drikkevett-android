@@ -213,27 +213,90 @@
                         android:layout_height="150dp"
                         >
                     </android.support.v4.view.ViewPager>
+                    <RadioGroup
+                        android:id="@+id/page_indicator_radio_PP"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_gravity="center"
+                        android:padding="5dp"
+                        >
+                        <RadioButton
+                            android:id="@+id/radio_one_PP"
+                            android:layout_weight="20"
+                            android:layout_width="10dp"
+                            android:layout_height="10dp"
+                            android:button="@android:color/transparent"
+                            android:background="@drawable/page_indicator_background"/>
+
+                        <LinearLayout
+                            android:layout_width="5dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="5"/>
+
+                        <RadioButton
+                            android:id="@+id/radio_two_PP"
+                            android:layout_weight="20"
+                            android:layout_width="10dp"
+                            android:layout_height="10dp"
+                            android:button="@android:color/transparent"
+                            android:background="@drawable/page_indicator_background"/>
+
+                        <LinearLayout
+                            android:layout_width="5dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="5"/>
+
+                        <RadioButton
+                            android:id="@+id/radio_three_PP"
+                            android:layout_weight="20"
+                            android:layout_width="10dp"
+                            android:layout_height="10dp"
+                            android:button="@android:color/transparent"
+                            android:background="@drawable/page_indicator_background"/>
+
+                        <LinearLayout
+                            android:layout_width="5dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="5"/>
+
+                        <RadioButton
+                            android:id="@+id/radio_four__PP"
+                            android:layout_weight="20"
+                            android:layout_width="10dp"
+                            android:layout_height="10dp"
+                            android:button="@android:color/transparent"
+                            android:background="@drawable/page_indicator_background"/>
+
+                        <LinearLayout
+                            android:layout_width="5dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="5"/>
+                    </RadioGroup>
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
+                        android:padding="20dp"
                         >
                         <Button
                             android:text="Fjern"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/buttonRemovePP"
-                            android:background="@color/redSuper"
+                            android:background="@drawable/button_shape"
                             android:textColor="@color/textColor"
                             android:layout_marginRight="40dp"
+                            android:minWidth="120dp"
                             />
                         <Button
                             android:text="Legg til"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/buttonAddPP"
-                            android:background="@color/greenSuper"
+                            android:background="@drawable/green_button_shape"
                             android:textColor="@color/textColor"
+                            android:minWidth="120dp"
                             />
                     </LinearLayout>
                 </LinearLayout>
