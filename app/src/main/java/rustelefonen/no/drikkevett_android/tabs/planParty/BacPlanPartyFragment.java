@@ -473,6 +473,7 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
         plannedWines = 0;
         plannedDrinks = 0;
         plannedShots = 0;
+        colorsUnitLabels();
     }
 
     private void emptyAllConsumedUnits(){
@@ -480,6 +481,7 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
         winesConsumed = 0;
         drinksConsumed = 0;
         shotsConsumed = 0;
+        colorsUnitLabels();
 
         SuperDao superDao = new SuperDao(getContext());
         DayAfterBACDao dayAfterBACDao = superDao.getDayAfterBACDao();

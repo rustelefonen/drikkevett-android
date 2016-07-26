@@ -46,6 +46,7 @@ import java.net.URI;
 import java.nio.channels.FileChannel;
 import java.util.List;
 
+import rustelefonen.no.drikkevett_android.Guidance.Guidance;
 import rustelefonen.no.drikkevett_android.db.User;
 import rustelefonen.no.drikkevett_android.db.UserDao;
 import rustelefonen.no.drikkevett_android.information.InformationCategoryActivity;
@@ -128,6 +129,10 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
             startActivity(intent);
         } else if (itemId == R.id.nav_third_fragment) {
             Intent intent = new Intent(this, GoalSettingsActivity.class);
+            intent.putExtra(GoalSettingsActivity.ID, getUser());
+            startActivity(intent);
+        } else if (itemId == R.id.nav_fourth_activity) {
+            Intent intent = new Intent(this, Guidance.class);
             intent.putExtra(GoalSettingsActivity.ID, getUser());
             startActivity(intent);
         }
