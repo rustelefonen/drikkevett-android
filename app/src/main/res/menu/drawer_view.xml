@@ -34,6 +34,9 @@
                 <item
                     android:id="@+id/nav_fifth_fragment"
                     android:title="Veiledning"/>
+                <item
+                    android:id="@+id/nav_sixth_fragment"
+                    android:title="Send spørsmål"/>
             </group>
         </menu>
     </item>

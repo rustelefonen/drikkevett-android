@@ -42,4 +42,32 @@
         <item>Står til?</item>
         <item>Läget?</item>
     </string-array>
+    <string-array name="genders">
+        <item>Velg Kjønn</item>
+        <item>Mann</item>
+        <item>Kvinne</item>
+        <item>Annet</item>
+    </string-array>
+    <string-array name="counties">
+        <item>Velg Fylke</item>
+        <item>Akershus</item>
+        <item>Aust-Agder</item>
+        <item>Buskerud</item>
+        <item>Finnmark</item>
+        <item>Hedmark</item>
+        <item>Hordaland</item>
+        <item>Møre og Romsdal</item>
+        <item>Nord-Trøndelag</item>
+        <item>Nordland</item>
+        <item>Oppland</item>
+        <item>Oslo</item>
+        <item>Rogaland</item>
+        <item>Sogn og Fjordane</item>
+        <item>Sør-Trøndelag</item>
+        <item>Telemark</item>
+        <item>Troms</item>
+        <item>Vest-Agder</item>
+        <item>Vestfold</item>
+        <item>Østfold</item>
+    </string-array>
 </resources>

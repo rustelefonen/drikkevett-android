@@ -11,13 +11,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.provider.OpenableColumns;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.content.CursorLoader;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -28,13 +23,9 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,28 +33,19 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URI;
 import java.nio.channels.FileChannel;
 import java.util.List;
 
-import rustelefonen.no.drikkevett_android.Guidance.Guidance;
 import rustelefonen.no.drikkevett_android.db.User;
 import rustelefonen.no.drikkevett_android.db.UserDao;
 import rustelefonen.no.drikkevett_android.extra.SourcesActivity;
 import rustelefonen.no.drikkevett_android.extra.guidance.Guidance;
-import rustelefonen.no.drikkevett_android.goalreached.GoalReachedActivity;
 import rustelefonen.no.drikkevett_android.information.InformationCategoryActivity;
-import rustelefonen.no.drikkevett_android.intro.GoalRegistrationActivity;
+import rustelefonen.no.drikkevett_android.information.QuestionActivity;
 import rustelefonen.no.drikkevett_android.settings.AlcoholPricingSettingsActivity;
 import rustelefonen.no.drikkevett_android.settings.GoalSettingsActivity;
 import rustelefonen.no.drikkevett_android.settings.UserSettingsActivity;
-import rustelefonen.no.drikkevett_android.tabs.calc.BacCalcFragment;
-import rustelefonen.no.drikkevett_android.tabs.dayAfter.BacDayAfterFragment;
-import rustelefonen.no.drikkevett_android.tabs.history.BacHistoryFragment;
-import rustelefonen.no.drikkevett_android.tabs.home.BacHomeFragment;
 import rustelefonen.no.drikkevett_android.tabs.home.SuperDao;
-import rustelefonen.no.drikkevett_android.tabs.planParty.BacPlanPartyFragment;
-import rustelefonen.no.drikkevett_android.util.NotificationUtil;
 
 public class MainActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener {
 
@@ -134,6 +116,9 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
             startActivity(intent);
         } else if (itemId == R.id.nav_fifth_fragment) {
             Intent intent = new Intent(this, Guidance.class);
+            startActivity(intent);
+        } else if (itemId == R.id.nav_sixth_fragment) {
+            Intent intent = new Intent(this, QuestionActivity.class);
             startActivity(intent);
         }
     }

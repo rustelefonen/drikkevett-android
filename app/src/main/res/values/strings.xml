@@ -145,4 +145,16 @@
         2. baagasdf
         3. asdf as
     </string>
+
+    <!--Contact form-->
+    <string name="contact_info">Har du spørsmål om rus? Still dem her, eller ring 08588! Alle henvendelser er helt anonyme.\nSvar på spørsmål legges ut på vår nettside. I perioder med mye pågang kan det ta opptil 7 dager før svaret publiseres.</string>
+    <string name="contact_info_link"><a href="http://www.rustelefonen.no/besvarte-sporsmal-og-svar">Svarene finner du her!</a></string>
+    <string name="information">Opplysninger</string>
+    <string name="age">Alder:</string>
+    <string name="gender">Kjønn:</string>
+    <string name="county">Fylke:</string>
+    <string name="question">Spørsmål</string>
+    <string name="title">Tittel</string>
+    <string name="your_question_hint">Ditt spørsmål</string>
+    <string name="send_question">Send spørsmål</string>
 </resources>
