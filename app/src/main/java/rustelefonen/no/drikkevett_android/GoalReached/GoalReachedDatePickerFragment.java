@@ -1,4 +1,4 @@
-package rustelefonen.no.drikkevett_android.GoalReached;
+package rustelefonen.no.drikkevett_android.goalreached;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;

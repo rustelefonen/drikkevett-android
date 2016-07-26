@@ -1,4 +1,4 @@
-package rustelefonen.no.drikkevett_android.GoalReached;
+package rustelefonen.no.drikkevett_android.goalreached;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -20,7 +20,6 @@ import rustelefonen.no.drikkevett_android.R;
 import rustelefonen.no.drikkevett_android.db.History;
 import rustelefonen.no.drikkevett_android.db.HistoryDao;
 import rustelefonen.no.drikkevett_android.db.User;
-import rustelefonen.no.drikkevett_android.settings.GoalSettingsActivity;
 import rustelefonen.no.drikkevett_android.tabs.home.BarChartController;
 import rustelefonen.no.drikkevett_android.tabs.home.SuperDao;
 

@@ -1,19 +1,27 @@
 package rustelefonen.no.drikkevett_android.intro;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
+import android.support.v7.widget.PopupMenu;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 import rustelefonen.no.drikkevett_android.R;
 import rustelefonen.no.drikkevett_android.db.User;
@@ -40,7 +48,8 @@ public class UserRegistrationActivity extends AppCompatActivity {
 
 
         genderAutoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.user_reg_gender_auto_complete_text_view);
-        genderAutoCompleteTextView.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, GENDERS));
+        ArrayAdapter arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, GENDERS);
+        genderAutoCompleteTextView.setAdapter(arrayAdapter);
 
         genderAutoCompleteTextView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 
@@ -54,9 +63,20 @@ public class UserRegistrationActivity extends AppCompatActivity {
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                genderAutoCompleteTextView.showDropDown();
+                if (!genderAutoCompleteTextView.hasFocus()) genderAutoCompleteTextView.showDropDown();
                 return false;
             }
+        });
+
+        genderAutoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+                InputMethodManager in = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                in.hideSoftInputFromWindow(arg1.getWindowToken(), 0);
+
+            }
+
         });
 
         weightEditText = (EditText) findViewById(R.id.user_reg_weight_edit_text);

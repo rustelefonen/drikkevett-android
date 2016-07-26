@@ -1,4 +1,4 @@
-package rustelefonen.no.drikkevett_android.GoalReached;
+package rustelefonen.no.drikkevett_android.goalreached;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -15,8 +15,6 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
-
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -27,10 +25,7 @@ import rustelefonen.no.drikkevett_android.MainActivity;
 import rustelefonen.no.drikkevett_android.R;
 import rustelefonen.no.drikkevett_android.db.User;
 import rustelefonen.no.drikkevett_android.db.UserDao;
-import rustelefonen.no.drikkevett_android.settings.SettingsDatepickerFragment;
-import rustelefonen.no.drikkevett_android.tabs.calc.BacCalcFragment;
 import rustelefonen.no.drikkevett_android.tabs.home.SuperDao;
-import rustelefonen.no.drikkevett_android.tabs.planParty.BacPlanPartyFragment;
 
 /**
  * Created by LarsPetterKristiansen on 25.07.2016.
