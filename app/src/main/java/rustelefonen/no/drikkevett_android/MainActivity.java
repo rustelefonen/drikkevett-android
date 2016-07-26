@@ -65,17 +65,12 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
     public static final String ID = "MainActivity";
 
-    //Fields
-    private SectionsPagerAdapter mSectionsPagerAdapter;
-    private ViewPager mViewPager;
     private static final String[] IMAGE_DIALOG = new String[]{"Ta nytt bilde", "Velg bilde", "Avbryt"};
     public final String APP_TAG = "MyCustomApp";
     public final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1034;
     public String photoFileName = "photo.jpg";
 
     public TabLayout tabLayout;
-
-    public ImageView profileImage;
 
     private User user;
 
@@ -181,9 +176,9 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        SectionsPagerAdapter mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
-        mViewPager = (ViewPager) findViewById(R.id.container);
+        ViewPager mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
@@ -210,6 +205,9 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                 headerTextView.setText(nickname);
             }
         }
+
+        insertImageIfExists();
+
     }
 
     private void fetchUser() {
@@ -364,4 +362,17 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
     @Override
     public void onBackPressed() {}
+
+    private void insertImageIfExists() {
+        Uri photoToInsert = getPhotoFileUri(photoFileName);
+        File file = new File(photoToInsert.getPath());
+
+        if (file.exists()) {
+            View headerLayout = nvDrawer.getHeaderView(0);
+            Bitmap takenImage = BitmapFactory.decodeFile(photoToInsert.getPath());
+            ((ImageView) headerLayout.findViewById(R.id.nav_header_image)).setImageBitmap(takenImage);
+        } else {
+            System.out.println("Bildet eksisterer ikke");
+        }
+    }
 }

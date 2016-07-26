@@ -4,7 +4,7 @@
         <item
             android:id="@+id/drawer_view_information"
             android:title="Informasjon"
-            android:icon="@drawable/ic_action_notification"/>
+            android:icon="@drawable/ic_action_ic_info_outline_48px"/>
         <item
             android:id="@+id/nav_first_fragment"
             android:title="Endre din bruker"
