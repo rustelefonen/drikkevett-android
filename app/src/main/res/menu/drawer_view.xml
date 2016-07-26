@@ -1,27 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/drawer_view_information"
-            android:title="Informasjon"
-            android:icon="@drawable/ic_action_ic_info_outline_48px"/>
-        <item
-            android:id="@+id/nav_first_fragment"
-            android:title="Endre din bruker"
-            android:icon="@drawable/ic_action_ic_person_48px"/>
-        <item
-            android:id="@+id/nav_second_fragment"
-            android:title="Endre alkoholpriser"
-            android:icon="@drawable/ic_money"/>
-        <item
-            android:id="@+id/nav_third_fragment"
-            android:title="Endre ditt mål"
-            android:icon="@drawable/ic_action_goals"/>
-        <item
-            android:id="@+id/nav_fourth_fragment"
-            android:title="Kilder"/>
-        <item
-            android:id="@+id/nav_fifth_fragment"
-            android:title="Veiledning"/>
-    </group>
+    <item
+        android:id="@+id/drawer_view_information"
+        android:title="Informasjon"
+        android:icon="@drawable/ic_action_ic_info_outline_48px"/>
+    <item android:title="Innstillinger">
+        <menu>
+            <group
+                android:id="@+id/nav_drawer_settings_group"
+                android:checkableBehavior="single">
+                <item
+                    android:id="@+id/nav_first_fragment"
+                    android:title="Endre din bruker"
+                    android:icon="@drawable/ic_action_ic_person_48px"/>
+                <item
+                    android:id="@+id/nav_second_fragment"
+                    android:title="Endre alkoholpriser"
+                    android:icon="@drawable/ic_action_coin"/>
+                <item
+                    android:id="@+id/nav_third_fragment"
+                    android:title="Endre ditt mål"
+                    android:icon="@drawable/ic_action_goals"/>
+            </group>
+        </menu>
+    </item>
+    <item android:title="Ekstra">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/nav_fourth_fragment"
+                    android:title="Kilder"
+                    android:icon="@drawable/ic_action_copy"/>
+                <item
+                    android:id="@+id/nav_fifth_fragment"
+                    android:title="Veiledning"/>
+            </group>
+        </menu>
+    </item>
 </menu>

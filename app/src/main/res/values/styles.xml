@@ -31,4 +31,11 @@
         <item name="android:textColor">#000000</item>
         <item name="android:textSize">12sp</item>
     </style>
+
+    <style name="Widget.Design.NavigationView.Test">
+        <item name="android:listDivider">@color/backgroundColor</item>
+        <item name="android:textColorSecondary">#000000</item>
+        <item name="android:background">@color/textColor</item>
+        <item name="android:headerBackground">@color/backgroundColor</item>
+    </style>
 </resources>

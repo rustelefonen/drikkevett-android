@@ -44,8 +44,8 @@
         <activity android:name=".information.InformationCategoryActivity" android:label="Informasjon"/>
         <activity android:name=".information.InformationListActivity"/>
         <activity android:name=".information.InformationActivity"/>
-        <activity android:name=".intro.SuperIntro"/>
         <activity android:name=".intro.WelcomeActivity"/>
+        <activity android:name=".extra.SourcesActivity"/>
 
         <receiver android:name=".BacWidgetProvider">
             <intent-filter>

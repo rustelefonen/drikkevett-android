@@ -48,6 +48,7 @@ import java.util.List;
 
 import rustelefonen.no.drikkevett_android.db.User;
 import rustelefonen.no.drikkevett_android.db.UserDao;
+import rustelefonen.no.drikkevett_android.extra.SourcesActivity;
 import rustelefonen.no.drikkevett_android.information.InformationCategoryActivity;
 import rustelefonen.no.drikkevett_android.intro.GoalRegistrationActivity;
 import rustelefonen.no.drikkevett_android.settings.AlcoholPricingSettingsActivity;
@@ -122,6 +123,13 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
             intent.putExtra(AlcoholPricingSettingsActivity.ID, getUser());
             startActivity(intent);
         } else if (itemId == R.id.nav_third_fragment) {
+            Intent intent = new Intent(this, GoalSettingsActivity.class);
+            intent.putExtra(GoalSettingsActivity.ID, getUser());
+            startActivity(intent);
+        } else if (itemId == R.id.nav_fourth_fragment) {
+            Intent intent = new Intent(this, SourcesActivity.class);
+            startActivity(intent);
+        } else if (itemId == R.id.nav_fifth_fragment) {
             Intent intent = new Intent(this, GoalSettingsActivity.class);
             intent.putExtra(GoalSettingsActivity.ID, getUser());
             startActivity(intent);
@@ -228,10 +236,10 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         fetchUser();
 
         //Litt hack?
-        nvDrawer.getMenu().getItem(0).setChecked(false);
+        /*nvDrawer.getMenu().getItem(0).setChecked(false);
         nvDrawer.getMenu().getItem(1).setChecked(false);
         nvDrawer.getMenu().getItem(2).setChecked(false);
-        nvDrawer.getMenu().getItem(3).setChecked(false);
+        nvDrawer.getMenu().getItem(3).setChecked(false);*/
 
     }
 
