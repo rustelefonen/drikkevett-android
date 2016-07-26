@@ -46,6 +46,7 @@ import java.net.URI;
 import java.nio.channels.FileChannel;
 import java.util.List;
 
+import rustelefonen.no.drikkevett_android.Guidance.Guidance;
 import rustelefonen.no.drikkevett_android.db.User;
 import rustelefonen.no.drikkevett_android.db.UserDao;
 import rustelefonen.no.drikkevett_android.extra.SourcesActivity;
