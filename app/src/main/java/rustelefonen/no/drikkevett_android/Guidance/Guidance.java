@@ -22,6 +22,7 @@ import rustelefonen.no.drikkevett_android.db.User;
 import rustelefonen.no.drikkevett_android.db.UserDao;
 import rustelefonen.no.drikkevett_android.information.DBSeeder;
 import rustelefonen.no.drikkevett_android.intro.UserRegistrationActivity;
+import rustelefonen.no.drikkevett_android.intro.WelcomeActivity;
 import rustelefonen.no.drikkevett_android.tabs.home.SuperDao;
 
 /**
@@ -90,8 +91,9 @@ public class Guidance extends AppCompatActivity implements ViewPager.OnPageChang
         guideScroll.setAdapter(new GuideScrollAdapter(getSupportFragmentManager()));
         guideScroll.setCurrentItem(0);
         if (hasUser()) {
-            finishBtn.setText("Tilbake");
+            finishBtn.setVisibility(View.GONE);
         } else {
+            finishBtn.setVisibility(View.VISIBLE);
             finishBtn.setText("Fortsett til registrering");
         }
     }
@@ -138,5 +140,11 @@ public class Guidance extends AppCompatActivity implements ViewPager.OnPageChang
     }
 
     @Override
-    public void onBackPressed() {}
+    public void onBackPressed() {
+        if(hasUser()){
+            startActivity(new Intent(this, MainActivity.class));
+        } else {
+            startActivity(new Intent(this, WelcomeActivity.class));
+        }
+    }
 }
