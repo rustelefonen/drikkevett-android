@@ -111,6 +111,9 @@
                     android:layout_gravity="center"
                     android:textColor="@color/textColor"
                     android:textSize="16sp"
+                    android:textAlignment="center"
+                    android:maxWidth="175dp"
+                    android:minHeight="60dp"
                     />
 
                 </LinearLayout>

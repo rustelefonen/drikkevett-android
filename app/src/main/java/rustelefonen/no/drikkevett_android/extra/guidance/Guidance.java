@@ -47,7 +47,6 @@ public class Guidance extends AppCompatActivity implements ViewPager.OnPageChang
                 handleIntents();
             }
         });
-
         pageIndicatorGroup.check(pageIndicatorGroup.getChildAt(0).getId());
     }
 
@@ -101,9 +100,7 @@ public class Guidance extends AppCompatActivity implements ViewPager.OnPageChang
     }
 
     @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-    }
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
 
     @Override
     public void onPageSelected(int position) {
@@ -118,9 +115,7 @@ public class Guidance extends AppCompatActivity implements ViewPager.OnPageChang
     }
 
     @Override
-    public void onPageScrollStateChanged(int state) {
-
-    }
+    public void onPageScrollStateChanged(int state) {}
 
     @Override
     public void onCheckedChanged(RadioGroup group, int i) {
@@ -133,14 +128,5 @@ public class Guidance extends AppCompatActivity implements ViewPager.OnPageChang
         else if (id == R.id.radio_six_G) guideScroll.setCurrentItem(5);
         else if (id == R.id.radio_seven_G) guideScroll.setCurrentItem(6);
         else if (id == R.id.radio_eight_G) guideScroll.setCurrentItem(7);
-    }
-
-    @Override
-    public void onBackPressed() {
-        if(hasUser()){
-            startActivity(new Intent(this, MainActivity.class));
-        } else {
-            startActivity(new Intent(this, WelcomeActivity.class));
-        }
     }
 }

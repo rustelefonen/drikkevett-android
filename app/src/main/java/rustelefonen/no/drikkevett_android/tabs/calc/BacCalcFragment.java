@@ -30,6 +30,7 @@ import rustelefonen.no.drikkevett_android.db.User;
 import rustelefonen.no.drikkevett_android.tabs.calc.fragments.BeerScrollAdapter;
 import rustelefonen.no.drikkevett_android.util.Gender;
 import rustelefonen.no.drikkevett_android.util.NavigationUtil;
+import rustelefonen.no.drikkevett_android.util.PartyUtil;
 
 public class BacCalcFragment extends android.support.v4.app.Fragment
         implements ViewPager.OnPageChangeListener,
@@ -52,12 +53,12 @@ public class BacCalcFragment extends android.support.v4.app.Fragment
 
     // TEXTVIEWS
     public TextView labelHours;
-    //public TextView labelQuotes;
 
     public TextView labelBeerNrUnits;
     public TextView labelWineNrUnits;
     public TextView labelDrinkNrUnits;
     public TextView labelShotNrUnits;
+    private TextView labelQuotes;
 
     private SeekBar seekBar;
     public PieChart pieChart;
@@ -99,20 +100,82 @@ public class BacCalcFragment extends android.support.v4.app.Fragment
         return super.onOptionsItemSelected(item);
     }
 
-    public void totalPromille(){
+    private void totalPromille(){
         String tmpGender = user.getGender();
         Gender gender = null;
         if (tmpGender.equals("Mann")) gender = Gender.MALE;
         else if (tmpGender.equals("Kvinne")) gender = Gender.FEMALE;
 
         String bac = calculateBAC(gender, user.getWeight(), countingGrams(beer, wine, drink, shot), hours);
-        //labelPromille.setText("" + bac);
         pieChart.setCenterText(Double.valueOf(bac) + PER_MILLE);
         pieChart.animateY(0, Easing.EasingOption.EaseInOutQuad);
-        //labelQuotes.setText(textInQuote(Double.valueOf(bac)));
     }
 
-    public String calculateBAC(Gender gender, double weight, double grams, double hours) {
+    private int colorQuote(double bac){
+        int color = 0;
+        if(bac >= 0 && bac < 0.4){
+            color = Color.rgb(255, 255, 255);
+        }
+        if(bac >= 0.4 && bac < 0.8){
+            color = Color.rgb(26, 193, 73);
+        }
+        if(bac >= 0.8 && bac < 1.0){
+            color = Color.rgb(255, 180, 10);
+        }
+        if(bac >= 1.0 && bac < 1.2){
+            color = Color.rgb(255, 180, 10);
+        }
+        if(bac >= 1.2 && bac < 1.4){
+            color = Color.rgb(255, 160, 0);
+        }
+        if(bac >= 1.4 && bac < 1.8){
+            color = Color.rgb(255, 160, 0);
+        }
+        if(bac >= 1.8 && bac < 3.0){
+            color = Color.rgb(255, 55, 55);
+        }
+        if(bac >= 3.0 && bac < 5.0){
+            color = Color.rgb(255, 55, 55);
+        }
+        if(bac >= 5.0){
+            color = Color.rgb(255, 0, 0);
+        }
+        return color;
+    }
+
+    private String textQuote(double bac){
+        String output = "";
+        if(bac >= 0 && bac < 0.4){
+            output = "Kos deg";
+        }
+        if(bac >= 0.4 && bac < 0.8){
+            output = "Lykkepromille";
+        }
+        if(bac >= 0.8 && bac < 1.0){
+            output = "Du blir mer kritikkløs og risikovillig";
+        }
+        if(bac >= 1.0 && bac < 1.2){
+            output = "Balansen blir dårligere";
+        }
+        if(bac >= 1.2 && bac < 1.4){
+            output = "Talen snøvlete og \nkontroll på bevegelser forverres";
+        }
+        if(bac >= 1.4 && bac < 1.8){
+            output = "Man blir trøtt, sløv og \nkan bli kvalm";
+        }
+        if(bac >= 1.8 && bac < 3.0){
+            output = "Hukommelsen sliter";
+        }
+        if(bac >= 3.0 && bac < 5.0){
+            output = "Svært høy promille! \nMan kan bli bevisstløs";
+        }
+        if(bac >= 5.0){
+            output = "Du kan dø ved en så høy promille!";
+        }
+        return output;
+    }
+
+    private String calculateBAC(Gender gender, double weight, double grams, double hours) {
         double oppdatertPromille = 0.0;
         double genderScore = setGenderScore(gender);
 
@@ -124,17 +187,20 @@ public class BacCalcFragment extends android.support.v4.app.Fragment
                 oppdatertPromille = 0.0;
             }
         }
+        pieChart.setCenterTextColor(colorQuote(oppdatertPromille));
+        labelQuotes.setText(textQuote(oppdatertPromille));
+
         DecimalFormat numberFormat = new DecimalFormat("#.##");
         String newPromille = numberFormat.format(oppdatertPromille);
 
         return newPromille;
     }
 
-    public double countingGrams(double beerUnits, double wineUnits, double drinkUnits, double shotUnits){
+    private double countingGrams(double beerUnits, double wineUnits, double drinkUnits, double shotUnits){
         return (beerUnits * 12.6) + (wineUnits * 14.0) + (drinkUnits * 15.0) + (shotUnits * 14.2);
     }
 
-    public double setGenderScore(Gender gender){
+    private double setGenderScore(Gender gender){
         if(gender == Gender.MALE)return 0.70;
         else if(gender == Gender.FEMALE)return 0.60;
         return 0.0;
@@ -152,6 +218,7 @@ public class BacCalcFragment extends android.support.v4.app.Fragment
         labelShotNrUnits = (TextView) view.findViewById(R.id.textViewShotUnits);
         pieChart = (PieChart) view.findViewById(R.id.pie_chart_bac_calc);
         beerScroll = (ViewPager) view.findViewById(R.id.beer_scroll);
+        labelQuotes = (TextView) view.findViewById(R.id.text_view_quotes);
     }
 
     private void setListeners() {
