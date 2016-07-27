@@ -4,7 +4,6 @@
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
     android:minHeight="?attr/actionBarSize"
-    android:theme="@style/AppTheme"
     android:background="?attr/colorPrimary"
     app:layout_scrollFlags="scroll|enterAlways"
     xmlns:app="http://schemas.android.com/apk/res-auto"
