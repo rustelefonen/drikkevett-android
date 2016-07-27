@@ -8,7 +8,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -34,7 +33,6 @@ import rustelefonen.no.drikkevett_android.db.GraphHistoryDao;
 import rustelefonen.no.drikkevett_android.db.History;
 import rustelefonen.no.drikkevett_android.db.HistoryDao;
 import rustelefonen.no.drikkevett_android.db.User;
-import rustelefonen.no.drikkevett_android.db.UserDao;
 import rustelefonen.no.drikkevett_android.util.NavigationUtil;
 import rustelefonen.no.drikkevett_android.util.PartyUtil;
 
@@ -56,18 +54,13 @@ import static rustelefonen.no.drikkevett_android.util.PartyUtil.addMinsToDate;
 import static rustelefonen.no.drikkevett_android.util.PartyUtil.calculateBAC;
 import static rustelefonen.no.drikkevett_android.util.PartyUtil.countingGrams;
 import static rustelefonen.no.drikkevett_android.util.PartyUtil.getDateDiff;
-import static rustelefonen.no.drikkevett_android.util.PartyUtil.setGenderScore;
 
 public class BacDayAfterFragment extends Fragment {
     private double weight = 0;
     private String gender = "";
 
     private int consumBeers = 0, consumWines = 0, consumDrink = 0, consumShots = 0, planBeers = 0, planWines = 0, planDrink = 0, planShots = 0, totalConsumed = 0;
-
-    private int afterRegBeer = 0;
-    private int afterRegWine = 0;
-    private int afterRegDrink = 0;
-    private int afterRegShot = 0;
+    private int afterRegBeer = 0, afterRegWine = 0, afterRegDrink = 0, afterRegShot = 0;
 
     private int costs = 0;
     private String currentBAC = "";
@@ -77,15 +70,9 @@ public class BacDayAfterFragment extends Fragment {
 
     private Date startStamp = new Date(), endStamp = new Date();
 
-    /*
-    * WIDGETS
-    * */
     private TextView beerLbl, wineLbl, drinkLbl, shotLbl, costsLbl, highBACLbl, currBACLbl;
-
     private TextView afterRegBeerLbl, afterRegWineLbl, afterRegDrinkLbl, afterRegShotLbl;
-
     private Button btnEndDA, beerBtnAfterReg_DA, wineBtnAfterReg_DA, drinkBtnAfterReg_DA, shotBtnAfterReg_DA;
-
     private LinearLayout planPaRunning_LinLay, dayAfterRunning_LinLay;
 
     private TextView txtView;
@@ -94,12 +81,17 @@ public class BacDayAfterFragment extends Fragment {
 
     public View v;
 
-    public PieChart pieChart;
+    private PieChart pieChart;
+
+    private DayAfter_DB dayAfter_db;
+
     private static final String PER_MILLE = "\u2030";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.bac_day_after_frag, container, false);
+
+        dayAfter_db = new DayAfter_DB(getContext());
         initWidgets();
         setUserData();
 
@@ -114,32 +106,24 @@ public class BacDayAfterFragment extends Fragment {
         });
 
         // REGISTRATION
-
-        // beer
         beerBtnAfterReg_DA.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 afterPopUp("Beer");
             }
         });
-
-        // wine
         wineBtnAfterReg_DA.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 afterPopUp("Wine");
             }
         });
-
-        // drink
         drinkBtnAfterReg_DA.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 afterPopUp("Drink");
             }
         });
-
-        // shot
         shotBtnAfterReg_DA.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -170,9 +154,7 @@ public class BacDayAfterFragment extends Fragment {
     @Override
     public void onResume(){
         super.onResume();
-
         setUserData();
-        // hente status fra db
         status = getStatus();
         statusHandler(status);
     }
@@ -182,21 +164,16 @@ public class BacDayAfterFragment extends Fragment {
         super.setUserVisibleHint(isVisibleToUser);
         if (!this.isVisible()) return;
         if (!isVisibleToUser) return;
-
         setUserData();
         status = getStatus();
         statusHandler(status);
     }
 
-    /*
-    * STATUS
-    * */
-
     private void statusHandler(Status state){
-        if(state == status.RUNNING || state == status.NOT_RUNNING || state == status.DEFAULT){
+        if(state == Status.RUNNING || state == Status.NOT_RUNNING || state == Status.DEFAULT){
             planPartyRunning();
         }
-        if(state == status.DA_RUNNING){
+        if(state == Status.DA_RUNNING){
             dayAfterRunning();
         }
     }
@@ -237,12 +214,9 @@ public class BacDayAfterFragment extends Fragment {
     private void dayAfterRunning(){
         getUnits();
         setStats();
-
-        // pie chart
         pieChart = (PieChart) v.findViewById(R.id.pie_chart_bac_day_after);
         fillPieChart();
         stylePieChart();
-
         setVisualsDA();
     }
 
@@ -302,13 +276,6 @@ public class BacDayAfterFragment extends Fragment {
         gender = user.getGender();
     }
 
-    private Date getFirstUnAddedStamp(){
-        PlanPartyElementsDao partyDao = setDaoSessionDB().getPlanPartyElementsDao();
-        List<PlanPartyElements> planPList = partyDao.queryBuilder().list();
-        PlanPartyElements lastElement = planPList.get(planPList.size() - 1);
-        return lastElement.getFirstUnitAddedDate();
-    }
-
     private void getUnits(){
         clearUnitVariabels();
 
@@ -342,7 +309,6 @@ public class BacDayAfterFragment extends Fragment {
             } else {
                 afterRegShot = party.getAftRegShot();
             }
-            System.out.println("After Reg beer? ffs" + party.getAftRegBeer());
         }
 
         List<DayAfterBAC> dayAfterList = dayAfterDao.queryBuilder().list();
@@ -367,9 +333,7 @@ public class BacDayAfterFragment extends Fragment {
     private double getHighestBAC(){
         double tempVal = 0.0;
         HistoryDao historyDao = setDaoSessionDB().getHistoryDao();
-        if(historyDao == null){
-            System.out.println("HISTORIE TOM");
-        } else {
+        if(historyDao != null){
             List<History> histList = historyDao.queryBuilder().list();
             History lastElement = histList.get(histList.size() -1);
             tempVal = lastElement.getHighestBAC();
@@ -473,9 +437,9 @@ public class BacDayAfterFragment extends Fragment {
 
     private void setStats(){
         costs = calculateCosts(consumBeers, consumWines, consumDrink, consumShots);
-        if(getFirstUnAddedStamp() != null){
+        if(dayAfter_db.getFirstUnAddedStamp() != null){
             DecimalFormat numberFormat = new DecimalFormat("#.##");
-            currentBAC = numberFormat.format(getCurrentBAC(weight, gender, getFirstUnAddedStamp()));
+            currentBAC = numberFormat.format(getCurrentBAC(weight, gender, dayAfter_db.getFirstUnAddedStamp()));
         }
         highestBAC = getHighestBAC();
     }
@@ -620,10 +584,10 @@ public class BacDayAfterFragment extends Fragment {
         System.out.println("New Unit (UnitType: " + unit + "), and timeStamp: " + newUnitStamp);
 
         // add one more unit to history table ( beer/wine/drink/shot )
-        updateUnitInHistory(unit);
+        dayAfter_db.updateUnitInHistory(unit);
 
         // add unit to day after
-        addDayAfter(newUnitStamp, unit);
+        dayAfter_db.addDayAfter(newUnitStamp, unit);
 
         // refresh graphHistory, by removing all the last values and adding them again with the new unit added
         refreshGraphHist();
@@ -679,7 +643,6 @@ public class BacDayAfterFragment extends Fragment {
             afterRegShot++;
             getLastElement.setAftRegShot(afterRegShot);
         }
-
         partyDao.insertOrReplace(getLastElement);
 
         // refresh all visuals
@@ -691,12 +654,10 @@ public class BacDayAfterFragment extends Fragment {
         HistoryDao historyDao = setDaoSessionDB().getHistoryDao();
         List<History> histories = historyDao.queryBuilder().list();
         History lastElement = histories.get(histories.size() -1);
-        System.out.println("Last Element ID: " + lastElement.getId());
 
         GraphHistoryDao graphHistoryDao = setDaoSessionDB().getGraphHistoryDao();
         List<GraphHistory> graphHistList = graphHistoryDao.queryBuilder().where(GraphHistoryDao.Properties.HistoryId.eq(lastElement.getId())).list();
 
-        System.out.println("refreshGraphHist: ------: ");
         for(GraphHistory graphHist : graphHistList){
             graphHistoryDao.deleteByKey(graphHist.getId());
         }
@@ -704,23 +665,6 @@ public class BacDayAfterFragment extends Fragment {
         // ADD NEW VALUES IN GRAPH HIST WITH THE AFTER REGISTRATED TIME STAMP
         long id = lastElement.getId();
         calcPr((int) id);
-    }
-
-    private void addDayAfter(Date newUnitStamp, String unitType){
-        DayAfterBACDao dayAfterBACDao = setDaoSessionDB().getDayAfterBACDao();
-        DayAfterBAC newDayAfter = new DayAfterBAC();
-        newDayAfter.setTimestamp(newUnitStamp);
-        newDayAfter.setUnit(unitType);
-        dayAfterBACDao.insert(newDayAfter);
-    }
-
-    private void addGraphValues(double currentBAC, Date timeStamp, int id){
-        GraphHistoryDao graphHistoryDao = setDaoSessionDB().getGraphHistoryDao();
-        GraphHistory newGraphVal = new GraphHistory();
-        newGraphVal.setHistoryId(id);
-        newGraphVal.setCurrentBAC(currentBAC);
-        newGraphVal.setTimestamp(timeStamp);
-        graphHistoryDao.insert(newGraphVal);
     }
 
     private void setStartAndEndStamp(){
@@ -740,7 +684,6 @@ public class BacDayAfterFragment extends Fragment {
         double promille = 0.0;
         Date tempTimeStamp = new Date();
 
-        // GET START AND END STAMP
         setStartAndEndStamp();
 
         double sessionInterval = getDateDiff(startStamp, endStamp, TimeUnit.MINUTES);
@@ -770,7 +713,6 @@ public class BacDayAfterFragment extends Fragment {
                 }
 
                 double hoursToMins = tempInterval / 60;
-
                 String tempPromille = calculateBAC(gender, weight, countingGrams(beer, wine, drink, shot), hoursToMins);
                 promille = Double.parseDouble(tempPromille);
 
@@ -778,66 +720,16 @@ public class BacDayAfterFragment extends Fragment {
                 if(highestBAC < promille){
                     highestBAC = promille;
                 }
-
                 // Legg til 15 min på en date
                 tempTimeStamp = addMinsToDate((int) tempInterval);
             }
             // Legg til elementet i databasen ( I LOOPEN )
-            addGraphValues(promille, tempTimeStamp, id);
+            dayAfter_db.addGraphValues(promille, tempTimeStamp, id);
         }
-        updateHighestBACinHistory(highestBAC);
+        dayAfter_db.updateHighestBACinHistory(highestBAC);
         startStamp = null;
         endStamp = null;
-        printLastGraphValues();
-    }
-
-    private void printLastGraphValues(){
-        // REMOVE ALL LATEST GRAPH HIST WITH SAME ID AS HISTORY ID AND TEMP STORE THE TIMESTAMPS
-        HistoryDao historyDao = setDaoSessionDB().getHistoryDao();
-        List<History> histories = historyDao.queryBuilder().list();
-        History lastElement = histories.get(histories.size() -1);
-
-        GraphHistoryDao graphHistoryDao = setDaoSessionDB().getGraphHistoryDao();
-        List<GraphHistory> graphHistList = graphHistoryDao.queryBuilder().where(GraphHistoryDao.Properties.HistoryId.eq(lastElement.getId())).list();
-
-        System.out.println("Last hist id: (" + lastElement.getId() + ")");
-        for(GraphHistory graphHist : graphHistList){
-            System.out.println("graph value id: " + graphHist.getId());
-            System.out.println("graph value history_id: " + graphHist.getHistoryId());
-            System.out.println("graph value timeStamp: " + graphHist.getTimestamp());
-            System.out.println("graph value currentBac: " + graphHist.getCurrentBAC());
-        }
-    }
-
-    private void updateHighestBACinHistory(double highBac){
-        // update highest BAC in History
-        HistoryDao historyDao = setDaoSessionDB().getHistoryDao();
-        List<History> histories = historyDao.queryBuilder().list();
-        History lastElement = histories.get(histories.size() -1);
-        lastElement.setHighestBAC(highBac);
-        historyDao.insertOrReplace(lastElement);
-    }
-
-    private void updateUnitInHistory(String unit){
-        // update highest BAC in History
-        HistoryDao historyDao = setDaoSessionDB().getHistoryDao();
-        List<History> histories = historyDao.queryBuilder().list();
-        History lastElement = histories.get(histories.size() -1);
-        System.out.println("Siste Element i DB History: " + lastElement.getId());
-
-        if(unit.equals("Beer")){
-            lastElement.setBeerCount(lastElement.getBeerCount() + 1);
-        }
-        if(unit.equals("Wine")){
-            lastElement.setWineCount(lastElement.getWineCount() + 1);
-        }
-        if(unit.equals("Drink")){
-            lastElement.setDrinkCount(lastElement.getDrinkCount() + 1);
-        }
-        if(unit.equals("Shot")){
-            lastElement.setShotCount(lastElement.getShotCount() + 1);
-        }
-        historyDao.insertOrReplace(lastElement);
+        dayAfter_db.printLastGraphValues();
     }
 
     private void afterPopUp(final String unit){
@@ -897,14 +789,12 @@ public class BacDayAfterFragment extends Fragment {
         alert_builder.setMessage("Er du sikker på at du vil avslutte dagen derpå? ").setCancelable(false).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                System.out.println("Ok");
                 clearDBTables();
                 statusHandler(status);
             }
         }).setNegativeButton("Avbryt", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                System.out.println("Avbryt");
                 dialogInterface.cancel();
             }
         });
@@ -912,10 +802,6 @@ public class BacDayAfterFragment extends Fragment {
         alert.setTitle("Avslutt Dagen Derpå");
         alert.show();
     }
-
-    /*
-    * PIE CHART
-    * */
 
     private void fillPieChart() {
         ArrayList<Entry> entries = new ArrayList<>();

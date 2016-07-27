@@ -53,7 +53,6 @@ public class BacCalcFragment extends android.support.v4.app.Fragment
 
     // TEXTVIEWS
     public TextView labelHours;
-    //public TextView labelQuotes;
 
     public TextView labelBeerNrUnits;
     public TextView labelWineNrUnits;
@@ -64,7 +63,6 @@ public class BacCalcFragment extends android.support.v4.app.Fragment
     private SeekBar seekBar;
     public PieChart pieChart;
     public ViewPager beerScroll;
-    private PartyUtil partyUtil;
 
     private static final String PER_MILLE = "\u2030";
 

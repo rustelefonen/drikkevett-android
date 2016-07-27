@@ -108,7 +108,6 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
         status = isSessionOver();
         stateHandler(status);
 
-
         addBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -188,14 +187,7 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
         status = isSessionOver();
         stateHandler(status);
     }
-
-    /*
-    * STATUS
-    * */
-    private enum Status {
-        RUNNING, NOT_RUNNING, DA_RUNNING, DEFAULT
-    }
-
+    
     private void stateHandler(Status state){
         if(state == Status.RUNNING){
             partyRunning();
@@ -414,14 +406,17 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
     }
 
     private void removeUnitConsumedDB(String unit){
-        DayAfterBACDao dayAfterBACDao = setDaoSessionDB().getDayAfterBACDao();
+        SuperDao superDao = new SuperDao(getContext());
+        DayAfterBACDao dayAfterBACDao = superDao.getDayAfterBACDao();
         List<DayAfterBAC> dayAfterBACList = dayAfterBACDao.queryBuilder().where(DayAfterBACDao.Properties.Unit.eq(unit)).list();
         DayAfterBAC lastElement = dayAfterBACList.get(dayAfterBACList.size() - 1);
         dayAfterBACDao.deleteByKey(lastElement.getId());
+        superDao.close();
     }
 
     private void updateStatusBtn(String status){
-        PlanPartyElementsDao partyDao = setDaoSessionDB().getPlanPartyElementsDao();
+        SuperDao superDao = new SuperDao(getContext());
+        PlanPartyElementsDao partyDao = superDao.getPlanPartyElementsDao();
 
         if(status.equals("NOT_RUNNING")){
             statusNotRunning();
@@ -433,6 +428,7 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
             statusDA_Running(partyDao);
         }
         partyDao.deleteAll();
+        superDao.close();
         planPartyDB.setPlannedPartyElementsDB(startTimeStamp, endTimeStamp, firstUnitAdded, plannedBeers, plannedWines, plannedDrinks, plannedShots, 0, 0, 0, 0, status);
     }
 
@@ -473,6 +469,10 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
         plannedWines = 0;
         plannedDrinks = 0;
         plannedShots = 0;
+        beersConsumed = 0;
+        winesConsumed = 0;
+        drinksConsumed = 0;
+        shotsConsumed = 0;
         colorsUnitLabels();
     }
 
@@ -537,15 +537,6 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
     /*
     * DATABASE METHODS
     * */
-    private DaoSession setDaoSessionDB(){
-        String DB_NAME = "my-db";
-        SQLiteDatabase db;
-        SQLiteDatabase.CursorFactory cursorFactory = null;
-        final DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(getContext(), DB_NAME, cursorFactory);
-        db = helper.getWritableDatabase();
-        DaoMaster daoMaster = new DaoMaster(db);
-        return daoMaster.newSession();
-    }
 
     private void populateConsumtion(){
         beersConsumed = 0;
@@ -553,8 +544,10 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
         drinksConsumed = 0;
         shotsConsumed = 0;
 
-        DayAfterBACDao dayAfterDao = setDaoSessionDB().getDayAfterBACDao();
+        SuperDao superDao = new SuperDao(getContext());
+        DayAfterBACDao dayAfterDao = superDao.getDayAfterBACDao();
         List<DayAfterBAC> dayAfterBACList = dayAfterDao.queryBuilder().list();
+        superDao.close();
         for (DayAfterBAC dayAfter : dayAfterBACList) {
             if(dayAfter.getUnit().equals("Beer")){
                 beersConsumed++;
@@ -572,8 +565,10 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
     }
 
     private void getUnitsPlanned() {
-        PlanPartyElementsDao partyDao = setDaoSessionDB().getPlanPartyElementsDao();
+        SuperDao superDao = new SuperDao(getContext());
+        PlanPartyElementsDao partyDao = superDao.getPlanPartyElementsDao();
         List<PlanPartyElements> partyList = partyDao.queryBuilder().list();
+        superDao.close();
         PlanPartyElements elements = partyList.get(partyList.size() - 1);
         plannedBeers = elements.getPlannedBeer();
         plannedWines = elements.getPlannedWine();
@@ -582,14 +577,13 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
     }
 
     private void clearPartyTables(){
-        PlanPartyElementsDao partyDao = setDaoSessionDB().getPlanPartyElementsDao();
-        DayAfterBACDao dayAfterDao = setDaoSessionDB().getDayAfterBACDao();
-
-        // clearing the tables (PlanPartyDao and DayAfterBacDao)
+        SuperDao superDao = new SuperDao(getContext());
+        PlanPartyElementsDao partyDao = superDao.getPlanPartyElementsDao();
+        DayAfterBACDao dayAfterDao = superDao.getDayAfterBACDao();
         partyDao.deleteAll();
         dayAfterDao.deleteAll();
+        superDao.close();
 
-        // Clear variabels planned and consumed
         plannedBeers = 0;
         plannedWines = 0;
         plannedDrinks = 0;
@@ -605,9 +599,10 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
     }
 
     private void setFirstUnitAdded(){
-        PlanPartyElementsDao partyDao = setDaoSessionDB().getPlanPartyElementsDao();
+        SuperDao superDao = new SuperDao(getContext());
+        PlanPartyElementsDao partyDao = superDao.getPlanPartyElementsDao();
         List<PlanPartyElements> PlanPartyList = partyDao.queryBuilder().list();
-
+        superDao.close();
         String state = "";
 
         for (PlanPartyElements party : PlanPartyList) {
@@ -626,11 +621,12 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
     private Status isSessionOver(){
         Date currentDate = new Date();
         Date endSes = null;
-
-        PlanPartyElementsDao partyDao = setDaoSessionDB().getPlanPartyElementsDao();
+        SuperDao superDao = new SuperDao(getContext());
+        PlanPartyElementsDao partyDao = superDao.getPlanPartyElementsDao();
 
         // GET elements to temporary store them in variables then re-saving them
         List<PlanPartyElements> partyList = partyDao.queryBuilder().list();
+        superDao.close();
 
         for (PlanPartyElements party : partyList) {
             endSes = party.getEndTimeStamp();
@@ -699,8 +695,12 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
         SuperDao superDao2 = new SuperDao(getContext());
         HistoryDao histDao = superDao2.getHistoryDao();
         List<History> histList = histDao.queryBuilder().list();
-        History lastElementHist = histList.get(histList.size() - 1);
-        tempStartDate = lastElementHist.getStartDate();
+        if(histList.size() > 0){
+            History lastElementHist = histList.get(histList.size() - 1);
+            tempStartDate = lastElementHist.getStartDate();
+        } else {
+            tempStartDate = null;
+        }
 
         if(!startTimeStamp.equals(tempStartDate)){
             setHistory();
@@ -721,8 +721,10 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
     }
 
     private void simulateBAC(int id){
-        DayAfterBACDao dayAfterBACDao = setDaoSessionDB().getDayAfterBACDao();
+        SuperDao superDao = new SuperDao(getContext());
+        DayAfterBACDao dayAfterBACDao = superDao.getDayAfterBACDao();
         List<DayAfterBAC> dayAfterBacList = dayAfterBACDao.queryBuilder().list();
+        superDao.close();
 
         double highestBAC = 0.0;
         double promille = 0.0;
@@ -913,10 +915,6 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
                 ContextCompat.getColor(getContext(), R.color.drinkColor),
                 ContextCompat.getColor(getContext(), R.color.shotColor)};
     }
-
-    /*
-    * PAGE INDICATOR
-    * */
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}

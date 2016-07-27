@@ -87,12 +87,12 @@ public class BacHomeFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.bac_home_frag, container, false);
 
-        addHistory();
+        //addHistory();
         initWidgets(view);
         fillWidgets();
         fillPieChart();
         stylePieChart();
-        //fireGoalDateReachedView();
+        fireGoalDateReachedView();
 
         setHasOptionsMenu(true);
 
@@ -343,7 +343,6 @@ public class BacHomeFragment extends Fragment{
                     graphHomeTextView.setText("Målet ditt er her grønt fordi du har gjort det bra!");
                 }
             }
-
             @Override
             public void onNothingSelected() {
                 graphHomeTextView.setText("Denne grafikken viser hvordan det står til med målet ditt. Ønsker du å vite mer klikk på fargene");
