@@ -35,10 +35,11 @@ dependencies {
 
     //GreenDAO
     compile group: 'de.greenrobot', name: 'greendao', version: '2.1.0'
+
+
     compile 'com.android.support:appcompat-v7:23.4.0'
     compile 'com.github.PhilJay:MPAndroidChart:v2.2.5'
     compile 'com.android.support:design:24.0.0'
-    testCompile 'junit:junit:4.12'
 
     //For eldre support av cardview og recycleview
     compile 'com.android.support:cardview-v7:21.0.+'

@@ -65,6 +65,7 @@
                 android:textColorHint="@color/greyTextColor"
                 android:textSize="16sp"
                 android:layout_marginBottom="32dp"
+                android:drawableRight="@drawable/ic_action_ic_arrow_drop_down_black_24dp"
                 android:padding="8dp"/>
 
             <EditText

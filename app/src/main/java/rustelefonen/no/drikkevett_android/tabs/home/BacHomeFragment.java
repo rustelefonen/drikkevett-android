@@ -43,6 +43,7 @@ import rustelefonen.no.drikkevett_android.db.History;
 import rustelefonen.no.drikkevett_android.db.HistoryDao;
 import rustelefonen.no.drikkevett_android.db.User;
 import rustelefonen.no.drikkevett_android.util.DateUtil;
+import rustelefonen.no.drikkevett_android.util.ImageUtil;
 import rustelefonen.no.drikkevett_android.util.NavigationUtil;
 
 import static rustelefonen.no.drikkevett_android.tabs.home.HistoryCalculator.getLastMonthAverageBac;
@@ -55,12 +56,11 @@ import static rustelefonen.no.drikkevett_android.tabs.home.HistoryCalculator.get
 public class BacHomeFragment extends Fragment{
 
     //Fields
-    public final String APP_TAG = "MyCustomApp";
     public String photoFileName = "photo.jpg";
 
     //Widgets
     public TextView quoteTextView;
-    public ImageView ivPreview;
+    public ImageView profileImage;
     public TextView totalCostTextView;
     public TextView totalHighestBac;
     public TextView totalAvgTextView;
@@ -83,20 +83,29 @@ public class BacHomeFragment extends Fragment{
     public TextView barChartMonth;
     public TextView barChartYear;
 
+    private User user;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.bac_home_frag, container, false);
-
-        addHistory();
         initWidgets(view);
+        fetchUser();
         fillWidgets();
         fillPieChart();
         stylePieChart();
-        //fireGoalDateReachedView();
-
         setHasOptionsMenu(true);
-
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        fetchUser();
+        insertProfileImageIfExists();
+    }
+
+    private void fetchUser() {
+        user = ((MainActivity)getActivity()).getUser();
     }
 
     @Override
@@ -122,62 +131,14 @@ public class BacHomeFragment extends Fragment{
         goalPieChart.animateY(1400, Easing.EasingOption.EaseInOutQuad);
     }
 
-    public Uri getPhotoFileUri(String fileName) {
-        if (!isExternalStorageAvailable()) return null;
-        File mediaStorageDir = new File(getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), APP_TAG);
-        if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()){
-            Log.d(APP_TAG, "failed to create directory");
-        }
-        return Uri.fromFile(new File(mediaStorageDir.getPath() + File.separator + fileName));
-    }
-
-    // Returns true if external storage for photos is available
-    private boolean isExternalStorageAvailable() {
-        String state = Environment.getExternalStorageState();
-        return state.equals(Environment.MEDIA_MOUNTED);
-    }
-
     private String getRandomQuote() {
         String[] quotes = getResources().getStringArray(R.array.quotes);
         int randomIndex = (int) (Math.random() * quotes.length-1 + 1);
         return quotes[randomIndex];
     }
 
-    private String getRandomWelcomeMessage() {
-        String[] welcomeMessages = getResources().getStringArray(R.array.welcomeMessages);
-        int randomIndex = (int) (Math.random() * welcomeMessages.length-1 + 1);
-        return welcomeMessages[randomIndex];
-    }
-
-    private void insertImageIfExists() {
-        Uri photoToInsert = getPhotoFileUri(photoFileName);
-        File file = new File(photoToInsert.getPath());
-
-        if (file.exists()) {
-            Bitmap takenImage = BitmapFactory.decodeFile(photoToInsert.getPath());
-            ivPreview.setImageBitmap(takenImage);
-        } else {
-            System.out.println("Bildet eksisterer ikke");
-        }
-    }
-
-    private boolean imageExist() {
-        Uri photoToInsert = getPhotoFileUri(photoFileName);
-        File file = new File(photoToInsert.getPath());
-        return file.exists();
-    }
-
-    private String getUsername() {
-        User user = ((MainActivity)getActivity()).getUser();
-        if (user == null) return "Tom bruker";
-
-        if (user.getNickname() == null || user.getNickname().isEmpty()) return "Tom bruker";
-
-        return user.getNickname();
-    }
-
     private void initWidgets(View view) {
-        ivPreview = (ImageView) view.findViewById(R.id.profile_image);
+        profileImage = (ImageView) view.findViewById(R.id.profile_image);
         quoteTextView = (TextView) view.findViewById(R.id.quote_text_view);
         totalCostTextView = (TextView) view.findViewById(R.id.total_cost_text_view);
         totalHighestBac = (TextView) view.findViewById(R.id.total_highest_bac);
@@ -201,16 +162,18 @@ public class BacHomeFragment extends Fragment{
     }
 
     private void fillWidgets() {
-        User user = ((MainActivity)getActivity()).getUser();
         quoteTextView.setText(getRandomQuote());
-        if (imageExist()) {
-            imageTextView.setText(user.getNickname());
-        }
 
-        insertImageIfExists();
 
         List<History> historyList = getHistoryList();
         if (historyList.size() > 0) {
+            noDataBarChartCardView.setVisibility(View.GONE);
+            noDataPieChart.setVisibility(View.GONE);
+            historyCardView.setVisibility(View.VISIBLE);
+            goalCardView.setVisibility(View.VISIBLE);
+            Date now = new Date();
+            barChartMonth.setText(DateUtil.getMonthOfDate(now));
+            barChartYear.setText(DateUtil.getYearOfDate(now));
 
             DecimalFormat df = new DecimalFormat("#.##");
             df.setRoundingMode(RoundingMode.CEILING);
@@ -222,20 +185,11 @@ public class BacHomeFragment extends Fragment{
             lastMonthCostTextView.setText(df.format(getLastMonthCost(historyList)) + ",-");
             lastMonthHighestBacTextView.setText(df.format(getLastMonthHighestBac(historyList)));
             lastMonthAvgBacTextView.setText(df.format(getLastMonthAverageBac(historyList)));
-        }
 
-        BarChartController chartController = new BarChartController(historyBarChart, user, getHistoryList());
-        chartController.setData();
-        chartController.styleBarChart();
-
-        if (historyList.size() > 0) {
-            noDataBarChartCardView.setVisibility(View.GONE);
-            noDataPieChart.setVisibility(View.GONE);
-            historyCardView.setVisibility(View.VISIBLE);
-            goalCardView.setVisibility(View.VISIBLE);
-            Date now = new Date();
-            barChartMonth.setText(DateUtil.getMonthOfDate(now));
-            barChartYear.setText(DateUtil.getYearOfDate(now));
+            if (user == null) return;
+            BarChartController chartController = new BarChartController(historyBarChart, user, getHistoryList());
+            chartController.setData();
+            chartController.styleBarChart();
         } else {
             noDataBarChartCardView.setVisibility(View.VISIBLE);
             noDataPieChart.setVisibility(View.VISIBLE);
@@ -265,24 +219,6 @@ public class BacHomeFragment extends Fragment{
             if (calendar.get(Calendar.MONTH) == currentMonth) historiesInThisMonth.add(history);
         }
         return historiesInThisMonth;
-    }
-
-    private void addHistory() {
-        SuperDao superDao = new SuperDao(getContext());
-        HistoryDao historyDao = superDao.getHistoryDao();
-
-        History history = new History();
-        history.setBeerCount(5);
-        history.setDrinkCount(6);
-        history.setWineCount(7);
-        history.setShotCount(8);
-        history.setStartDate(new Date());
-        history.setHighestBAC(0.4);
-        history.setPlannedUnitsCount(10);
-        history.setSum(2000);
-
-        historyDao.insert(history);
-        superDao.close();
     }
 
     private void fillPieChart() {
@@ -356,12 +292,53 @@ public class BacHomeFragment extends Fragment{
     * */
 
     private void fireGoalDateReachedView(){
-        User user = ((MainActivity)getActivity()).getUser();
         Date currentDate = new Date();
         if(currentDate.after(user.getGoalDate())){
             Intent intent = new Intent(getContext(), GoalReachedActivity.class);
             intent.putExtra(GoalReachedActivity.ID, user);
             startActivity(intent);
         }
+    }
+
+    private void insertProfileImageIfExists() {
+        Uri takenPhotoUri = ImageUtil.getPhotoFileUri(photoFileName, getContext());
+        if (takenPhotoUri == null) return;
+        Bitmap takenImage = BitmapFactory.decodeFile(takenPhotoUri.getPath());
+        if (takenImage == null) return;
+        if (profileImage == null) return;
+        profileImage.setImageBitmap(takenImage);
+
+        if (user == null) return;
+        String nickname = user.getNickname();
+        if (nickname == null) return;
+        imageTextView.setText(nickname);
+    }
+
+
+
+
+
+    private void addHistory() {
+        SuperDao superDao = new SuperDao(getContext());
+        HistoryDao historyDao = superDao.getHistoryDao();
+
+        History history = new History();
+        history.setBeerCount(5);
+        history.setDrinkCount(6);
+        history.setWineCount(7);
+        history.setShotCount(8);
+        history.setStartDate(new Date());
+        history.setHighestBAC(0.4);
+        history.setPlannedUnitsCount(10);
+        history.setSum(2000);
+
+        historyDao.insert(history);
+        superDao.close();
+    }
+
+    private String getRandomWelcomeMessage() {
+        String[] welcomeMessages = getResources().getStringArray(R.array.welcomeMessages);
+        int randomIndex = (int) (Math.random() * welcomeMessages.length-1 + 1);
+        return welcomeMessages[randomIndex];
     }
 }

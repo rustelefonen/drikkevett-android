@@ -26,6 +26,8 @@ public class InformationCategoryDao extends AbstractDao<InformationCategory, Lon
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
         public final static Property Name = new Property(1, String.class, "name", false, "NAME");
         public final static Property Image = new Property(2, byte[].class, "image", false, "IMAGE");
+        public final static Property OrderNumber = new Property(3, Integer.class, "orderNumber", false, "ORDER_NUMBER");
+        public final static Property VersionNumber = new Property(4, Integer.class, "versionNumber", false, "VERSION_NUMBER");
     };
 
     private DaoSession daoSession;
@@ -46,7 +48,9 @@ public class InformationCategoryDao extends AbstractDao<InformationCategory, Lon
         db.execSQL("CREATE TABLE " + constraint + "\"INFORMATION_CATEGORY\" (" + //
                 "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
                 "\"NAME\" TEXT," + // 1: name
-                "\"IMAGE\" BLOB);"); // 2: image
+                "\"IMAGE\" BLOB," + // 2: image
+                "\"ORDER_NUMBER\" INTEGER," + // 3: orderNumber
+                "\"VERSION_NUMBER\" INTEGER);"); // 4: versionNumber
     }
 
     /** Drops the underlying database table. */
@@ -74,6 +78,16 @@ public class InformationCategoryDao extends AbstractDao<InformationCategory, Lon
         if (image != null) {
             stmt.bindBlob(3, image);
         }
+ 
+        Integer orderNumber = entity.getOrderNumber();
+        if (orderNumber != null) {
+            stmt.bindLong(4, orderNumber);
+        }
+ 
+        Integer versionNumber = entity.getVersionNumber();
+        if (versionNumber != null) {
+            stmt.bindLong(5, versionNumber);
+        }
     }
 
     @Override
@@ -94,7 +108,9 @@ public class InformationCategoryDao extends AbstractDao<InformationCategory, Lon
         InformationCategory entity = new InformationCategory( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
             cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // name
-            cursor.isNull(offset + 2) ? null : cursor.getBlob(offset + 2) // image
+            cursor.isNull(offset + 2) ? null : cursor.getBlob(offset + 2), // image
+            cursor.isNull(offset + 3) ? null : cursor.getInt(offset + 3), // orderNumber
+            cursor.isNull(offset + 4) ? null : cursor.getInt(offset + 4) // versionNumber
         );
         return entity;
     }
@@ -105,6 +121,8 @@ public class InformationCategoryDao extends AbstractDao<InformationCategory, Lon
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setName(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
         entity.setImage(cursor.isNull(offset + 2) ? null : cursor.getBlob(offset + 2));
+        entity.setOrderNumber(cursor.isNull(offset + 3) ? null : cursor.getInt(offset + 3));
+        entity.setVersionNumber(cursor.isNull(offset + 4) ? null : cursor.getInt(offset + 4));
      }
     
     /** @inheritdoc */

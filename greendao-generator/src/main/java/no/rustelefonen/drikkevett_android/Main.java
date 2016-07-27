@@ -71,6 +71,8 @@ public class Main {
         informationCategory.addIdProperty();
         informationCategory.addStringProperty("name");
         informationCategory.addByteArrayProperty("image");
+        informationCategory.addIntProperty("orderNumber");
+        informationCategory.addIntProperty("versionNumber");
         informationCategory.implementsSerializable();
 
         Entity information = schema.addEntity("Information");

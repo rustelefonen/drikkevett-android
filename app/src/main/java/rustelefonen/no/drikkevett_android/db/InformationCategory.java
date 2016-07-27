@@ -13,6 +13,8 @@ public class InformationCategory implements java.io.Serializable {
     private Long id;
     private String name;
     private byte[] image;
+    private Integer orderNumber;
+    private Integer versionNumber;
 
     /** Used to resolve relations */
     private transient DaoSession daoSession;
@@ -29,10 +31,12 @@ public class InformationCategory implements java.io.Serializable {
         this.id = id;
     }
 
-    public InformationCategory(Long id, String name, byte[] image) {
+    public InformationCategory(Long id, String name, byte[] image, Integer orderNumber, Integer versionNumber) {
         this.id = id;
         this.name = name;
         this.image = image;
+        this.orderNumber = orderNumber;
+        this.versionNumber = versionNumber;
     }
 
     /** called by internal mechanisms, do not call yourself. */
@@ -63,6 +67,22 @@ public class InformationCategory implements java.io.Serializable {
 
     public void setImage(byte[] image) {
         this.image = image;
+    }
+
+    public Integer getOrderNumber() {
+        return orderNumber;
+    }
+
+    public void setOrderNumber(Integer orderNumber) {
+        this.orderNumber = orderNumber;
+    }
+
+    public Integer getVersionNumber() {
+        return versionNumber;
+    }
+
+    public void setVersionNumber(Integer versionNumber) {
+        this.versionNumber = versionNumber;
     }
 
     /** To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity. */
