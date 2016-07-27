@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -32,6 +33,8 @@ import rustelefonen.no.drikkevett_android.util.NavigationUtil;
 public class BacHistoryFragment extends Fragment {
     private static final String TAG = "RecyclerViewFragment";
     private static final int SPAN_COUNT = 2;
+
+    public CardView defaultCard;
 
 
     private enum LayoutManagerType {
@@ -90,6 +93,9 @@ public class BacHistoryFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.bac_history_frag, container, false);
         rootView.setTag(TAG);
 
+        defaultCard = (CardView) rootView.findViewById(R.id.history_list_default_card);
+        if (historyList.size() <= 0) defaultCard.setVisibility(View.VISIBLE);
+
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
         mLayoutManager = new LinearLayoutManager(getActivity());
         mCurrentLayoutManagerType = LayoutManagerType.LINEAR_LAYOUT_MANAGER;
@@ -101,6 +107,16 @@ public class BacHistoryFragment extends Fragment {
         mRecyclerView.setAdapter(mAdapter);
 
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (historyList.size() <= 0) {
+            defaultCard.setVisibility(View.VISIBLE);
+        } else {
+            defaultCard.setVisibility(View.GONE);
+        }
     }
 
     private void setRecyclerViewLayoutManager(LayoutManagerType layoutManagerType) {

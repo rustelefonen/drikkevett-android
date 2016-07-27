@@ -26,8 +26,7 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:onClick="openImageDialog">
+                    android:layout_height="wrap_content">
 
                     <ImageView
                         android:layout_width="match_parent"
@@ -36,7 +35,8 @@
                         android:layout_alignParentTop="true"
                         android:src="@drawable/ic_defaultprofilepicturehollowwithroomfortextayylmaothislongassfilenameneverendscuh"
                         android:clickable="true"
-                        android:scaleType="centerCrop"/>
+                        android:scaleType="centerCrop"
+                        android:adjustViewBounds="false"/>
 
                     <TextView
                         android:id="@+id/myImageViewText"
@@ -44,7 +44,6 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:textSize="32sp"
-                        android:text="Trykk for å legge til bilde!"
                         android:paddingLeft="8dp"
                         android:textColor="@color/textColor"
                         android:layout_alignParentLeft="true"
