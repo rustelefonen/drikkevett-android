@@ -2,20 +2,17 @@ package rustelefonen.no.drikkevett_android.tabs.history;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -65,8 +62,8 @@ public class BacHistoryFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_delete:
-                new AlertDialog.Builder(getContext())
-                        .setTitle("Slett all historikk")
+                AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.AlertDialogCustom));
+                builder.setTitle("Slett all historikk")
                         .setMessage("Er du sikker på at du vil slette all historikk? Handlingen kan ikke angres.")
                         .setPositiveButton("JA", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
