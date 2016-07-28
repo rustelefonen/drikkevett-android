@@ -1,13 +1,13 @@
 package rustelefonen.no.drikkevett_android.tabs.dayAfter;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,29 +26,26 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 
-import rustelefonen.no.drikkevett_android.MainActivity;
-import rustelefonen.no.drikkevett_android.R;
-import rustelefonen.no.drikkevett_android.db.GraphHistory;
-import rustelefonen.no.drikkevett_android.db.GraphHistoryDao;
-import rustelefonen.no.drikkevett_android.db.History;
-import rustelefonen.no.drikkevett_android.db.HistoryDao;
-import rustelefonen.no.drikkevett_android.db.User;
-import rustelefonen.no.drikkevett_android.tabs.home.SuperDao;
-import rustelefonen.no.drikkevett_android.util.NavigationUtil;
-import rustelefonen.no.drikkevett_android.util.PartyUtil;
-
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import rustelefonen.no.drikkevett_android.db.DaoMaster;
-import rustelefonen.no.drikkevett_android.db.DaoSession;
+import rustelefonen.no.drikkevett_android.MainActivity;
+import rustelefonen.no.drikkevett_android.R;
 import rustelefonen.no.drikkevett_android.db.DayAfterBAC;
 import rustelefonen.no.drikkevett_android.db.DayAfterBACDao;
+import rustelefonen.no.drikkevett_android.db.GraphHistory;
+import rustelefonen.no.drikkevett_android.db.GraphHistoryDao;
+import rustelefonen.no.drikkevett_android.db.History;
+import rustelefonen.no.drikkevett_android.db.HistoryDao;
 import rustelefonen.no.drikkevett_android.db.PlanPartyElements;
 import rustelefonen.no.drikkevett_android.db.PlanPartyElementsDao;
+import rustelefonen.no.drikkevett_android.db.User;
+import rustelefonen.no.drikkevett_android.tabs.home.SuperDao;
+import rustelefonen.no.drikkevett_android.util.NavigationUtil;
+import rustelefonen.no.drikkevett_android.util.PartyUtil;
 
 import static rustelefonen.no.drikkevett_android.util.DateUtil.setNewUnitDate;
 import static rustelefonen.no.drikkevett_android.util.PartyUtil.addMinsToDate;
@@ -786,7 +783,7 @@ public class BacDayAfterFragment extends Fragment {
     }
 
     private void showAlert(){
-        AlertDialog.Builder alert_builder = new AlertDialog.Builder(getContext());
+        AlertDialog.Builder alert_builder = new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.AlertDialogCustom));
         alert_builder.setMessage("Er du sikker på at du vil avslutte dagen derpå? ").setCancelable(false).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
