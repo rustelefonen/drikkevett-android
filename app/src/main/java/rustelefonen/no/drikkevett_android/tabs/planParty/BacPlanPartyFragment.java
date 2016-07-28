@@ -1,6 +1,5 @@
 package rustelefonen.no.drikkevett_android.tabs.planParty;
 
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -8,6 +7,8 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -811,7 +812,7 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
     }
 
     private void showAlertNotRunning() {
-        AlertDialog.Builder alert_builder = new AlertDialog.Builder(getContext());
+        AlertDialog.Builder alert_builder = new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.AlertDialogCustom));
         alert_builder.setMessage("Har du husket alt? ").setCancelable(false).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -833,7 +834,7 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
     }
 
     private void showAlertRunning() {
-        AlertDialog.Builder alert_builder = new AlertDialog.Builder(getContext());
+        AlertDialog.Builder alert_builder = new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.AlertDialogCustom));
         alert_builder.setMessage("Er du sikker på at du vil avslutte kvelden?").setCancelable(false).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -854,7 +855,7 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
     }
 
     private void showAlertDayAfterRunning() {
-        AlertDialog.Builder alert_builder = new AlertDialog.Builder(getContext());
+        AlertDialog.Builder alert_builder = new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.AlertDialogCustom));
         alert_builder.setMessage("Er du sikker på at du vil avslutte Dagen Derpå? ").setCancelable(false).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
