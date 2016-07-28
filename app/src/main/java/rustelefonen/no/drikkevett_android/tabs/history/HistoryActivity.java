@@ -63,7 +63,7 @@ public class HistoryActivity extends AppCompatActivity {
             history = (History) tmpHistory;
             System.out.println(history.getHighestBAC());
         }
-
+        /*
         SuperDao superDao = new SuperDao(this);
         GraphHistoryDao graphHistoryDao = superDao.getGraphHistoryDao();
 
@@ -85,6 +85,7 @@ public class HistoryActivity extends AppCompatActivity {
         graphHistories = graphHistoryDao.queryBuilder().where(GraphHistoryDao.Properties.HistoryId.eq(history.getId())).list();
 
         superDao.close();
+        */
 
         lineChart = (LineChart) findViewById(R.id.history_line_chart_view);
         lineChart.setData(getLineData());

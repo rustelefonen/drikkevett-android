@@ -33,6 +33,7 @@ import rustelefonen.no.drikkevett_android.db.GraphHistoryDao;
 import rustelefonen.no.drikkevett_android.db.History;
 import rustelefonen.no.drikkevett_android.db.HistoryDao;
 import rustelefonen.no.drikkevett_android.db.User;
+import rustelefonen.no.drikkevett_android.tabs.home.SuperDao;
 import rustelefonen.no.drikkevett_android.util.NavigationUtil;
 import rustelefonen.no.drikkevett_android.util.PartyUtil;
 
@@ -184,11 +185,12 @@ public class BacDayAfterFragment extends Fragment {
 
     private Status getStatus(){
         Status tempStatus = Status.DEFAULT;
-
-        PlanPartyElementsDao partyDao = setDaoSessionDB().getPlanPartyElementsDao();
+        SuperDao superDao = new SuperDao(getContext());
+        PlanPartyElementsDao partyDao = superDao.getPlanPartyElementsDao();
 
         // GET elements to temporary store them in variables then re-saving them
         List<PlanPartyElements> partyList = partyDao.queryBuilder().list();
+        superDao.close();
         for (PlanPartyElements party : partyList) {
             if(party.getStatus().equals("NOT_RUNNING")){
                 tempStatus = Status.NOT_RUNNING;
@@ -201,9 +203,7 @@ public class BacDayAfterFragment extends Fragment {
             }
         }
         // For å sjekke om listen er tom
-        if(partyList.size() == 0){
-            System.out.println("Party listen er tom! ");
-        }
+        if(partyList.size() == 0){}
         return tempStatus;
     }
 
@@ -259,17 +259,6 @@ public class BacDayAfterFragment extends Fragment {
     * DATABASE COMMUNICATION METHODS
     * */
 
-    private DaoSession setDaoSessionDB(){
-        String DB_NAME = "my-db";
-        SQLiteDatabase db;
-        SQLiteDatabase.CursorFactory cursorFactory = null;
-        final DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(getContext(), DB_NAME, cursorFactory);
-        db = helper.getWritableDatabase();
-        DaoMaster daoMaster = new DaoMaster(db);
-        DaoSession daoSession = daoMaster.newSession();
-        return daoSession;
-    }
-
     private void setUserData(){
         User user = ((MainActivity)getActivity()).getUser();
         weight = user.getWeight();
@@ -278,9 +267,9 @@ public class BacDayAfterFragment extends Fragment {
 
     private void getUnits(){
         clearUnitVariabels();
-
-        PlanPartyElementsDao partyDao = setDaoSessionDB().getPlanPartyElementsDao();
-        DayAfterBACDao dayAfterDao = setDaoSessionDB().getDayAfterBACDao();
+        SuperDao superDao = new SuperDao(getContext());
+        PlanPartyElementsDao partyDao = superDao.getPlanPartyElementsDao();
+        DayAfterBACDao dayAfterDao = superDao.getDayAfterBACDao();
 
         // GET elements to temporary store them in variables then re-saving them
         List<PlanPartyElements> partyList = partyDao.queryBuilder().list();
@@ -327,17 +316,20 @@ public class BacDayAfterFragment extends Fragment {
                 consumShots++;
             }
         }
+        superDao.close();
         totalConsumed = consumBeers + consumWines + consumDrink + consumShots;
     }
 
     private double getHighestBAC(){
         double tempVal = 0.0;
-        HistoryDao historyDao = setDaoSessionDB().getHistoryDao();
+        SuperDao superDao = new SuperDao(getContext());
+        HistoryDao historyDao = superDao.getHistoryDao();
         if(historyDao != null){
             List<History> histList = historyDao.queryBuilder().list();
             History lastElement = histList.get(histList.size() -1);
             tempVal = lastElement.getHighestBAC();
         }
+        superDao.close();
         return tempVal;
     }
 
@@ -349,8 +341,10 @@ public class BacDayAfterFragment extends Fragment {
         consumDrink = 0;
         consumShots = 0;
 
-        DayAfterBACDao dayAfterDao = setDaoSessionDB().getDayAfterBACDao();
+        SuperDao superDao = new SuperDao(getContext());
+        DayAfterBACDao dayAfterDao = superDao.getDayAfterBACDao();
         List<DayAfterBAC> dayAfterBACList = dayAfterDao.queryBuilder().list();
+        superDao.close();
         for (DayAfterBAC dayAfter : dayAfterBACList) {
             if(dayAfter.getUnit().equals("Beer")){
                 consumBeers++;
@@ -395,8 +389,9 @@ public class BacDayAfterFragment extends Fragment {
     }
 
     private void clearDBTables(){
-        PlanPartyElementsDao partyDao = setDaoSessionDB().getPlanPartyElementsDao();
-        DayAfterBACDao dayAfterDao = setDaoSessionDB().getDayAfterBACDao();
+        SuperDao superDao = new SuperDao(getContext());
+        PlanPartyElementsDao partyDao = superDao.getPlanPartyElementsDao();
+        DayAfterBACDao dayAfterDao = superDao.getDayAfterBACDao();
 
         List<DayAfterBAC> dayAfterBACList = dayAfterDao.queryBuilder().list();
         for (DayAfterBAC dayAfter : dayAfterBACList) {
@@ -428,6 +423,7 @@ public class BacDayAfterFragment extends Fragment {
         newParty.setAftRegShot(0);
         newParty.setStatus(status.toString());
         partyDao.insert(newParty);
+        superDao.close();
     }
 
     public int calculateCosts(int b, int w, int d, int s){
@@ -452,10 +448,10 @@ public class BacDayAfterFragment extends Fragment {
         int intervallHours = 0;
 
         // Get length of session ( interval )
-
-        PlanPartyElementsDao partyDao = setDaoSessionDB().getPlanPartyElementsDao();
+        SuperDao superDao = new SuperDao(getContext());
+        PlanPartyElementsDao partyDao = superDao.getPlanPartyElementsDao();
         List<PlanPartyElements> partyList = partyDao.queryBuilder().list();
-
+        superDao.close();
         PlanPartyElements lastElement = partyList.get(partyList.size() -1);
         Date endS = lastElement.getEndTimeStamp();
         Date startS = lastElement.getStartTimeStamp();
@@ -593,7 +589,8 @@ public class BacDayAfterFragment extends Fragment {
         refreshGraphHist();
 
         // add number of after registered units
-        PlanPartyElementsDao partyDao = setDaoSessionDB().getPlanPartyElementsDao();
+        SuperDao superDao = new SuperDao(getContext());
+        PlanPartyElementsDao partyDao = superDao.getPlanPartyElementsDao();
         List<PlanPartyElements> plaList = partyDao.queryBuilder().list();
         PlanPartyElements getLastElement = plaList.get(plaList.size() - 1);
 
@@ -644,20 +641,21 @@ public class BacDayAfterFragment extends Fragment {
             getLastElement.setAftRegShot(afterRegShot);
         }
         partyDao.insertOrReplace(getLastElement);
-
+        superDao.close();
         // refresh all visuals
         dayAfterRunning();
     }
 
     private void refreshGraphHist(){
+        SuperDao superDao = new SuperDao(getContext());
         // REMOVE ALL LATEST GRAPH HIST WITH SAME ID AS HISTORY ID AND TEMP STORE THE TIMESTAMPS
-        HistoryDao historyDao = setDaoSessionDB().getHistoryDao();
+        HistoryDao historyDao = superDao.getHistoryDao();
         List<History> histories = historyDao.queryBuilder().list();
         History lastElement = histories.get(histories.size() -1);
 
-        GraphHistoryDao graphHistoryDao = setDaoSessionDB().getGraphHistoryDao();
+        GraphHistoryDao graphHistoryDao = superDao.getGraphHistoryDao();
         List<GraphHistory> graphHistList = graphHistoryDao.queryBuilder().where(GraphHistoryDao.Properties.HistoryId.eq(lastElement.getId())).list();
-
+        superDao.close();
         for(GraphHistory graphHist : graphHistList){
             graphHistoryDao.deleteByKey(graphHist.getId());
         }
@@ -668,8 +666,10 @@ public class BacDayAfterFragment extends Fragment {
     }
 
     private void setStartAndEndStamp(){
-        PlanPartyElementsDao planDao = setDaoSessionDB().getPlanPartyElementsDao();
+        SuperDao superDao = new SuperDao(getContext());
+        PlanPartyElementsDao planDao = superDao.getPlanPartyElementsDao();
         List<PlanPartyElements> planPList = planDao.queryBuilder().list();
+        superDao.close();
         PlanPartyElements element = planPList.get(planPList.size() - 1);
         startStamp = element.getStartTimeStamp();
         endStamp = element.getEndTimeStamp();
@@ -677,8 +677,10 @@ public class BacDayAfterFragment extends Fragment {
 
     private void calcPr(int id){
         // Loop gjennom DayAfterBAC. Simuler hva promillen var hvert kvarter/halvtime
-        DayAfterBACDao dayAfterBACDao = setDaoSessionDB().getDayAfterBACDao();
+        SuperDao superDao = new SuperDao(getContext());
+        DayAfterBACDao dayAfterBACDao = superDao.getDayAfterBACDao();
         List<DayAfterBAC> dayAfterBacList = dayAfterBACDao.queryBuilder().list();
+        superDao.close();
 
         double highestBAC = 0.0;
         double promille = 0.0;
@@ -772,7 +774,6 @@ public class BacDayAfterFragment extends Fragment {
                 hours = i;
                 seekBar.setMax(setMaxSeekBarVal());
                 tempMins = configSeekBar(hours);
-                System.out.println("Temp Mins: " + tempMins);
             }
 
             @Override
