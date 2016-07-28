@@ -2,9 +2,9 @@ package rustelefonen.no.drikkevett_android.tabs.planParty;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
@@ -17,16 +17,16 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
-import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -34,12 +34,8 @@ import java.util.concurrent.TimeUnit;
 
 import rustelefonen.no.drikkevett_android.MainActivity;
 import rustelefonen.no.drikkevett_android.R;
-import rustelefonen.no.drikkevett_android.db.DaoMaster;
-import rustelefonen.no.drikkevett_android.db.DaoSession;
 import rustelefonen.no.drikkevett_android.db.DayAfterBAC;
 import rustelefonen.no.drikkevett_android.db.DayAfterBACDao;
-import rustelefonen.no.drikkevett_android.db.GraphHistory;
-import rustelefonen.no.drikkevett_android.db.GraphHistoryDao;
 import rustelefonen.no.drikkevett_android.db.History;
 import rustelefonen.no.drikkevett_android.db.HistoryDao;
 import rustelefonen.no.drikkevett_android.db.PlanPartyElements;
@@ -55,10 +51,9 @@ import static rustelefonen.no.drikkevett_android.util.DateUtil.setNewUnitDate;
 import static rustelefonen.no.drikkevett_android.util.PartyUtil.calculateBAC;
 import static rustelefonen.no.drikkevett_android.util.PartyUtil.countingGrams;
 import static rustelefonen.no.drikkevett_android.util.PartyUtil.getDateDiff;
-import static rustelefonen.no.drikkevett_android.util.PartyUtil.setGenderScore;
 
 public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageChangeListener,
-        RadioGroup.OnCheckedChangeListener {
+        RadioGroup.OnCheckedChangeListener, View.OnClickListener {
 
     private double weight = 0;
     private String gender = "";
@@ -77,7 +72,9 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
 
     private TextView beerLbl, wineLbl, drinkLbl, shotLbl, textQuoteLbl;
 
-    private Button addBtn, removeBtn, statusBtn;
+    private FloatingActionButton addBtn, removeBtn;
+
+    private Button statusBtn;
 
     public View v;
 
@@ -90,6 +87,8 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
     private PartyUtil partyUtil;
 
     public RadioGroup pageIndicatorGroup;
+
+    private boolean fabLabelsHidden = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -109,30 +108,6 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
         checkIfDayAfterEndedDayAfter();
         stateHandler(status);
 
-        addBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(status.equals(Status.RUNNING)){
-                    planPartyDB.addConsumedUnits(getUnitId());
-                    if(!planPartyDB.isFirstUnitAdded()){
-                        System.out.println("First unit added =)");
-                        setFirstUnitAdded();
-                    }
-                }
-                if(status.equals(Status.NOT_RUNNING)){
-                    addPlannedUnits(getUnitId());
-                }
-                stateHandler(status);
-            }
-        });
-
-        removeBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                removeBtnHandler();
-            }
-        });
-
         statusBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -146,6 +121,28 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
         setHasOptionsMenu(true);
 
         return v;
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+
+        // Make sure that we are currently visible
+        if (this.isVisible()) {
+            // If we are becoming invisible, then...
+            if (!isVisibleToUser) {
+                FloatingActionMenu floatingActionMenu = (FloatingActionMenu) getActivity().findViewById(R.id.fab_menu_lol);
+                floatingActionMenu.close(false);
+            } else {
+                setUserData();
+                status = isSessionOver();
+                checkIfDayAfterEndedDayAfter();
+                stateHandler(status);
+
+                FloatingActionButton l = (FloatingActionButton) getActivity().findViewById(R.id.fab_start_night_button);
+                if (l.getVisibility() == View.GONE) l.setVisibility(View.VISIBLE);
+            }
+        }
     }
 
     @Override
@@ -180,17 +177,6 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
         checkIfDayAfterEndedDayAfter();
         stateHandler(status);
     }
-
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (!this.isVisible()) return;
-        if (!isVisibleToUser) return;
-        setUserData();
-        status = isSessionOver();
-        checkIfDayAfterEndedDayAfter();
-        stateHandler(status);
-    }
     
     private void stateHandler(Status state){
         if(state == Status.RUNNING){
@@ -204,9 +190,12 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
         }
     }
 
+    //HUSK!
     private void partyRunning(){
         statusBtn.setText("Avslutt Kvelden");
-        addBtn.setText("Drikk");
+        //addBtn.setText("Drikk");
+
+
         firstUnitAdded = planPartyDB.getFirstUnitAddedStamp();
 
         // calculate BAC
@@ -264,9 +253,10 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
         }
     }
 
+    //HUSK!
     private void partyNotRunning(){
 
-        addBtn.setText("Legg til");
+        //addBtn.setText("Legg til");
 
         textQuoteLbl.setText("Planlegg kvelden!");
 
@@ -304,6 +294,7 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
         }
     }
 
+    //HUSK!
     private void dayAfterRunning(){
         statusBtn.setText("Avslutt Dagen Derpå");
         dayAfterRunning_LinLay.setVisibility(View.VISIBLE);
@@ -957,6 +948,8 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
     private void setListeners() {
         pageIndicatorGroup.setOnCheckedChangeListener(this);
         beerScroll.addOnPageChangeListener(this);
+        addBtn.setOnClickListener(this);
+        removeBtn.setOnClickListener(this);
     }
 
     private void initWidgets(){
@@ -965,11 +958,53 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
         drinkLbl = (TextView) v.findViewById(R.id.textViewDrinkPP);
         shotLbl = (TextView) v.findViewById(R.id.textViewShotPP);
         textQuoteLbl = (TextView) v.findViewById(R.id.textViewQuotesPP);
-        addBtn = (Button) v.findViewById(R.id.buttonAddPP);
-        removeBtn = (Button) v.findViewById(R.id.buttonRemovePP);
+        addBtn = (FloatingActionButton) getActivity().findViewById(R.id.add_button);
+        removeBtn = (FloatingActionButton) getActivity().findViewById(R.id.subtract_button);
         statusBtn = (Button) v.findViewById(R.id.buttonStatusPP);
         planPartyRunning_LinLay = (LinearLayout) v.findViewById(R.id.layout_planPartyRunning_ID_PP);
         dayAfterRunning_LinLay = (LinearLayout) v.findViewById(R.id.layout_dayAfterRunning_ID_PP);
         pageIndicatorGroup = (RadioGroup) v.findViewById(R.id.page_indicator_radio_PP);
+    }
+
+    private boolean bacPlanPartyIsSelected() {
+        return ((MainActivity)getActivity()).getCurrentViewpagerPosition() == 2;
+    }
+
+    @Override
+    public void onClick(View view) {
+        int id = view.getId();
+        if (id == R.id.add_button) {
+            if (!bacPlanPartyIsSelected()) return;
+            if(status.equals(Status.RUNNING)){
+                planPartyDB.addConsumedUnits(getUnitId());
+                if(!planPartyDB.isFirstUnitAdded()){
+                    System.out.println("First unit added =)");
+                    setFirstUnitAdded();
+                }
+            }
+            if(status.equals(Status.NOT_RUNNING)){
+                addPlannedUnits(getUnitId());
+            }
+            stateHandler(status);
+            if (fabLabelsHidden) return;
+            fabLabelsHidden = true;
+            hideFabLabels();
+        } else if (id == R.id.subtract_button) {
+            if (!bacPlanPartyIsSelected()) return;
+            removeBtnHandler();
+            if (fabLabelsHidden) return;
+            fabLabelsHidden = true;
+            hideFabLabels();
+        }
+    }
+
+    private void hideFabLabels() {
+        new Handler().postDelayed(new Runnable() {
+            public void run() {
+                //insert animation?
+                addBtn.setLabelVisibility(View.GONE);
+                removeBtn.setLabelVisibility(View.GONE);
+            }
+        }, 5000);
     }
 }

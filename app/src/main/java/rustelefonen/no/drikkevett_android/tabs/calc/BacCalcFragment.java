@@ -91,6 +91,9 @@ public class BacCalcFragment extends android.support.v4.app.Fragment implements 
             // If we are becoming invisible, then...
             if (!isVisibleToUser) {
                 floatingActionMenu.close(false);
+            } else {
+                FloatingActionButton l = (FloatingActionButton) getActivity().findViewById(R.id.fab_start_night_button);
+                l.setVisibility(View.GONE);
             }
         }
     }
