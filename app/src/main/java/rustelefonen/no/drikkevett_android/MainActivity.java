@@ -239,8 +239,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         } else if (itemId == R.id.nav_fourth_fragment) intent = new Intent(this, SourcesActivity.class);
         else if (itemId == R.id.nav_fifth_fragment) {
             intent = new Intent(this, Guidance.class);
-        } else if (itemId == R.id.nav_sixth_fragment) {
-            intent = new Intent(this, QuestionActivity.class);
         }
         if (intent != null) startActivity(intent);
     }
