@@ -256,19 +256,19 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
     private void setTabLayoutIcons() {
         TabLayout.Tab homeTab = tabLayout.getTabAt(FIRST_TAB_INDEX);
-        if (homeTab != null) homeTab.setIcon(R.drawable.ic_home_black_24dp);
+        if (homeTab != null) homeTab.setIcon(R.drawable.ic_action_ic_home_white_24dp);
 
         TabLayout.Tab calcTab = tabLayout.getTabAt(1);
-        if (calcTab != null) calcTab.setIcon(R.drawable.per_mille);
+        if (calcTab != null) calcTab.setIcon(R.drawable.ic_action_ic_action_promilleikon1000000);
 
         TabLayout.Tab planPartyTab = tabLayout.getTabAt(2);
-        if (planPartyTab != null) planPartyTab.setIcon(R.drawable.ic_playlist_add_black_24dp);
+        if (planPartyTab != null) planPartyTab.setIcon(R.drawable.ic_action_checklist);
 
         TabLayout.Tab dayAfterTab = tabLayout.getTabAt(3);
-        if (dayAfterTab != null) dayAfterTab.setIcon(R.drawable.ic_mood_bad_black_24dp);
+        if (dayAfterTab != null) dayAfterTab.setIcon(R.drawable.ic_action_ic_mood_bad_white_24dp);
 
         TabLayout.Tab historyTab = tabLayout.getTabAt(4);
-        if (historyTab != null) historyTab.setIcon(R.drawable.ic_access_time_black_24dp);
+        if (historyTab != null) historyTab.setIcon(R.drawable.ic_action_ic_history_black_24dp);
     }
 
     private void fetchUser() {
