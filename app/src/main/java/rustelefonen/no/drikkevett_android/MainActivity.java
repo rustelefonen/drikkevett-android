@@ -18,6 +18,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.MenuItem;
@@ -314,7 +315,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     }
 
     public void openImageDialog(final View view) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.AlertDialogCustom));
         builder.setTitle("Profilbilde")
                 .setItems(IMAGE_DIALOG, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {

@@ -62,8 +62,7 @@
                                 android:layout_width="10dp"
                                 android:layout_height="3dp"
                                 android:layout_gravity="center"
-                                android:background="@color/beerColor"
-                                />
+                                android:background="@color/beerColor"/>
 
                         </LinearLayout>
                         <LinearLayout
