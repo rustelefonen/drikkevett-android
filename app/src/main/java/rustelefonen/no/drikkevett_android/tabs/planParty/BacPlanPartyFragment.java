@@ -287,6 +287,7 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
         SuperDao superDao = new SuperDao(getContext());
         DayAfterBACDao dayAfterBACDao = superDao.getDayAfterBACDao();
         List<DayAfterBAC> dayAfterBACList = dayAfterBACDao.queryBuilder().list();
+        superDao.close();
 
         if(dayAfterBACList.size() <= 0 ){
             System.out.println("DayAfterBac er tømt! ");
