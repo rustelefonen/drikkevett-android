@@ -36,7 +36,6 @@ public class PlanPartyDB {
     }
 
     public Date getFirstUnitAddedStamp(){
-        System.out.println("Hæ? ");
         SuperDao superDao = new SuperDao(context);
 
         PlanPartyElementsDao partyDao = superDao.getPlanPartyElementsDao();

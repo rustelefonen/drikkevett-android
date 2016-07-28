@@ -94,6 +94,7 @@ public class BacHomeFragment extends Fragment{
         fillPieChart();
         stylePieChart();
         setHasOptionsMenu(true);
+        fireGoalDateReachedView();
         return view;
     }
 

@@ -106,6 +106,7 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
         setListeners();
         setUserData();
         status = isSessionOver();
+        checkIfDayAfterEndedDayAfter();
         stateHandler(status);
 
         addBtn.setOnClickListener(new View.OnClickListener() {
@@ -114,6 +115,7 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
                 if(status.equals(Status.RUNNING)){
                     planPartyDB.addConsumedUnits(getUnitId());
                     if(!planPartyDB.isFirstUnitAdded()){
+                        System.out.println("First unit added =)");
                         setFirstUnitAdded();
                     }
                 }
@@ -175,6 +177,7 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
         super.onResume();
         setUserData();
         status = isSessionOver();
+        checkIfDayAfterEndedDayAfter();
         stateHandler(status);
     }
 
@@ -185,6 +188,7 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
         if (!isVisibleToUser) return;
         setUserData();
         status = isSessionOver();
+        checkIfDayAfterEndedDayAfter();
         stateHandler(status);
     }
     
@@ -261,6 +265,7 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
     }
 
     private void partyNotRunning(){
+
         addBtn.setText("Legg til");
 
         textQuoteLbl.setText("Planlegg kvelden!");
@@ -286,6 +291,17 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
         textQuoteLbl.setText(partyUtil.textQuote(promilleBAC));
         textQuoteLbl.setTextColor(partyUtil.colorQuote(promilleBAC));
         pieChart.setCenterTextColor(partyUtil.colorQuote(promilleBAC));
+    }
+
+    private void checkIfDayAfterEndedDayAfter(){
+        SuperDao superDao = new SuperDao(getContext());
+        DayAfterBACDao dayAfterBACDao = superDao.getDayAfterBACDao();
+        List<DayAfterBAC> dayAfterBACList = dayAfterBACDao.queryBuilder().list();
+
+        if(dayAfterBACList.size() <= 0 ){
+            System.out.println("DayAfterBac er tømt! ");
+            statusNotRunning();
+        }
     }
 
     private void dayAfterRunning(){
@@ -440,7 +456,6 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
         endTimeStamp = setEndOfSesStamp(15);
 
         List<PlanPartyElements> PlanPartyList = partyDao.queryBuilder().list();
-
         for (PlanPartyElements party : PlanPartyList) {
             if(party.getFirstUnitAddedDate() != null){
                 firstUnitAdded = party.getFirstUnitAddedDate();
@@ -486,6 +501,7 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
         SuperDao superDao = new SuperDao(getContext());
         DayAfterBACDao dayAfterBACDao = superDao.getDayAfterBACDao();
         dayAfterBACDao.deleteAll();
+        superDao.close();
     }
 
     private void statusNotRunning(){
@@ -691,7 +707,6 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
         Date tempStartDate = null;
 
         superDao.close();
-
         SuperDao superDao2 = new SuperDao(getContext());
         HistoryDao histDao = superDao2.getHistoryDao();
         List<History> histList = histDao.queryBuilder().list();
