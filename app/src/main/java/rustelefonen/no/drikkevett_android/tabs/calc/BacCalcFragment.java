@@ -2,6 +2,7 @@ package rustelefonen.no.drikkevett_android.tabs.calc;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -10,11 +11,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.Entry;
@@ -30,13 +32,9 @@ import rustelefonen.no.drikkevett_android.db.User;
 import rustelefonen.no.drikkevett_android.tabs.calc.fragments.BeerScrollAdapter;
 import rustelefonen.no.drikkevett_android.util.Gender;
 import rustelefonen.no.drikkevett_android.util.NavigationUtil;
-import rustelefonen.no.drikkevett_android.util.PartyUtil;
 
-public class BacCalcFragment extends android.support.v4.app.Fragment
-        implements ViewPager.OnPageChangeListener,
-        RadioGroup.OnCheckedChangeListener,
-        SeekBar.OnSeekBarChangeListener,
-        View.OnClickListener {
+public class BacCalcFragment extends android.support.v4.app.Fragment implements ViewPager.OnPageChangeListener,
+        RadioGroup.OnCheckedChangeListener, SeekBar.OnSeekBarChangeListener, View.OnClickListener {
 
     // ENHETER
     private int beer = 0;
@@ -46,10 +44,6 @@ public class BacCalcFragment extends android.support.v4.app.Fragment
 
     // HOURS
     private int hours = 0;
-
-    // BUTTON
-    public Button addButton;
-    public Button removeButton;
 
     // TEXTVIEWS
     public TextView labelHours;
@@ -64,11 +58,18 @@ public class BacCalcFragment extends android.support.v4.app.Fragment
     public PieChart pieChart;
     public ViewPager beerScroll;
 
+    //Fabs
+    public FloatingActionMenu floatingActionMenu;
+    public FloatingActionButton addFAB;
+    public FloatingActionButton subFAB;
+
     private static final String PER_MILLE = "\u2030";
 
     public RadioGroup pageIndicatorGroup;
 
     private User user;
+
+    private boolean fabLabelsHidden = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -79,6 +80,19 @@ public class BacCalcFragment extends android.support.v4.app.Fragment
         setListeners();
         fillWidgets();
         return view;
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+
+        // Make sure that we are currently visible
+        if (this.isVisible()) {
+            // If we are becoming invisible, then...
+            if (!isVisibleToUser) {
+                floatingActionMenu.close(false);
+            }
+        }
     }
 
     @Override
@@ -208,8 +222,6 @@ public class BacCalcFragment extends android.support.v4.app.Fragment
 
     private void initWidgets(View view){
         pageIndicatorGroup = (RadioGroup) view.findViewById(R.id.page_indicator_radio);
-        addButton = (Button) view.findViewById(R.id.addBtn);
-        removeButton = (Button) view.findViewById(R.id.btnRemove);
         labelHours = (TextView) view.findViewById(R.id.textViewHours);
         seekBar = (SeekBar) view.findViewById(R.id.seekBarBacCalc);
         labelBeerNrUnits = (TextView) view.findViewById(R.id.textViewBeerUnits);
@@ -219,14 +231,18 @@ public class BacCalcFragment extends android.support.v4.app.Fragment
         pieChart = (PieChart) view.findViewById(R.id.pie_chart_bac_calc);
         beerScroll = (ViewPager) view.findViewById(R.id.beer_scroll);
         labelQuotes = (TextView) view.findViewById(R.id.text_view_quotes);
+
+        floatingActionMenu = (FloatingActionMenu) getActivity().findViewById(R.id.fab_menu_lol);
+        addFAB = (FloatingActionButton) getActivity().findViewById(R.id.add_button);
+        subFAB = (FloatingActionButton) getActivity().findViewById(R.id.subtract_button);
     }
 
     private void setListeners() {
         pageIndicatorGroup.setOnCheckedChangeListener(this);
         seekBar.setOnSeekBarChangeListener(this);
         beerScroll.addOnPageChangeListener(this);
-        addButton.setOnClickListener(this);
-        removeButton.setOnClickListener(this);
+        addFAB.setOnClickListener(this);
+        subFAB.setOnClickListener(this);
     }
 
     private void fillWidgets() {
@@ -403,10 +419,35 @@ public class BacCalcFragment extends android.support.v4.app.Fragment
         pieChart.animateY(1400, Easing.EasingOption.EaseInOutQuad);
     }
 
+    private boolean bacCalcIsSelected() {
+        return ((MainActivity)getActivity()).getCurrentViewpagerPosition() == 1;
+    }
+
     @Override
     public void onClick(View view) {
         int id = view.getId();
-        if (id == R.id.addBtn) addBeverage();
-        else if (id == R.id.btnRemove) removeBeverage();
+        if (id == R.id.add_button) {
+            if (!bacCalcIsSelected()) return;
+            addBeverage();
+            if (fabLabelsHidden) return;
+            fabLabelsHidden = true;
+            hideFabLabels();
+        } else if (id == R.id.subtract_button) {
+            if (!bacCalcIsSelected()) return;
+            removeBeverage();
+            if (fabLabelsHidden) return;
+            fabLabelsHidden = true;
+            hideFabLabels();
+        }
+    }
+
+    private void hideFabLabels() {
+        new Handler().postDelayed(new Runnable() {
+            public void run() {
+                //insert animation?
+                addFAB.setLabelVisibility(View.GONE);
+                subFAB.setLabelVisibility(View.GONE);
+            }
+        }, 5000);
     }
 }

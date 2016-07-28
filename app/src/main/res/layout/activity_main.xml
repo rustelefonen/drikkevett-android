@@ -39,6 +39,40 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+        <com.github.clans.fab.FloatingActionMenu
+            xmlns:fab="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/fab_menu_lol"
+            android:layout_margin="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right"
+            fab:menu_animationDelayPerItem="50"
+            fab:menu_colorNormal="@color/blueButton"
+            fab:menu_colorPressed="@color/blueButton"
+            app:layout_behavior="rustelefonen.no.drikkevett_android.ScrollFAMBehaviour">
+
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/add_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_add_black_24dp"
+                app:fab_colorNormal="@color/greenSuper"
+                app:fab_colorPressed="@color/greenSuper"
+                fab:fab_size="mini"
+                fab:fab_label="Legg til" />
+
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/subtract_button"
+                app:fab_colorNormal="@color/redSuper"
+                app:fab_colorPressed="@color/redSuper"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_remove_black_24dp"
+                fab:fab_size="mini"
+                fab:fab_label="Fjern" />
+
+
+        </com.github.clans.fab.FloatingActionMenu>
     </android.support.design.widget.CoordinatorLayout>
 
     <android.support.design.widget.NavigationView

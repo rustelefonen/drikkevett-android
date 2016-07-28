@@ -26,6 +26,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
+
 import java.io.File;
 import java.util.List;
 
@@ -58,10 +61,16 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
     private User user;
 
+    public FloatingActionMenu floatingActionMenu;
+
+    private int currentViewpagerPosition;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        floatingActionMenu = (FloatingActionMenu) findViewById(R.id.fab_menu_lol);
 
         initWidgets();
         setupToolbar();
@@ -109,6 +118,21 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
     @Override
     public void onPageSelected(int position) {
+        currentViewpagerPosition = position;
+        if (position == 0) {
+            floatingActionMenu.hideMenu(true);
+        } else if (position == 1) {
+            floatingActionMenu.showMenu(true);
+        } else if (position == 2) {
+            floatingActionMenu.showMenu(true);
+        } else if (position == 3) {
+            floatingActionMenu.showMenu(true);
+        } else if (position == 4) {
+            floatingActionMenu.hideMenu(true);
+        }
+
+
+
         String title = position == 0 ? "Hjem" : position == 1 ? "Promillekalkulator"
                 : position == 2 ? "Planlegg kvelden" : position == 3 ? "Dagen Derpå"
                 : position == 4 ? "Historikk" : "";
@@ -147,7 +171,11 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
             if (selectedImage == null) return;
             String picturePath = getGalleryPath(selectedImage);
             if (picturePath == null) return;
-            ImageUtil.copyFile(new File(picturePath), new File(ImageUtil.getPhotoFileUri(photoFileName, this).getPath()));
+            Uri newFileUri = ImageUtil.getPhotoFileUri(photoFileName, this);
+            if (newFileUri == null) return;
+            String newFilePath = newFileUri.getPath();
+            if (newFilePath == null) return;
+            ImageUtil.copyFile(new File(picturePath), new File(newFilePath));
         }
     }
 
@@ -318,5 +346,9 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     private void setupToolbar() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+    }
+
+    public int getCurrentViewpagerPosition() {
+        return currentViewpagerPosition;
     }
 }
