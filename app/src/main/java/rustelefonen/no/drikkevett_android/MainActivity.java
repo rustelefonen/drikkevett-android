@@ -159,6 +159,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         } else if (position == 4) {
             floatingActionMenu.hideMenu(true);
         }
+        floatingActionMenu.close(false);
 
 
 

@@ -17,7 +17,6 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.github.clans.fab.FloatingActionButton;
-import com.github.clans.fab.FloatingActionMenu;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.Entry;
@@ -59,7 +58,6 @@ public class BacCalcFragment extends Fragment implements ViewPager.OnPageChangeL
     public ViewPager beerScroll;
 
     //Fabs
-    public FloatingActionMenu floatingActionMenu;
     public FloatingActionButton addFAB;
     public FloatingActionButton subFAB;
 
@@ -90,7 +88,6 @@ public class BacCalcFragment extends Fragment implements ViewPager.OnPageChangeL
         if (this.isVisible()) {
             // If we are becoming invisible, then...
             if (!isVisibleToUser) {
-                floatingActionMenu.close(false);
             } else {
                 FloatingActionButton l = (FloatingActionButton) getActivity().findViewById(R.id.fab_start_night_button);
                 l.setVisibility(View.GONE);
@@ -235,7 +232,6 @@ public class BacCalcFragment extends Fragment implements ViewPager.OnPageChangeL
         beerScroll = (ViewPager) view.findViewById(R.id.beer_scroll);
         labelQuotes = (TextView) view.findViewById(R.id.text_view_quotes);
 
-        floatingActionMenu = (FloatingActionMenu) getActivity().findViewById(R.id.fab_menu_lol);
         addFAB = ((MainActivity)getActivity()).getBacFabAddButton();
         subFAB = ((MainActivity)getActivity()).getBacFabRemoveButton();
     }

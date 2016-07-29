@@ -91,6 +91,10 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
 
     private boolean fabLabelsHidden = false;
 
+    public FloatingActionButton planpartyStartButton;
+    public FloatingActionButton planPartyEndEveningButton;
+    public FloatingActionButton planPartyEndDayAfterButton;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.bac_plan_party_frag, container, false);
@@ -193,6 +197,11 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
 
     //HUSK!
     private void partyRunning(){
+        planpartyStartButton.setVisibility(View.GONE);
+        planPartyEndEveningButton.setVisibility(View.VISIBLE);
+        planPartyEndDayAfterButton.setVisibility(View.GONE);
+
+
         statusBtn.setText("Avslutt Kvelden");
         //addBtn.setText("Drikk");
 
@@ -256,6 +265,9 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
 
     //HUSK!
     private void partyNotRunning(){
+        planpartyStartButton.setVisibility(View.VISIBLE);
+        planPartyEndEveningButton.setVisibility(View.GONE);
+        planPartyEndDayAfterButton.setVisibility(View.GONE);
 
         //addBtn.setText("Legg til");
 
@@ -298,6 +310,10 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
 
     //HUSK!
     private void dayAfterRunning(){
+        planpartyStartButton.setVisibility(View.GONE);
+        planPartyEndEveningButton.setVisibility(View.GONE);
+        planPartyEndDayAfterButton.setVisibility(View.VISIBLE);
+
         statusBtn.setText("Avslutt Dagen Derpå");
         dayAfterRunning_LinLay.setVisibility(View.VISIBLE);
         planPartyRunning_LinLay.setVisibility(View.GONE);
@@ -516,12 +532,21 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
     private void statusBtnHandler(){
         String textOnBtn = (String) statusBtn.getText();
         if(textOnBtn.equals("Avslutt Kvelden")){
+            planpartyStartButton.setVisibility(View.GONE);
+            planPartyEndEveningButton.setVisibility(View.VISIBLE);
+            planPartyEndDayAfterButton.setVisibility(View.GONE);
             showAlertRunning();
         }
         if(textOnBtn.equals("Avslutt Dagen Derpå")){
+            planpartyStartButton.setVisibility(View.GONE);
+            planPartyEndEveningButton.setVisibility(View.GONE);
+            planPartyEndDayAfterButton.setVisibility(View.VISIBLE);
             showAlertDayAfterRunning();
         }
         if(textOnBtn.equals("Start Kvelden")){
+            planpartyStartButton.setVisibility(View.VISIBLE);
+            planPartyEndEveningButton.setVisibility(View.GONE);
+            planPartyEndDayAfterButton.setVisibility(View.GONE);
             showAlertNotRunning();
         }
     }
@@ -529,9 +554,15 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
     private void removeBtnHandler(){
         String textOnBtn = (String) statusBtn.getText();
         if(textOnBtn.equals("Avslutt Kvelden")){
+            planpartyStartButton.setVisibility(View.GONE);
+            planPartyEndEveningButton.setVisibility(View.VISIBLE);
+            planPartyEndDayAfterButton.setVisibility(View.GONE);
             removeConsumedUnits(getUnitId());
         }
         if(textOnBtn.equals("Start Kvelden")){
+            planpartyStartButton.setVisibility(View.VISIBLE);
+            planPartyEndEveningButton.setVisibility(View.GONE);
+            planPartyEndDayAfterButton.setVisibility(View.GONE);
             removePlannedUnits(getUnitId());
         }
         stateHandler(status);
@@ -817,6 +848,13 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 statusBtn.setText("Avslutt Kvelden");
+
+                planpartyStartButton.setVisibility(View.GONE);
+                planPartyEndEveningButton.setVisibility(View.VISIBLE);
+                planPartyEndDayAfterButton.setVisibility(View.GONE);
+
+
+
                 status = Status.RUNNING;
                 updateStatusBtn(status.toString());
                 stateHandler(status);
@@ -861,6 +899,10 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
             public void onClick(DialogInterface dialogInterface, int i) {
                 statusBtn.setText("Start Kvelden");
                 status = Status.NOT_RUNNING;
+
+                planpartyStartButton.setVisibility(View.VISIBLE);
+                planPartyEndEveningButton.setVisibility(View.GONE);
+                planPartyEndDayAfterButton.setVisibility(View.GONE);
 
                 // Clear tabels: (PlanPartyElements and DayAfterBAC)
                 clearPartyTables();
@@ -966,6 +1008,10 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
         planPartyRunning_LinLay = (LinearLayout) v.findViewById(R.id.layout_planPartyRunning_ID_PP);
         dayAfterRunning_LinLay = (LinearLayout) v.findViewById(R.id.layout_dayAfterRunning_ID_PP);
         pageIndicatorGroup = (RadioGroup) v.findViewById(R.id.page_indicator_radio_PP);
+
+        planpartyStartButton = ((MainActivity)getActivity()).getPlanpartyStartButton();
+        planPartyEndEveningButton = ((MainActivity)getActivity()).getPlanPartyEndEveningButton();
+        planPartyEndDayAfterButton = ((MainActivity)getActivity()).getPlanPartyEndDayAfterButton();
     }
 
     private boolean bacPlanPartyIsSelected() {

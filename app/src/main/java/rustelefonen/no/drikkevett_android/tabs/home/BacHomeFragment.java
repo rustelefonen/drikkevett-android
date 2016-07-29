@@ -16,9 +16,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.github.clans.fab.FloatingActionButton;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
@@ -83,6 +85,8 @@ public class BacHomeFragment extends Fragment{
     public TextView barChartMonth;
     public TextView barChartYear;
 
+    public FloatingActionButton addProfileImageFab;
+
     private User user;
 
     @Override
@@ -130,6 +134,7 @@ public class BacHomeFragment extends Fragment{
         super.setUserVisibleHint(isVisibleToUser);
         if (!this.isVisible()) return;
         if (!isVisibleToUser) return;
+        addProfileImageFab.setShowAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.fab_slide_in_from_left));
         goalPieChart.animateY(1400, Easing.EasingOption.EaseInOutQuad);
     }
 
@@ -161,6 +166,7 @@ public class BacHomeFragment extends Fragment{
         goalCardView = (CardView) view.findViewById(R.id.goal_card_view);
         barChartYear = (TextView) view.findViewById(R.id.home_bar_chart_year);
         barChartMonth = (TextView) view.findViewById(R.id.home_bar_chart_month);
+        addProfileImageFab = (FloatingActionButton) view.findViewById(R.id.add_profile_image_fab);
     }
 
     private void fillWidgets() {

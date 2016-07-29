@@ -424,7 +424,7 @@
         </LinearLayout>
         <com.github.clans.fab.FloatingActionButton
             xmlns:fab="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/subtract_button"
+            android:id="@+id/add_profile_image_fab"
             app:fab_colorNormal="@color/blueButton"
             app:fab_colorPressed="@color/blueButton"
             android:layout_width="wrap_content"
@@ -433,6 +433,8 @@
             android:onClick="openImageDialog"
             fab:layout_anchor="@id/viewA"
             fab:layout_anchorGravity="bottom|right|end"
+            app:fab_showAnimation="@anim/fab_slide_in_from_left"
+            app:fab_hideAnimation="@anim/fab_scale_down"
             fab:fab_size="normal"
             fab:fab_label="Fjern" />
     </android.support.design.widget.CoordinatorLayout>
