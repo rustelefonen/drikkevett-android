@@ -236,8 +236,8 @@ public class BacCalcFragment extends Fragment implements ViewPager.OnPageChangeL
         labelQuotes = (TextView) view.findViewById(R.id.text_view_quotes);
 
         floatingActionMenu = (FloatingActionMenu) getActivity().findViewById(R.id.fab_menu_lol);
-        addFAB = ((MainActivity)getActivity()).getAddButton();
-        subFAB = ((MainActivity)getActivity()).getRemoveButton();
+        addFAB = ((MainActivity)getActivity()).getBacFabAddButton();
+        subFAB = ((MainActivity)getActivity()).getBacFabRemoveButton();
     }
 
     private void setListeners() {
@@ -440,16 +440,14 @@ public class BacCalcFragment extends Fragment implements ViewPager.OnPageChangeL
 
     @Override
     public void onClick(View v) {
-        System.out.println("onclick");
         int id = v.getId();
-        if (id == R.id.add_button) {
+        if (id == R.id.bac_fab_add_button) {
             if (!bacCalcIsSelected()) return;
-            System.out.println("er selecta");
             addBeverage();
             if (fabLabelsHidden) return;
             fabLabelsHidden = true;
             hideFabLabels();
-        } else if (id == R.id.subtract_button) {
+        } else if (id == R.id.bac_fab_subtract_button) {
             if (!bacCalcIsSelected()) return;
             removeBeverage();
             if (fabLabelsHidden) return;

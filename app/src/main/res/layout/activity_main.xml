@@ -52,6 +52,36 @@
             app:layout_behavior="rustelefonen.no.drikkevett_android.ScrollFAMBehaviour">
 
             <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/fab_day_after_end_day_after"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_play_arrow_black_24dp"
+                app:fab_colorNormal="@color/greenSuper"
+                app:fab_colorPressed="@color/greenSuper"
+                fab:fab_size="mini"
+                fab:fab_label="Avslutt dagen derpå" />
+
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/fab_plan_party_end_day_after"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_play_arrow_black_24dp"
+                app:fab_colorNormal="@color/greenSuper"
+                app:fab_colorPressed="@color/greenSuper"
+                fab:fab_size="mini"
+                fab:fab_label="Avslutt dagen derpå" />
+
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/fab_plan_party_end_evening"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_play_arrow_black_24dp"
+                app:fab_colorNormal="@color/greenSuper"
+                app:fab_colorPressed="@color/greenSuper"
+                fab:fab_size="mini"
+                fab:fab_label="Avslutt kvelden" />
+
+            <com.github.clans.fab.FloatingActionButton
                 android:id="@+id/fab_start_night_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -60,6 +90,26 @@
                 app:fab_colorPressed="@color/greenSuper"
                 fab:fab_size="mini"
                 fab:fab_label="Start kvelden" />
+
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/bac_fab_add_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/fab_add"
+                app:fab_colorNormal="@color/greenSuper"
+                app:fab_colorPressed="@color/greenSuper"
+                fab:fab_size="mini"
+                fab:fab_label="Legg til" />
+
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/bac_fab_subtract_button"
+                app:fab_colorNormal="@color/redSuper"
+                app:fab_colorPressed="@color/redSuper"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_action_ic_remove_24px"
+                fab:fab_size="mini"
+                fab:fab_label="Fjern" />
 
             <com.github.clans.fab.FloatingActionButton
                 android:id="@+id/add_button"

@@ -64,12 +64,23 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
     private User user;
 
-    public FloatingActionMenu floatingActionMenu;
+
 
     private int currentViewpagerPosition;
 
+    public FloatingActionMenu floatingActionMenu;
+
     public FloatingActionButton addButton;
     public FloatingActionButton removeButton;
+
+    public FloatingActionButton planpartyStartButton;
+    public FloatingActionButton planPartyEndEveningButton;
+    public FloatingActionButton planPartyEndDayAfterButton;
+
+    public FloatingActionButton bacFabAddButton;
+    public FloatingActionButton bacFabRemoveButton;
+
+    public FloatingActionButton dayAfterFabEndButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,10 +140,22 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
             floatingActionMenu.hideMenu(true);
         } else if (position == 1) {
             floatingActionMenu.showMenu(true);
+            displayPlanPartyFABs(View.GONE);
+            displayPlanPartyActionFABs(View.GONE);
+            displayBacCalcFABs(View.VISIBLE);
+            dayAfterFabEndButton.setVisibility(View.GONE);
         } else if (position == 2) {
             floatingActionMenu.showMenu(true);
+            displayPlanPartyFABs(View.VISIBLE);
+            displayPlanPartyActionFABs(View.VISIBLE);
+            displayBacCalcFABs(View.GONE);
+            dayAfterFabEndButton.setVisibility(View.GONE);
         } else if (position == 3) {
             floatingActionMenu.showMenu(true);
+            displayPlanPartyFABs(View.GONE);
+            displayPlanPartyActionFABs(View.GONE);
+            displayBacCalcFABs(View.GONE);
+            dayAfterFabEndButton.setVisibility(View.VISIBLE);
         } else if (position == 4) {
             floatingActionMenu.hideMenu(true);
         }
@@ -306,6 +329,15 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
         addButton = (FloatingActionButton) findViewById(R.id.add_button);
         removeButton = (FloatingActionButton) findViewById(R.id.subtract_button);
+
+        bacFabAddButton = (FloatingActionButton) findViewById(R.id.bac_fab_add_button);
+        bacFabRemoveButton = (FloatingActionButton) findViewById(R.id.bac_fab_subtract_button);
+
+        planpartyStartButton = (FloatingActionButton) findViewById(R.id.fab_start_night_button);
+        planPartyEndEveningButton = (FloatingActionButton) findViewById(R.id.fab_plan_party_end_evening);
+        planPartyEndDayAfterButton = (FloatingActionButton) findViewById(R.id.fab_plan_party_end_day_after);
+
+        dayAfterFabEndButton = (FloatingActionButton) findViewById(R.id.fab_day_after_end_day_after);
     }
 
     private void launchGallery() {
@@ -376,5 +408,45 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
     public FloatingActionButton getRemoveButton() {
         return removeButton;
+    }
+
+    public FloatingActionButton getBacFabAddButton() {
+        return bacFabAddButton;
+    }
+
+    public FloatingActionButton getBacFabRemoveButton() {
+        return bacFabRemoveButton;
+    }
+
+    public FloatingActionButton getPlanpartyStartButton() {
+        return planpartyStartButton;
+    }
+
+    public FloatingActionButton getPlanPartyEndEveningButton() {
+        return planPartyEndEveningButton;
+    }
+
+    public FloatingActionButton getPlanPartyEndDayAfterButton() {
+        return planPartyEndDayAfterButton;
+    }
+
+    public FloatingActionButton getDayAfterFabEndButton() {
+        return dayAfterFabEndButton;
+    }
+
+    private void displayBacCalcFABs(int state) {
+        bacFabAddButton.setVisibility(state);
+        bacFabRemoveButton.setVisibility(state);
+    }
+
+    private void displayPlanPartyFABs(int state) {
+        addButton.setVisibility(state);
+        removeButton.setVisibility(state);
+    }
+
+    private void displayPlanPartyActionFABs(int state) {
+        planpartyStartButton.setVisibility(state);
+        planPartyEndEveningButton.setVisibility(state);
+        planPartyEndDayAfterButton.setVisibility(state);
     }
 }
