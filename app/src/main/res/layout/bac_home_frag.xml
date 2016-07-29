@@ -21,7 +21,7 @@
             <LinearLayout
                 android:id="@+id/viewA"
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
+                android:layout_height="175dp"
                 android:orientation="horizontal">
 
                 <RelativeLayout
@@ -422,17 +422,18 @@
                 </android.support.v7.widget.CardView>
             </LinearLayout>
         </LinearLayout>
-        <android.support.design.widget.FloatingActionButton
+        <com.github.clans.fab.FloatingActionButton
+            xmlns:fab="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/subtract_button"
+            app:fab_colorNormal="@color/blueButton"
+            app:fab_colorPressed="@color/blueButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:borderWidth="2dp"
-            app:backgroundTint="@color/greenSuper"
-            app:fabSize="normal"
-            android:layout_margin="16dp"
+            android:src="@drawable/fab_add"
             android:onClick="openImageDialog"
-            app:layout_anchor="@id/viewA"
-            android:src="@drawable/ic_action_picture"
-            app:layout_anchorGravity="bottom|right|end"
-            android:clickable="true"/>
+            fab:layout_anchor="@id/viewA"
+            fab:layout_anchorGravity="bottom|right|end"
+            fab:fab_size="normal"
+            fab:fab_label="Fjern" />
     </android.support.design.widget.CoordinatorLayout>
 </android.support.v4.widget.NestedScrollView>
