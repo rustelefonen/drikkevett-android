@@ -960,8 +960,8 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
         drinkLbl = (TextView) v.findViewById(R.id.textViewDrinkPP);
         shotLbl = (TextView) v.findViewById(R.id.textViewShotPP);
         textQuoteLbl = (TextView) v.findViewById(R.id.textViewQuotesPP);
-        addBtn = (FloatingActionButton) getActivity().findViewById(R.id.add_button);
-        removeBtn = (FloatingActionButton) getActivity().findViewById(R.id.subtract_button);
+        addBtn = ((MainActivity)getActivity()).getAddButton();
+        removeBtn = ((MainActivity)getActivity()).getRemoveButton();
         statusBtn = (Button) v.findViewById(R.id.buttonStatusPP);
         planPartyRunning_LinLay = (LinearLayout) v.findViewById(R.id.layout_planPartyRunning_ID_PP);
         dayAfterRunning_LinLay = (LinearLayout) v.findViewById(R.id.layout_dayAfterRunning_ID_PP);

@@ -30,6 +30,8 @@ import android.widget.Toast;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.List;
 
@@ -65,6 +67,9 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     public FloatingActionMenu floatingActionMenu;
 
     private int currentViewpagerPosition;
+
+    public FloatingActionButton addButton;
+    public FloatingActionButton removeButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -211,11 +216,22 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     private void setNavigationDrawerHeaderImage(Uri photoToInsert) {
         View headerLayout = navigationView.getHeaderView(0);
         if (headerLayout == null) return;
-        Bitmap takenImage = BitmapFactory.decodeFile(photoToInsert.getPath());
-        if (takenImage == null) return;
+
+        if (photoToInsert == null) return;
+        Bitmap bMap = BitmapFactory.decodeFile(photoToInsert.getPath());
+        if (bMap == null) return;
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        bMap.compress(Bitmap.CompressFormat.JPEG, 0, out);
+        Bitmap decoded = BitmapFactory.decodeStream(new ByteArrayInputStream(out.toByteArray()));
+        if (decoded == null) return;
+
+
+
+        /*Bitmap takenImage = BitmapFactory.decodeFile(photoToInsert.getPath());
+        if (takenImage == null) return;*/
         ImageView imageView = (ImageView) headerLayout.findViewById(R.id.nav_header_image);
         if (imageView == null) return;
-        imageView.setImageBitmap(takenImage);
+        imageView.setImageBitmap(decoded);
     }
 
     public User getUser() {
@@ -262,7 +278,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         if (calcTab != null) calcTab.setIcon(R.drawable.ic_action_ic_action_promilleikon1000000);
 
         TabLayout.Tab planPartyTab = tabLayout.getTabAt(2);
-        if (planPartyTab != null) planPartyTab.setIcon(R.drawable.ic_action_checklist);
+        if (planPartyTab != null) planPartyTab.setIcon(R.drawable.ic_action_chekclistasd);
 
         TabLayout.Tab dayAfterTab = tabLayout.getTabAt(3);
         if (dayAfterTab != null) dayAfterTab.setIcon(R.drawable.ic_action_ic_mood_bad_white_24dp);
@@ -287,6 +303,9 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.nvView);
+
+        addButton = (FloatingActionButton) findViewById(R.id.add_button);
+        removeButton = (FloatingActionButton) findViewById(R.id.subtract_button);
     }
 
     private void launchGallery() {
@@ -349,5 +368,13 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
     public int getCurrentViewpagerPosition() {
         return currentViewpagerPosition;
+    }
+
+    public FloatingActionButton getAddButton() {
+        return addButton;
+    }
+
+    public FloatingActionButton getRemoveButton() {
+        return removeButton;
     }
 }

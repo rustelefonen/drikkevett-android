@@ -3,6 +3,7 @@ package rustelefonen.no.drikkevett_android.tabs.calc;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -33,8 +34,7 @@ import rustelefonen.no.drikkevett_android.tabs.calc.fragments.BeerScrollAdapter;
 import rustelefonen.no.drikkevett_android.util.Gender;
 import rustelefonen.no.drikkevett_android.util.NavigationUtil;
 
-public class BacCalcFragment extends android.support.v4.app.Fragment implements ViewPager.OnPageChangeListener,
-        RadioGroup.OnCheckedChangeListener, SeekBar.OnSeekBarChangeListener, View.OnClickListener {
+public class BacCalcFragment extends Fragment implements ViewPager.OnPageChangeListener, RadioGroup.OnCheckedChangeListener, SeekBar.OnSeekBarChangeListener, View.OnClickListener {
 
     // ENHETER
     private int beer = 0;
@@ -74,8 +74,8 @@ public class BacCalcFragment extends android.support.v4.app.Fragment implements 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.bac_calc_frag, container, false);
-        user = ((MainActivity)getActivity()).getUser();
         setHasOptionsMenu(true);
+        user = ((MainActivity)getActivity()).getUser();
         initWidgets(view);
         setListeners();
         fillWidgets();
@@ -236,14 +236,15 @@ public class BacCalcFragment extends android.support.v4.app.Fragment implements 
         labelQuotes = (TextView) view.findViewById(R.id.text_view_quotes);
 
         floatingActionMenu = (FloatingActionMenu) getActivity().findViewById(R.id.fab_menu_lol);
-        addFAB = (FloatingActionButton) getActivity().findViewById(R.id.add_button);
-        subFAB = (FloatingActionButton) getActivity().findViewById(R.id.subtract_button);
+        addFAB = ((MainActivity)getActivity()).getAddButton();
+        subFAB = ((MainActivity)getActivity()).getRemoveButton();
     }
 
     private void setListeners() {
         pageIndicatorGroup.setOnCheckedChangeListener(this);
         seekBar.setOnSeekBarChangeListener(this);
         beerScroll.addOnPageChangeListener(this);
+
         addFAB.setOnClickListener(this);
         subFAB.setOnClickListener(this);
     }
@@ -423,14 +424,27 @@ public class BacCalcFragment extends android.support.v4.app.Fragment implements 
     }
 
     private boolean bacCalcIsSelected() {
+        System.out.println(((MainActivity)getActivity()).getCurrentViewpagerPosition());
         return ((MainActivity)getActivity()).getCurrentViewpagerPosition() == 1;
     }
 
+    private void hideFabLabels() {
+        new Handler().postDelayed(new Runnable() {
+            public void run() {
+                //insert animation?
+                addFAB.setLabelVisibility(View.GONE);
+                subFAB.setLabelVisibility(View.GONE);
+            }
+        }, 5000);
+    }
+
     @Override
-    public void onClick(View view) {
-        int id = view.getId();
+    public void onClick(View v) {
+        System.out.println("onclick");
+        int id = v.getId();
         if (id == R.id.add_button) {
             if (!bacCalcIsSelected()) return;
+            System.out.println("er selecta");
             addBeverage();
             if (fabLabelsHidden) return;
             fabLabelsHidden = true;
@@ -442,15 +456,5 @@ public class BacCalcFragment extends android.support.v4.app.Fragment implements 
             fabLabelsHidden = true;
             hideFabLabels();
         }
-    }
-
-    private void hideFabLabels() {
-        new Handler().postDelayed(new Runnable() {
-            public void run() {
-                //insert animation?
-                addFAB.setLabelVisibility(View.GONE);
-                subFAB.setLabelVisibility(View.GONE);
-            }
-        }, 5000);
     }
 }
