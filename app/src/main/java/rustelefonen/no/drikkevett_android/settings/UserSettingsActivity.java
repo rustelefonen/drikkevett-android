@@ -3,8 +3,11 @@ package rustelefonen.no.drikkevett_android.settings;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -45,6 +48,24 @@ public class UserSettingsActivity extends AppCompatActivity {
         }
         initWidgets();
         fillWidgets();
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.textColor));
+        toolbar.setTitle("Brukerinnstillinger");
+
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayShowHomeEnabled(true);
+        }
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hasChanged();
+            }
+        });
     }
 
     private void initWidgets() {
@@ -170,7 +191,6 @@ public class UserSettingsActivity extends AppCompatActivity {
                             // do nothing
                         }
                     })
-                    .setIcon(android.R.drawable.ic_dialog_alert)
                     .show();
         } else {
             super.onBackPressed();

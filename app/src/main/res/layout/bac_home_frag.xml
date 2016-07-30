@@ -33,10 +33,10 @@
                         android:layout_height="match_parent"
                         android:id="@+id/profile_image"
                         android:layout_alignParentTop="true"
-                        android:src="@drawable/ic_action_beer"
+                        android:src="@drawable/ic_defaultprofilepicturehollowwithroomfortextayylmaothislongassfilenameneverendscuh"
                         android:clickable="true"
                         android:scaleType="centerCrop"
-                        android:adjustViewBounds="false"/>
+                        android:adjustViewBounds="true"/>
 
                     <TextView
                         android:id="@+id/myImageViewText"

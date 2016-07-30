@@ -1,7 +1,10 @@
 package rustelefonen.no.drikkevett_android;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -366,10 +369,14 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     }
 
     public void launchCamera() {
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, ImageUtil.getPhotoFileUri(photoFileName, this));
-        if (intent.resolveActivity(getPackageManager()) != null)
-            startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+        //if (hasPermissionInManifest(this, MediaStore.ACTION_IMAGE_CAPTURE)) {
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, ImageUtil.getPhotoFileUri(photoFileName, this));
+            if (intent.resolveActivity(getPackageManager()) != null)
+                startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+        /*} else {
+            Toast.makeText(this, "Fikk ikke tillatelse til å åpne kamera.", Toast.LENGTH_SHORT).show();
+        }*/
     }
 
     private String getGalleryPath(Uri imagePath) {
@@ -472,5 +479,24 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         planpartyStartButton.setVisibility(state);
         planPartyEndEveningButton.setVisibility(state);
         planPartyEndDayAfterButton.setVisibility(state);
+    }
+
+    public boolean hasPermissionInManifest(Context context, String permissionName) {
+        final String packageName = context.getPackageName();
+        try {
+            final PackageInfo packageInfo = context.getPackageManager()
+                    .getPackageInfo(packageName, PackageManager.GET_PERMISSIONS);
+            final String[] declaredPermisisons = packageInfo.requestedPermissions;
+            if (declaredPermisisons != null && declaredPermisisons.length > 0) {
+                for (String p : declaredPermisisons) {
+                    if (p.equals(permissionName)) {
+                        return true;
+                    }
+                }
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+
+        }
+        return false;
     }
 }

@@ -121,6 +121,14 @@ public class BacHomeFragment extends Fragment{
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        fetchUser();
+        insertProfileImageIfExists();
+        insertNicknameIfExists();
+    }
+
 
     @Override
     public void onDestroyView() {
@@ -302,6 +310,25 @@ public class BacHomeFragment extends Fragment{
                 graphHomeTextView.setText("Denne grafikken viser hvordan det står til med målet ditt. Ønsker du å vite mer klikk på fargene");
             }
         });
+    }
+
+    private void insertProfileImageIfExists() {
+        Uri takenPhotoUri = ImageUtil.getPhotoFileUri(photoFileName, getContext());
+        if (takenPhotoUri == null) return;
+        String path = takenPhotoUri.getPath();
+        if (path == null) return;
+        if (!new File(path).exists()) return;
+        Bitmap takenImage = BitmapFactory.decodeFile(path);
+        if (takenImage == null) return;
+        if (profileImage == null) return;
+        profileImage.setImageBitmap(takenImage);
+    }
+
+    private void insertNicknameIfExists() {
+        if (user == null) return;
+        String nickname = user.getNickname();
+        if (nickname == null) return;
+        imageTextView.setText(nickname);
     }
 
     /*
