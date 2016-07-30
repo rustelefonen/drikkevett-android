@@ -67,7 +67,7 @@
                 android:orientation="horizontal"
                 android:layout_marginBottom="32dp"
                 android:background="@color/textColor"
-                android:padding="8dp">
+                android:padding="4dp">
 
                 <ImageView
                     android:layout_width="wrap_content"
