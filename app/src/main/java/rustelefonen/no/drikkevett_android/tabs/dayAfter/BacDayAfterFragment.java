@@ -20,11 +20,16 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -34,6 +39,7 @@ import java.util.concurrent.TimeUnit;
 
 import rustelefonen.no.drikkevett_android.MainActivity;
 import rustelefonen.no.drikkevett_android.R;
+import rustelefonen.no.drikkevett_android.SelectedPageEvent;
 import rustelefonen.no.drikkevett_android.db.DayAfterBAC;
 import rustelefonen.no.drikkevett_android.db.DayAfterBACDao;
 import rustelefonen.no.drikkevett_android.db.GraphHistory;
@@ -85,14 +91,19 @@ public class BacDayAfterFragment extends Fragment {
 
     private static final String PER_MILLE = "\u2030";
 
+    public FloatingActionMenu floatingActionMenu;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.bac_day_after_frag, container, false);
+        EventBus.getDefault().register(this);
 
         dayAfter_db = new DayAfter_DB(getContext());
         initWidgets();
-        setUserData();
 
+        //if (bacDayAfterIsSelected()) ((MainActivity)getActivity()).getFloatingActionMenu().showMenu(true);
+
+        setUserData();
         status = getStatus();
         statusHandler(status);
 
@@ -134,6 +145,35 @@ public class BacDayAfterFragment extends Fragment {
         return v;
     }
 
+    @Subscribe
+    public void getSelectedPage(SelectedPageEvent selectedPageEvent) {
+        System.out.println("page from eventbus: " + selectedPageEvent.page);
+        if (selectedPageEvent.page == 3) {
+            setUserData();
+            status = getStatus();
+            statusHandler(status);
+
+            if(status == Status.DA_RUNNING){
+                System.out.println(status);
+                ((MainActivity)getActivity()).getFloatingActionMenu().showMenu(true);
+            } else {
+                ((MainActivity)getActivity()).getFloatingActionMenu().hideMenu(true);
+            }
+        }
+    }
+
+
+    @Override
+    public void onDestroyView() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroyView();
+    }
+
+
+
+
+
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         getActivity().getMenuInflater().inflate(R.menu.simple_menu, menu);
@@ -149,6 +189,7 @@ public class BacDayAfterFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
+
     @Override
     public void onResume(){
         super.onResume();
@@ -157,6 +198,8 @@ public class BacDayAfterFragment extends Fragment {
         statusHandler(status);
     }
 
+
+    /*
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
@@ -165,7 +208,13 @@ public class BacDayAfterFragment extends Fragment {
         setUserData();
         status = getStatus();
         statusHandler(status);
+
+        if(status == Status.RUNNING || status == Status.NOT_RUNNING || status == Status.DEFAULT){
+            if (bacDayAfterIsSelected()) floatingActionMenu.hideMenu(true);
+        }
     }
+
+    */
 
     private void statusHandler(Status state){
         if(state == Status.RUNNING || state == Status.NOT_RUNNING || state == Status.DEFAULT){
@@ -789,6 +838,7 @@ public class BacDayAfterFragment extends Fragment {
             public void onClick(DialogInterface dialogInterface, int i) {
                 clearDBTables();
                 statusHandler(status);
+                ((MainActivity)getActivity()).getFloatingActionMenu().hideMenu(true);
             }
         }).setNegativeButton("Avbryt", new DialogInterface.OnClickListener() {
             @Override
@@ -867,6 +917,7 @@ public class BacDayAfterFragment extends Fragment {
         afterRegDrinkLbl.setText(afterRegDrink + "");
         afterRegShotLbl.setText(afterRegShot + "");
         btnEndDA.setVisibility(View.VISIBLE);
+        floatingActionMenu.showMenu(true);
         planPaRunning_LinLay.setVisibility(View.GONE);
         dayAfterRunning_LinLay.setVisibility(View.VISIBLE);
         colorsUnitLabels();
@@ -891,5 +942,11 @@ public class BacDayAfterFragment extends Fragment {
         afterRegShotLbl = (TextView) v.findViewById(R.id.txtViewAfterRegShotUnit_DA);
         planPaRunning_LinLay = (LinearLayout) v.findViewById(R.id.planP_running_layout_DA);
         dayAfterRunning_LinLay = (LinearLayout) v.findViewById(R.id.dayAfterRunning_layout_ID);
+
+        floatingActionMenu = ((MainActivity)getActivity()).getFloatingActionMenu();
+    }
+
+    private boolean bacDayAfterIsSelected() {
+        return ((MainActivity)getActivity()).getCurrentViewpagerPosition() == 3;
     }
 }

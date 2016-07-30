@@ -1,4 +1,4 @@
-package rustelefonen.no.drikkevett_android.extra;
+package rustelefonen.no.drikkevett_android.extra.sources;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

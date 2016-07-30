@@ -23,11 +23,15 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import rustelefonen.no.drikkevett_android.MainActivity;
 import rustelefonen.no.drikkevett_android.R;
+import rustelefonen.no.drikkevett_android.SelectedPageEvent;
 import rustelefonen.no.drikkevett_android.db.User;
 import rustelefonen.no.drikkevett_android.tabs.calc.fragments.BeerScrollAdapter;
 import rustelefonen.no.drikkevett_android.util.Gender;
@@ -72,27 +76,32 @@ public class BacCalcFragment extends Fragment implements ViewPager.OnPageChangeL
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.bac_calc_frag, container, false);
+
+        EventBus.getDefault().register(this);
+
         setHasOptionsMenu(true);
         user = ((MainActivity)getActivity()).getUser();
         initWidgets(view);
+
+
+
         setListeners();
         fillWidgets();
         return view;
     }
 
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-
-        // Make sure that we are currently visible
-        if (this.isVisible()) {
-            // If we are becoming invisible, then...
-            if (!isVisibleToUser) {
-            } else {
-                FloatingActionButton l = (FloatingActionButton) getActivity().findViewById(R.id.fab_start_night_button);
-                l.setVisibility(View.GONE);
-            }
+    @Subscribe
+    public void getSelectedPage(SelectedPageEvent selectedPageEvent) {
+        System.out.println("page from eventbus: " + selectedPageEvent.page);
+        if (selectedPageEvent.page == 1) {
+            ((MainActivity)getActivity()).getFloatingActionMenu().showMenu(true);
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroyView();
     }
 
     @Override

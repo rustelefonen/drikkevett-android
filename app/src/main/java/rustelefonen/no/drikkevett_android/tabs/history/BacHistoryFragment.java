@@ -16,10 +16,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.github.mikephil.charting.animation.Easing;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 import java.util.List;
 
 import rustelefonen.no.drikkevett_android.MainActivity;
 import rustelefonen.no.drikkevett_android.R;
+import rustelefonen.no.drikkevett_android.SelectedPageEvent;
 import rustelefonen.no.drikkevett_android.db.GraphHistory;
 import rustelefonen.no.drikkevett_android.db.GraphHistoryDao;
 import rustelefonen.no.drikkevett_android.db.History;
@@ -30,6 +36,8 @@ import rustelefonen.no.drikkevett_android.util.NavigationUtil;
 public class BacHistoryFragment extends Fragment {
     private static final String TAG = "RecyclerViewFragment";
     private static final int SPAN_COUNT = 2;
+
+    boolean hack = false;
 
     public CardView defaultCard;
 
@@ -51,6 +59,21 @@ public class BacHistoryFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         initDataset();
+    }
+
+    @Subscribe
+    public void getSelectedPage(SelectedPageEvent selectedPageEvent) {
+        System.out.println("page from eventbus: " + selectedPageEvent.page);
+        if (selectedPageEvent.page == 4) {
+            ((MainActivity)getActivity()).getFloatingActionMenu().hideMenu(true);
+        }
+    }
+
+
+    @Override
+    public void onDestroyView() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroyView();
     }
 
     @Override
@@ -88,6 +111,11 @@ public class BacHistoryFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.bac_history_frag, container, false);
+        EventBus.getDefault().register(this);
+        if (!hack) {
+            ((MainActivity)getActivity()).onPageSelected(0);
+            hack = true;
+        }
         rootView.setTag(TAG);
 
         defaultCard = (CardView) rootView.findViewById(R.id.history_list_default_card);

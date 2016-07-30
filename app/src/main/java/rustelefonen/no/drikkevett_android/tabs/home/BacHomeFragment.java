@@ -6,17 +6,14 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -30,6 +27,9 @@ import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 import java.io.File;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -38,6 +38,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import rustelefonen.no.drikkevett_android.SelectedPageEvent;
 import rustelefonen.no.drikkevett_android.goalreached.GoalReachedActivity;
 import rustelefonen.no.drikkevett_android.MainActivity;
 import rustelefonen.no.drikkevett_android.R;
@@ -89,9 +90,18 @@ public class BacHomeFragment extends Fragment{
 
     private User user;
 
+    boolean hack = false;
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.bac_home_frag, container, false);
+        EventBus.getDefault().register(this);
+        if (!hack) {
+            ((MainActivity)getActivity()).onPageSelected(0);
+            hack = true;
+        }
+
         initWidgets(view);
         fetchUser();
         fillWidgets();
@@ -102,12 +112,20 @@ public class BacHomeFragment extends Fragment{
         return view;
     }
 
+    @Subscribe
+    public void getSelectedPage(SelectedPageEvent selectedPageEvent) {
+        System.out.println("page from eventbus: " + selectedPageEvent.page);
+        if (selectedPageEvent.page == 0) {
+            ((MainActivity)getActivity()).getFloatingActionMenu().hideMenu(true);
+            if (goalPieChart != null) goalPieChart.animateY(1400, Easing.EasingOption.EaseInOutQuad);
+        }
+    }
+
+
     @Override
-    public void onResume() {
-        super.onResume();
-        fetchUser();
-        insertProfileImageIfExists();
-        insertNicknameIfExists();
+    public void onDestroyView() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroyView();
     }
 
     private void fetchUser() {
@@ -127,15 +145,6 @@ public class BacHomeFragment extends Fragment{
                 return false;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (!this.isVisible()) return;
-        if (!isVisibleToUser) return;
-        addProfileImageFab.setShowAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.fab_slide_in_from_left));
-        goalPieChart.animateY(1400, Easing.EasingOption.EaseInOutQuad);
     }
 
     private String getRandomQuote() {
@@ -306,52 +315,5 @@ public class BacHomeFragment extends Fragment{
             intent.putExtra(GoalReachedActivity.ID, user);
             startActivity(intent);
         }
-    }
-
-    private void insertProfileImageIfExists() {
-        Uri takenPhotoUri = ImageUtil.getPhotoFileUri(photoFileName, getContext());
-        if (takenPhotoUri == null) return;
-        String path = takenPhotoUri.getPath();
-        if (path == null) return;
-        if (!new File(path).exists()) return;
-        Bitmap takenImage = BitmapFactory.decodeFile(path);
-        if (takenImage == null) return;
-        if (profileImage == null) return;
-        profileImage.setImageBitmap(takenImage);
-    }
-
-    private void insertNicknameIfExists() {
-        if (user == null) return;
-        String nickname = user.getNickname();
-        if (nickname == null) return;
-        imageTextView.setText(nickname);
-    }
-
-
-
-
-
-    private void addHistory() {
-        SuperDao superDao = new SuperDao(getContext());
-        HistoryDao historyDao = superDao.getHistoryDao();
-
-        History history = new History();
-        history.setBeerCount(5);
-        history.setDrinkCount(6);
-        history.setWineCount(7);
-        history.setShotCount(8);
-        history.setStartDate(new Date());
-        history.setHighestBAC(0.4);
-        history.setPlannedUnitsCount(10);
-        history.setSum(2000);
-
-        historyDao.insert(history);
-        superDao.close();
-    }
-
-    private String getRandomWelcomeMessage() {
-        String[] welcomeMessages = getResources().getStringArray(R.array.welcomeMessages);
-        int randomIndex = (int) (Math.random() * welcomeMessages.length-1 + 1);
-        return welcomeMessages[randomIndex];
     }
 }

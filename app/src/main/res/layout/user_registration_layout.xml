@@ -56,23 +56,53 @@
                 android:maxLines="1"
                 android:scrollHorizontally="false"
                 android:minLines="1"
+                android:maxLength="15"
                 android:inputType="textEmailAddress|textEmailSubject"
-                android:imeOptions="actionDone"
+                android:imeOptions="actionNext"
                 android:windowSoftInputMode="adjustResize"/>
 
-            <AutoCompleteTextView
-                android:padding="8dp"
-                android:id="@+id/user_reg_gender_auto_complete_text_view"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/ic_action_gender_symbol"
-                android:background="@color/textColor"
-                android:hint="Kjønn"
-                android:textColorHint="@color/greyTextColor"
-                android:textSize="16sp"
+                android:orientation="horizontal"
                 android:layout_marginBottom="32dp"
-                android:focusable="false"
-                android:drawableRight="@drawable/ic_action_ic_arrow_drop_down_48px"/>
+                android:background="@color/textColor"
+                android:padding="8dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_action_gender_symbol"
+                    android:layout_gravity="left|center"/>
+
+                <Spinner
+                    android:id="@+id/user_reg_gender_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right|center" />
+            </LinearLayout>
+
+
+
+
+
+            <!--<AutoCompleteTextView-->
+                <!--android:padding="8dp"-->
+                <!--android:id="@+id/user_reg_gender_auto_complete_text_view"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:drawableLeft="@drawable/ic_action_gender_symbol"-->
+                <!--android:background="@color/textColor"-->
+                <!--android:hint="Kjønn"-->
+                <!--android:textColorHint="@color/greyTextColor"-->
+                <!--android:textSize="16sp"-->
+                <!--android:inputType="textEmailAddress|textEmailSubject"-->
+                <!--android:imeOptions="actionNext"-->
+                <!--android:layout_marginBottom="32dp"-->
+                <!--android:minLines="1"-->
+                <!--android:maxLines="1"-->
+                <!--android:maxLength="6"-->
+                <!--android:drawableRight="@drawable/ic_action_ic_arrow_drop_down_black_24dp"/>-->
 
             <EditText
                 android:padding="8dp"
@@ -99,6 +129,7 @@
                 android:textSize="16sp"
                 android:layout_marginBottom="32dp"
                 android:inputType="number"
+                android:imeOptions="actionDone"
                 android:windowSoftInputMode="adjustResize"/>
 
             <Button

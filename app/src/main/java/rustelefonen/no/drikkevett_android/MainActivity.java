@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -18,6 +19,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.content.res.AppCompatResources;
 import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
@@ -30,6 +32,8 @@ import android.widget.Toast;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -37,10 +41,9 @@ import java.util.List;
 
 import rustelefonen.no.drikkevett_android.db.User;
 import rustelefonen.no.drikkevett_android.db.UserDao;
-import rustelefonen.no.drikkevett_android.extra.SourcesActivity;
+import rustelefonen.no.drikkevett_android.extra.sources.SourcesActivity;
 import rustelefonen.no.drikkevett_android.extra.guidance.Guidance;
 import rustelefonen.no.drikkevett_android.information.InformationCategoryActivity;
-import rustelefonen.no.drikkevett_android.information.QuestionActivity;
 import rustelefonen.no.drikkevett_android.settings.AlcoholPricingSettingsActivity;
 import rustelefonen.no.drikkevett_android.settings.GoalSettingsActivity;
 import rustelefonen.no.drikkevett_android.settings.UserSettingsActivity;
@@ -63,6 +66,8 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     public Toolbar toolbar;
 
     private User user;
+
+    public ViewPager viewPager;
 
 
 
@@ -91,8 +96,15 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
         initWidgets();
         setupToolbar();
+
+        toolbar.setTitleTextColor( ContextCompat.getColor(this, R.color.textColor));
+
         setupNavigationDrawer();
         setupViewpager();
+
+
+
+
         onPageSelected(FIRST_TAB_INDEX);
         fetchData();
     }
@@ -131,33 +143,40 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     }
 
     @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
 
     @Override
     public void onPageSelected(int position) {
+        System.out.println("nå blir onPageSelected kjørt");
+        EventBus.getDefault().post(new SelectedPageEvent(position));
+
+
         currentViewpagerPosition = position;
         if (position == 0) {
-            floatingActionMenu.hideMenu(true);
+            //floatingActionMenu.hideMenu(true);
         } else if (position == 1) {
-            floatingActionMenu.showMenu(true);
+            //floatingActionMenu.showMenu(true);
+
             displayPlanPartyFABs(View.GONE);
             displayPlanPartyActionFABs(View.GONE);
             displayBacCalcFABs(View.VISIBLE);
             dayAfterFabEndButton.setVisibility(View.GONE);
         } else if (position == 2) {
-            floatingActionMenu.showMenu(true);
+            //floatingActionMenu.showMenu(true);
             displayPlanPartyFABs(View.VISIBLE);
             displayPlanPartyActionFABs(View.VISIBLE);
             displayBacCalcFABs(View.GONE);
             dayAfterFabEndButton.setVisibility(View.GONE);
         } else if (position == 3) {
-            floatingActionMenu.showMenu(true);
+            //floatingActionMenu.showMenu(true);
             displayPlanPartyFABs(View.GONE);
             displayPlanPartyActionFABs(View.GONE);
             displayBacCalcFABs(View.GONE);
             dayAfterFabEndButton.setVisibility(View.VISIBLE);
         } else if (position == 4) {
-            floatingActionMenu.hideMenu(true);
+            //floatingActionMenu.hideMenu(true);
         }
         floatingActionMenu.close(false);
 
@@ -383,7 +402,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     }
 
     private void setupViewpager() {
-        ViewPager viewPager = (ViewPager) findViewById(R.id.container);
+        viewPager = (ViewPager) findViewById(R.id.container);
         viewPager.setAdapter(new SectionsPagerAdapter(getSupportFragmentManager()));
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
@@ -433,6 +452,10 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
     public FloatingActionButton getDayAfterFabEndButton() {
         return dayAfterFabEndButton;
+    }
+
+    public FloatingActionMenu getFloatingActionMenu() {
+        return floatingActionMenu;
     }
 
     private void displayBacCalcFABs(int state) {

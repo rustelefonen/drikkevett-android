@@ -1,28 +1,22 @@
 package rustelefonen.no.drikkevett_android.intro;
 
-import android.content.Context;
 import android.content.Intent;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.AppCompatDelegate;
-import android.support.v7.widget.PopupMenu;
-import android.view.KeyEvent;
-import android.view.MenuItem;
-import android.view.MotionEvent;
+import android.text.InputFilter;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
-import android.widget.TextView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-
+import rustelefonen.no.drikkevett_android.InputFilterMinMax;
 import rustelefonen.no.drikkevett_android.R;
 import rustelefonen.no.drikkevett_android.db.User;
 
@@ -34,81 +28,89 @@ import rustelefonen.no.drikkevett_android.db.User;
 public class UserRegistrationActivity extends AppCompatActivity {
 
     public EditText nicknameEditText;
-    public AutoCompleteTextView genderAutoCompleteTextView;
+    public Spinner genderSpinner;
     public EditText weightEditText;
     public EditText ageEditText;
 
-    private static final String[] GENDERS = new String[]{"Mann", "Kvinne"};
+    private static final String[] GENDERS = new String[]{"Velg kjønn", "Mann", "Kvinne"};
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.user_registration_layout);
-        nicknameEditText = (EditText) findViewById(R.id.user_reg_nickname_edit_text);
+        initWidgets();
 
 
-        genderAutoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.user_reg_gender_auto_complete_text_view);
-        ArrayAdapter arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, GENDERS);
-        genderAutoCompleteTextView.setAdapter(arrayAdapter);
+        ArrayAdapter arrayAdapter = new ArrayAdapter<>(this, R.layout.spinner_item, GENDERS);
+        genderSpinner.setAdapter(arrayAdapter);
 
-        genderAutoCompleteTextView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        Drawable spinnerDrawable = genderSpinner.getBackground().getConstantState().newDrawable();
 
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) genderAutoCompleteTextView.showDropDown();
-            }
-        });
 
-        genderAutoCompleteTextView.setOnTouchListener(new View.OnTouchListener() {
+        spinnerDrawable.setColorFilter(ContextCompat.getColor(this, R.color.backgroundColor), PorterDuff.Mode.SRC_ATOP);
 
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (!genderAutoCompleteTextView.hasFocus()) genderAutoCompleteTextView.showDropDown();
-                return false;
-            }
-        });
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            genderSpinner.setBackground(spinnerDrawable);
+        }else{
+            genderSpinner.setBackgroundDrawable(spinnerDrawable);
+        }
 
-        genderAutoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
-            @Override
-            public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-                InputMethodManager in = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                in.hideSoftInputFromWindow(arg1.getWindowToken(), 0);
 
-            }
 
-        });
 
-        weightEditText = (EditText) findViewById(R.id.user_reg_weight_edit_text);
-        ageEditText = (EditText) findViewById(R.id.user_reg_age_edit_text);
+
+
+        weightEditText.setFilters(new InputFilter[]{ new InputFilterMinMax("1", "250")});
+
+        ageEditText.setFilters(new InputFilter[]{ new InputFilterMinMax("1", "99")});
+
+
+
     }
 
     public void next(View view) {
         User user = new User();
 
         String nicknameText = nicknameEditText.getText().toString();
-        if (nicknameText.isEmpty()) {
+
+        if (nicknameText.length() > 15) {
+            Toast.makeText(this, "Ugyldig kallenavn.", Toast.LENGTH_SHORT).show();
+            return;
+        } else if (nicknameText.length() < 1) {
             Toast.makeText(this, "Du må registrere kallenavn for å gå videre", Toast.LENGTH_SHORT).show();
             return;
         } else {
             user.setNickname(nicknameText);
         }
 
-        String genderText = genderAutoCompleteTextView.getText().toString();
+        String genderText = GENDERS[genderSpinner.getSelectedItemPosition()];//genderSpinner.getText().toString();
+
         if (genderText.isEmpty()) {
             Toast.makeText(this, "Du må registrere kjønn for å gå videre", Toast.LENGTH_SHORT).show();
             return;
         } else {
-            user.setGender(genderText);
+            if (genderText.equals(GENDERS[1]) || genderText.equals(GENDERS[2])) {
+                user.setGender(genderText);
+            } else {
+                Toast.makeText(this, "Ugyldig kjønn", Toast.LENGTH_SHORT).show();
+                return;
+            }
         }
 
         String weightText = weightEditText.getText().toString();
         if (!weightText.isEmpty()) {
             try {
                 double weight = Double.parseDouble(weightText);
-                user.setWeight(weight);
+
+                if (weight < 40.0 || weight > 250) {
+                    Toast.makeText(this, "Vekt må være mellom 40 og 250kg.", Toast.LENGTH_SHORT).show();
+                    return;
+                } else {
+                    user.setWeight(weight);
+                }
             } catch (NumberFormatException ignored) {
-                Toast.makeText(this, "Du må registrere vekt for å gå videre", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Ugyldig vekt", Toast.LENGTH_SHORT).show();
                 return;
             }
         } else {
@@ -120,7 +122,12 @@ public class UserRegistrationActivity extends AppCompatActivity {
         if (!ageText.isEmpty()) {
             try {
                 int age = Integer.parseInt(ageText);
-                user.setAge(age);
+                if (age < 18 || age > 99) {
+                    Toast.makeText(this, "Alder må være mellom 18 og 99.", Toast.LENGTH_SHORT).show();
+                    return;
+                } else {
+                    user.setAge(age);
+                }
             } catch (NumberFormatException ignored) {
                 Toast.makeText(this, "Du må registrere alder for å gå videre", Toast.LENGTH_SHORT).show();
                 return;
@@ -133,5 +140,12 @@ public class UserRegistrationActivity extends AppCompatActivity {
         Intent intent = new Intent(this, AlcoholPricingRegistrationActivity.class);
         intent.putExtra(AlcoholPricingRegistrationActivity.ID, user);
         startActivity(intent);
+    }
+
+    private void initWidgets() {
+        nicknameEditText = (EditText) findViewById(R.id.user_reg_nickname_edit_text);
+        genderSpinner = (Spinner) findViewById(R.id.user_reg_gender_spinner);
+        weightEditText = (EditText) findViewById(R.id.user_reg_weight_edit_text);
+        ageEditText = (EditText) findViewById(R.id.user_reg_age_edit_text);
     }
 }

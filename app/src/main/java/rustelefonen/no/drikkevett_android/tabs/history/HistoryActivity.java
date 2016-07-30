@@ -161,7 +161,9 @@ public class HistoryActivity extends AppCompatActivity {
         ArrayList<Entry> entries = new ArrayList<>();
         ArrayList<String> labels = new ArrayList<>();
 
-        for (int i = 0; i < graphHistories.size(); i++) {
+        int size = 0;
+        if (graphHistories != null) size = graphHistories.size();
+        for (int i = 0; i < size; i++) {
             entries.add(new Entry(graphHistories.get(i).getCurrentBAC().floatValue(), i));
             labels.add(getHoursAndMinutes(graphHistories.get(i).getTimestamp()));
         }

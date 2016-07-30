@@ -47,7 +47,7 @@
         <activity android:name=".information.InformationListActivity"/>
         <activity android:name=".information.InformationActivity"/>
         <activity android:name=".intro.WelcomeActivity"/>
-        <activity android:name=".extra.SourcesActivity"/>
+        <activity android:name=".extra.sources.SourcesActivity"/>
         <activity
             android:name=".information.QuestionActivity"
             android:label="Kontaktskjema"

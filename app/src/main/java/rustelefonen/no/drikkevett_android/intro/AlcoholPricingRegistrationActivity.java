@@ -4,10 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputFilter;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import rustelefonen.no.drikkevett_android.InputFilterMinMax;
 import rustelefonen.no.drikkevett_android.R;
 import rustelefonen.no.drikkevett_android.db.User;
 
@@ -26,15 +28,27 @@ public class AlcoholPricingRegistrationActivity extends AppCompatActivity {
 
     private User user;
 
+    private static final int LOWEST_PRICE = 1;
+    private static final int HIGHEST_PRICE = 1000;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.alcohol_pricing_registration_layout);
 
+        InputFilter [] inputFilter = new InputFilter[]{ new InputFilterMinMax("1", "1000")};
+
         beerEditText = (EditText) findViewById(R.id.alco_reg_beer_edit_text);
+        beerEditText.setFilters(inputFilter);
+
         wineEditText = (EditText) findViewById(R.id.alco_reg_wine_edit_text);
+        wineEditText.setFilters(inputFilter);
+
         drinkEditText = (EditText) findViewById(R.id.alco_reg_drink_edit_text);
+        drinkEditText.setFilters(inputFilter);
+
         shotEditText = (EditText) findViewById(R.id.alco_reg_shot_edit_text);
+        shotEditText.setFilters(inputFilter);
 
         Object tmpUser = getIntent().getSerializableExtra(ID);
         if (tmpUser != null && tmpUser instanceof User) {
@@ -57,7 +71,12 @@ public class AlcoholPricingRegistrationActivity extends AppCompatActivity {
             Toast.makeText(this, "Du må registrere øl for å gå videre", Toast.LENGTH_SHORT).show();
             return;
         } else {
-            user.setBeerPrice(beerPrice);
+            if (beerPrice < LOWEST_PRICE || beerPrice > HIGHEST_PRICE) {
+                Toast.makeText(this, "Ølpris må være mellom 1 og 1000.", Toast.LENGTH_SHORT).show();
+                return;
+            } else {
+                user.setBeerPrice(beerPrice);
+            }
         }
 
         int winePrice = validateInputText(wineEditText.getText().toString());
@@ -65,7 +84,12 @@ public class AlcoholPricingRegistrationActivity extends AppCompatActivity {
             Toast.makeText(this, "Du må registrere vin for å gå videre", Toast.LENGTH_SHORT).show();
             return;
         } else {
-            user.setWinePrice(winePrice);
+            if (winePrice < LOWEST_PRICE || winePrice > HIGHEST_PRICE) {
+                Toast.makeText(this, "Vinpris må være mellom 1 og 1000.", Toast.LENGTH_SHORT).show();
+                return;
+            } else {
+                user.setWinePrice(winePrice);
+            }
         }
 
         int drinkPrice = validateInputText(drinkEditText.getText().toString());
@@ -73,7 +97,12 @@ public class AlcoholPricingRegistrationActivity extends AppCompatActivity {
             Toast.makeText(this, "Du må registrere drink for å gå videre", Toast.LENGTH_SHORT).show();
             return;
         } else {
-            user.setDrinkPrice(drinkPrice);
+            if (drinkPrice < LOWEST_PRICE || drinkPrice > HIGHEST_PRICE) {
+                Toast.makeText(this, "Drinkpris må være mellom 1 og 1000.", Toast.LENGTH_SHORT).show();
+                return;
+            } else {
+                user.setDrinkPrice(drinkPrice);
+            }
         }
 
         int shotPrice = validateInputText(shotEditText.getText().toString());
@@ -81,7 +110,12 @@ public class AlcoholPricingRegistrationActivity extends AppCompatActivity {
             Toast.makeText(this, "Du må registrere shot for å gå videre", Toast.LENGTH_SHORT).show();
             return;
         } else {
-            user.setShotPrice(shotPrice);
+            if (shotPrice < LOWEST_PRICE || shotPrice > HIGHEST_PRICE) {
+                Toast.makeText(this, "Shotpris må være mellom 1 og 1000.", Toast.LENGTH_SHORT).show();
+                return;
+            } else {
+                user.setShotPrice(shotPrice);
+            }
         }
 
         Intent intent = new Intent(this, GoalRegistrationActivity.class);
@@ -90,9 +124,9 @@ public class AlcoholPricingRegistrationActivity extends AppCompatActivity {
     }
 
     public void setDefault(View view) {
-        beerEditText.setText(Integer.toString(0));
-        wineEditText.setText(Integer.toString(0));
-        drinkEditText.setText(Integer.toString(0));
-        shotEditText.setText(Integer.toString(0));
+        beerEditText.setText(Integer.toString(60));
+        wineEditText.setText(Integer.toString(80));
+        drinkEditText.setText(Integer.toString(100));
+        shotEditText.setText(Integer.toString(120));
     }
 }
