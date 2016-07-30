@@ -7,7 +7,6 @@
 
     <android.support.v7.widget.CardView
         android:id="@+id/long_row_card"
-        android:layout_weight="50"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         card_view:cardBackgroundColor="@color/cardColor"
@@ -29,11 +28,11 @@
                 android:id="@+id/long_row_text"
                 android:gravity="center"
                 android:layout_centerHorizontal="true"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="32sp"
                 android:textColor="@color/textColor"
-                android:layout_below="@+id/long_row_image"/>
+                android:layout_alignParentBottom="true"/>
         </RelativeLayout>
     </android.support.v7.widget.CardView>
 </FrameLayout>

@@ -33,11 +33,11 @@
                     android:id="@+id/short_row_text_one"
                     android:gravity="center"
                     android:layout_centerHorizontal="true"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="32sp"
                     android:textColor="@color/textColor"
-                    android:layout_below="@+id/short_row_image_one"/>
+                    android:layout_alignParentBottom="true"/>
             </RelativeLayout>
 
         </android.support.v7.widget.CardView>
@@ -65,11 +65,11 @@
                     android:id="@+id/short_row_text_two"
                     android:gravity="center"
                     android:layout_centerHorizontal="true"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="32sp"
                     android:textColor="@color/textColor"
-                    android:layout_below="@+id/short_row_image_two"/>
+                    android:layout_alignParentBottom="true"/>
             </RelativeLayout>
 
         </android.support.v7.widget.CardView>
