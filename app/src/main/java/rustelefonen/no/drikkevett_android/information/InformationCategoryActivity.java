@@ -97,6 +97,10 @@ public class InformationCategoryActivity extends AppCompatActivity {
         SuperDao superDao = new SuperDao(this);
         InformationCategoryDao informationCategoryDao = superDao.getInformationCategoryDao();
         informationCategories = informationCategoryDao.queryBuilder().list();
+
+        System.out.println("størrelsen: " +informationCategories.size());
+
+
         superDao.close();
     }
 }

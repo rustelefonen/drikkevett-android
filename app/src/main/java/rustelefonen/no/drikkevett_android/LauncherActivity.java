@@ -7,6 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 
 import java.util.List;
 
+import rustelefonen.no.drikkevett_android.db.InformationCategory;
+import rustelefonen.no.drikkevett_android.db.InformationCategoryDao;
 import rustelefonen.no.drikkevett_android.db.User;
 import rustelefonen.no.drikkevett_android.db.UserDao;
 import rustelefonen.no.drikkevett_android.information.DBSeeder;
@@ -38,7 +40,13 @@ public class LauncherActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        DBSeeder.seed(this);
+
+        if (!hasInfoInDB()) {
+            System.out.println("har ikke mer enn 0");
+            DBSeeder.seed(this);
+        } else {
+            System.out.println("har mer enn 0");
+        }
         Intent intent;
         if (hasUser()) {
             intent = new Intent(this, MainActivity.class);
@@ -48,5 +56,13 @@ public class LauncherActivity extends AppCompatActivity {
         }
         startActivity(intent);
         finish();
+    }
+
+    private boolean hasInfoInDB() {
+        SuperDao superDao = new SuperDao(this);
+        InformationCategoryDao informationCategoryDao = superDao.getInformationCategoryDao();
+        int size = informationCategoryDao.queryBuilder().list().size();
+        superDao.close();
+        return size > 0;
     }
 }
