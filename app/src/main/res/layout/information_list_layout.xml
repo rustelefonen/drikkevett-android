@@ -5,6 +5,8 @@
     android:orientation="vertical"
     android:background="@color/backgroundColor">
 
+    <include layout="@layout/toolbar"/>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/information_list_recycler_view"
         android:layout_width="match_parent"

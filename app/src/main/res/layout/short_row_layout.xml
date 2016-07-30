@@ -27,7 +27,7 @@
                     android:id="@+id/short_row_image_one"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:scaleType="fitXY"/>
+                    android:scaleType="centerCrop"/>
 
                 <TextView
                     android:id="@+id/short_row_text_one"
@@ -59,7 +59,7 @@
                     android:id="@+id/short_row_image_two"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:scaleType="fitXY"/>
+                    android:scaleType="centerCrop"/>
 
                 <TextView
                     android:id="@+id/short_row_text_two"

@@ -1,11 +1,14 @@
 package rustelefonen.no.drikkevett_android.information;
 
 import android.content.Context;
+import android.content.res.AssetManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
-import rustelefonen.no.drikkevett_android.R;
 import rustelefonen.no.drikkevett_android.db.Information;
 import rustelefonen.no.drikkevett_android.db.InformationCategory;
 import rustelefonen.no.drikkevett_android.db.InformationCategoryDao;
@@ -18,20 +21,42 @@ import rustelefonen.no.drikkevett_android.tabs.home.SuperDao;
 
 public class DBSeeder {
 
+    private static byte[] getImage(String strName, Context context) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        Bitmap bitmap = getBitmapFromAsset(strName, context);
+        if (bitmap == null) return new byte[]{};
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+        return stream.toByteArray();
+    }
+
+    private static Bitmap getBitmapFromAsset(String strName, Context context) {
+        AssetManager assetManager = context.getAssets();
+        InputStream istr = null;
+        try {
+            istr = assetManager.open(strName);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return BitmapFactory.decodeStream(istr);
+    }
+
     public static void seed(Context context) {
         SuperDao superDao = new SuperDao(context);
         InformationCategoryDao informationCategoryDao = superDao.getInformationCategoryDao();
         InformationDao informationDao = superDao.getInformationDao();
 
+
         InformationCategory ic1 = new InformationCategory();
         ic1.setName("ALKOHOL");
         ic1.setOrderNumber(0);
         ic1.setVersionNumber(0);
+        ic1.setImage(getImage("c1.jpg", context));
         informationCategoryDao.insert(ic1);
 
         Information i1c1 = new Information();
         i1c1.setName("Hvorfor bruker vi alkohol?");
         i1c1.setContent("Vanligvis brukes alkohol for å oppnå glede, avspenning og lettere sosial omgang. Noen bruker også alkohol for å få sove, dempe angst, depresjon og smerte, fylle et tomrom i livet, eller dempe abstinenser. Denne form for bruk vil virke mot sin hensikt i det lange løp fordi alkohol gir dårlig søvnkvalitet, og kan påvirke psykisk helse negativt. I Norge har toleranse for atferd som følger med ”fylla” bakgrunn helt fra vikingtiden. Å bli ruset later fortsatt til å være den viktigste egenskapen ved alkohol- bruken i Norge.");
+        i1c1.setImage(getImage("i1c1.jpg", context));
         i1c1.setCategoryId(1);
         informationDao.insert(i1c1);
 
@@ -112,6 +137,7 @@ public class DBSeeder {
                 "\uF0B7 Hos personer med et jevnlig, hyppig og stort alkoholforbruk kan forbrenningen gå\n" +
                 "\n" +
                 "raskere, opp mot 0,30 promille per time, og i sjeldne tilfeller enda raskere.");
+        i3c1.setImage(getImage("i3c1.jpg", context));
         i3c1.setCategoryId(1);
         informationDao.insert(i3c1);
 
@@ -132,6 +158,7 @@ public class DBSeeder {
                 "fordi du blir sårbar for ulykker, voldshandlinger og andre farlige situasjoner. Det er dessuten\n" +
                 "\n" +
                 "ganske frustrerende og ofte litt flaut og ikke huske hva du har gjort og sagt.");
+        i4c1.setImage(getImage("i4c1.jpg", context));
         i4c1.setCategoryId(1);
         informationDao.insert(i4c1);
 
@@ -205,6 +232,7 @@ public class DBSeeder {
 
         InformationCategory ic2 = new InformationCategory();
         ic2.setName("Kropp og psyke");
+        ic2.setImage(getImage("c2.jpg", context));
         ic2.setOrderNumber(1);
         ic2.setVersionNumber(0);
         informationCategoryDao.insert(ic2);
@@ -220,6 +248,7 @@ public class DBSeeder {
                 "nivå (ca. 0,5) vil tanker og følelser endres og forsterkes, og sosiale ferdigheter avta. Du\n" +
                 "\n" +
                 "risikerer å miste flere hemninger enn du i ettertid vil være komfortabel med.");
+        i1c2.setImage(getImage("i1c2.jpg", context));
         i1c2.setCategoryId(2);
         informationDao.insert(i1c2);
 
@@ -236,6 +265,7 @@ public class DBSeeder {
                 "med alkohol. Det er større sjanse for at du selvskader eller forsøker å ta ditt liv i fylla. Faktisk\n" +
                 "\n" +
                 "er det slik at hvert fjerde tilfelle av selvskading blant norsk ungdom er gjort i alkoholrus.");
+        i2c2.setImage(getImage("i2c2.jpg", context));
         i2c2.setCategoryId(2);
         informationDao.insert(i2c2);
 
@@ -278,6 +308,7 @@ public class DBSeeder {
                 "mat når du drikker og dagen etter. Er du ofte på fylla over tid, øker risikoen for overvekt og\n" +
                 "\n" +
                 "ernæringsmangler.");
+        i4c2.setImage(getImage("i4c2.jpg", context));
         i4c2.setCategoryId(2);
         informationDao.insert(i4c2);
 
@@ -294,6 +325,7 @@ public class DBSeeder {
                 "magen. Dessuten inneholder alkohol mye kalorier og karbohydrater, som kan føre til uren\n" +
                 "\n" +
                 "hud.");
+        i5c2.setImage(getImage("i5c2.jpg", context));
         i5c2.setCategoryId(2);
         informationDao.insert(i5c2);
 
@@ -328,11 +360,13 @@ public class DBSeeder {
                 "- ALDRI gjennomfør seksuelle handlinger på en person som er for full til å si ja eller\n" +
                 "\n" +
                 "nei. Det er voldtekt");
+        i6c2.setImage(getImage("i6c2.jpg", context));
         i6c2.setCategoryId(2);
         informationDao.insert(i6c2);
 
         InformationCategory ic3 = new InformationCategory();
         ic3.setName("Trening");
+        ic3.setImage(getImage("c3.jpg", context));
         ic3.setOrderNumber(2);
         ic3.setVersionNumber(0);
         informationCategoryDao.insert(ic3);
@@ -364,6 +398,7 @@ public class DBSeeder {
                 "slik at den aerobe kapasiteten blir redusert. Alkohol kan derfor gi dårligere treningseffekt\n" +
                 "\n" +
                 "både på kort og lang sikt.");
+        i1c3.setImage(getImage("i1c3.jpg", context));
         i1c3.setCategoryId(3);
         informationDao.insert(i1c3);
 
@@ -376,6 +411,7 @@ public class DBSeeder {
                 "Væsketap gir redusert prestasjonsevne blant annet fordi blodgjennomstrømningen til\n" +
                 "\n" +
                 "musklene reduseres og kroppstemperaturen øker.");
+        i2c3.setImage(getImage("i2c3.jpg", context));
         i2c3.setCategoryId(3);
         informationDao.insert(i2c3);
 
@@ -390,6 +426,7 @@ public class DBSeeder {
                 "muskelmasse utvikles. Andre stresshormoner kan også øke; symptomer på dette kan være\n" +
                 "\n" +
                 "uregelmessig hjerterytme og søvnproblemer.");
+        i3c3.setImage(getImage("i3c3.jpg", context));
         i3c3.setCategoryId(3);
         informationDao.insert(i3c3);
 
@@ -440,6 +477,7 @@ public class DBSeeder {
                 "\uF0B7 Vær snill med deg selv. Forsøk å unngå de store selvransakelsene akkurat denne\n" +
                 "\n" +
                 "dagen, og fokuser heller på hva du kan gjøre for å unngå å bli SÅ full neste gang.");
+        i1c4.setImage(getImage("i1c4.jpg", context));
         i1c4.setCategoryId(4);
         informationDao.insert(i1c4);
 
@@ -450,6 +488,7 @@ public class DBSeeder {
                 "bakrus dagen derpå. Da er sjansene for at du får en roligere søvn større. Det kan dessuten\n" +
                 "\n" +
                 "være farlig å legge seg på stigende rus, om promillen er høy.");
+        i2c4.setImage(getImage("i2c4.jpg", context));
         i2c4.setCategoryId(4);
         informationDao.insert(i2c4);
 
