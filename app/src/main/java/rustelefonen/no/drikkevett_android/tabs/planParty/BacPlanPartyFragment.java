@@ -159,13 +159,10 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
             checkIfDayAfterEndedDayAfter();
             stateHandler(status);
 
-            displayPlanPartyFABs(View.VISIBLE);
-            displayPlanPartyActionFABs(View.VISIBLE);
-            displayBacCalcFABs(View.GONE);
             ((MainActivity)getActivity()).getDayAfterFabEndButton().setVisibility(View.GONE);
+            displayBacCalcFABs(View.GONE);
+            displayPlanPartyFABs(View.VISIBLE);
 
-
-            ((MainActivity)getActivity()).getFloatingActionMenu().showMenu(true);
             if (status == Status.NOT_RUNNING) {
                 planpartyStartButton.setVisibility(View.VISIBLE);
                 planPartyEndEveningButton.setVisibility(View.GONE);
@@ -179,7 +176,7 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
                 planPartyEndEveningButton.setVisibility(View.GONE);
                 planPartyEndDayAfterButton.setVisibility(View.VISIBLE);
             }
-        } else {
+            ((MainActivity)getActivity()).getFloatingActionMenu().showMenu(true);
             ((MainActivity)getActivity()).getFloatingActionMenu().close(true);
         }
     }
@@ -191,13 +188,23 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
 
     private void displayPlanPartyFABs(int state) {
         ((MainActivity)getActivity()).getAddButton().setVisibility(state);
+        ((MainActivity)getActivity()).getAddButton().hide(false);
+        ((MainActivity)getActivity()).getAddButton().setLabelVisibility(View.GONE);
         ((MainActivity)getActivity()).getRemoveButton().setVisibility(state);
+        ((MainActivity)getActivity()).getRemoveButton().hide(false);
+        ((MainActivity)getActivity()).getRemoveButton().setLabelVisibility(View.GONE);
     }
 
     private void displayPlanPartyActionFABs(int state) {
         ((MainActivity)getActivity()).getPlanpartyStartButton().setVisibility(state);
+        ((MainActivity)getActivity()).getPlanpartyStartButton().hide(false);
+        ((MainActivity)getActivity()).getPlanpartyStartButton().setLabelVisibility(View.GONE);
         ((MainActivity)getActivity()).getPlanPartyEndEveningButton().setVisibility(state);
+        ((MainActivity)getActivity()).getPlanPartyEndEveningButton().hide(false);
+        ((MainActivity)getActivity()).getPlanPartyEndEveningButton().setLabelVisibility(View.GONE);
         ((MainActivity)getActivity()).getPlanPartyEndDayAfterButton().setVisibility(state);
+        ((MainActivity)getActivity()).getPlanPartyEndDayAfterButton().hide(false);
+        ((MainActivity)getActivity()).getPlanPartyEndDayAfterButton().setLabelVisibility(View.GONE);
     }
 
 
@@ -1132,15 +1139,15 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
                 addPlannedUnits(getUnitId());
             }
             stateHandler(status);
-            if (fabLabelsHidden) return;
+            /*if (fabLabelsHidden) return;
             fabLabelsHidden = true;
-            hideFabLabels();
+            hideFabLabels();*/
         } else if (id == R.id.subtract_button) {
             if (!bacPlanPartyIsSelected()) return;
             removeBtnHandler();
-            if (fabLabelsHidden) return;
+            /*if (fabLabelsHidden) return;
             fabLabelsHidden = true;
-            hideFabLabels();
+            hideFabLabels();*/
         }
     }
 

@@ -1,14 +1,17 @@
 package rustelefonen.no.drikkevett_android;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -24,6 +27,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.Toolbar;
+import android.view.Display;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -39,6 +43,8 @@ import org.greenrobot.eventbus.EventBus;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.List;
 
 import rustelefonen.no.drikkevett_android.db.User;
@@ -213,17 +219,8 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         if (headerLayout == null) return;
 
         if (photoToInsert == null) return;
-        Bitmap bMap = BitmapFactory.decodeFile(photoToInsert.getPath());
-        if (bMap == null) return;
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        bMap.compress(Bitmap.CompressFormat.JPEG, 0, out);
-        Bitmap decoded = BitmapFactory.decodeStream(new ByteArrayInputStream(out.toByteArray()));
-        if (decoded == null) return;
+        Bitmap decoded = ImageUtil.decodeSampledBitmapFromResource(this, photoToInsert, 100, 100);
 
-
-
-        /*Bitmap takenImage = BitmapFactory.decodeFile(photoToInsert.getPath());
-        if (takenImage == null) return;*/
         ImageView imageView = (ImageView) headerLayout.findViewById(R.id.nav_header_image);
         if (imageView == null) return;
         imageView.setImageBitmap(decoded);

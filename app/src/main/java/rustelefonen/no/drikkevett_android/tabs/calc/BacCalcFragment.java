@@ -100,6 +100,7 @@ public class BacCalcFragment extends Fragment implements ViewPager.OnPageChangeL
             ((MainActivity)getActivity()).getDayAfterFabEndButton().setVisibility(View.GONE);
 
             ((MainActivity)getActivity()).getFloatingActionMenu().showMenu(true);
+            ((MainActivity)getActivity()).getFloatingActionMenu().close(true);
 
         }
     }
