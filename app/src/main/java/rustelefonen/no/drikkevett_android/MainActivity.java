@@ -152,26 +152,16 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
     @Override
     public void onPageSelected(int position) {
-        System.out.println("nå blir onPageSelected kjørt");
-        EventBus.getDefault().post(new SelectedPageEvent(position));
-
-
         currentViewpagerPosition = position;
         if (position == 0) {
             //floatingActionMenu.hideMenu(true);
         } else if (position == 1) {
             //floatingActionMenu.showMenu(true);
 
-            displayPlanPartyFABs(View.GONE);
-            displayPlanPartyActionFABs(View.GONE);
-            displayBacCalcFABs(View.VISIBLE);
-            dayAfterFabEndButton.setVisibility(View.GONE);
+
         } else if (position == 2) {
             //floatingActionMenu.showMenu(true);
-            displayPlanPartyFABs(View.VISIBLE);
-            displayPlanPartyActionFABs(View.VISIBLE);
-            displayBacCalcFABs(View.GONE);
-            dayAfterFabEndButton.setVisibility(View.GONE);
+
         } else if (position == 3) {
             //floatingActionMenu.showMenu(true);
             displayPlanPartyFABs(View.GONE);
@@ -181,7 +171,10 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         } else if (position == 4) {
             //floatingActionMenu.hideMenu(true);
         }
-        floatingActionMenu.close(false);
+        //floatingActionMenu.close(false);
+
+        System.out.println("nå blir onPageSelected kjørt");
+        EventBus.getDefault().post(new SelectedPageEvent(position));
 
 
 

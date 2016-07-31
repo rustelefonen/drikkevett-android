@@ -66,6 +66,8 @@ public class BacHistoryFragment extends Fragment {
         System.out.println("page from eventbus: " + selectedPageEvent.page);
         if (selectedPageEvent.page == 4) {
             ((MainActivity)getActivity()).getFloatingActionMenu().hideMenu(true);
+        } else {
+            ((MainActivity)getActivity()).getFloatingActionMenu().close(true);
         }
     }
 
@@ -112,10 +114,10 @@ public class BacHistoryFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.bac_history_frag, container, false);
         EventBus.getDefault().register(this);
-        if (!hack) {
+        /*if (!hack) {
             ((MainActivity)getActivity()).onPageSelected(0);
             hack = true;
-        }
+        }*/
         rootView.setTag(TAG);
 
         defaultCard = (CardView) rootView.findViewById(R.id.history_list_default_card);
