@@ -23,6 +23,7 @@ public class ContactActivity extends AppCompatActivity {
     public Button callButton;
 
     private static final String NUMBER = "08588";
+    private static final String TITLE = "Kontakt oss";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -46,7 +47,7 @@ public class ContactActivity extends AppCompatActivity {
     private void setupToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.textColor));
-        toolbar.setTitle("Kontakt oss");
+        toolbar.setTitle(TITLE);
 
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();

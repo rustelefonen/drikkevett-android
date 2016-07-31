@@ -114,7 +114,6 @@ public class BacHomeFragment extends Fragment{
 
     @Subscribe
     public void getSelectedPage(SelectedPageEvent selectedPageEvent) {
-        System.out.println("page from eventbus: " + selectedPageEvent.page);
         if (selectedPageEvent.page == 0) {
             ((MainActivity)getActivity()).getFloatingActionMenu().hideMenu(true);
             if (goalPieChart != null) goalPieChart.animateY(1400, Easing.EasingOption.EaseInOutQuad);

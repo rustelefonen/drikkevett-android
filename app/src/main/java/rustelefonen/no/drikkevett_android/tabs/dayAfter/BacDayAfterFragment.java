@@ -76,7 +76,7 @@ public class BacDayAfterFragment extends Fragment {
 
     private TextView beerLbl, wineLbl, drinkLbl, shotLbl, costsLbl, highBACLbl, currBACLbl;
     private TextView afterRegBeerLbl, afterRegWineLbl, afterRegDrinkLbl, afterRegShotLbl;
-    private Button btnEndDA, beerBtnAfterReg_DA, wineBtnAfterReg_DA, drinkBtnAfterReg_DA, shotBtnAfterReg_DA;
+    private Button beerBtnAfterReg_DA, wineBtnAfterReg_DA, drinkBtnAfterReg_DA, shotBtnAfterReg_DA;
     private LinearLayout planPaRunning_LinLay, dayAfterRunning_LinLay;
 
     private TextView txtView;
@@ -107,9 +107,16 @@ public class BacDayAfterFragment extends Fragment {
         status = getStatus();
         statusHandler(status);
 
-        btnEndDA.setOnClickListener(new View.OnClickListener() {
+        /*btnEndDA.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view){
+                showAlert();
+            }
+        });*/
+
+        ((MainActivity)getActivity()).getDayAfterFabEndButton().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 showAlert();
             }
         });
@@ -147,7 +154,6 @@ public class BacDayAfterFragment extends Fragment {
 
     @Subscribe
     public void getSelectedPage(SelectedPageEvent selectedPageEvent) {
-        System.out.println("page from eventbus: " + selectedPageEvent.page);
         if (selectedPageEvent.page == 3) {
             setUserData();
             status = getStatus();
@@ -920,7 +926,7 @@ public class BacDayAfterFragment extends Fragment {
 
     private void setVisualsPP(){
         clearUnitVariabels();
-        btnEndDA.setVisibility(View.GONE);
+        //btnEndDA.setVisibility(View.GONE);
         planPaRunning_LinLay.setVisibility(View.VISIBLE);
         dayAfterRunning_LinLay.setVisibility(View.GONE);
         colorsUnitLabels();
@@ -938,7 +944,7 @@ public class BacDayAfterFragment extends Fragment {
         afterRegWineLbl.setText(afterRegWine + "");
         afterRegDrinkLbl.setText(afterRegDrink + "");
         afterRegShotLbl.setText(afterRegShot + "");
-        btnEndDA.setVisibility(View.VISIBLE);
+        //btnEndDA.setVisibility(View.VISIBLE);
         floatingActionMenu.showMenu(true);
         planPaRunning_LinLay.setVisibility(View.GONE);
         dayAfterRunning_LinLay.setVisibility(View.VISIBLE);
@@ -953,7 +959,7 @@ public class BacDayAfterFragment extends Fragment {
         costsLbl = (TextView) v.findViewById(R.id.txtViewCosts_DA);
         highBACLbl = (TextView) v.findViewById(R.id.txtViewHighestBAC_DA);
         currBACLbl = (TextView) v.findViewById(R.id.txtViewCurrBAC_DA);
-        btnEndDA = (Button) v.findViewById(R.id.btnEndDayAfter);
+        //btnEndDA = (Button) v.findViewById(R.id.btnEndDayAfter);
         beerBtnAfterReg_DA = (Button) v.findViewById(R.id.btnAfterRegBeer_DA);
         wineBtnAfterReg_DA = (Button) v.findViewById(R.id.btnAfterRegWine_DA);
         drinkBtnAfterReg_DA = (Button) v.findViewById(R.id.btnAfterRegDrink_DA);

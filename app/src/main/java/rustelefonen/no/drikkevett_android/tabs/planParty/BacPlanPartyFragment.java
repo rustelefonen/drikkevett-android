@@ -152,7 +152,6 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
 
     @Subscribe
     public void getSelectedPage(SelectedPageEvent selectedPageEvent) {
-        System.out.println("page from eventbus: " + selectedPageEvent.page);
         if (selectedPageEvent.page == 2) {
 
             setUserData();

@@ -93,7 +93,6 @@ public class BacCalcFragment extends Fragment implements ViewPager.OnPageChangeL
 
     @Subscribe
     public void getSelectedPage(SelectedPageEvent selectedPageEvent) {
-        System.out.println("page from eventbus: " + selectedPageEvent.page);
         if (selectedPageEvent.page == 1) {
             displayPlanPartyFABs(View.GONE);
             displayPlanPartyActionFABs(View.GONE);

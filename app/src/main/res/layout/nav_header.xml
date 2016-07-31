@@ -12,6 +12,7 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         app:border_color="#FF000000"
+
         android:layout_centerInParent="true"
         android:src="@drawable/ic_default100x100_1"
         android:background="@color/backgroundColor"/>

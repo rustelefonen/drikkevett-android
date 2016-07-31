@@ -22,7 +22,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.content.res.AppCompatResources;
 import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
@@ -44,8 +43,8 @@ import java.util.List;
 
 import rustelefonen.no.drikkevett_android.db.User;
 import rustelefonen.no.drikkevett_android.db.UserDao;
-import rustelefonen.no.drikkevett_android.extra.sources.SourcesActivity;
 import rustelefonen.no.drikkevett_android.extra.guidance.Guidance;
+import rustelefonen.no.drikkevett_android.extra.sources.SourcesActivity;
 import rustelefonen.no.drikkevett_android.information.InformationCategoryActivity;
 import rustelefonen.no.drikkevett_android.settings.AlcoholPricingSettingsActivity;
 import rustelefonen.no.drikkevett_android.settings.GoalSettingsActivity;
@@ -57,57 +56,38 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
     public static final String ID = "MainActivity";
     private static final String[] IMAGE_DIALOG = new String[]{"Ta nytt bilde", "Velg bilde", "Avbryt"};
-    public final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1034;
+    private final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1034;
     private static final int SELECT_IMAGE = 987;
     private static final int FIRST_TAB_INDEX = 0;
-    public String photoFileName = "photo.jpg";
+    private String photoFileName = "photo.jpg";
+    private User user;
+    private int currentViewpagerPosition;
 
+    //Widgets
     public TabLayout tabLayout;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private ActionBarDrawerToggle actionBarDrawerToggle;
     public Toolbar toolbar;
-
-    private User user;
-
     public ViewPager viewPager;
-
-
-
-    private int currentViewpagerPosition;
-
     public FloatingActionMenu floatingActionMenu;
-
     public FloatingActionButton addButton;
     public FloatingActionButton removeButton;
-
     public FloatingActionButton planpartyStartButton;
     public FloatingActionButton planPartyEndEveningButton;
     public FloatingActionButton planPartyEndDayAfterButton;
-
     public FloatingActionButton bacFabAddButton;
     public FloatingActionButton bacFabRemoveButton;
-
     public FloatingActionButton dayAfterFabEndButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        floatingActionMenu = (FloatingActionMenu) findViewById(R.id.fab_menu_lol);
-
         initWidgets();
         setupToolbar();
-
-        toolbar.setTitleTextColor( ContextCompat.getColor(this, R.color.textColor));
-
         setupNavigationDrawer();
         setupViewpager();
-
-
-
-
         onPageSelected(FIRST_TAB_INDEX);
         fetchData();
     }
@@ -153,18 +133,13 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     @Override
     public void onPageSelected(int position) {
         currentViewpagerPosition = position;
-
-        System.out.println("nå blir onPageSelected kjørt");
         EventBus.getDefault().post(new SelectedPageEvent(position));
-
-
-
-        String title = position == 0 ? "Hjem" : position == 1 ? "Promillekalkulator"
-                : position == 2 ? "Planlegg kvelden" : position == 3 ? "Dagen Derpå"
-                : position == 4 ? "Historikk" : "";
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar == null) return;
+        String title = position == 0 ? "Hjem" : position == 1 ? "Promillekalkulator"
+                : position == 2 ? "Planlegg kvelden" : position == 3 ? "Dagen Derpå"
+                : position == 4 ? "Historikk" : "";
         actionBar.setTitle(title);
     }
 
@@ -326,6 +301,8 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.nvView);
 
+        floatingActionMenu = (FloatingActionMenu) findViewById(R.id.fab_menu_lol);
+
         addButton = (FloatingActionButton) findViewById(R.id.add_button);
         removeButton = (FloatingActionButton) findViewById(R.id.subtract_button);
 
@@ -345,14 +322,14 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     }
 
     public void launchCamera() {
-        //if (hasPermissionInManifest(this, MediaStore.ACTION_IMAGE_CAPTURE)) {
-            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, ImageUtil.getPhotoFileUri(photoFileName, this));
-            if (intent.resolveActivity(getPackageManager()) != null)
-                startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
-        /*} else {
-            Toast.makeText(this, "Fikk ikke tillatelse til å åpne kamera.", Toast.LENGTH_SHORT).show();
-        }*/
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, ImageUtil.getPhotoFileUri(photoFileName, this));
+        if (intent.resolveActivity(getPackageManager()) == null) return;
+        try {
+            startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+        } catch (SecurityException se) {
+            Toast.makeText(this, "Fikk ikke tilgang til kameraet.", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private String getGalleryPath(Uri imagePath) {
@@ -399,6 +376,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     private void setupToolbar() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.textColor));
     }
 
     public int getCurrentViewpagerPosition() {
@@ -439,24 +417,5 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
     public FloatingActionMenu getFloatingActionMenu() {
         return floatingActionMenu;
-    }
-
-    public boolean hasPermissionInManifest(Context context, String permissionName) {
-        final String packageName = context.getPackageName();
-        try {
-            final PackageInfo packageInfo = context.getPackageManager()
-                    .getPackageInfo(packageName, PackageManager.GET_PERMISSIONS);
-            final String[] declaredPermisisons = packageInfo.requestedPermissions;
-            if (declaredPermisisons != null && declaredPermisisons.length > 0) {
-                for (String p : declaredPermisisons) {
-                    if (p.equals(permissionName)) {
-                        return true;
-                    }
-                }
-            }
-        } catch (PackageManager.NameNotFoundException e) {
-
-        }
-        return false;
     }
 }
