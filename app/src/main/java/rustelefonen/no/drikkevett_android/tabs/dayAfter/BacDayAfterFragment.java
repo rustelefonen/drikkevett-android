@@ -153,6 +153,12 @@ public class BacDayAfterFragment extends Fragment {
             status = getStatus();
             statusHandler(status);
 
+            displayPlanPartyFABs(View.GONE);
+            displayPlanPartyActionFABs(View.GONE);
+            displayBacCalcFABs(View.GONE);
+            ((MainActivity)getActivity()).getDayAfterFabEndButton().setVisibility(View.VISIBLE);
+            ((MainActivity)getActivity()).getDayAfterFabEndButton().hide(false);
+
             if(status == Status.DA_RUNNING){
                 System.out.println(status);
                 ((MainActivity)getActivity()).getFloatingActionMenu().showMenu(true);
@@ -160,6 +166,22 @@ public class BacDayAfterFragment extends Fragment {
                 ((MainActivity)getActivity()).getFloatingActionMenu().hideMenu(true);
             }
         }
+    }
+
+    private void displayBacCalcFABs(int state) {
+        ((MainActivity)getActivity()).getBacFabAddButton().setVisibility(state);
+        ((MainActivity)getActivity()).getBacFabRemoveButton().setVisibility(state);
+    }
+
+    private void displayPlanPartyFABs(int state) {
+        ((MainActivity)getActivity()).getAddButton().setVisibility(state);
+        ((MainActivity)getActivity()).getRemoveButton().setVisibility(state);
+    }
+
+    private void displayPlanPartyActionFABs(int state) {
+        ((MainActivity)getActivity()).getPlanpartyStartButton().setVisibility(state);
+        ((MainActivity)getActivity()).getPlanPartyEndEveningButton().setVisibility(state);
+        ((MainActivity)getActivity()).getPlanPartyEndDayAfterButton().setVisibility(state);
     }
 
 

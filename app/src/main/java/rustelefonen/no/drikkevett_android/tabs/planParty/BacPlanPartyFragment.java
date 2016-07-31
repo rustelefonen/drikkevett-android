@@ -124,24 +124,9 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
         checkIfDayAfterEndedDayAfter();
         stateHandler(status);
 
-        /*statusBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                statusBtnHandler();
-            }
-        });*/
-
-
-
-
         pageIndicatorGroup.check(pageIndicatorGroup.getChildAt(0).getId());
 
         setHasOptionsMenu(true);
-
-        /*if (!hack) {
-            ((MainActivity)getActivity()).onPageSelected(2);
-            hack = true;
-        }*/
 
         planpartyStartButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -960,6 +945,9 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
                 status = Status.RUNNING;
                 updateStatusBtn(status.toString());
                 stateHandler(status);
+
+                ((MainActivity)getActivity()).getFloatingActionMenu().close(true);
+
             }
         }).setNegativeButton("Avbryt", new DialogInterface.OnClickListener() {
             @Override
@@ -982,6 +970,9 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
                 status = Status.DA_RUNNING;
                 updateStatusBtn(status.toString());
                 stateHandler(status);
+
+                ((MainActivity)getActivity()).getFloatingActionMenu().close(true);
+
             }
         }).setNegativeButton("Avbryt", new DialogInterface.OnClickListener() {
             @Override
@@ -1014,6 +1005,9 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
 
                 updateStatusBtn(status.toString());
                 stateHandler(status);
+
+                ((MainActivity)getActivity()).getFloatingActionMenu().close(true);
+
             }
         }).setNegativeButton("Avbryt", new DialogInterface.OnClickListener() {
             @Override

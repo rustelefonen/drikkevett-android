@@ -153,25 +153,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     @Override
     public void onPageSelected(int position) {
         currentViewpagerPosition = position;
-        if (position == 0) {
-            //floatingActionMenu.hideMenu(true);
-        } else if (position == 1) {
-            //floatingActionMenu.showMenu(true);
-
-
-        } else if (position == 2) {
-            //floatingActionMenu.showMenu(true);
-
-        } else if (position == 3) {
-            //floatingActionMenu.showMenu(true);
-            displayPlanPartyFABs(View.GONE);
-            displayPlanPartyActionFABs(View.GONE);
-            displayBacCalcFABs(View.GONE);
-            dayAfterFabEndButton.setVisibility(View.VISIBLE);
-        } else if (position == 4) {
-            //floatingActionMenu.hideMenu(true);
-        }
-        //floatingActionMenu.close(false);
 
         System.out.println("nå blir onPageSelected kjørt");
         EventBus.getDefault().post(new SelectedPageEvent(position));
@@ -294,6 +275,8 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         } else if (itemId == R.id.nav_fourth_fragment) intent = new Intent(this, SourcesActivity.class);
         else if (itemId == R.id.nav_fifth_fragment) {
             intent = new Intent(this, Guidance.class);
+        } else if (itemId == R.id.drawer_view_contact) {
+            intent = new Intent(this, ContactActivity.class);
         }
         if (intent != null) startActivity(intent);
     }
@@ -456,22 +439,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
     public FloatingActionMenu getFloatingActionMenu() {
         return floatingActionMenu;
-    }
-
-    private void displayBacCalcFABs(int state) {
-        bacFabAddButton.setVisibility(state);
-        bacFabRemoveButton.setVisibility(state);
-    }
-
-    private void displayPlanPartyFABs(int state) {
-        addButton.setVisibility(state);
-        removeButton.setVisibility(state);
-    }
-
-    private void displayPlanPartyActionFABs(int state) {
-        planpartyStartButton.setVisibility(state);
-        planPartyEndEveningButton.setVisibility(state);
-        planPartyEndDayAfterButton.setVisibility(state);
     }
 
     public boolean hasPermissionInManifest(Context context, String permissionName) {
