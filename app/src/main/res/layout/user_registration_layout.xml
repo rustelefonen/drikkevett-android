@@ -58,7 +58,7 @@
                 android:minLines="1"
                 android:maxLength="15"
                 android:inputType="textEmailAddress|textEmailSubject"
-                android:imeOptions="actionNext"
+                android:imeOptions="actionDone"
                 android:windowSoftInputMode="adjustResize"/>
 
             <LinearLayout

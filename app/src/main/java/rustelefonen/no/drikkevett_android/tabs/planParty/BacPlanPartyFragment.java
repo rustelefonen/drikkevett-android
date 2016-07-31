@@ -151,6 +151,12 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
     public void getSelectedPage(SelectedPageEvent selectedPageEvent) {
         System.out.println("page from eventbus: " + selectedPageEvent.page);
         if (selectedPageEvent.page == 2) {
+            setUserData();
+            status = isSessionOver();
+            checkIfDayAfterEndedDayAfter();
+            stateHandler(status);
+
+
             ((MainActivity)getActivity()).getFloatingActionMenu().showMenu(true);
             if (status == Status.NOT_RUNNING) {
                 planpartyStartButton.setVisibility(View.VISIBLE);
@@ -166,6 +172,7 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
                 planPartyEndDayAfterButton.setVisibility(View.VISIBLE);
             }
         }
+        ((MainActivity)getActivity()).getFloatingActionMenu().close(true);
     }
 
 
