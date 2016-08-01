@@ -56,11 +56,6 @@ public class UserRegistrationActivity extends AppCompatActivity {
         }
 
 
-
-
-
-
-
         weightEditText.setFilters(new InputFilter[]{ new InputFilterMinMax("1", "250")});
 
         ageEditText.setFilters(new InputFilter[]{ new InputFilterMinMax("1", "99")});

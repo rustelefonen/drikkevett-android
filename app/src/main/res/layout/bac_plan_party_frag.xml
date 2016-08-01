@@ -304,15 +304,15 @@
                 android:textSize="15dp"
                 />
         </LinearLayout>
-        <Button
-            android:paddingTop="50dp"
-            android:text="Start Kvelden"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/buttonStatusPP"
-            android:layout_gravity="right|bottom"
-            style="?android:attr/borderlessButtonStyle"
-            android:textColor="@color/textColor"
-            />
+        <!--<Button-->
+            <!--android:paddingTop="50dp"-->
+            <!--android:text="Start Kvelden"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:id="@+id/buttonStatusPP"-->
+            <!--android:layout_gravity="right|bottom"-->
+            <!--style="?android:attr/borderlessButtonStyle"-->
+            <!--android:textColor="@color/textColor"-->
+            <!--/>-->
     </LinearLayout>
 </android.support.v4.widget.NestedScrollView>

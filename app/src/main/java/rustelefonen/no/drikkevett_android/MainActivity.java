@@ -1,14 +1,17 @@
 package rustelefonen.no.drikkevett_android;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -22,9 +25,9 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.content.res.AppCompatResources;
 import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.Toolbar;
+import android.view.Display;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -40,12 +43,14 @@ import org.greenrobot.eventbus.EventBus;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.List;
 
 import rustelefonen.no.drikkevett_android.db.User;
 import rustelefonen.no.drikkevett_android.db.UserDao;
-import rustelefonen.no.drikkevett_android.extra.sources.SourcesActivity;
 import rustelefonen.no.drikkevett_android.extra.guidance.Guidance;
+import rustelefonen.no.drikkevett_android.extra.sources.SourcesActivity;
 import rustelefonen.no.drikkevett_android.information.InformationCategoryActivity;
 import rustelefonen.no.drikkevett_android.settings.AlcoholPricingSettingsActivity;
 import rustelefonen.no.drikkevett_android.settings.GoalSettingsActivity;
@@ -57,57 +62,38 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
     public static final String ID = "MainActivity";
     private static final String[] IMAGE_DIALOG = new String[]{"Ta nytt bilde", "Velg bilde", "Avbryt"};
-    public final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1034;
+    private final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1034;
     private static final int SELECT_IMAGE = 987;
     private static final int FIRST_TAB_INDEX = 0;
-    public String photoFileName = "photo.jpg";
+    private String photoFileName = "photo.jpg";
+    private User user;
+    private int currentViewpagerPosition;
 
+    //Widgets
     public TabLayout tabLayout;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private ActionBarDrawerToggle actionBarDrawerToggle;
     public Toolbar toolbar;
-
-    private User user;
-
     public ViewPager viewPager;
-
-
-
-    private int currentViewpagerPosition;
-
     public FloatingActionMenu floatingActionMenu;
-
     public FloatingActionButton addButton;
     public FloatingActionButton removeButton;
-
     public FloatingActionButton planpartyStartButton;
     public FloatingActionButton planPartyEndEveningButton;
     public FloatingActionButton planPartyEndDayAfterButton;
-
     public FloatingActionButton bacFabAddButton;
     public FloatingActionButton bacFabRemoveButton;
-
     public FloatingActionButton dayAfterFabEndButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        floatingActionMenu = (FloatingActionMenu) findViewById(R.id.fab_menu_lol);
-
         initWidgets();
         setupToolbar();
-
-        toolbar.setTitleTextColor( ContextCompat.getColor(this, R.color.textColor));
-
         setupNavigationDrawer();
         setupViewpager();
-
-
-
-
         onPageSelected(FIRST_TAB_INDEX);
         fetchData();
     }
@@ -152,45 +138,14 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
     @Override
     public void onPageSelected(int position) {
-        System.out.println("nå blir onPageSelected kjørt");
-        EventBus.getDefault().post(new SelectedPageEvent(position));
-
-
         currentViewpagerPosition = position;
-        if (position == 0) {
-            //floatingActionMenu.hideMenu(true);
-        } else if (position == 1) {
-            //floatingActionMenu.showMenu(true);
-
-            displayPlanPartyFABs(View.GONE);
-            displayPlanPartyActionFABs(View.GONE);
-            displayBacCalcFABs(View.VISIBLE);
-            dayAfterFabEndButton.setVisibility(View.GONE);
-        } else if (position == 2) {
-            //floatingActionMenu.showMenu(true);
-            displayPlanPartyFABs(View.VISIBLE);
-            displayPlanPartyActionFABs(View.VISIBLE);
-            displayBacCalcFABs(View.GONE);
-            dayAfterFabEndButton.setVisibility(View.GONE);
-        } else if (position == 3) {
-            //floatingActionMenu.showMenu(true);
-            displayPlanPartyFABs(View.GONE);
-            displayPlanPartyActionFABs(View.GONE);
-            displayBacCalcFABs(View.GONE);
-            dayAfterFabEndButton.setVisibility(View.VISIBLE);
-        } else if (position == 4) {
-            //floatingActionMenu.hideMenu(true);
-        }
-        floatingActionMenu.close(false);
-
-
-
-        String title = position == 0 ? "Hjem" : position == 1 ? "Promillekalkulator"
-                : position == 2 ? "Planlegg kvelden" : position == 3 ? "Dagen Derpå"
-                : position == 4 ? "Historikk" : "";
+        EventBus.getDefault().post(new SelectedPageEvent(position));
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar == null) return;
+        String title = position == 0 ? "Hjem" : position == 1 ? "Promillekalkulator"
+                : position == 2 ? "Planlegg kvelden" : position == 3 ? "Dagen Derpå"
+                : position == 4 ? "Historikk" : "";
         actionBar.setTitle(title);
     }
 
@@ -264,17 +219,8 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         if (headerLayout == null) return;
 
         if (photoToInsert == null) return;
-        Bitmap bMap = BitmapFactory.decodeFile(photoToInsert.getPath());
-        if (bMap == null) return;
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        bMap.compress(Bitmap.CompressFormat.JPEG, 0, out);
-        Bitmap decoded = BitmapFactory.decodeStream(new ByteArrayInputStream(out.toByteArray()));
-        if (decoded == null) return;
+        Bitmap decoded = ImageUtil.decodeSampledBitmapFromResource(this, photoToInsert, 100, 100);
 
-
-
-        /*Bitmap takenImage = BitmapFactory.decodeFile(photoToInsert.getPath());
-        if (takenImage == null) return;*/
         ImageView imageView = (ImageView) headerLayout.findViewById(R.id.nav_header_image);
         if (imageView == null) return;
         imageView.setImageBitmap(decoded);
@@ -301,6 +247,8 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         } else if (itemId == R.id.nav_fourth_fragment) intent = new Intent(this, SourcesActivity.class);
         else if (itemId == R.id.nav_fifth_fragment) {
             intent = new Intent(this, Guidance.class);
+        } else if (itemId == R.id.drawer_view_contact) {
+            intent = new Intent(this, ContactActivity.class);
         }
         if (intent != null) startActivity(intent);
     }
@@ -350,6 +298,8 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.nvView);
 
+        floatingActionMenu = (FloatingActionMenu) findViewById(R.id.fab_menu_lol);
+
         addButton = (FloatingActionButton) findViewById(R.id.add_button);
         removeButton = (FloatingActionButton) findViewById(R.id.subtract_button);
 
@@ -369,14 +319,14 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     }
 
     public void launchCamera() {
-        //if (hasPermissionInManifest(this, MediaStore.ACTION_IMAGE_CAPTURE)) {
-            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, ImageUtil.getPhotoFileUri(photoFileName, this));
-            if (intent.resolveActivity(getPackageManager()) != null)
-                startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
-        /*} else {
-            Toast.makeText(this, "Fikk ikke tillatelse til å åpne kamera.", Toast.LENGTH_SHORT).show();
-        }*/
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, ImageUtil.getPhotoFileUri(photoFileName, this));
+        if (intent.resolveActivity(getPackageManager()) == null) return;
+        try {
+            startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+        } catch (SecurityException se) {
+            Toast.makeText(this, "Fikk ikke tilgang til kameraet.", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private String getGalleryPath(Uri imagePath) {
@@ -423,6 +373,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     private void setupToolbar() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.textColor));
     }
 
     public int getCurrentViewpagerPosition() {
@@ -463,40 +414,5 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
     public FloatingActionMenu getFloatingActionMenu() {
         return floatingActionMenu;
-    }
-
-    private void displayBacCalcFABs(int state) {
-        bacFabAddButton.setVisibility(state);
-        bacFabRemoveButton.setVisibility(state);
-    }
-
-    private void displayPlanPartyFABs(int state) {
-        addButton.setVisibility(state);
-        removeButton.setVisibility(state);
-    }
-
-    private void displayPlanPartyActionFABs(int state) {
-        planpartyStartButton.setVisibility(state);
-        planPartyEndEveningButton.setVisibility(state);
-        planPartyEndDayAfterButton.setVisibility(state);
-    }
-
-    public boolean hasPermissionInManifest(Context context, String permissionName) {
-        final String packageName = context.getPackageName();
-        try {
-            final PackageInfo packageInfo = context.getPackageManager()
-                    .getPackageInfo(packageName, PackageManager.GET_PERMISSIONS);
-            final String[] declaredPermisisons = packageInfo.requestedPermissions;
-            if (declaredPermisisons != null && declaredPermisisons.length > 0) {
-                for (String p : declaredPermisisons) {
-                    if (p.equals(permissionName)) {
-                        return true;
-                    }
-                }
-            }
-        } catch (PackageManager.NameNotFoundException e) {
-
-        }
-        return false;
     }
 }

@@ -53,6 +53,7 @@
             android:label="Kontaktskjema"
             android:theme="@style/Theme.AppCompat.NoActionBar">
         </activity>
+        <activity android:name=".ContactActivity"/>
 
         <receiver android:name=".BacWidgetProvider">
             <intent-filter>

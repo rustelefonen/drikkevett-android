@@ -77,6 +77,7 @@ public class BacCalcFragment extends Fragment implements ViewPager.OnPageChangeL
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.bac_calc_frag, container, false);
 
+        System.out.println("i oncreateview baccalc");
         EventBus.getDefault().register(this);
 
         setHasOptionsMenu(true);
@@ -92,10 +93,37 @@ public class BacCalcFragment extends Fragment implements ViewPager.OnPageChangeL
 
     @Subscribe
     public void getSelectedPage(SelectedPageEvent selectedPageEvent) {
-        System.out.println("page from eventbus: " + selectedPageEvent.page);
         if (selectedPageEvent.page == 1) {
+            displayPlanPartyFABs(View.GONE);
+            displayPlanPartyActionFABs(View.GONE);
+            displayBacCalcFABs(View.VISIBLE);
+            ((MainActivity)getActivity()).getDayAfterFabEndButton().setVisibility(View.GONE);
+
             ((MainActivity)getActivity()).getFloatingActionMenu().showMenu(true);
+            ((MainActivity)getActivity()).getFloatingActionMenu().close(true);
+
         }
+    }
+
+
+    private void displayBacCalcFABs(int state) {
+        ((MainActivity)getActivity()).getBacFabAddButton().setVisibility(state);
+        ((MainActivity)getActivity()).getBacFabAddButton().hide(false);
+        ((MainActivity)getActivity()).getBacFabAddButton().setLabelVisibility(View.GONE);
+        ((MainActivity)getActivity()).getBacFabRemoveButton().setVisibility(state);
+        ((MainActivity)getActivity()).getBacFabRemoveButton().hide(false);
+        ((MainActivity)getActivity()).getBacFabRemoveButton().setLabelVisibility(View.GONE);
+    }
+
+    private void displayPlanPartyFABs(int state) {
+        ((MainActivity)getActivity()).getAddButton().setVisibility(state);
+        ((MainActivity)getActivity()).getRemoveButton().setVisibility(state);
+    }
+
+    private void displayPlanPartyActionFABs(int state) {
+        ((MainActivity)getActivity()).getPlanpartyStartButton().setVisibility(state);
+        ((MainActivity)getActivity()).getPlanPartyEndEveningButton().setVisibility(state);
+        ((MainActivity)getActivity()).getPlanPartyEndDayAfterButton().setVisibility(state);
     }
 
     @Override
@@ -449,15 +477,15 @@ public class BacCalcFragment extends Fragment implements ViewPager.OnPageChangeL
         if (id == R.id.bac_fab_add_button) {
             if (!bacCalcIsSelected()) return;
             addBeverage();
-            if (fabLabelsHidden) return;
+            /*if (fabLabelsHidden) return;
             fabLabelsHidden = true;
-            hideFabLabels();
+            hideFabLabels();*/
         } else if (id == R.id.bac_fab_subtract_button) {
             if (!bacCalcIsSelected()) return;
             removeBeverage();
-            if (fabLabelsHidden) return;
+            /*if (fabLabelsHidden) return;
             fabLabelsHidden = true;
-            hideFabLabels();
+            hideFabLabels();*/
         }
     }
 }

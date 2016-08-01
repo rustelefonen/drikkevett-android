@@ -4,10 +4,12 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -114,7 +116,6 @@ public class BacHomeFragment extends Fragment{
 
     @Subscribe
     public void getSelectedPage(SelectedPageEvent selectedPageEvent) {
-        System.out.println("page from eventbus: " + selectedPageEvent.page);
         if (selectedPageEvent.page == 0) {
             ((MainActivity)getActivity()).getFloatingActionMenu().hideMenu(true);
             if (goalPieChart != null) goalPieChart.animateY(1400, Easing.EasingOption.EaseInOutQuad);
@@ -315,13 +316,20 @@ public class BacHomeFragment extends Fragment{
     private void insertProfileImageIfExists() {
         Uri takenPhotoUri = ImageUtil.getPhotoFileUri(photoFileName, getContext());
         if (takenPhotoUri == null) return;
-        String path = takenPhotoUri.getPath();
-        if (path == null) return;
-        if (!new File(path).exists()) return;
-        Bitmap takenImage = BitmapFactory.decodeFile(path);
+        /*String path = takenPhotoUri.getPath();
+        if (path == null) return;*/
+        if (!new File(takenPhotoUri.getPath()).exists()) return;
+        Bitmap takenImage = ImageUtil.decodeSampledBitmapFromResource(getContext(), takenPhotoUri, getWidth(), 175);
         if (takenImage == null) return;
         if (profileImage == null) return;
         profileImage.setImageBitmap(takenImage);
+    }
+
+    private int getWidth() {
+        Display display = getActivity().getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        return size.x;
     }
 
     private void insertNicknameIfExists() {
