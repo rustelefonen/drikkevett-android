@@ -438,6 +438,7 @@ public class DBSeeder {
         ic4.setName("Tips");
         ic4.setOrderNumber(3);
         ic4.setVersionNumber(0);
+        ic4.setImage(getImage("c4.jpg", context));
         informationCategoryDao.insert(ic4);
 
         Information i1c4 = new Information();
@@ -548,12 +549,14 @@ public class DBSeeder {
                 "\n" +
                 "tåler du mindre alkohol, enn når du er frisk og uthvilt.\n" +
                 "\n" +
-                "11. Lytt til erfarne folk. Har du spørsmål om rus kontakt RUStelefonen på tlf 08588, chat\n" +
+                "11. Lytt til erfarne folk. Har du spørsmål om rus kontak" +
+                "t RUStelefonen på tlf 08588, chat\n" +
                 "\n" +
                 "med oss eller send oss spørsmål.\n" +
                 "\n" +
                 "12. Sett deg et langsiktig mål. Får du ikke til første gang, forsøk igjen.");
         i3c4.setCategoryId(4);
+        i3c4.setImage(getImage("i3c4.jpg", context));
         informationDao.insert(i3c4);
 
         superDao.close();
