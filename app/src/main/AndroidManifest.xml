@@ -20,7 +20,10 @@
             android:theme="@style/AppTheme">
         </activity>
         <activity android:name=".goalreached.GoalReachedActivity"/>
-        <activity android:name=".goalreached.SetNewGoalActivity"/>
+        <activity
+            android:name=".goalreached.SetNewGoalActivity"
+            android:windowSoftInputMode="stateHidden"
+            />
         <activity android:name=".extra.guidance.Guidance"/>
         <activity
             android:name=".tabs.history.HistoryActivity"

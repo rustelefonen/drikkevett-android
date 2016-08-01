@@ -12,6 +12,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+
+        <include layout="@layout/toolbar"/>
+
         <android.support.v7.widget.CardView
             card_view:cardBackgroundColor="@color/cardColor"
             android:layout_width="match_parent"
@@ -64,6 +67,7 @@
                     android:minWidth="100dp"
                     android:id="@+id/costs_txtView_goalReached"
                     android:textColor="@color/textColor"
+                    android:textSize="30sp"
                     />
                 <TextView
                     android:layout_width="wrap_content"
@@ -73,6 +77,7 @@
                     android:minWidth="100dp"
                     android:id="@+id/highestBAC_txtView_goalReached"
                     android:textColor="@color/textColor"
+                    android:textSize="30sp"
                     />
                 <TextView
                     android:layout_width="wrap_content"
@@ -82,6 +87,7 @@
                     android:minWidth="100dp"
                     android:id="@+id/highestAverageBAC_txtView_goalReached"
                     android:textColor="@color/textColor"
+                    android:textSize="30sp"
                     />
                 <TextView
                     android:layout_width="wrap_content"
@@ -116,49 +122,52 @@
             android:id="@+id/card_three_goal_reached"
             card_view:cardUseCompatPadding="true"
             card_view:cardElevation="4dp">
-            <TextView
-                android:text="@string/explanation_goalreached_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/explanationGoalReached_ID"
-                android:textAlignment="center"
-                android:textColor="@color/textColor"
-                android:padding="20dp"
-                />
-            </android.support.v7.widget.CardView>
-        <android.support.v7.widget.CardView
-            card_view:cardBackgroundColor="@color/cardColor"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/card_four_goal_reached"
-            card_view:cardUseCompatPadding="true"
-            card_view:cardElevation="4dp">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center"
+                android:orientation="vertical"
                 >
-                <Button
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Skjermbilde"
-                    android:id="@+id/btnScreenshot_GR"
-                    android:onClick="screenShot"
-                    />
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Start på nytt"
-                    android:id="@+id/btnRestart_GR"
+                    android:orientation="horizontal"
+                    >
+                    <TextView
+                        android:text="@string/explanation_goalreached_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/explanationGoalReached_ID"
+                        android:textAlignment="center"
+                        android:textColor="@color/textColor"
+                        android:padding="20dp"
+                        />
+                </LinearLayout>
 
-                    />
-                <Button
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Fortsett"
-                    android:id="@+id/btnContinue_GR"
-                    />
+                    android:orientation="horizontal"
+                    android:padding="28dp"
+                    >
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Start på nytt"
+                        android:id="@+id/btnRestart_GR"
+                        android:background="@color/redSuper"
+                        android:layout_weight="50"
+                        android:textColor="@color/textColor"
+                        />
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Fortsett"
+                        android:id="@+id/btnContinue_GR"
+                        android:background="@color/blueButton"
+                        android:layout_weight="50"
+                        android:textColor="@color/textColor"
+                        />
+                </LinearLayout>
             </LinearLayout>
             </android.support.v7.widget.CardView>
     </LinearLayout>

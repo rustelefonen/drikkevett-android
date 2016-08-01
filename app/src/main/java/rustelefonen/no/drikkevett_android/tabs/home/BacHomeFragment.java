@@ -343,10 +343,15 @@ public class BacHomeFragment extends Fragment{
 
     private void fireGoalDateReachedView(){
         Date currentDate = new Date();
+        System.out.println("Current Dato: " + currentDate + "\nEr etter -> \nMålet ditt: " + user.getGoalDate());
+
         if(currentDate.after(user.getGoalDate())){
             Intent intent = new Intent(getContext(), GoalReachedActivity.class);
             intent.putExtra(GoalReachedActivity.ID, user);
             startActivity(intent);
         }
+        Intent intent = new Intent(getContext(), GoalReachedActivity.class);
+        intent.putExtra(GoalReachedActivity.ID, user);
+        startActivity(intent);
     }
 }

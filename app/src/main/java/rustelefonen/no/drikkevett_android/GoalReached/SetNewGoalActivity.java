@@ -72,10 +72,9 @@ public class SetNewGoalActivity extends Activity{
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                seekBar.setMax(20);
-                promilleBAC = getConvertedValue(progress);
-                DecimalFormat numberFormat = new DecimalFormat("#.##");
-                bacTextView.setText(numberFormat.format(promilleBAC) + "");
+                float perMille = (float) progress / 10f;
+                bacTextView.setText(Float.toString(perMille));
+                promilleBAC = perMille;
             }
 
             @Override
@@ -106,17 +105,12 @@ public class SetNewGoalActivity extends Activity{
         }
     }
 
-    public double getConvertedValue(int intVal){
-        double floatVal = 0.0;
-        floatVal = .1f * intVal;
-        return floatVal;
-    }
-
     private void saveAndGoToHome(){
         Date goalDate = getDate(dateEditText.getText().toString());
         saveUser(promilleBAC, goalDate);
         Toast.makeText(this, "Ny makspromille lagret", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra(MainActivity.ID, user);
         startActivity(intent);
     }
 
@@ -168,9 +162,6 @@ public class SetNewGoalActivity extends Activity{
         superDao.close();
     }
 
-    @Override
-    public void onBackPressed() {}
-
     private void showAlertView() {
         AlertDialog.Builder alert_builder = new AlertDialog.Builder(this);
         alert_builder.setMessage("").setCancelable(false).setPositiveButton("Bekreft", new DialogInterface.OnClickListener() {
@@ -201,4 +192,7 @@ public class SetNewGoalActivity extends Activity{
         alert.setTitle("Feil!");
         alert.show();
     }
+
+    @Override
+    public void onBackPressed() {}
 }

@@ -100,11 +100,12 @@
     <string name="custom_pop_up_title">Etterregistrer enhet</string>
     <string name="custom_pop_up_text">Her velger du tiden fra du begynte å drikke til du konsumerte enheten du glemte å registrere</string>
     <string name="explanation_goalreached_text">
-        Hvis du ønsker å fortsette med de samme statistikkene som før klikk på "Fortsett".\n\n
-        Hvis ikke kan du starte applikasjonen helt på nytt ved å klikke på "Start på nytt".
+        Ønsker du å beholde statistikken din klikk på "Fortsett".\n\n
+        Eller du kan ta et skjermbilde av denne skjermen og statistikken blir lagret i galleriet ditt. Det gjør du ved å åpne menyen å klikke på knappen merket \"Skjermbilde\" \n\n
+        Ved å klikke på \"Start på nytt\" vil alt av statistikk bli slettet og du kan starte helt på nytt.
     </string>
     <string name="textNewGoal">
-        Her setter du deg et nytt mål og en ny ønsket promille!
+        Sett deg en ny ønsket makspromille og \nen ny mål dato
     </string>
     <string name="underPlanParty_DA">
         Her vil du se statistikk over den siste kvelden du har registrert i Planlegg Kvelden.\n\n

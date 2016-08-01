@@ -240,6 +240,7 @@ public class BacCalcFragment extends Fragment implements ViewPager.OnPageChangeL
         }
         pieChart.setCenterTextColor(colorQuote(oppdatertPromille));
         labelQuotes.setText(textQuote(oppdatertPromille));
+        labelQuotes.setTextColor(colorQuote(oppdatertPromille));
 
         DecimalFormat numberFormat = new DecimalFormat("#.##");
         String newPromille = numberFormat.format(oppdatertPromille);
