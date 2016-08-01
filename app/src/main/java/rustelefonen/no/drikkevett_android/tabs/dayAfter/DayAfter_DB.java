@@ -66,6 +66,16 @@ public class DayAfter_DB {
         superDao.close();
     }
 
+    public void updateCostsHistory(int costs){
+        SuperDao superDao = new SuperDao(context);
+        HistoryDao historyDao = superDao.getHistoryDao();
+        List<History> histories = historyDao.queryBuilder().list();
+        History lastElement = histories.get(histories.size() -1);
+        lastElement.setSum(costs);
+        historyDao.insertOrReplace(lastElement);
+        superDao.close();
+    }
+
     public void printLastGraphValues(){
         // REMOVE ALL LATEST GRAPH HIST WITH SAME ID AS HISTORY ID AND TEMP STORE THE TIMESTAMPS
         SuperDao superDao = new SuperDao(context);

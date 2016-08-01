@@ -129,6 +129,14 @@ public class DateUtil {
         return date;
     }
 
+    public static Date setForgottenNewUnitDate(int minutes, Date startDate){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(startDate);
+        calendar.add(Calendar.MINUTE, minutes);
+        startDate = calendar.getTime();
+        return startDate;
+    }
+
     public static Date setEndOfSesStamp(int hours){
         Date date = new Date();
         Calendar calendar = Calendar.getInstance();

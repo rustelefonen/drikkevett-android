@@ -63,6 +63,7 @@ public class BarChartController {
         barChart.setVisibleXRange(6, 8);
 
 
+
         barChart.getXAxis().setAvoidFirstLastClipping(true);
 
 

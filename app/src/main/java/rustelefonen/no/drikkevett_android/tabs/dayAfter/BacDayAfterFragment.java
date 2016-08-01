@@ -53,6 +53,7 @@ import rustelefonen.no.drikkevett_android.tabs.home.SuperDao;
 import rustelefonen.no.drikkevett_android.util.NavigationUtil;
 import rustelefonen.no.drikkevett_android.util.PartyUtil;
 
+import static rustelefonen.no.drikkevett_android.util.DateUtil.setForgottenNewUnitDate;
 import static rustelefonen.no.drikkevett_android.util.DateUtil.setNewUnitDate;
 import static rustelefonen.no.drikkevett_android.util.PartyUtil.addMinsToDate;
 import static rustelefonen.no.drikkevett_android.util.PartyUtil.calculateBAC;
@@ -508,7 +509,6 @@ public class BacDayAfterFragment extends Fragment {
 
         double timeDiffToDouble = (double) timeDiff;
 
-        // max være 24
         double convertToHours = timeDiffToDouble / 60;
         System.out.println("Timer: " + convertToHours);
 
@@ -587,6 +587,24 @@ public class BacDayAfterFragment extends Fragment {
         if(convertToHours > 11.5 && convertToHours < 12){
             intervallHours = 24;
         }
+        if(convertToHours > 12 && convertToHours < 12.5){
+            intervallHours = 25;
+        }
+        if(convertToHours > 12.5 && convertToHours < 13){
+            intervallHours = 26;
+        }
+        if(convertToHours > 13 && convertToHours < 13.5){
+            intervallHours = 27;
+        }
+        if(convertToHours > 13.5 && convertToHours < 14){
+            intervallHours = 28;
+        }
+        if(convertToHours > 14 && convertToHours < 14.5){
+            intervallHours = 29;
+        }
+        if(convertToHours >= 15){
+            intervallHours = 30;
+        }
         return intervallHours;
     }
 
@@ -617,12 +635,19 @@ public class BacDayAfterFragment extends Fragment {
         if(hours == 22){ txtView.setText(11 + " t"); minutes = 660; }
         if(hours == 23){ txtView.setText(11 + " t " + 30 + " m"); minutes = 690; }
         if(hours == 24){ txtView.setText(12 + " t"); minutes = 720; }
+        if(hours == 25){ txtView.setText(12 + " t " + 30 + " m"); minutes = 750; }
+        if(hours == 26){ txtView.setText(13 + " t"); minutes = 780; }
+        if(hours == 27){ txtView.setText(13 + " t " + 30 + " m"); minutes = 810; }
+        if(hours == 28){ txtView.setText(14 + " t"); minutes = 840; }
+        if(hours == 29){ txtView.setText(14 + " t " + 30 + " m"); minutes = 870; }
+        if(hours == 30){ txtView.setText(15 + " t"); minutes = 900; }
         return  minutes;
     }
 
     private void addForgottenUnit(String unit, int time){
+        setStartAndEndStamp();
         // add time to startTimeStamp to find out when this unit was added
-        Date newUnitStamp = setNewUnitDate(time);
+        Date newUnitStamp = setForgottenNewUnitDate(time, startStamp);
         System.out.println("New Unit (UnitType: " + unit + "), and timeStamp: " + newUnitStamp);
 
         // add one more unit to history table ( beer/wine/drink/shot )
@@ -688,6 +713,10 @@ public class BacDayAfterFragment extends Fragment {
         }
         partyDao.insertOrReplace(getLastElement);
         superDao.close();
+
+        // Update costs
+        dayAfter_db.updateCostsHistory(calculateCosts(consumBeers, consumWines, consumDrink, consumShots));
+
         // refresh all visuals
         dayAfterRunning();
     }
@@ -701,11 +730,11 @@ public class BacDayAfterFragment extends Fragment {
 
         GraphHistoryDao graphHistoryDao = superDao.getGraphHistoryDao();
         List<GraphHistory> graphHistList = graphHistoryDao.queryBuilder().where(GraphHistoryDao.Properties.HistoryId.eq(lastElement.getId())).list();
-        superDao.close();
+
         for(GraphHistory graphHist : graphHistList){
             graphHistoryDao.deleteByKey(graphHist.getId());
         }
-
+        superDao.close();
         // ADD NEW VALUES IN GRAPH HIST WITH THE AFTER REGISTRATED TIME STAMP
         long id = lastElement.getId();
         calcPr((int) id);
@@ -730,47 +759,69 @@ public class BacDayAfterFragment extends Fragment {
 
         double highestBAC = 0.0;
         double promille = 0.0;
-        Date tempTimeStamp = new Date();
 
         setStartAndEndStamp();
 
         double sessionInterval = getDateDiff(startStamp, endStamp, TimeUnit.MINUTES);
+        Date tempTimeStamp = startStamp;
+
         double tempInterval = 0;
 
         while(tempInterval < sessionInterval){
+            System.out.println("Iterasjon: " + tempInterval);
+
+
             int beer = 0;
             int wine = 0;
             int drink = 0;
             int shot = 0;
 
+            // Legg til 15 min på en date
+            tempTimeStamp = setForgottenNewUnitDate((int) tempInterval, startStamp);
+
             tempInterval += 15;
+
             for(DayAfterBAC dayAfter : dayAfterBacList){
                 String unit = dayAfter.getUnit();
 
-                if(unit.equals("Beer")){
-                    beer++;
-                }
-                if(unit.equals("Wine")){
-                    wine++;
-                }
-                if(unit.equals("Drink")){
-                    drink++;
-                }
-                if(unit.equals("Shot")){
-                    shot++;
-                }
+                double intervalSinceUnitAdded = getDateDiff(dayAfter.getTimestamp(), tempTimeStamp, TimeUnit.MINUTES);
+                System.out.println("Time STAMP TEMP: " + tempTimeStamp);
+                System.out.println("Time Stamp unit added: " + dayAfter.getTimestamp());
+                System.out.println("intervalSineUnitAdded: " + intervalSinceUnitAdded);
 
-                double hoursToMins = tempInterval / 60;
+                if(intervalSinceUnitAdded <= 0){
+                    System.out.println("Enheten ikke lagt til enda:)");
+                } else {
+                    if(unit.equals("Beer")){
+                        beer++;
+                    }
+                    if(unit.equals("Wine")){
+                        wine++;
+                    }
+                    if(unit.equals("Drink")){
+                        drink++;
+                    }
+                    if(unit.equals("Shot")){
+                        shot++;
+                    }
+                }
+            }
+
+            double hoursToMins = tempInterval / 60;
+            if((beer + wine + drink + shot) == 0){
+                promille = 0;
+            } else {
+                System.out.println("Beer: " + beer + "\nWine: " + wine + "\nDrink: " + drink + "\nShot: " + shot);
                 String tempPromille = calculateBAC(gender, weight, countingGrams(beer, wine, drink, shot), hoursToMins);
                 promille = Double.parseDouble(tempPromille);
-
-                // Sjekke høyeste promille og temp lagre denne verdien før man oppdaterer høyeste promille i historikken. ( I LOOPEN )
-                if(highestBAC < promille){
-                    highestBAC = promille;
-                }
-                // Legg til 15 min på en date
-                tempTimeStamp = addMinsToDate((int) tempInterval);
             }
+
+            if(highestBAC < promille){
+                highestBAC = promille;
+            }
+
+            System.out.println("Promille lagt til i graph: " + promille + "\nTidspunkt lagt til: " + tempTimeStamp + "\nId lagt til: " + id);
+
             // Legg til elementet i databasen ( I LOOPEN )
             dayAfter_db.addGraphValues(promille, tempTimeStamp, id);
         }

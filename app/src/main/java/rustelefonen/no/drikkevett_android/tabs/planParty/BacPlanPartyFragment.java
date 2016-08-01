@@ -52,6 +52,7 @@ import rustelefonen.no.drikkevett_android.util.NavigationUtil;
 import rustelefonen.no.drikkevett_android.util.PartyUtil;
 
 import static rustelefonen.no.drikkevett_android.util.DateUtil.setEndOfSesStamp;
+import static rustelefonen.no.drikkevett_android.util.DateUtil.setForgottenNewUnitDate;
 import static rustelefonen.no.drikkevett_android.util.DateUtil.setNewUnitDate;
 import static rustelefonen.no.drikkevett_android.util.PartyUtil.calculateBAC;
 import static rustelefonen.no.drikkevett_android.util.PartyUtil.countingGrams;
@@ -847,9 +848,9 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
 
         double highestBAC = 0.0;
         double promille = 0.0;
-        Date tempTimeStamp = new Date();
 
         double sessionInterval = getDateDiff(startTimeStamp, endTimeStamp, TimeUnit.MINUTES);
+        Date tempTimeStamp = startTimeStamp;
         double tempInterval = 0;
 
         while(tempInterval < sessionInterval){
@@ -858,37 +859,50 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
             int drink = 0;
             int shot = 0;
 
+            // Add 15 minutes to simulator
+            tempTimeStamp = setForgottenNewUnitDate((int) tempInterval, startTimeStamp);
+
             tempInterval += 15;
 
             for(DayAfterBAC dayAfter : dayAfterBacList){
                 String unit = dayAfter.getUnit();
-                if(unit.equals("Beer")){
-                    beer++;
+
+                double intervalSinceUnitAdded = getDateDiff(dayAfter.getTimestamp(), tempTimeStamp, TimeUnit.MINUTES);
+                System.out.println("Time STAMP TEMP: " + tempTimeStamp);
+                System.out.println("Time Stamp unit added: " + dayAfter.getTimestamp());
+                System.out.println("intervalSineUnitAdded: " + intervalSinceUnitAdded);
+
+                if(intervalSinceUnitAdded <= 0){
+
+                } else {
+                    if(unit.equals("Beer")){
+                        beer++;
+                    }
+                    if(unit.equals("Wine")){
+                        wine++;
+                    }
+                    if(unit.equals("Drink")){
+                        drink++;
+                    }
+                    if(unit.equals("Shot")){
+                        shot++;
+                    }
                 }
-                if(unit.equals("Wine")){
-                    wine++;
-                }
-                if(unit.equals("Drink")){
-                    drink++;
-                }
-                if(unit.equals("Shot")){
-                    shot++;
-                }
-                // set minutes to hours
-                double hoursToMins = tempInterval / 60;
+            }
+            // set minutes to hours
+            double hoursToMins = tempInterval / 60;
+            if((beer + wine + drink + shot) == 0){
+                promille = 0;
+            } else {
                 String tempPromille = calculateBAC(gender, weight, countingGrams(beer, wine, drink, shot), hoursToMins);
                 try{
                     promille = Double.parseDouble(tempPromille);
                 } catch(NumberFormatException e) {
                     promille = 0;
                 }
-                // Check highest BAC
-                if(highestBAC < promille){
-                    highestBAC = promille;
-                }
-
-                // Add 15 minutes to simulator
-                tempTimeStamp = setNewUnitDate((int) tempInterval);
+            }
+            if(highestBAC < promille){
+                highestBAC = promille;
             }
             planPartyDB.addGraphValues(promille, tempTimeStamp, id);
         }
