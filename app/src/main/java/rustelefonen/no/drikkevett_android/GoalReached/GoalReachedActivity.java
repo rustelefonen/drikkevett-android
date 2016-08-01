@@ -1,14 +1,24 @@
 package rustelefonen.no.drikkevett_android.goalreached;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.ContextThemeWrapper;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -26,6 +36,7 @@ import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.List;
 
+import rustelefonen.no.drikkevett_android.MainActivity;
 import rustelefonen.no.drikkevett_android.R;
 import rustelefonen.no.drikkevett_android.db.DayAfterBACDao;
 import rustelefonen.no.drikkevett_android.db.GraphHistoryDao;
@@ -34,6 +45,8 @@ import rustelefonen.no.drikkevett_android.db.HistoryDao;
 import rustelefonen.no.drikkevett_android.db.User;
 import rustelefonen.no.drikkevett_android.tabs.home.BarChartController;
 import rustelefonen.no.drikkevett_android.tabs.home.SuperDao;
+import rustelefonen.no.drikkevett_android.tabs.planParty.Status;
+import rustelefonen.no.drikkevett_android.util.NavigationUtil;
 
 import static android.app.PendingIntent.getActivity;
 import static rustelefonen.no.drikkevett_android.tabs.home.HistoryCalculator.getTotalAverageHighestBac;
@@ -49,7 +62,7 @@ public class GoalReachedActivity extends AppCompatActivity {
     private static final String FILENAME = "drikkevett_screenshot";
     private TextView txtViewCosts, txtViewHighestBAC, txtViewHighestAverageBAC, txtViewGreeting;
     private BarChart historyBarChart;
-    private Button btnScreenshot, btnRestart, btnContinue;
+    private Button btnRestart, btnContinue;
     public static final String ID = "GoalReached";
 
     private Bitmap mbitmap;
@@ -60,7 +73,7 @@ public class GoalReachedActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reached_goal_date);
-
+        insertToolbar();
         initWidets();
 
         Object tmpUser = getIntent().getSerializableExtra(ID);
@@ -73,13 +86,13 @@ public class GoalReachedActivity extends AppCompatActivity {
         btnRestart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                restartSettings();
+                alertRestart();
             }
         });
         btnContinue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                continueWithNewDate();
+                alertContinue();
             }
         });
     }
@@ -107,7 +120,7 @@ public class GoalReachedActivity extends AppCompatActivity {
     }
 
     public void screenShot(View view) {
-        mbitmap = getBitmapOFRootView(btnScreenshot);
+        mbitmap = getBitmapOFRootView(btnContinue);
         createImage(mbitmap);
         Toast.makeText(this, "Skjermbilde lagt til i Galleri!", Toast.LENGTH_SHORT).show();
     }
@@ -136,6 +149,42 @@ public class GoalReachedActivity extends AppCompatActivity {
         }
     }
 
+    private void alertContinue() {
+        AlertDialog.Builder alert_builder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.AlertDialogCustom));
+        alert_builder.setMessage("Er du sikker på at du vil fortsette? ").setCancelable(false).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                continueWithNewDate();
+            }
+        }).setNegativeButton("Avbryt", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.cancel();
+            }
+        });
+        AlertDialog alert = alert_builder.create();
+        alert.setTitle("Fortsett");
+        alert.show();
+    }
+
+    private void alertRestart() {
+        AlertDialog.Builder alert_builder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.AlertDialogCustom));
+        alert_builder.setMessage("Er du sikker på at du vil slette all historikk og starte på nytt?").setCancelable(false).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                restartSettings();
+            }
+        }).setNegativeButton("Avbryt", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.cancel();
+            }
+        });
+        AlertDialog alert = alert_builder.create();
+        alert.setTitle("Start på nytt");
+        alert.show();
+    }
+
     private void restartSettings(){
         // clear history table
         SuperDao superDao = new SuperDao(this);
@@ -162,7 +211,6 @@ public class GoalReachedActivity extends AppCompatActivity {
         txtViewHighestAverageBAC = (TextView) findViewById(R.id.highestAverageBAC_txtView_goalReached);
         txtViewGreeting = (TextView) findViewById(R.id.txtViewGreeting_goalReached);
         historyBarChart = (BarChart) findViewById(R.id.goal_reached_bar_chart);
-        btnScreenshot = (Button) findViewById(R.id.btnScreenshot_GR);
         btnRestart = (Button) findViewById(R.id.btnRestart_GR);
         btnContinue = (Button) findViewById(R.id.btnContinue_GR);
     }
@@ -182,6 +230,31 @@ public class GoalReachedActivity extends AppCompatActivity {
         if(user.getGoalDate().after(currentDate)){
             finish();
         }
+    }
+
+    private void insertToolbar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.textColor));
+        toolbar.setTitle("Måldato");
+        setSupportActionBar(toolbar);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.goalreached_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_screenshot:
+                final ViewGroup viewGroup = (ViewGroup) ((ViewGroup) this
+                        .findViewById(android.R.id.content)).getChildAt(0);
+                screenShot(viewGroup);
+                return false;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

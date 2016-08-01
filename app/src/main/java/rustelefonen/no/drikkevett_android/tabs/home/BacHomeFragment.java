@@ -352,5 +352,8 @@ public class BacHomeFragment extends Fragment{
             intent.putExtra(GoalReachedActivity.ID, user);
             startActivity(intent);
         }
+        Intent intent = new Intent(getContext(), GoalReachedActivity.class);
+        intent.putExtra(GoalReachedActivity.ID, user);
+        startActivity(intent);
     }
 }

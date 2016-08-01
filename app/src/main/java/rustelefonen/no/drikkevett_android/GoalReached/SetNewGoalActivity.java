@@ -192,4 +192,7 @@ public class SetNewGoalActivity extends Activity{
         alert.setTitle("Feil!");
         alert.show();
     }
+
+    @Override
+    public void onBackPressed() {}
 }
