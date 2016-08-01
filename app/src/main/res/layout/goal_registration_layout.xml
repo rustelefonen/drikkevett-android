@@ -82,7 +82,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Fullfør"
-                android:background="@color/greenSuper"
+                android:background="@color/blueButton"
                 android:textColor="@color/textColor"
                 android:onClick="finish"/>
         </LinearLayout>

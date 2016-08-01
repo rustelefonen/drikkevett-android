@@ -5,7 +5,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.animation.Easing;
@@ -24,8 +26,8 @@ import rustelefonen.no.drikkevett_android.R;
 import rustelefonen.no.drikkevett_android.db.GraphHistory;
 import rustelefonen.no.drikkevett_android.db.GraphHistoryDao;
 import rustelefonen.no.drikkevett_android.db.History;
-import rustelefonen.no.drikkevett_android.db.HistoryDao;
 import rustelefonen.no.drikkevett_android.tabs.home.SuperDao;
+import rustelefonen.no.drikkevett_android.util.DateUtil;
 
 /**
  * Created by simenfonnes on 12.07.2016.
@@ -48,59 +50,38 @@ public class HistoryActivity extends AppCompatActivity {
     public TextView historyCostTextView;
     public TextView historyHighestBacTextView;
 
-    public TextView historyHeader;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.history_layout);
+        insertHistoryIfExists();
+        setData();
+        initWidgets();
+        fillWidgets();
+        insertToolbar();
+    }
 
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) actionBar.setHomeButtonEnabled(true);
+    private void fillWidgets() {
+        setupLineChart();
+        beerCountTextView.setText(history.getBeerCount() + "");
+        wineCountTextView.setText(history.getWineCount() + "");
+        drinkCountTextView.setText(history.getDrinkCount() + "");
+        shotCountTextView.setText(history.getShotCount() + "");
+        historyCostTextView.setText(history.getSum() + "");
+        historyHighestBacTextView.setText(history.getHighestBAC() + "");
+    }
 
-        Object tmpHistory = getIntent().getSerializableExtra(ID);
-
-        if (tmpHistory != null && tmpHistory instanceof History) {
-            history = (History) tmpHistory;
-            System.out.println(history.getHighestBAC());
-        }
-
-        SuperDao superDao = new SuperDao(this);
-        GraphHistoryDao graphHistoryDao = superDao.getGraphHistoryDao();
-
-
-        List <GraphHistory> graphHist = graphHistoryDao.queryBuilder().list();
-        for(GraphHistory item : graphHist){
-            //System.out.println("Promiller i graphhistorikk: " + item.getCurrentBAC());
-            //System.out.println("Tidspunkt i graphhistorikk: " + item.getTimestamp());
-        }
-        HistoryDao historyDao = superDao.getHistoryDao();
-        List <History> histList = historyDao.queryBuilder().list();
-        for(History items : histList){
-            //System.out.println("Units i historikk: " + items.getBeerCount() + " Vin: " + items.getWineCount() + " Drink: " + items.getDrinkCount() + " Shot: " + items.getShotCount());
-        }
-        /*
-        Date now = new Date();
-        GraphHistory graphHistory = new GraphHistory();
-        graphHistory.setTimestamp(now);
-        graphHistory.setCurrentBAC(0.4);
-        graphHistory.setHistoryId(history.getId());
-
-        graphHistoryDao.insert(graphHistory);
-
-        GraphHistory graphHistory2 = new GraphHistory();
-        graphHistory.setTimestamp(getDateMinus15Minutes(now));
-        graphHistory.setCurrentBAC(0.6);
-        graphHistory.setHistoryId(history.getId());
-
-        graphHistoryDao.insert(graphHistory2);
-        */
-        graphHistories = graphHistoryDao.queryBuilder().where(GraphHistoryDao.Properties.HistoryId.eq(history.getId())).list();
-
-        superDao.close();
-
-
+    private void initWidgets() {
         lineChart = (LineChart) findViewById(R.id.history_line_chart_view);
+        beerCountTextView = (TextView) findViewById(R.id.history_beer_count);
+        wineCountTextView = (TextView) findViewById(R.id.history_wine_count);
+        drinkCountTextView = (TextView) findViewById(R.id.history_drink_count);
+        shotCountTextView = (TextView) findViewById(R.id.history_shot_count);
+        historyCostTextView = (TextView) findViewById(R.id.history_cost);
+        historyHighestBacTextView = (TextView) findViewById(R.id.history_highest_bac);
+    }
+
+    private void setupLineChart() {
         lineChart.setData(getLineData());
         lineChart.setDescription("");
         lineChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
@@ -114,25 +95,11 @@ public class HistoryActivity extends AppCompatActivity {
         lineChart.getLegend().setEnabled(false);
         lineChart.setVisibleXRange(3, 3);
         lineChart.animateY(1400, Easing.EasingOption.EaseInOutQuad);
+    }
 
-        beerCountTextView = (TextView) findViewById(R.id.history_beer_count);
-        wineCountTextView = (TextView) findViewById(R.id.history_wine_count);
-        drinkCountTextView = (TextView) findViewById(R.id.history_drink_count);
-        shotCountTextView = (TextView) findViewById(R.id.history_shot_count);
-
-        beerCountTextView.setText(history.getBeerCount() + "");
-        beerCountTextView.setText(history.getWineCount() + "");
-        beerCountTextView.setText(history.getDrinkCount() + "");
-        beerCountTextView.setText(history.getShotCount() + "");
-
-        historyCostTextView = (TextView) findViewById(R.id.history_cost);
-        historyHighestBacTextView = (TextView) findViewById(R.id.history_highest_bac);
-
-        historyCostTextView.setText(history.getSum() + "");
-        historyHighestBacTextView.setText(history.getHighestBAC() + "");
-
-        historyHeader = (TextView) findViewById(R.id.history_header);
-        historyHeader.setText(getGraphTitle(history.getStartDate()));
+    private void insertHistoryIfExists() {
+        Object tmpHistory = getIntent().getSerializableExtra(ID);
+        if (tmpHistory != null && tmpHistory instanceof History) history = (History) tmpHistory;
     }
 
     private String getNorwegianDayOfWeek(int day) {
@@ -146,7 +113,7 @@ public class HistoryActivity extends AppCompatActivity {
         return "";
     }
 
-    private String getGraphTitle(Date date) {
+    private String getTitle(Date date) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         int weekDay = calendar.get(Calendar.DAY_OF_WEEK);
@@ -154,14 +121,7 @@ public class HistoryActivity extends AppCompatActivity {
         int month = calendar.get(Calendar.MONTH);
         int year = calendar.get(Calendar.YEAR);
 
-        return getNorwegianDayOfWeek(weekDay) + " - " + dayOfMonth + "/" + month + "-" + year;
-    }
-
-    private Date getDateMinus15Minutes(Date currentDate) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(currentDate);
-        cal.add(Calendar.MINUTE, -15);
-        return cal.getTime();
+        return getNorwegianDayOfWeek(weekDay) + " " + dayOfMonth + ". " + DateUtil.getMonthName(month) + " - " + year;
     }
 
     private String getHoursAndMinutes(Date date) {
@@ -188,8 +148,6 @@ public class HistoryActivity extends AppCompatActivity {
         dataset.setDrawCircleHole(true);
         dataset.setDrawValues(false);
         dataset.setCircleRadius(5f);
-        //dataset.setCircleHoleRadius(3f);
-        //dataset.setCircleColorHole(Color.RED);
         dataset.setCircleColor(ContextCompat.getColor(this, R.color.textColor));
         dataset.setFillColor(ContextCompat.getColor(this, R.color.historyLineChartGreen));
         dataset.setColor(ContextCompat.getColor(this, R.color.historyLineChartGreen));
@@ -208,5 +166,36 @@ public class HistoryActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void insertToolbar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.textColor));
+        toolbar.setTitle(getTitle(history.getStartDate()));
+
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayShowHomeEnabled(true);
+        }
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hasChanged();
+            }
+        });
+    }
+
+    private void hasChanged() {
+        super.onBackPressed();
+    }
+
+    private void setData() {
+        SuperDao superDao = new SuperDao(this);
+        GraphHistoryDao graphHistoryDao = superDao.getGraphHistoryDao();
+        graphHistories = graphHistoryDao.queryBuilder().where(GraphHistoryDao.Properties.HistoryId.eq(history.getId())).list();
+        superDao.close();
     }
 }

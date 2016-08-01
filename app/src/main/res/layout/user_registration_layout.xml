@@ -56,7 +56,7 @@
                 android:maxLines="1"
                 android:scrollHorizontally="false"
                 android:minLines="1"
-                android:maxLength="15"
+                android:maxLength="25"
                 android:inputType="textEmailAddress|textEmailSubject"
                 android:imeOptions="actionDone"
                 android:windowSoftInputMode="adjustResize"/>
@@ -133,10 +133,11 @@
                 android:windowSoftInputMode="adjustResize"/>
 
             <Button
+                android:id="@+id/user_reg_next_button"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:text="Neste"
-                android:background="@color/greenSuper"
+                android:background="@color/blueButton"
                 android:textColor="@color/textColor"
                 android:onClick="next"/>
         </LinearLayout>

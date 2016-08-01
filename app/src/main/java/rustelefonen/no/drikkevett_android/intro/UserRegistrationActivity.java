@@ -12,6 +12,7 @@ import android.text.InputFilter;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -31,45 +32,26 @@ public class UserRegistrationActivity extends AppCompatActivity {
     public Spinner genderSpinner;
     public EditText weightEditText;
     public EditText ageEditText;
+    public Button nextButton;
 
     private static final String[] GENDERS = new String[]{"Velg kjønn", "Mann", "Kvinne"};
+    private static final int DELAY_TIME = 2500;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.user_registration_layout);
         initWidgets();
-
-
-        ArrayAdapter arrayAdapter = new ArrayAdapter<>(this, R.layout.spinner_item, GENDERS);
-        genderSpinner.setAdapter(arrayAdapter);
-
-        Drawable spinnerDrawable = genderSpinner.getBackground().getConstantState().newDrawable();
-
-
-        spinnerDrawable.setColorFilter(ContextCompat.getColor(this, R.color.backgroundColor), PorterDuff.Mode.SRC_ATOP);
-
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            genderSpinner.setBackground(spinnerDrawable);
-        }else{
-            genderSpinner.setBackgroundDrawable(spinnerDrawable);
-        }
-
-
-        weightEditText.setFilters(new InputFilter[]{ new InputFilterMinMax("1", "250")});
-
-        ageEditText.setFilters(new InputFilter[]{ new InputFilterMinMax("1", "99")});
-
-
-
+        setupWidgets();
     }
 
     public void next(View view) {
+        delaySpam();
         User user = new User();
 
         String nicknameText = nicknameEditText.getText().toString();
 
-        if (nicknameText.length() > 15) {
+        if (nicknameText.length() > 25) {
             Toast.makeText(this, "Ugyldig kallenavn.", Toast.LENGTH_SHORT).show();
             return;
         } else if (nicknameText.length() < 1) {
@@ -79,7 +61,7 @@ public class UserRegistrationActivity extends AppCompatActivity {
             user.setNickname(nicknameText);
         }
 
-        String genderText = GENDERS[genderSpinner.getSelectedItemPosition()];//genderSpinner.getText().toString();
+        String genderText = GENDERS[genderSpinner.getSelectedItemPosition()];
 
         if (genderText.isEmpty()) {
             Toast.makeText(this, "Du må registrere kjønn for å gå videre", Toast.LENGTH_SHORT).show();
@@ -88,7 +70,7 @@ public class UserRegistrationActivity extends AppCompatActivity {
             if (genderText.equals(GENDERS[1]) || genderText.equals(GENDERS[2])) {
                 user.setGender(genderText);
             } else {
-                Toast.makeText(this, "Ugyldig kjønn", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Du må registrere kjønn for å gå videre", Toast.LENGTH_SHORT).show();
                 return;
             }
         }
@@ -99,7 +81,7 @@ public class UserRegistrationActivity extends AppCompatActivity {
                 double weight = Double.parseDouble(weightText);
 
                 if (weight < 40.0 || weight > 250) {
-                    Toast.makeText(this, "Vekt må være mellom 40 og 250kg.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Vekt under 40kg og over 250kg er ikke gyldig.", Toast.LENGTH_SHORT).show();
                     return;
                 } else {
                     user.setWeight(weight);
@@ -142,5 +124,38 @@ public class UserRegistrationActivity extends AppCompatActivity {
         genderSpinner = (Spinner) findViewById(R.id.user_reg_gender_spinner);
         weightEditText = (EditText) findViewById(R.id.user_reg_weight_edit_text);
         ageEditText = (EditText) findViewById(R.id.user_reg_age_edit_text);
+        nextButton = (Button) findViewById(R.id.user_reg_next_button);
     }
+
+    private void setupWidgets() {
+        setupGenderSpinner();
+        weightEditText.setFilters(new InputFilter[]{ new InputFilterMinMax("1", "250")});
+        ageEditText.setFilters(new InputFilter[]{ new InputFilterMinMax("1", "99")});
+    }
+
+    private void setupGenderSpinner() {
+        genderSpinner.setAdapter(new ArrayAdapter<>(this, R.layout.spinner_item, GENDERS));
+        Drawable spinnerDrawable = genderSpinner.getBackground().getConstantState().newDrawable();
+        spinnerDrawable.setColorFilter(ContextCompat.getColor(this, R.color.backgroundColor), PorterDuff.Mode.SRC_ATOP);
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) genderSpinner.setBackground(spinnerDrawable);
+        else genderSpinner.setBackgroundDrawable(spinnerDrawable);
+    }
+
+    private void delaySpam() {
+        nextButton.setEnabled(false);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(DELAY_TIME);
+                } catch (InterruptedException ignored) {}
+                UserRegistrationActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {nextButton.setEnabled(true);}
+                });
+            }
+        }).start();
+    }
+
 }

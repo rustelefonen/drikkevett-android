@@ -1,10 +1,12 @@
 package rustelefonen.no.drikkevett_android.intro;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputFilter;
+import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -40,15 +42,23 @@ public class AlcoholPricingRegistrationActivity extends AppCompatActivity {
 
         beerEditText = (EditText) findViewById(R.id.alco_reg_beer_edit_text);
         beerEditText.setFilters(inputFilter);
+        beerEditText.setTransformationMethod(new NumericKeyBoardTransformationMethod());
+        beerEditText.setTypeface(Typeface.DEFAULT);
 
         wineEditText = (EditText) findViewById(R.id.alco_reg_wine_edit_text);
         wineEditText.setFilters(inputFilter);
+        wineEditText.setTransformationMethod(new NumericKeyBoardTransformationMethod());
+        wineEditText.setTypeface(Typeface.DEFAULT);
 
         drinkEditText = (EditText) findViewById(R.id.alco_reg_drink_edit_text);
         drinkEditText.setFilters(inputFilter);
+        drinkEditText.setTransformationMethod(new NumericKeyBoardTransformationMethod());
+        drinkEditText.setTypeface(Typeface.DEFAULT);
 
         shotEditText = (EditText) findViewById(R.id.alco_reg_shot_edit_text);
         shotEditText.setFilters(inputFilter);
+        shotEditText.setTransformationMethod(new NumericKeyBoardTransformationMethod());
+        shotEditText.setTypeface(Typeface.DEFAULT);
 
         Object tmpUser = getIntent().getSerializableExtra(ID);
         if (tmpUser != null && tmpUser instanceof User) {
@@ -128,5 +138,12 @@ public class AlcoholPricingRegistrationActivity extends AppCompatActivity {
         wineEditText.setText(Integer.toString(80));
         drinkEditText.setText(Integer.toString(100));
         shotEditText.setText(Integer.toString(120));
+    }
+
+    private class NumericKeyBoardTransformationMethod extends PasswordTransformationMethod {
+        @Override
+        public CharSequence getTransformation(CharSequence source, View view) {
+            return source;
+        }
     }
 }

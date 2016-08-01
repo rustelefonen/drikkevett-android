@@ -84,6 +84,7 @@ public class DBSeeder {
                 "\n" +
                 "\uF0B7 Unge jenter drikker alkohol og blir beruset like ofte, eller mer, enn gutter.");
         i2c1.setCategoryId(1);
+        i2c1.setImage(getImage("i2c1.jpg", context));
         informationDao.insert(i2c1);
 
         Information i3c1 = new Information();
@@ -189,6 +190,7 @@ public class DBSeeder {
                 "\uF0B7 Risikoen for død øker hvis du også har brukt medikamenter som har sløvende eller\n" +
                 "\n" +
                 "dempende virkning.");
+        i5c1.setImage(getImage("i5c1.jpg", context));
         i5c1.setCategoryId(1);
         informationDao.insert(i5c1);
 
@@ -228,6 +230,7 @@ public class DBSeeder {
                 "\n" +
                 "kan være livsfarlig.");
         i6c1.setCategoryId(1);
+        i6c1.setImage(getImage("i6c1.jpg", context));
         informationDao.insert(i6c1);
 
         InformationCategory ic2 = new InformationCategory();
@@ -292,6 +295,7 @@ public class DBSeeder {
                 "voldshandlinger eller ulykker når de er fulle. Å bli aggressiv eller i overkant dramatisk, er\n" +
                 "\n" +
                 "heller ikke uvanlig.");
+        i3c2.setImage(getImage("i3c2.jpg", context));
         i3c2.setCategoryId(2);
         informationDao.insert(i3c2);
 

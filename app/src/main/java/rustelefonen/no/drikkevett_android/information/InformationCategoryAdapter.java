@@ -80,13 +80,9 @@ public class InformationCategoryAdapter extends RecyclerView.Adapter<Information
     public int getItemCount() {
         int counter = 0;
         for (int i = 0; i <= informationCategoryList.size(); i++) {
-            if (i % 3 != 0) {
-                counter++;
-            }
+            if (i % 3 != 0) counter++;
         }
         return counter;
-
-        //return informationCategoryList.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

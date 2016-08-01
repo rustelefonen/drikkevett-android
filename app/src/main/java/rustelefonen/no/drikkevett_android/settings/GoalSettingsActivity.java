@@ -4,8 +4,11 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -42,13 +45,35 @@ public class GoalSettingsActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.goal_settings_layout);
-
-        Object tmpUser = getIntent().getSerializableExtra(ID);
-        if (tmpUser != null && tmpUser instanceof User) {
-            user = (User) tmpUser;
-        }
+        insertUserIfExists();
         initWidgets();
         fillWidgets();
+        insertToolbar();
+    }
+
+    private void insertUserIfExists() {
+        Object tmpUser = getIntent().getSerializableExtra(ID);
+        if (tmpUser != null && tmpUser instanceof User) user = (User) tmpUser;
+    }
+
+    private void insertToolbar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.textColor));
+        toolbar.setTitle("Målsetning");
+
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayShowHomeEnabled(true);
+        }
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hasChanged();
+            }
+        });
     }
 
     private void initWidgets() {
@@ -102,7 +127,6 @@ public class GoalSettingsActivity extends AppCompatActivity {
                             // do nothing
                         }
                     })
-                    .setIcon(android.R.drawable.ic_dialog_alert)
                     .show();
         } else {
             super.onBackPressed();
@@ -155,13 +179,9 @@ public class GoalSettingsActivity extends AppCompatActivity {
         hasChanged();
     }
 
-    public void cancel(View view) {
-        hasChanged();
-    }
-
     public void saveNewGoals(View view) {
         double goalBac = getDouble(goalBacEditText.getText().toString());
-        if (goalBac <= 0.0) {
+        if (goalBac <= 0.0 || goalBac < 2.0) {
             Toast.makeText(this, "Ugyldig mål", Toast.LENGTH_SHORT).show();
             return;
         }
