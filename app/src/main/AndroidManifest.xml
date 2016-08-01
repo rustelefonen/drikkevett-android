@@ -17,48 +17,96 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
-            android:theme="@style/AppTheme">
-        </activity>
-        <activity android:name=".goalreached.GoalReachedActivity"/>
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden"/>
+        <activity
+            android:name=".goalreached.GoalReachedActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden"/>
         <activity
             android:name=".goalreached.SetNewGoalActivity"
             android:windowSoftInputMode="stateHidden"
-            />
-        <activity android:name=".extra.guidance.Guidance"/>
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden"/>
+        <activity
+            android:name=".extra.guidance.Guidance"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden"/>
         <activity
             android:name=".tabs.history.HistoryActivity"
-            android:label="Historikk"/>
+            android:label="Historikk"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden"/>
         <activity
             android:name=".intro.UserRegistrationActivity"
-            android:label="Brukerregistrering">
-        </activity>
-        <activity android:name=".intro.AlcoholPricingRegistrationActivity"
-            android:label="Alkoholpriser"/>
-        <activity android:name=".intro.GoalRegistrationActivity"
-            android:label="Målsetning"/>
-        <activity android:name=".LauncherActivity"
-            android:theme="@style/SplashTheme">
+            android:label="Brukerregistrering"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden"/>
+        <activity
+            android:name=".intro.AlcoholPricingRegistrationActivity"
+            android:label="Alkoholpriser"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden"/>
+        <activity
+            android:name=".intro.GoalRegistrationActivity"
+            android:label="Målsetning"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden"/>
+        <activity
+            android:name=".LauncherActivity"
+            android:theme="@style/SplashTheme"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".settings.UserSettingsActivity"
-            android:label="Brukerinnstillinger"/>
-        <activity android:name=".settings.AlcoholPricingSettingsActivity"/>
-        <activity android:name=".settings.GoalSettingsActivity"/>
-        <activity android:name=".information.InformationCategoryActivity" android:label="Informasjon"/>
-        <activity android:name=".information.InformationListActivity"/>
-        <activity android:name=".information.InformationActivity"/>
-        <activity android:name=".intro.WelcomeActivity"/>
-        <activity android:name=".extra.sources.SourcesActivity"/>
+        <activity
+            android:name=".settings.UserSettingsActivity"
+            android:label="Brukerinnstillinger"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden"/>
+        <activity
+            android:name=".settings.AlcoholPricingSettingsActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden"/>
+        <activity
+            android:name=".settings.GoalSettingsActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden"/>
+        <activity
+            android:name=".information.InformationCategoryActivity"
+            android:label="Informasjon"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden"/>
+        <activity
+            android:name=".information.InformationListActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden"/>
+        <activity
+            android:name=".information.InformationActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden"/>
+        <activity
+            android:name=".intro.WelcomeActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden"/>
+        <activity
+            android:name=".extra.sources.SourcesActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden"/>
         <activity
             android:name=".information.QuestionActivity"
             android:label="Kontaktskjema"
-            android:theme="@style/Theme.AppCompat.NoActionBar">
-        </activity>
-        <activity android:name=".ContactActivity"/>
-
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden"/>
+        <activity
+            android:name=".ContactActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden"/>
         <receiver android:name=".BacWidgetProvider">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />

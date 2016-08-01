@@ -62,7 +62,7 @@ public class DBSeeder {
 
         Information i2c1 = new Information();
         i2c1.setName("Fakta om alkoholbruk");
-        i2c1.setContent("Alkoholomsetningen i Norge økte med 40 % fra 1995 til 2009.\n" +
+        i2c1.setContent("\u2022Alkoholomsetningen i Norge økte med 40 % fra 1995 til 2009.\n" +
                 "\n" +
                 "\uF0B7 Det registrerte forbruket i 2012 var anslått til 6,21 liter per voksen innbygger – da\n" +
                 "\n" +

@@ -78,11 +78,9 @@ public class InformationCategoryAdapter extends RecyclerView.Adapter<Information
 
     @Override
     public int getItemCount() {
-        int counter = 0;
-        for (int i = 0; i <= informationCategoryList.size(); i++) {
-            if (i % 3 != 0) counter++;
-        }
-        return counter;
+        //rows = imageCount - (imageCount / 3)
+        int y = informationCategoryList.size();
+        return y - (y / 3);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
