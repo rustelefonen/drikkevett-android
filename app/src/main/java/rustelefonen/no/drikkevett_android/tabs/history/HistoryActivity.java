@@ -24,6 +24,7 @@ import rustelefonen.no.drikkevett_android.R;
 import rustelefonen.no.drikkevett_android.db.GraphHistory;
 import rustelefonen.no.drikkevett_android.db.GraphHistoryDao;
 import rustelefonen.no.drikkevett_android.db.History;
+import rustelefonen.no.drikkevett_android.db.HistoryDao;
 import rustelefonen.no.drikkevett_android.tabs.home.SuperDao;
 
 /**
@@ -63,10 +64,22 @@ public class HistoryActivity extends AppCompatActivity {
             history = (History) tmpHistory;
             System.out.println(history.getHighestBAC());
         }
-        /*
+
         SuperDao superDao = new SuperDao(this);
         GraphHistoryDao graphHistoryDao = superDao.getGraphHistoryDao();
 
+
+        List <GraphHistory> graphHist = graphHistoryDao.queryBuilder().list();
+        for(GraphHistory item : graphHist){
+            //System.out.println("Promiller i graphhistorikk: " + item.getCurrentBAC());
+            //System.out.println("Tidspunkt i graphhistorikk: " + item.getTimestamp());
+        }
+        HistoryDao historyDao = superDao.getHistoryDao();
+        List <History> histList = historyDao.queryBuilder().list();
+        for(History items : histList){
+            //System.out.println("Units i historikk: " + items.getBeerCount() + " Vin: " + items.getWineCount() + " Drink: " + items.getDrinkCount() + " Shot: " + items.getShotCount());
+        }
+        /*
         Date now = new Date();
         GraphHistory graphHistory = new GraphHistory();
         graphHistory.setTimestamp(now);
@@ -81,11 +94,11 @@ public class HistoryActivity extends AppCompatActivity {
         graphHistory.setHistoryId(history.getId());
 
         graphHistoryDao.insert(graphHistory2);
-
+        */
         graphHistories = graphHistoryDao.queryBuilder().where(GraphHistoryDao.Properties.HistoryId.eq(history.getId())).list();
 
         superDao.close();
-        */
+
 
         lineChart = (LineChart) findViewById(R.id.history_line_chart_view);
         lineChart.setData(getLineData());
