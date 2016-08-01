@@ -41,12 +41,12 @@ public class LauncherActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (!hasInfoInDB()) {
+        /*if (!hasInfoInDB()) {
             System.out.println("har ikke mer enn 0");
             DBSeeder.seed(this);
         } else {
             System.out.println("har mer enn 0");
-        }
+        }*/
         Intent intent;
         if (hasUser()) {
             intent = new Intent(this, MainActivity.class);
