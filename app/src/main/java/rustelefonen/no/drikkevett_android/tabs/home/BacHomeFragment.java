@@ -316,8 +316,6 @@ public class BacHomeFragment extends Fragment{
     private void insertProfileImageIfExists() {
         Uri takenPhotoUri = ImageUtil.getPhotoFileUri(photoFileName, getContext());
         if (takenPhotoUri == null) return;
-        /*String path = takenPhotoUri.getPath();
-        if (path == null) return;*/
         if (!new File(takenPhotoUri.getPath()).exists()) return;
         Bitmap takenImage = ImageUtil.decodeSampledBitmapFromResource(getContext(), takenPhotoUri, getWidth(), 175);
         if (takenImage == null) return;

@@ -165,12 +165,8 @@ public class BacDayAfterFragment extends Fragment {
             ((MainActivity)getActivity()).getDayAfterFabEndButton().setVisibility(View.VISIBLE);
             ((MainActivity)getActivity()).getDayAfterFabEndButton().hide(false);
 
-            if(status == Status.DA_RUNNING){
-                System.out.println(status);
-                ((MainActivity)getActivity()).getFloatingActionMenu().showMenu(true);
-            } else {
-                ((MainActivity)getActivity()).getFloatingActionMenu().hideMenu(true);
-            }
+            if(status == Status.DA_RUNNING)((MainActivity)getActivity()).getFloatingActionMenu().showMenu(true);
+            else ((MainActivity)getActivity()).getFloatingActionMenu().hideMenu(true);
         }
     }
 
