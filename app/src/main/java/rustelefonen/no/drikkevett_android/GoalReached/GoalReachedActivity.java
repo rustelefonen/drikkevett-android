@@ -28,6 +28,7 @@ import java.util.List;
 
 import rustelefonen.no.drikkevett_android.R;
 import rustelefonen.no.drikkevett_android.db.DayAfterBACDao;
+import rustelefonen.no.drikkevett_android.db.GraphHistoryDao;
 import rustelefonen.no.drikkevett_android.db.History;
 import rustelefonen.no.drikkevett_android.db.HistoryDao;
 import rustelefonen.no.drikkevett_android.db.User;
@@ -139,6 +140,8 @@ public class GoalReachedActivity extends AppCompatActivity {
         // clear history table
         SuperDao superDao = new SuperDao(this);
         HistoryDao historyDao = superDao.getHistoryDao();
+        GraphHistoryDao graphHistoryDao = superDao.getGraphHistoryDao();
+        graphHistoryDao.deleteAll();
         historyDao.deleteAll();
         superDao.close();
 
