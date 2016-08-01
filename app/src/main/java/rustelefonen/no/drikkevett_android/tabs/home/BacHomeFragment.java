@@ -110,7 +110,7 @@ public class BacHomeFragment extends Fragment{
         fillPieChart();
         stylePieChart();
         setHasOptionsMenu(true);
-        //fireGoalDateReachedView();
+        fireGoalDateReachedView();
         return view;
     }
 
@@ -189,8 +189,6 @@ public class BacHomeFragment extends Fragment{
 
     private void fillWidgets() {
         quoteTextView.setText(getRandomQuote());
-
-
         List<History> historyList = getHistoryList();
         if (historyList.size() > 0) {
             noDataBarChartCardView.setVisibility(View.GONE);
@@ -350,8 +348,5 @@ public class BacHomeFragment extends Fragment{
             intent.putExtra(GoalReachedActivity.ID, user);
             startActivity(intent);
         }
-        Intent intent = new Intent(getContext(), GoalReachedActivity.class);
-        intent.putExtra(GoalReachedActivity.ID, user);
-        startActivity(intent);
     }
 }

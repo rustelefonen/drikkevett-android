@@ -27,6 +27,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
+                    android:layout_gravity="center"
                     >
                     <com.github.mikephil.charting.charts.PieChart
                         android:padding="16dp"
@@ -40,6 +41,7 @@
                         android:rowCount="2"
                         android:columnCount="2"
                         android:useDefaultMargins="true"
+                        android:layout_gravity="center"
                         >
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -193,6 +195,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:orientation="horizontal"
+                    android:padding="10dp"
                     >
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -291,6 +294,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
+                    android:padding="15dp"
                     >
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -310,7 +314,8 @@
                             android:layout_gravity="center"
                             android:textSize="15sp"
                             android:textColor="@color/greyTextColor"
-                            android:text="Har du glemt å registrere noen enheter?"
+                            android:text="Klikk enhetene for å etterregistrer"
+                            android:paddingBottom="14dp"
                             />
                     </LinearLayout>
                     <LinearLayout
@@ -341,7 +346,7 @@
                                 android:id="@+id/btnAfterRegBeer_DA"
                                 style="?android:attr/borderlessButtonStyle"
                                 android:textColor="@color/greyTextColor"
-                                android:textSize="20sp"
+                                android:textSize="16sp"
                                 />
                             <LinearLayout
                                 android:layout_width="10dp"
@@ -371,7 +376,8 @@
                                 android:id="@+id/btnAfterRegWine_DA"
                                 style="?android:attr/borderlessButtonStyle"
                                 android:textColor="@color/greyTextColor"
-                                android:textSize="20sp"
+                                android:textSize="16sp"
+
                                 />
                             <LinearLayout
                                 android:layout_width="10dp"
@@ -401,7 +407,8 @@
                                 android:id="@+id/btnAfterRegDrink_DA"
                                 style="?android:attr/borderlessButtonStyle"
                                 android:textColor="@color/greyTextColor"
-                                android:textSize="20sp"
+                                android:textSize="16sp"
+                                android:minWidth="80dp"
                                 />
                             <LinearLayout
                                 android:layout_width="10dp"
@@ -425,13 +432,13 @@
                                 android:layout_gravity="center"
                                 />
                             <Button
-                                android:text="SHOT"
+                                android:text="Shot"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:id="@+id/btnAfterRegShot_DA"
                                 style="?android:attr/borderlessButtonStyle"
                                 android:textColor="@color/greyTextColor"
-                                android:textSize="20sp"
+                                android:textSize="16sp"
                                 />
                             <LinearLayout
                                 android:layout_width="10dp"
