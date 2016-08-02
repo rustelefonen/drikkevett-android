@@ -190,6 +190,7 @@ public class BacHomeFragment extends Fragment{
     private void fillWidgets() {
         quoteTextView.setText(getRandomQuote());
         List<History> historyList = getHistoryList();
+        List<History> entireHistoryList = getEntireHistoryList();
         if (historyList.size() > 0) {
             noDataBarChartCardView.setVisibility(View.GONE);
             noDataPieChart.setVisibility(View.GONE);
@@ -202,13 +203,13 @@ public class BacHomeFragment extends Fragment{
             DecimalFormat df = new DecimalFormat("#.##");
             df.setRoundingMode(RoundingMode.CEILING);
 
-            totalCountTextView.setText(df.format(getTotalCost(historyList)) + ",-");
-            totalBacCountTextView.setText(df.format(getTotalHighestBac(historyList)));
-            avgBacCountTextView.setText(df.format(getTotalAverageHighestBac(historyList)));
+            totalCountTextView.setText(df.format(getTotalCost(entireHistoryList)) + ",-");
+            totalBacCountTextView.setText(df.format(getTotalHighestBac(entireHistoryList)));
+            avgBacCountTextView.setText(df.format(getTotalAverageHighestBac(entireHistoryList)));
 
-            lastMonthCostTextView.setText(df.format(getLastMonthCost(historyList)) + ",-");
-            lastMonthHighestBacTextView.setText(df.format(getLastMonthHighestBac(historyList)));
-            lastMonthAvgBacTextView.setText(df.format(getLastMonthAverageBac(historyList)));
+            lastMonthCostTextView.setText(df.format(getLastMonthCost(entireHistoryList)) + ",-");
+            lastMonthHighestBacTextView.setText(df.format(getLastMonthHighestBac(entireHistoryList)));
+            lastMonthAvgBacTextView.setText(df.format(getLastMonthAverageBac(entireHistoryList)));
 
             if (user == null) return;
             BarChartController chartController = new BarChartController(historyBarChart, user, getHistoryList());
@@ -243,6 +244,14 @@ public class BacHomeFragment extends Fragment{
             if (calendar.get(Calendar.MONTH) == currentMonth) historiesInThisMonth.add(history);
         }
         return historiesInThisMonth;
+    }
+
+    private List<History> getEntireHistoryList() {
+        SuperDao superDao = new SuperDao(getContext());
+        HistoryDao historyDao = superDao.getHistoryDao();
+        List<History> historyList = historyDao.queryBuilder().list();
+        superDao.close();
+        return historyList;
     }
 
     private void fillPieChart() {
