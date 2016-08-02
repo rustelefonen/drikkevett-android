@@ -1,6 +1,7 @@
 package rustelefonen.no.drikkevett_android.settings;
 
 import android.content.DialogInterface;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -8,17 +9,22 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.InputFilter;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import java.util.List;
 
+import rustelefonen.no.drikkevett_android.InputFilterMinMax;
 import rustelefonen.no.drikkevett_android.R;
 import rustelefonen.no.drikkevett_android.db.User;
 import rustelefonen.no.drikkevett_android.db.UserDao;
+import rustelefonen.no.drikkevett_android.intro.AlcoholPricingRegistrationActivity;
 import rustelefonen.no.drikkevett_android.tabs.home.SuperDao;
 
 /**
@@ -28,11 +34,13 @@ import rustelefonen.no.drikkevett_android.tabs.home.SuperDao;
 public class AlcoholPricingSettingsActivity extends AppCompatActivity {
 
     public static final String ID = "AlcoholPricingSettings";
+    private static final int DELAY_TIME = 2500;
 
     public EditText beerPriceEditText;
     public EditText winePriceEditText;
     public EditText drinkPriceEditText;
     public EditText shotPriceEditText;
+    public Button saveButton;
 
     private User user;
 
@@ -42,6 +50,9 @@ public class AlcoholPricingSettingsActivity extends AppCompatActivity {
         setContentView(R.layout.alcohol_price_settings_layout);
         insertUserIfExists();
         initWidgets();
+        setInputFilters();
+        setTransformationMethods();
+        setTypefaces();
         insertToolbar();
         fillWidgets();
     }
@@ -71,11 +82,34 @@ public class AlcoholPricingSettingsActivity extends AppCompatActivity {
         if (tmpUser != null && tmpUser instanceof User) user = (User) tmpUser;
     }
 
+    private void setTypefaces() {
+        beerPriceEditText.setTypeface(Typeface.DEFAULT);
+        winePriceEditText.setTypeface(Typeface.DEFAULT);
+        drinkPriceEditText.setTypeface(Typeface.DEFAULT);
+        shotPriceEditText.setTypeface(Typeface.DEFAULT);
+    }
+
+    private void setInputFilters() {
+        InputFilter[] inputFilter = new InputFilter[]{ new InputFilterMinMax("1", "1000")};
+        beerPriceEditText.setFilters(inputFilter);
+        winePriceEditText.setFilters(inputFilter);
+        drinkPriceEditText.setFilters(inputFilter);
+        shotPriceEditText.setFilters(inputFilter);
+    }
+
+    private void setTransformationMethods() {
+        beerPriceEditText.setTransformationMethod(new NumericKeyBoardTransformationMethod());
+        winePriceEditText.setTransformationMethod(new NumericKeyBoardTransformationMethod());
+        drinkPriceEditText.setTransformationMethod(new NumericKeyBoardTransformationMethod());
+        shotPriceEditText.setTransformationMethod(new NumericKeyBoardTransformationMethod());
+    }
+
     private void initWidgets() {
         beerPriceEditText = (EditText) findViewById(R.id.alco_settings_beer_edit_text);
         winePriceEditText = (EditText) findViewById(R.id.alco_settings_wine_edit_text);
         drinkPriceEditText = (EditText) findViewById(R.id.alco_settings_drink_edit_text);
         shotPriceEditText = (EditText) findViewById(R.id.alco_settings_shot_edit_text);
+        saveButton = (Button) findViewById(R.id.alcohol_settings_save_button);
     }
 
     private void fillWidgets() {
@@ -86,10 +120,10 @@ public class AlcoholPricingSettingsActivity extends AppCompatActivity {
     }
 
     public void setDefault(View view) {
-        beerPriceEditText.setText(Integer.toString(0));
-        winePriceEditText.setText(Integer.toString(0));
-        drinkPriceEditText.setText(Integer.toString(0));
-        shotPriceEditText.setText(Integer.toString(0));
+        beerPriceEditText.setText(Integer.toString(70));
+        winePriceEditText.setText(Integer.toString(65));
+        drinkPriceEditText.setText(Integer.toString(110));
+        shotPriceEditText.setText(Integer.toString(100));
     }
 
     private int getInt(String number) {
@@ -132,6 +166,7 @@ public class AlcoholPricingSettingsActivity extends AppCompatActivity {
     }
 
     public void saveNewPrices(View view) {
+        delaySpam();
         int beerPrice = getInt(beerPriceEditText.getText().toString());
         if (beerPrice <= 0) {
             Toast.makeText(this, "Ugyldig øl-pris", Toast.LENGTH_SHORT).show();
@@ -194,5 +229,30 @@ public class AlcoholPricingSettingsActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         hasChanged();
+    }
+
+    private void delaySpam() {
+        saveButton.setEnabled(false);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(DELAY_TIME);
+                } catch (InterruptedException ignored) {}
+                AlcoholPricingSettingsActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        saveButton.setEnabled(true);}
+                });
+            }
+        }).start();
+    }
+
+    private class NumericKeyBoardTransformationMethod extends PasswordTransformationMethod {
+        @Override
+        public CharSequence getTransformation(CharSequence source, View view) {
+            return source;
+        }
     }
 }

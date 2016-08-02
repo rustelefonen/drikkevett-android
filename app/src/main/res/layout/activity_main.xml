@@ -31,7 +31,7 @@
                 app:tabGravity="fill"
                 app:tabMode="fixed"
                 android:tint="@color/textColor"
-                app:tabIndicatorColor="@color/greenSuper"
+                app:tabIndicatorColor="@color/blueButton"
                 app:titleTextAppearance="@style/AppTheme.Toolbar.Title"/>
         </android.support.design.widget.AppBarLayout>
 

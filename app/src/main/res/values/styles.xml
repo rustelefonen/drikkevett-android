@@ -21,7 +21,7 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/greenSuper</item>
+        <item name="colorAccent">@color/blueButton</item>
         <item name="android:itemTextAppearance">@style/MyActionBar.MenuTextStyle</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
         <item name="android:textColorSecondary">@color/textColor</item>

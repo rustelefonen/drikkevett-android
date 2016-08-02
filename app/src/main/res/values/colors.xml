@@ -19,4 +19,6 @@
     <color name="defaultGreen">#41774A</color>
     <color name="blueButton">#00B9FF</color>
     <color name="splashBackground">#16151B</color>
+    <color name="redthing">#E85B5B</color>
+    <color name="greenthing">#58E472</color>
 </resources>

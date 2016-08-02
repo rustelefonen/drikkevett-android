@@ -11,20 +11,23 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.InputFilter;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.util.List;
 
+import rustelefonen.no.drikkevett_android.InputFilterMinMax;
 import rustelefonen.no.drikkevett_android.R;
 import rustelefonen.no.drikkevett_android.db.User;
 import rustelefonen.no.drikkevett_android.db.UserDao;
+import rustelefonen.no.drikkevett_android.intro.UserRegistrationActivity;
 import rustelefonen.no.drikkevett_android.tabs.home.SuperDao;
 
 /**
@@ -35,11 +38,13 @@ public class UserSettingsActivity extends AppCompatActivity {
 
     public static final String ID = "UserSettings";
     private static final String[] GENDERS = new String[]{"Velg kjønn", "Mann", "Kvinne"};
+    private static final int DELAY_TIME = 2500;
 
     public EditText nicknameEditText;
     public Spinner genderSpinner;
     public EditText weightEditText;
     public EditText ageEditText;
+    public Button saveButton;
 
     private User user;
 
@@ -49,6 +54,7 @@ public class UserSettingsActivity extends AppCompatActivity {
         setContentView(R.layout.user_settings_layout);
         insertUserIfExists();
         initWidgets();
+        setWidgetFilters();
         fillWidgets();
         insertToolbar();
     }
@@ -95,6 +101,12 @@ public class UserSettingsActivity extends AppCompatActivity {
         setupGenderSpinner();
         weightEditText = (EditText) findViewById(R.id.user_settings_weight_edit_text);
         ageEditText = (EditText) findViewById(R.id.user_settings_age_edit_text);
+        saveButton = (Button) findViewById(R.id.user_settings_save_button);
+    }
+
+    private void setWidgetFilters() {
+        weightEditText.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(3,1)});
+        ageEditText.setFilters(new InputFilter[]{new InputFilterMinMax(1, 99)});
     }
 
     private void fillWidgets() {
@@ -118,8 +130,9 @@ public class UserSettingsActivity extends AppCompatActivity {
     }
 
     public void save (View view) {
+        delaySpam();
         String nicknameText = nicknameEditText.getText().toString();
-        if (nicknameText.length() > 15) {
+        if (nicknameText.length() > 25) {
             Toast.makeText(this, "Ugyldig kallenavn.", Toast.LENGTH_SHORT).show();
             return;
         } else if (nicknameText.length() < 1) {
@@ -252,5 +265,23 @@ public class UserSettingsActivity extends AppCompatActivity {
 
     private void goBack() {
         super.onBackPressed();
+    }
+
+    private void delaySpam() {
+        saveButton.setEnabled(false);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(DELAY_TIME);
+                } catch (InterruptedException ignored) {}
+                UserSettingsActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        saveButton.setEnabled(true);}
+                });
+            }
+        }).start();
     }
 }
