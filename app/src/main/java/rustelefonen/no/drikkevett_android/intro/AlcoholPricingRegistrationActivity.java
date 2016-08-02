@@ -134,10 +134,10 @@ public class AlcoholPricingRegistrationActivity extends AppCompatActivity {
     }
 
     public void setDefault(View view) {
-        beerEditText.setText(Integer.toString(60));
-        wineEditText.setText(Integer.toString(80));
-        drinkEditText.setText(Integer.toString(100));
-        shotEditText.setText(Integer.toString(120));
+        beerEditText.setText(Integer.toString(70));
+        wineEditText.setText(Integer.toString(65));
+        drinkEditText.setText(Integer.toString(110));
+        shotEditText.setText(Integer.toString(100));
     }
 
     private class NumericKeyBoardTransformationMethod extends PasswordTransformationMethod {

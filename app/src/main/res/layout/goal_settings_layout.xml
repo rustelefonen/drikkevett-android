@@ -88,7 +88,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Lagre"
-                    android:background="@color/greenSuper"
+                    android:background="@color/blueButton"
                     android:textColor="@color/textColor"
                     android:onClick="saveNewGoals"/>
             </LinearLayout>
