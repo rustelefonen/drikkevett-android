@@ -368,7 +368,7 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
             ((MainActivity)getActivity()).getRemoveButton().setVisibility(View.VISIBLE);
             ((MainActivity)getActivity()).getRemoveButton().hideButtonInMenu(true);
             planpartyStartButton.setVisibility(View.VISIBLE);
-            planpartyStartButton.hideButtonInMenu(true);
+            //planpartyStartButton.hideButtonInMenu(true);
         }
 
 
