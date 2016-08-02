@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    android:background="@color/backgroundColor">
+    android:background="@color/backgroundColor"
+    android:paddingBottom="70dp"
+    >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -28,6 +30,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:layout_gravity="center"
+                    android:padding="20dp"
                     >
                     <com.github.mikephil.charting.charts.PieChart
                         android:padding="16dp"
@@ -60,7 +63,7 @@
                                 android:textSize="30dp"
                                 />
                             <TextView
-                                android:text="ØL"
+                                android:text="Øl"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:id="@+id/txtViewBeer_titleDA"
@@ -93,7 +96,7 @@
                                 android:textSize="30dp"
                                 />
                             <TextView
-                                android:text="VIN"
+                                android:text="Vin"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:id="@+id/txtViewWine_titleDA"
@@ -128,7 +131,7 @@
                                 />
 
                             <TextView
-                                android:text="DRINK"
+                                android:text="Drink"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:id="@+id/txtViewDrink_titleDA"
@@ -161,7 +164,7 @@
                                 android:textSize="30dp"
                                 />
                             <TextView
-                                android:text="SHOT"
+                                android:text="Shot"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:id="@+id/txtViewShot_titleDA"
@@ -340,13 +343,14 @@
                                 android:layout_gravity="center"
                                 />
                             <Button
-                                android:text="ØL"
+                                android:text="Øl"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:id="@+id/btnAfterRegBeer_DA"
                                 style="?android:attr/borderlessButtonStyle"
                                 android:textColor="@color/greyTextColor"
                                 android:textSize="16sp"
+                                android:minWidth="80dp"
                                 />
                             <LinearLayout
                                 android:layout_width="10dp"
@@ -370,14 +374,14 @@
                                 android:layout_gravity="center"
                                 />
                             <Button
-                                android:text="VIN"
+                                android:text="Vin"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:id="@+id/btnAfterRegWine_DA"
                                 style="?android:attr/borderlessButtonStyle"
                                 android:textColor="@color/greyTextColor"
                                 android:textSize="16sp"
-
+                                android:minWidth="80dp"
                                 />
                             <LinearLayout
                                 android:layout_width="10dp"
@@ -401,7 +405,7 @@
                                 android:layout_gravity="center"
                                 />
                             <Button
-                                android:text="DRINK"
+                                android:text="Drink"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:id="@+id/btnAfterRegDrink_DA"
@@ -439,6 +443,7 @@
                                 style="?android:attr/borderlessButtonStyle"
                                 android:textColor="@color/greyTextColor"
                                 android:textSize="16sp"
+                                android:minWidth="80dp"
                                 />
                             <LinearLayout
                                 android:layout_width="10dp"

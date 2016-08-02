@@ -335,10 +335,6 @@ public class BacHomeFragment extends Fragment{
         imageTextView.setText(nickname);
     }
 
-    /*
-    * GOALDATE REACHED
-    * */
-
     private void fireGoalDateReachedView(){
         Date currentDate = new Date();
         System.out.println("Current Dato: " + currentDate + "\nEr etter -> \nMålet ditt: " + user.getGoalDate());
