@@ -49,11 +49,22 @@ public class InformationCategoryAdapter extends RecyclerView.Adapter<Information
 
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
+        int correctPos = (position / 3 * 2) + (position % 3);
+        System.out.println("position: " + position);
+        //System.out.println("correctposition: " + correctPos);
+
+
         if (position % 2 == 0) {
-            setupCurrentCard(holder.getCardViewLong(), holder.getImageLong(), holder.getTextViewLong(), informationCategoryList.get(position + (position/2)));
-        } else {
-            setupCurrentCard(holder.getCardViewShortOne(), holder.getImageShortOne(), holder.getTextViewShortOne(), informationCategoryList.get(position + (position/2)));
-            setupCurrentCard(holder.getCardViewShortTwo(), holder.getImageShortTwo(), holder.getTextViewShortTwo(), informationCategoryList.get(position + (position/2) + 1));
+            int longPos = position + (position/2);
+            setupCurrentCard(holder.getCardViewLong(), holder.getImageLong(), holder.getTextViewLong(), informationCategoryList.get(longPos));
+        } else if (position % 2 == 1) {
+            int shortPos = position + (position/2);
+            setupCurrentCard(holder.getCardViewShortOne(), holder.getImageShortOne(), holder.getTextViewShortOne(), informationCategoryList.get(shortPos) /*informationCategoryList.get(position + (position/2))*/);
+            int shortTwoPos = shortPos + 1;
+            if (shortTwoPos < informationCategoryList.size()) {
+                System.out.println("shorttwqpos: " + (shortTwoPos));
+                setupCurrentCard(holder.getCardViewShortTwo(), holder.getImageShortTwo(), holder.getTextViewShortTwo(), informationCategoryList.get(shortTwoPos));
+            }
         }
     }
 
