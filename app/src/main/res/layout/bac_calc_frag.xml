@@ -269,8 +269,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:layout_below="@+id/pie_chart_bac_calc">
-
+                        android:layout_below="@+id/pie_chart_bac_calc"
+                        android:padding="20dp"
+                        >
                         <android.support.v4.view.ViewPager
                             android:padding="16dp"
                             android:id="@+id/beer_scroll"
@@ -285,8 +286,7 @@
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
                             android:layout_gravity="center"
-                            android:padding="30dp">
-
+                            android:padding="2dp">
                             <RadioButton
                                 android:id="@+id/radio_one"
                                 android:layout_weight="20"
