@@ -217,7 +217,9 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:padding="20dp"
+                    >
                     <android.support.v4.view.ViewPager
                         android:padding="16dp"
                         android:id="@+id/beer_scroll_plan_party"
@@ -231,7 +233,7 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:layout_gravity="center"
-                        android:padding="5dp"
+                        android:padding="2dp"
                         >
                         <RadioButton
                             android:id="@+id/radio_one_PP"
