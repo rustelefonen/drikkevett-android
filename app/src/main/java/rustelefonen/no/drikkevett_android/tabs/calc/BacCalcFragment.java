@@ -108,11 +108,11 @@ public class BacCalcFragment extends Fragment implements ViewPager.OnPageChangeL
 
     private void displayBacCalcFABs(int state) {
         ((MainActivity)getActivity()).getBacFabAddButton().setVisibility(state);
-        ((MainActivity)getActivity()).getBacFabAddButton().hide(false);
-        ((MainActivity)getActivity()).getBacFabAddButton().setLabelVisibility(View.GONE);
+        ((MainActivity)getActivity()).getBacFabAddButton().hideButtonInMenu(false);
+        //((MainActivity)getActivity()).getBacFabAddButton().setLabelVisibility(View.GONE);
         ((MainActivity)getActivity()).getBacFabRemoveButton().setVisibility(state);
-        ((MainActivity)getActivity()).getBacFabRemoveButton().hide(false);
-        ((MainActivity)getActivity()).getBacFabRemoveButton().setLabelVisibility(View.GONE);
+        ((MainActivity)getActivity()).getBacFabRemoveButton().hideButtonInMenu(false);
+        //((MainActivity)getActivity()).getBacFabRemoveButton().setLabelVisibility(View.GONE);
     }
 
     private void displayPlanPartyFABs(int state) {

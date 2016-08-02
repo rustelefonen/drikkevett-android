@@ -101,14 +101,11 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
     public FloatingActionButton planPartyEndEveningButton;
     public FloatingActionButton planPartyEndDayAfterButton;
 
-    boolean hack = false;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.bac_plan_party_frag, container, false);
-        System.out.println("Beer helt på starten: " + plannedBeers);
-
         EventBus.getDefault().register(this);
+
 
         planPartyDB = new PlanPartyDB(getContext());
         status_DB = new Status_DB(getContext());
@@ -124,6 +121,7 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
         setUserData();
 
         status = isSessionOver();
+        checkIfDayAfterEndedDayAfter();
         stateHandler(status);
 
         pageIndicatorGroup.check(pageIndicatorGroup.getChildAt(0).getId());
@@ -154,71 +152,79 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
 
     @Subscribe
     public void getSelectedPage(SelectedPageEvent selectedPageEvent) {
-        System.out.println("Beer in getSelectedPage before IF: " + plannedBeers);
-
         if (selectedPageEvent.page == 2) {
-            System.out.println("Beer in getSelectedPage: " + plannedBeers);
+            displayBacCalcFABs(View.GONE);
+            ((MainActivity)getActivity()).getFloatingActionMenu().close(true);
+
             setUserData();
             status = isSessionOver();
+            checkIfDayAfterEndedDayAfter();
             stateHandler(status);
 
             ((MainActivity)getActivity()).getDayAfterFabEndButton().setVisibility(View.GONE);
-            displayBacCalcFABs(View.GONE);
 
+
+            /*
             if (status == Status.NOT_RUNNING) {
                 ((MainActivity)getActivity()).getAddButton().setVisibility(View.VISIBLE);
                 ((MainActivity)getActivity()).getRemoveButton().setVisibility(View.VISIBLE);
                 planpartyStartButton.setVisibility(View.VISIBLE);
-                planpartyStartButton.hide(false);
-                planpartyStartButton.setLabelVisibility(View.GONE);
+
+                //planpartyStartButton.setLabelVisibility(View.GONE);
                 planPartyEndEveningButton.setVisibility(View.GONE);
                 planPartyEndDayAfterButton.setVisibility(View.GONE);
+                planpartyStartButton.hideButtonInMenu(false);
             } else if (status == Status.RUNNING) {
                 ((MainActivity)getActivity()).getAddButton().setVisibility(View.VISIBLE);
                 ((MainActivity)getActivity()).getRemoveButton().setVisibility(View.VISIBLE);
                 planpartyStartButton.setVisibility(View.GONE);
                 planPartyEndEveningButton.setVisibility(View.VISIBLE);
-                planPartyEndEveningButton.hide(false);
-                planPartyEndEveningButton.setLabelVisibility(View.GONE);
+
+                //planPartyEndEveningButton.setLabelVisibility(View.GONE);
                 planPartyEndDayAfterButton.setVisibility(View.GONE);
+                planPartyEndEveningButton.hideButtonInMenu(false);
             } else if (status == Status.DA_RUNNING) {
                 ((MainActivity)getActivity()).getAddButton().setVisibility(View.GONE);
                 ((MainActivity)getActivity()).getRemoveButton().setVisibility(View.GONE);
                 planpartyStartButton.setVisibility(View.GONE);
                 planPartyEndEveningButton.setVisibility(View.GONE);
                 planPartyEndDayAfterButton.setVisibility(View.VISIBLE);
-                planPartyEndDayAfterButton.hide(false);
-                planPartyEndDayAfterButton.setLabelVisibility(View.GONE);
-            }
+
+                //planPartyEndDayAfterButton.setLabelVisibility(View.GONE);
+                planPartyEndDayAfterButton.hideButtonInMenu(false);
+            }*/
+
             ((MainActivity)getActivity()).getFloatingActionMenu().showMenu(true);
-            ((MainActivity)getActivity()).getFloatingActionMenu().close(true);
+
         }
     }
 
     private void displayBacCalcFABs(int state) {
         ((MainActivity)getActivity()).getBacFabAddButton().setVisibility(state);
+        ((MainActivity)getActivity()).getBacFabAddButton().hide(true);
         ((MainActivity)getActivity()).getBacFabRemoveButton().setVisibility(state);
+        ((MainActivity)getActivity()).getBacFabRemoveButton().hide(true);
     }
 
     private void displayPlanPartyFABs(int state) {
         ((MainActivity)getActivity()).getAddButton().setVisibility(state);
-        ((MainActivity)getActivity()).getAddButton().hide(false);
-        ((MainActivity)getActivity()).getAddButton().setLabelVisibility(View.GONE);
+        ((MainActivity)getActivity()).getAddButton().hideButtonInMenu(false);
+        //((MainActivity)getActivity()).getAddButton().setLabelVisibility(View.GONE);
         ((MainActivity)getActivity()).getRemoveButton().setVisibility(state);
-        ((MainActivity)getActivity()).getRemoveButton().hide(false);
-        ((MainActivity)getActivity()).getRemoveButton().setLabelVisibility(View.GONE);
+        ((MainActivity)getActivity()).getRemoveButton().hideButtonInMenu(false);
+        //((MainActivity)getActivity()).getRemoveButton().setLabelVisibility(View.GONE);
     }
 
     private void displayPlanPartyActionFABs(int state) {
         ((MainActivity)getActivity()).getPlanpartyStartButton().setVisibility(state);
-        ((MainActivity)getActivity()).getPlanpartyStartButton().hide(false);
-        ((MainActivity)getActivity()).getPlanpartyStartButton().setLabelVisibility(View.GONE);
+        ((MainActivity)getActivity()).getPlanpartyStartButton().hideButtonInMenu(false);
+        //((MainActivity)getActivity()).getPlanpartyStartButton().setLabelVisibility(View.GONE);
         ((MainActivity)getActivity()).getPlanPartyEndEveningButton().setVisibility(state);
-        ((MainActivity)getActivity()).getPlanPartyEndEveningButton().hide(false);
-        ((MainActivity)getActivity()).getPlanPartyEndEveningButton().setLabelVisibility(View.GONE);
+        ((MainActivity)getActivity()).getPlanPartyEndEveningButton().hideButtonInMenu(false);
+        //((MainActivity)getActivity()).getPlanPartyEndEveningButton().setLabelVisibility(View.GONE);
         ((MainActivity)getActivity()).getPlanPartyEndDayAfterButton().setVisibility(state);
-        ((MainActivity)getActivity()).getPlanPartyEndDayAfterButton().hide(false);
-        ((MainActivity)getActivity()).getPlanPartyEndDayAfterButton().setLabelVisibility(View.GONE);
+        ((MainActivity)getActivity()).getPlanPartyEndDayAfterButton().hideButtonInMenu(false);
+        //((MainActivity)getActivity()).getPlanPartyEndDayAfterButton().setLabelVisibility(View.GONE);
     }
 
 
@@ -261,6 +267,7 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
 
         setUserData();
         status = isSessionOver();
+        checkIfDayAfterEndedDayAfter();
         stateHandler(status);
     }
 
@@ -279,11 +286,14 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
     //HUSK!
     private void partyRunning(){
         if (bacPlanPartyIsSelected()) {
-            ((MainActivity)getActivity()).getAddButton().setVisibility(View.VISIBLE);
-            ((MainActivity)getActivity()).getRemoveButton().setVisibility(View.VISIBLE);
             planpartyStartButton.setVisibility(View.GONE);
-            planPartyEndEveningButton.setVisibility(View.VISIBLE);
             planPartyEndDayAfterButton.setVisibility(View.GONE);
+            planPartyEndEveningButton.setVisibility(View.VISIBLE);
+            planPartyEndEveningButton.hideButtonInMenu(true);
+            ((MainActivity)getActivity()).getAddButton().setVisibility(View.VISIBLE);
+            ((MainActivity)getActivity()).getAddButton().hideButtonInMenu(true);
+            ((MainActivity)getActivity()).getRemoveButton().setVisibility(View.VISIBLE);
+            ((MainActivity)getActivity()).getRemoveButton().hideButtonInMenu(true);
         }
 
         statusBtn = "Avslutt Kvelden";
@@ -351,11 +361,14 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
     //HUSK!
     private void partyNotRunning(){
         if (bacPlanPartyIsSelected()) {
-            ((MainActivity)getActivity()).getAddButton().setVisibility(View.VISIBLE);
-            ((MainActivity)getActivity()).getRemoveButton().setVisibility(View.VISIBLE);
-            planpartyStartButton.setVisibility(View.VISIBLE);
             planPartyEndEveningButton.setVisibility(View.GONE);
             planPartyEndDayAfterButton.setVisibility(View.GONE);
+            ((MainActivity)getActivity()).getAddButton().setVisibility(View.VISIBLE);
+            ((MainActivity)getActivity()).getAddButton().hideButtonInMenu(true);
+            ((MainActivity)getActivity()).getRemoveButton().setVisibility(View.VISIBLE);
+            ((MainActivity)getActivity()).getRemoveButton().hideButtonInMenu(true);
+            planpartyStartButton.setVisibility(View.VISIBLE);
+            //planpartyStartButton.hideButtonInMenu(true);
         }
 
 
@@ -386,15 +399,31 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
         pieChart.setCenterTextColor(partyUtil.colorQuote(promilleBAC));
     }
 
+    private void checkIfDayAfterEndedDayAfter(){
+        SuperDao superDao = new SuperDao(getContext());
+        DayAfterBACDao dayAfterBACDao = superDao.getDayAfterBACDao();
+        List<DayAfterBAC> dayAfterBACList = dayAfterBACDao.queryBuilder().list();
+        superDao.close();
+
+        if(dayAfterBACList.size() <= 0 ){
+            System.out.println("DayAfterBac er tømt! ");
+            statusNotRunning();
+        }
+    }
+
     //HUSK!
     private void dayAfterRunning(){
         if (bacPlanPartyIsSelected()) {
             planpartyStartButton.setVisibility(View.GONE);
             planPartyEndEveningButton.setVisibility(View.GONE);
             planPartyEndDayAfterButton.setVisibility(View.VISIBLE);
+            planPartyEndDayAfterButton.hideButtonInMenu(true);
             ((MainActivity)getActivity()).getAddButton().setVisibility(View.GONE);
+            ((MainActivity)getActivity()).getAddButton().hideButtonInMenu(true);
             ((MainActivity)getActivity()).getRemoveButton().setVisibility(View.GONE);
+            ((MainActivity)getActivity()).getRemoveButton().hideButtonInMenu(true);
         }
+
 
         statusBtn = "Avslutt Dagen Derpå";
         dayAfterRunning_LinLay.setVisibility(View.VISIBLE);
@@ -840,7 +869,6 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
         if(firstUnitAdded != null){
             planPartyDB.setPlannedPartyElementsDB(startTimeStamp, endTimeStamp, firstUnitAdded, plannedBeers, plannedWines, plannedDrinks, plannedShots, tempAfterB, tempAfterW, tempAfterD, tempAfterS, status);
         }
-
         Date tempStartDate = null;
 
         superDao.close();
@@ -859,7 +887,6 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
             handleGraphHistory();
         }
         superDao2.close();
-        statusNotRunning();
     }
 
     private int calculateCosts(int b, int w, int d, int s){
@@ -901,6 +928,10 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
                 String unit = dayAfter.getUnit();
 
                 double intervalSinceUnitAdded = getDateDiff(dayAfter.getTimestamp(), tempTimeStamp, TimeUnit.MINUTES);
+                System.out.println("Time STAMP TEMP: " + tempTimeStamp);
+                System.out.println("Time Stamp unit added: " + dayAfter.getTimestamp());
+                System.out.println("intervalSineUnitAdded: " + intervalSinceUnitAdded);
+
                 if(intervalSinceUnitAdded <= 0){
 
                 } else {
@@ -918,12 +949,13 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
                     }
                 }
             }
+            // set minutes to hours
             double hoursToMins = tempInterval / 60;
             if((beer + wine + drink + shot) == 0){
                 promille = 0;
             } else {
+                String tempPromille = calculateBAC(gender, weight, countingGrams(beer, wine, drink, shot), hoursToMins);
                 try{
-                    String tempPromille = calculateBAC(gender, weight, countingGrams(beer, wine, drink, shot), hoursToMins);
                     promille = Double.parseDouble(tempPromille);
                 } catch(NumberFormatException e) {
                     promille = 0;
