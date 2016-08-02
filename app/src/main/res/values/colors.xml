@@ -18,4 +18,5 @@
     <color name="historyLineChartGreen">#53A964</color>
     <color name="defaultGreen">#41774A</color>
     <color name="blueButton">#00B9FF</color>
+    <color name="splashBackground">#16151B</color>
 </resources>
