@@ -3,32 +3,40 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="190dp"
-    android:orientation="vertical"
-    android:background="@color/backgroundColor">
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/hamburger_background"
+        android:scaleType="fitXY"
+        android:adjustViewBounds="true"/>
 
     <de.hdodenhof.circleimageview.CircleImageView
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/nav_header_image"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        app:border_color="#FF000000"
-
-        android:layout_centerInParent="true"
-        android:src="@drawable/ic_default100x100_1"
-        android:background="@color/backgroundColor"/>
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        app:border_color="#FFFFFF"
+        app:border_width="0dp"
+        android:layout_marginLeft="16dp"
+        android:src="@drawable/ic_kvitbakgrunn"
+        android:background="#000000FF"
+        android:layout_above="@+id/nav_header"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="20sp"
-        android:textColor="#FFF"
+        android:textColor="#FFFFFF"
         android:textStyle="bold"
         android:gravity="center"
         android:paddingBottom="4dp"
         android:layout_marginTop="4dp"
+        android:layout_marginLeft="16dp"
         android:id="@+id/nav_header"
-        android:layout_below="@+id/nav_header_image"
-        android:layout_centerInParent="true"
-        android:background="@color/backgroundColor"/>
+        android:layout_alignParentBottom="true"
+        android:background="#000000FF"
+        android:layout_marginBottom="8dp"/>
 
 </RelativeLayout>

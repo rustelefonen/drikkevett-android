@@ -28,16 +28,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:id="@+id/profile_image"
-                        android:layout_alignParentTop="true"
-                        android:src="@drawable/ic_defaultprofilepicturehollowwithroomfortextayylmaothislongassfilenameneverendscuh"
-                        android:clickable="true"
-                        android:scaleType="centerCrop"
-                        android:adjustViewBounds="true"/>
-
                     <TextView
                         android:id="@+id/myImageViewText"
                         android:layout_width="wrap_content"
@@ -48,6 +38,18 @@
                         android:textColor="@color/textColor"
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentBottom="true"/>
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/profile_image"
+                        android:src="@drawable/ic_1024picdick"
+                        android:clickable="true"
+                        android:scaleType="centerCrop"
+                        android:adjustViewBounds="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true" />
                 </RelativeLayout>
             </LinearLayout>
 

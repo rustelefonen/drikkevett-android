@@ -164,7 +164,7 @@ public class BacDayAfterFragment extends Fragment {
             displayPlanPartyActionFABs(View.GONE);
             displayBacCalcFABs(View.GONE);
             ((MainActivity)getActivity()).getDayAfterFabEndButton().setVisibility(View.VISIBLE);
-            ((MainActivity)getActivity()).getDayAfterFabEndButton().hide(false);
+            ((MainActivity)getActivity()).getDayAfterFabEndButton().hideButtonInMenu(true);
 
             if(status == Status.DA_RUNNING)((MainActivity)getActivity()).getFloatingActionMenu().showMenu(true);
             else ((MainActivity)getActivity()).getFloatingActionMenu().hideMenu(true);
