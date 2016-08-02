@@ -634,6 +634,9 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
                 ((MainActivity)getActivity()).getAddButton().setVisibility(View.VISIBLE);
                 ((MainActivity)getActivity()).getRemoveButton().setVisibility(View.VISIBLE);
             }
+            System.out.println("\nAVSLUTT KJØRER: \nStart tidspunkt: " + planPartyDB.getStartTimeStamp() + "\nNåværende Tidspunkt: " + new Date());
+            System.out.println("Differanse nåværende tidspunkt og starttidspunkt: " + getDateDiff(planPartyDB.getStartTimeStamp(), new Date(), TimeUnit.MINUTES));
+
             if(getDateDiff(planPartyDB.getStartTimeStamp(), new Date(), TimeUnit.MINUTES) > 15){
                 showAlertRunning("Er du sikker på at du vil avslutte kvelden?");
             } else {
@@ -1017,15 +1020,12 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
         alert_builder.setMessage(message).setCancelable(false).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-
-                System.out.println("\nAVSLUTT KJØRER: \nStart tidspunkt: " + planPartyDB.getStartTimeStamp() + "\nNåværende Tidspunkt: " + new Date());
-                System.out.println("Differanse nåværende tidspunkt og starttidspunkt: " + getDateDiff(planPartyDB.getStartTimeStamp(), new Date(), TimeUnit.MINUTES));
-
                 if(getDateDiff(planPartyDB.getStartTimeStamp(), new Date(), TimeUnit.MINUTES) > 15){
                     statusBtn = "Avslutt Dagen Derpå";
                     status = Status.DA_RUNNING;
                     System.out.println("Kvelden var lenger enn 15 minutter");
                 } else {
+                    clearPartyTables();
                     statusBtn = "Start Kvelden";
                     status = Status.NOT_RUNNING;
                     System.out.println("Kvelden var mindre enn 15 minutter");
