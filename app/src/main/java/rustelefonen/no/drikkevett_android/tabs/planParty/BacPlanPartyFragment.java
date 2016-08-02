@@ -634,8 +634,11 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
                 ((MainActivity)getActivity()).getAddButton().setVisibility(View.VISIBLE);
                 ((MainActivity)getActivity()).getRemoveButton().setVisibility(View.VISIBLE);
             }
-
-            showAlertRunning();
+            if(getDateDiff(planPartyDB.getStartTimeStamp(), new Date(), TimeUnit.MINUTES) > 15){
+                showAlertRunning("Er du sikker på at du vil avslutte kvelden?");
+            } else {
+                showAlertRunning("Avslutter du kvelden nå vil ingen historikk bli lagret. Vil du avslutte?");
+            }
         }
         if(textOnBtn.equals("Avslutt Dagen Derpå")){
             if (bacPlanPartyIsSelected()) {
@@ -645,7 +648,6 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
                 ((MainActivity)getActivity()).getAddButton().setVisibility(View.GONE);
                 ((MainActivity)getActivity()).getRemoveButton().setVisibility(View.GONE);
             }
-
             showAlertDayAfterRunning();
         }
         if(textOnBtn.equals("Start Kvelden")){
@@ -1010,20 +1012,27 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
         alert.show();
     }
 
-    private void showAlertRunning() {
+    private void showAlertRunning(String message) {
         AlertDialog.Builder alert_builder = new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.AlertDialogCustom));
-        alert_builder.setMessage("Er du sikker på at du vil avslutte kvelden?").setCancelable(false).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+        alert_builder.setMessage(message).setCancelable(false).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
 
+                System.out.println("\nAVSLUTT KJØRER: \nStart tidspunkt: " + planPartyDB.getStartTimeStamp() + "\nNåværende Tidspunkt: " + new Date());
+                System.out.println("Differanse nåværende tidspunkt og starttidspunkt: " + getDateDiff(planPartyDB.getStartTimeStamp(), new Date(), TimeUnit.MINUTES));
 
+                if(getDateDiff(planPartyDB.getStartTimeStamp(), new Date(), TimeUnit.MINUTES) > 15){
+                    statusBtn = "Avslutt Dagen Derpå";
+                    status = Status.DA_RUNNING;
+                    System.out.println("Kvelden var lenger enn 15 minutter");
+                } else {
+                    statusBtn = "Start Kvelden";
+                    status = Status.NOT_RUNNING;
+                    System.out.println("Kvelden var mindre enn 15 minutter");
+                }
 
-                statusBtn = "Avslutt Dagen Derpå";
-                status = Status.DA_RUNNING;
                 updateStatusBtn(status.toString());
                 stateHandler(status);
-
-
 
                 ((MainActivity)getActivity()).getFloatingActionMenu().close(true);
 

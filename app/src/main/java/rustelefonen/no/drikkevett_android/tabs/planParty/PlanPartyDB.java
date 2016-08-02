@@ -1,6 +1,8 @@
 package rustelefonen.no.drikkevett_android.tabs.planParty;
 
 import android.content.Context;
+import android.support.v7.widget.LinearSmoothScroller;
+import android.widget.LinearLayout;
 
 import java.text.DecimalFormat;
 import java.util.Date;
@@ -217,5 +219,17 @@ public class PlanPartyDB {
         double tempID = lastElement.getId();
         superDao.close();
         return (int) tempID;
+    }
+
+    public Date getStartTimeStamp(){
+        SuperDao superDao = new SuperDao(context);
+        PlanPartyElementsDao planPartyElementsDao = superDao.getPlanPartyElementsDao();
+        List<PlanPartyElements> planPartyElementsList = planPartyElementsDao.queryBuilder().list();
+        Date startStamp = null;
+        if(planPartyElementsList.size() > 0){
+            PlanPartyElements element = planPartyElementsList.get(planPartyElementsList.size() - 1);
+            startStamp = element.getStartTimeStamp();
+        }
+        return startStamp;
     }
 }
