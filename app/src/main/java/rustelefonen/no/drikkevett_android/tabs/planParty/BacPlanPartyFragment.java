@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
@@ -285,11 +286,8 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
             planPartyEndDayAfterButton.setVisibility(View.GONE);
         }
 
-
-
         statusBtn = "Avslutt Kvelden";
         //addBtn.setText("Drikk");
-
 
         firstUnitAdded = planPartyDB.getFirstUnitAddedStamp();
 
@@ -301,6 +299,8 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
             } catch(NumberFormatException e){
                 promilleBAC = 0;
             }
+        } else {
+            promilleBAC = 0;
         }
         getUnitsPlanned();
 
@@ -419,7 +419,7 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
     * */
 
     private void addPlannedUnits(String unit){
-        int limit = 30;
+        int limit = 99;
 
         if(unit.equals("Beer")){
             if(totalUnits >= limit){
@@ -523,6 +523,8 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
                 removeUnitConsumedDB(unit);
             }
         }
+        firstUnitAdded = planPartyDB.resetFirstUnitAdded(beersConsumed, winesConsumed, drinksConsumed, shotsConsumed);
+        System.out.println("Første enhet lagt tell: " + firstUnitAdded);
     }
 
     private void removeUnitConsumedDB(String unit){
@@ -1186,7 +1188,8 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
         if (id == R.id.add_button) {
             if (!bacPlanPartyIsSelected()) return;
             if(status.equals(Status.RUNNING)){
-                planPartyDB.addConsumedUnits(getUnitId());
+                String unitAdded = planPartyDB.addConsumedUnits(getUnitId());
+                Toast.makeText(getContext(), unitAdded, Toast.LENGTH_SHORT).show();
                 if(!planPartyDB.isFirstUnitAdded()){
                     System.out.println("First unit added =)");
                     setFirstUnitAdded();

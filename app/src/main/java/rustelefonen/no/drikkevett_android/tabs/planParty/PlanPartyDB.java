@@ -71,6 +71,30 @@ public class PlanPartyDB {
         return bool;
     }
 
+    public Date resetFirstUnitAdded(int b, int w, int d, int s){
+        SuperDao superDao = new SuperDao(context);
+        Date firstAdded = null;
+
+        PlanPartyElementsDao partyDao = superDao.getPlanPartyElementsDao();
+        List<PlanPartyElements> planPartyList = partyDao.queryBuilder().list();
+
+        if(planPartyList.size() > 0){
+            if((b + w + d + s) == 0){
+                PlanPartyElements lastElement = planPartyList.get(planPartyList.size() -1);
+                lastElement.setFirstUnitAddedDate(null);
+                firstAdded = lastElement.getFirstUnitAddedDate();
+                partyDao.insertOrReplace(lastElement);
+            } else {
+                PlanPartyElements lastElement = planPartyList.get(planPartyList.size() -1);
+                firstAdded = lastElement.getFirstUnitAddedDate();
+                partyDao.insertOrReplace(lastElement);
+            }
+        }
+        System.out.println("FIRST ADDED - (resetFirstAdded): " + firstAdded);
+        superDao.close();
+        return firstAdded;
+    }
+
     public String liveUpdatePromille(double weight, String gender, Date firstUnitAddedTimeStamp){
         SuperDao superDao = new SuperDao(context);
         double sum = 0.0;
@@ -131,16 +155,22 @@ public class PlanPartyDB {
         return numberFormat.format(sum);
     }
 
-    public void addConsumedUnits(String unit){
+    public String addConsumedUnits(String unit){
+        String output = "";
         SuperDao superDao = new SuperDao(context);
         DayAfterBACDao dayAfterDao = superDao.getDayAfterBACDao();
-        DayAfterBAC newTS = new DayAfterBAC();
-
-        newTS.setTimestamp(new Date());
-        newTS.setUnit(unit);
-
-        dayAfterDao.insert(newTS);
+        List<DayAfterBAC> dayList = dayAfterDao.queryBuilder().list();
+        if(dayList.size() < 99){
+            DayAfterBAC newTS = new DayAfterBAC();
+            newTS.setTimestamp(new Date());
+            newTS.setUnit(unit);
+            dayAfterDao.insert(newTS);
+            output = unit + " lagt til";
+        } else {
+            output = "Du kan ikke legge til flere enheter!";
+        }
         superDao.close();
+        return output;
     }
 
     public void setPlannedPartyElementsDB(Date sDate, Date eDate, Date fDate, int pB, int pW, int pD, int pS, int aB, int aW, int aD, int aS, String status){
