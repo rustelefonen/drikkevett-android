@@ -64,6 +64,8 @@ public class BacHistoryFragment extends Fragment {
     @Subscribe
     public void getSelectedPage(SelectedPageEvent selectedPageEvent) {
         if (selectedPageEvent.page == 4) {
+            refreshFragment();
+            displayHiddenCard();
             ((MainActivity)getActivity()).getFloatingActionMenu().hideMenu(true);
         } else {
             ((MainActivity)getActivity()).getFloatingActionMenu().close(true);
@@ -135,11 +137,7 @@ public class BacHistoryFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (historyList.size() <= 0) {
-            defaultCard.setVisibility(View.VISIBLE);
-        } else {
-            defaultCard.setVisibility(View.GONE);
-        }
+        displayHiddenCard();
     }
 
     private void setRecyclerViewLayoutManager(LayoutManagerType layoutManagerType) {
@@ -191,5 +189,13 @@ public class BacHistoryFragment extends Fragment {
         double goalBac = ((MainActivity)getActivity()).getUser().getGoalBAC();
         mAdapter = new HistoryAdapter(historyList, goalBac);
         mRecyclerView.setAdapter(mAdapter);
+    }
+
+    private void displayHiddenCard() {
+        if (historyList.size() <= 0) {
+            defaultCard.setVisibility(View.VISIBLE);
+        } else {
+            defaultCard.setVisibility(View.GONE);
+        }
     }
 }
