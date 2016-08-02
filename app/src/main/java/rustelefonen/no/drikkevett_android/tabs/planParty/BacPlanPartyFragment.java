@@ -106,8 +106,9 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.bac_plan_party_frag, container, false);
-        EventBus.getDefault().register(this);
+        System.out.println("Beer helt på starten: " + plannedBeers);
 
+        EventBus.getDefault().register(this);
 
         planPartyDB = new PlanPartyDB(getContext());
         status_DB = new Status_DB(getContext());
@@ -123,7 +124,6 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
         setUserData();
 
         status = isSessionOver();
-        checkIfDayAfterEndedDayAfter();
         stateHandler(status);
 
         pageIndicatorGroup.check(pageIndicatorGroup.getChildAt(0).getId());
@@ -154,11 +154,12 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
 
     @Subscribe
     public void getSelectedPage(SelectedPageEvent selectedPageEvent) {
-        if (selectedPageEvent.page == 2) {
+        System.out.println("Beer in getSelectedPage before IF: " + plannedBeers);
 
+        if (selectedPageEvent.page == 2) {
+            System.out.println("Beer in getSelectedPage: " + plannedBeers);
             setUserData();
             status = isSessionOver();
-            checkIfDayAfterEndedDayAfter();
             stateHandler(status);
 
             ((MainActivity)getActivity()).getDayAfterFabEndButton().setVisibility(View.GONE);
@@ -260,7 +261,6 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
 
         setUserData();
         status = isSessionOver();
-        checkIfDayAfterEndedDayAfter();
         stateHandler(status);
     }
 
@@ -386,18 +386,6 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
         pieChart.setCenterTextColor(partyUtil.colorQuote(promilleBAC));
     }
 
-    private void checkIfDayAfterEndedDayAfter(){
-        SuperDao superDao = new SuperDao(getContext());
-        DayAfterBACDao dayAfterBACDao = superDao.getDayAfterBACDao();
-        List<DayAfterBAC> dayAfterBACList = dayAfterBACDao.queryBuilder().list();
-        superDao.close();
-
-        if(dayAfterBACList.size() <= 0 ){
-            System.out.println("DayAfterBac er tømt! ");
-            statusNotRunning();
-        }
-    }
-
     //HUSK!
     private void dayAfterRunning(){
         if (bacPlanPartyIsSelected()) {
@@ -407,7 +395,6 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
             ((MainActivity)getActivity()).getAddButton().setVisibility(View.GONE);
             ((MainActivity)getActivity()).getRemoveButton().setVisibility(View.GONE);
         }
-
 
         statusBtn = "Avslutt Dagen Derpå";
         dayAfterRunning_LinLay.setVisibility(View.VISIBLE);
@@ -853,6 +840,7 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
         if(firstUnitAdded != null){
             planPartyDB.setPlannedPartyElementsDB(startTimeStamp, endTimeStamp, firstUnitAdded, plannedBeers, plannedWines, plannedDrinks, plannedShots, tempAfterB, tempAfterW, tempAfterD, tempAfterS, status);
         }
+
         Date tempStartDate = null;
 
         superDao.close();
@@ -871,6 +859,7 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
             handleGraphHistory();
         }
         superDao2.close();
+        statusNotRunning();
     }
 
     private int calculateCosts(int b, int w, int d, int s){
@@ -912,10 +901,6 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
                 String unit = dayAfter.getUnit();
 
                 double intervalSinceUnitAdded = getDateDiff(dayAfter.getTimestamp(), tempTimeStamp, TimeUnit.MINUTES);
-                System.out.println("Time STAMP TEMP: " + tempTimeStamp);
-                System.out.println("Time Stamp unit added: " + dayAfter.getTimestamp());
-                System.out.println("intervalSineUnitAdded: " + intervalSinceUnitAdded);
-
                 if(intervalSinceUnitAdded <= 0){
 
                 } else {
@@ -933,13 +918,12 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
                     }
                 }
             }
-            // set minutes to hours
             double hoursToMins = tempInterval / 60;
             if((beer + wine + drink + shot) == 0){
                 promille = 0;
             } else {
-                String tempPromille = calculateBAC(gender, weight, countingGrams(beer, wine, drink, shot), hoursToMins);
                 try{
+                    String tempPromille = calculateBAC(gender, weight, countingGrams(beer, wine, drink, shot), hoursToMins);
                     promille = Double.parseDouble(tempPromille);
                 } catch(NumberFormatException e) {
                     promille = 0;
