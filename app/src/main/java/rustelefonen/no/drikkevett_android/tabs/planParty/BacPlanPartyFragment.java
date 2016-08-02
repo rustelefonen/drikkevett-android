@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
@@ -295,11 +296,8 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
             ((MainActivity)getActivity()).getRemoveButton().hideButtonInMenu(true);
         }
 
-
-
         statusBtn = "Avslutt Kvelden";
         //addBtn.setText("Drikk");
-
 
         firstUnitAdded = planPartyDB.getFirstUnitAddedStamp();
 
@@ -311,6 +309,8 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
             } catch(NumberFormatException e){
                 promilleBAC = 0;
             }
+        } else {
+            promilleBAC = 0;
         }
         getUnitsPlanned();
 
@@ -435,7 +435,7 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
     * */
 
     private void addPlannedUnits(String unit){
-        int limit = 30;
+        int limit = 99;
 
         if(unit.equals("Beer")){
             if(totalUnits >= limit){
@@ -539,6 +539,8 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
                 removeUnitConsumedDB(unit);
             }
         }
+        firstUnitAdded = planPartyDB.resetFirstUnitAdded(beersConsumed, winesConsumed, drinksConsumed, shotsConsumed);
+        System.out.println("Første enhet lagt tell: " + firstUnitAdded);
     }
 
     private void removeUnitConsumedDB(String unit){
@@ -650,8 +652,14 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
                 ((MainActivity)getActivity()).getAddButton().setVisibility(View.VISIBLE);
                 ((MainActivity)getActivity()).getRemoveButton().setVisibility(View.VISIBLE);
             }
+            System.out.println("\nAVSLUTT KJØRER: \nStart tidspunkt: " + planPartyDB.getStartTimeStamp() + "\nNåværende Tidspunkt: " + new Date());
+            System.out.println("Differanse nåværende tidspunkt og starttidspunkt: " + getDateDiff(planPartyDB.getStartTimeStamp(), new Date(), TimeUnit.MINUTES));
 
-            showAlertRunning();
+            if(getDateDiff(planPartyDB.getStartTimeStamp(), new Date(), TimeUnit.MINUTES) > 15){
+                showAlertRunning("Er du sikker på at du vil avslutte kvelden?");
+            } else {
+                showAlertRunning("Avslutter du kvelden nå vil ingen historikk bli lagret. Vil du avslutte?");
+            }
         }
         if(textOnBtn.equals("Avslutt Dagen Derpå")){
             if (bacPlanPartyIsSelected()) {
@@ -661,7 +669,6 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
                 ((MainActivity)getActivity()).getAddButton().setVisibility(View.GONE);
                 ((MainActivity)getActivity()).getRemoveButton().setVisibility(View.GONE);
             }
-
             showAlertDayAfterRunning();
         }
         if(textOnBtn.equals("Start Kvelden")){
@@ -1026,20 +1033,24 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
         alert.show();
     }
 
-    private void showAlertRunning() {
+    private void showAlertRunning(String message) {
         AlertDialog.Builder alert_builder = new AlertDialog.Builder(new ContextThemeWrapper(getContext(), R.style.AlertDialogCustom));
-        alert_builder.setMessage("Er du sikker på at du vil avslutte kvelden?").setCancelable(false).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+        alert_builder.setMessage(message).setCancelable(false).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                if(getDateDiff(planPartyDB.getStartTimeStamp(), new Date(), TimeUnit.MINUTES) > 15){
+                    statusBtn = "Avslutt Dagen Derpå";
+                    status = Status.DA_RUNNING;
+                    System.out.println("Kvelden var lenger enn 15 minutter");
+                } else {
+                    clearPartyTables();
+                    statusBtn = "Start Kvelden";
+                    status = Status.NOT_RUNNING;
+                    System.out.println("Kvelden var mindre enn 15 minutter");
+                }
 
-
-
-                statusBtn = "Avslutt Dagen Derpå";
-                status = Status.DA_RUNNING;
                 updateStatusBtn(status.toString());
                 stateHandler(status);
-
-
 
                 ((MainActivity)getActivity()).getFloatingActionMenu().close(true);
 
@@ -1193,7 +1204,8 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
         if (id == R.id.add_button) {
             if (!bacPlanPartyIsSelected()) return;
             if(status.equals(Status.RUNNING)){
-                planPartyDB.addConsumedUnits(getUnitId());
+                String unitAdded = planPartyDB.addConsumedUnits(getUnitId());
+                Toast.makeText(getContext(), unitAdded, Toast.LENGTH_SHORT).show();
                 if(!planPartyDB.isFirstUnitAdded()){
                     System.out.println("First unit added =)");
                     setFirstUnitAdded();
