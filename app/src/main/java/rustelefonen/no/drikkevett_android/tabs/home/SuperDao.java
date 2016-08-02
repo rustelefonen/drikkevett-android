@@ -20,13 +20,13 @@ import rustelefonen.no.drikkevett_android.information.DatabaseHelper;
 
 public class SuperDao {
 
-    //private DaoMaster.DevOpenHelper helper;
-    private DatabaseHelper helper;
+    private DaoMaster.DevOpenHelper helper;
+    //private DatabaseHelper helper;
     private static final String DB_NAME = "my-db";
     private DaoSession daoSession;
 
     public SuperDao(Context context) {
-        helper = new DatabaseHelper(context);// new DaoMaster.DevOpenHelper(context, DB_NAME, null);
+        helper = /*new DatabaseHelper(context);*/ new DaoMaster.DevOpenHelper(context, DB_NAME, null);
         DaoMaster daoMaster = new DaoMaster(helper.getWritableDatabase());
         daoSession = daoMaster.newSession();
     }
