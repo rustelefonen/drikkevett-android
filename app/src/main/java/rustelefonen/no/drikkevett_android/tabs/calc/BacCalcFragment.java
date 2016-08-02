@@ -289,6 +289,11 @@ public class BacCalcFragment extends Fragment implements ViewPager.OnPageChangeL
         pageIndicatorGroup.check(pageIndicatorGroup.getChildAt(0).getId());
         fillPieChart();
         stylePieChart();
+        labelBeerNrUnits.setText(beer + "");
+        labelWineNrUnits.setText(wine + "");
+        labelDrinkNrUnits.setText(drink + "");
+        labelShotNrUnits.setText(shot + "");
+        totalPromille();
     }
 
 
