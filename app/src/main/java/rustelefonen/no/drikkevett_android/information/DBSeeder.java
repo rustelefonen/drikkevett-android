@@ -62,58 +62,27 @@ public class DBSeeder {
 
         Information i2c1 = new Information();
         i2c1.setName("Fakta om alkoholbruk");
-        i2c1.setContent("\u2022Alkoholomsetningen i Norge økte med 40 % fra 1995 til 2009.\n" +
-                "\n" +
-                "\uF0B7 Det registrerte forbruket i 2012 var anslått til 6,21 liter per voksen innbygger – da\n" +
-                "\n" +
-                "teller man ikke med smuglervarer og konsum utenfor Norge. Det uregistrerte\n" +
-                "\n" +
-                "alkoholkonsumet står for ca. 25–30 % av totalforbruket.\n" +
-                "\n" +
-                "\uF0B7 Økningen skyldes i hovedsak en kraftig vekst i omsetningen av vin.\n" +
-                "\n" +
-                "\uF0B7 Menn drikker i gjennomsnitt oftere og mer enn kvinner, med unntak av vin.\n" +
-                "\n" +
-                "\uF0B7 Andelen som drikker alkohol flere ganger i måneden (2 ganger eller mer) har økt i alle\n" +
-                "\n" +
-                "aldersgrupper, og økningen har vært særlig sterk blant de over 50 år.\n" +
-                "\n" +
-                "\uF0B7 Til tross for en reduksjon i konsumet blant ungdom de siste årene, er konsumet og\n" +
-                "\n" +
-                "beruselses-drikkingen fortsatt betydelig.\n" +
-                "\n" +
-                "\uF0B7 Unge jenter drikker alkohol og blir beruset like ofte, eller mer, enn gutter.");
+        i2c1.setContent(
+                "• Alkoholomsetningen i Norge økte med 40 % fra 1995 til 2009.\n" +
+                "• Det registrerte forbruket i 2012 var anslått til 6,21 liter per voksen innbygger – da teller man ikke med smuglervarer og konsum utenfor Norge. Det uregistrerte alkoholkonsumet står for ca. 25–30 % av totalforbruket.\n" +
+                "• Økningen skyldes i hovedsak en kraftig vekst i omsetningen av vin.\n" +
+                "• Menn drikker i gjennomsnitt oftere og mer enn kvinner, med unntak av vin.\n" +
+                "• Andelen som drikker alkohol flere ganger i måneden (2 ganger eller mer) har økt i alle aldersgrupper, og økningen har vært særlig sterk blant de over 50 år.\n" +
+                "• Til tross for en reduksjon i konsumet blant ungdom de siste årene, er konsumet og beruselses-drikkingen fortsatt betydelig.\n" +
+                "• Unge jenter drikker alkohol og blir beruset like ofte, eller mer, enn gutter.");
         i2c1.setCategoryId(1);
         i2c1.setImage(getImage("i2c1.jpg", context));
         informationDao.insert(i2c1);
 
         Information i3c1 = new Information();
         i3c1.setName("Hvordan virker alkohol på kroppen");
-        i3c1.setContent("\uF0B7 Alkohol tas opp gjennom slimhinnene i tynntarmen og magesekken og går over i\n" +
-                "\n" +
-                "blodet.\n" +
-                "\n" +
-                "\uF0B7 Mengden alkohol i blodet blir målt i promille, og en promille betyr ett gram ren\n" +
-                "\n" +
-                "alkohol pr liter blod.\n" +
-                "\n" +
-                "\uF0B7 Konsentrasjonen av alkohol i blodet (promille) øker raskt, spesielt hvis du ikke har\n" +
-                "\n" +
-                "spist på en stund og magesekken er tom. Vanligvis tar det bare noen minutter etter\n" +
-                "\n" +
-                "inntak før du kan måle alkohol i blodet.\n" +
-                "\n" +
-                "\uF0B7 Dersom du drikker på tom mage, kan maksimal alkoholkonsentrasjon i blodet\n" +
-                "\n" +
-                "(promille) oppnås allerede etter 15-30 min, og en stor alkoholmengde kan være\n" +
-                "\n" +
-                "nærmest fullstendig tatt opp i blodet på mindre enn 1 time.\n" +
-                "\n" +
-                "\uF0B7 Ved inntak av kullsyreholdige drikker som champagne, rusbrus og drinker med\n" +
-                "\n" +
-                "kullsyreholdig mineralvann tas alkoholen ekstra raskt opp i blodet.\n" +
-                "\n" +
-                "\uF0B7 Drikkes alkohol på full mage eller i forbindelse med et måltid, vil det tas langsommere\n" +
+        i3c1.setContent(
+                "• Alkohol tas opp gjennom slimhinnene i tynntarmen og magesekken og går over i blodet.\n" +
+                "• Mengden alkohol i blodet blir målt i promille, og en promille betyr ett gram ren alkohol pr liter blod.\n" +
+                "• Konsentrasjonen av alkohol i blodet (promille) øker raskt, spesielt hvis du ikke har spist på en stund og magesekken er tom. Vanligvis tar det bare noen minutter etter inntak før du kan måle alkohol i blodet.\n" +
+                "• Dersom du drikker på tom mage, kan maksimal alkoholkonsentrasjon i blodet (promille) oppnås allerede etter 15-30 min, og en stor alkoholmengde kan være nærmest fullstendig tatt opp i blodet på mindre enn 1 time.\n" +
+                "• Ved inntak av kullsyreholdige drikker som champagne, rusbrus og drinker med kullsyreholdig mineralvann tas alkoholen ekstra raskt opp i blodet.\n" +
+                "• Drikkes alkohol på full mage eller i forbindelse med et måltid, vil det tas langsommere\n" +
                 "\n" +
                 "(opptil 3 timer) opp i blodet.\n" +
                 "\n" +

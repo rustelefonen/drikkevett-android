@@ -35,6 +35,7 @@ public class LauncherActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        DBSeeder.seed(this);
         Intent intent;
         if (hasUser()) intent = new Intent(this, MainActivity.class);
         else intent = new Intent(this, WelcomeActivity.class);
