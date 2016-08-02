@@ -121,7 +121,6 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
         setUserData();
 
         status = isSessionOver();
-        checkIfDayAfterEndedDayAfter();
         stateHandler(status);
 
         pageIndicatorGroup.check(pageIndicatorGroup.getChildAt(0).getId());
@@ -158,7 +157,6 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
 
             setUserData();
             status = isSessionOver();
-            checkIfDayAfterEndedDayAfter();
             stateHandler(status);
 
             ((MainActivity)getActivity()).getDayAfterFabEndButton().setVisibility(View.GONE);
@@ -267,7 +265,6 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
 
         setUserData();
         status = isSessionOver();
-        checkIfDayAfterEndedDayAfter();
         stateHandler(status);
     }
 
@@ -397,18 +394,6 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
         textQuoteLbl.setText(partyUtil.textQuote(promilleBAC));
         textQuoteLbl.setTextColor(partyUtil.colorQuote(promilleBAC));
         pieChart.setCenterTextColor(partyUtil.colorQuote(promilleBAC));
-    }
-
-    private void checkIfDayAfterEndedDayAfter(){
-        SuperDao superDao = new SuperDao(getContext());
-        DayAfterBACDao dayAfterBACDao = superDao.getDayAfterBACDao();
-        List<DayAfterBAC> dayAfterBACList = dayAfterBACDao.queryBuilder().list();
-        superDao.close();
-
-        if(dayAfterBACList.size() <= 0 ){
-            System.out.println("DayAfterBac er tømt! ");
-            statusNotRunning();
-        }
     }
 
     //HUSK!
@@ -887,6 +872,7 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
             handleGraphHistory();
         }
         superDao2.close();
+        statusNotRunning();
     }
 
     private int calculateCosts(int b, int w, int d, int s){
@@ -954,8 +940,8 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
             if((beer + wine + drink + shot) == 0){
                 promille = 0;
             } else {
-                String tempPromille = calculateBAC(gender, weight, countingGrams(beer, wine, drink, shot), hoursToMins);
                 try{
+                    String tempPromille = calculateBAC(gender, weight, countingGrams(beer, wine, drink, shot), hoursToMins);
                     promille = Double.parseDouble(tempPromille);
                 } catch(NumberFormatException e) {
                     promille = 0;
