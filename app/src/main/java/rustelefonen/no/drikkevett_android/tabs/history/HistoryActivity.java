@@ -127,7 +127,22 @@ public class HistoryActivity extends AppCompatActivity {
     private String getHoursAndMinutes(Date date) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
-        return calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE);
+        String tempTime = "";
+        String tempMinute = "";
+        String tempHour = "";
+
+        if(calendar.get(Calendar.MINUTE) >= 0 && calendar.get(Calendar.MINUTE) <= 9){
+            tempMinute = "0" + calendar.get(Calendar.MINUTE);
+        } else {
+            tempMinute = "" + calendar.get(Calendar.MINUTE);
+        }
+        if(calendar.get(Calendar.HOUR_OF_DAY) >= 0 && calendar.get(Calendar.HOUR_OF_DAY) <= 9){
+            tempHour = "0" + calendar.get(Calendar.HOUR_OF_DAY);
+        } else {
+            tempHour = "" + calendar.get(Calendar.HOUR_OF_DAY);
+        }
+        tempTime = tempHour + ":" + tempMinute;
+        return tempTime;
     }
 
     private LineData getLineData() {
