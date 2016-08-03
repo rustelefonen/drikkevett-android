@@ -171,7 +171,6 @@ public class HistoryActivity extends AppCompatActivity {
         return new LineData(labels, dataset);
     }
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
