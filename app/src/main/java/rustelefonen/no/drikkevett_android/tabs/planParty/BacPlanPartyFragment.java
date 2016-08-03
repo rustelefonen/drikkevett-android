@@ -118,10 +118,10 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
         beerScroll.setAdapter(new BeerScrollAdapter(getChildFragmentManager()));
 
         setListeners();
-        setUserData();
+        //setUserData();
 
-        status = isSessionOver();
-        stateHandler(status);
+        //status = isSessionOver();
+        //stateHandler(status);
 
         pageIndicatorGroup.check(pageIndicatorGroup.getChildAt(0).getId());
 
@@ -152,75 +152,10 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
     @Subscribe
     public void getSelectedPage(SelectedPageEvent selectedPageEvent) {
         if (selectedPageEvent.page == 2) {
-
-            //((MainActivity)getActivity()).getFloatingActionMenu().close(true);
-
             setUserData();
             status = isSessionOver();
             stateHandler(status);
-
-
-            /*
-            if (status == Status.NOT_RUNNING) {
-                ((MainActivity)getActivity()).getAddButton().setVisibility(View.VISIBLE);
-                ((MainActivity)getActivity()).getRemoveButton().setVisibility(View.VISIBLE);
-                planpartyStartButton.setVisibility(View.VISIBLE);
-
-                //planpartyStartButton.setLabelVisibility(View.GONE);
-                planPartyEndEveningButton.setVisibility(View.GONE);
-                planPartyEndDayAfterButton.setVisibility(View.GONE);
-                planpartyStartButton.hideButtonInMenu(false);
-            } else if (status == Status.RUNNING) {
-                ((MainActivity)getActivity()).getAddButton().setVisibility(View.VISIBLE);
-                ((MainActivity)getActivity()).getRemoveButton().setVisibility(View.VISIBLE);
-                planpartyStartButton.setVisibility(View.GONE);
-                planPartyEndEveningButton.setVisibility(View.VISIBLE);
-
-                //planPartyEndEveningButton.setLabelVisibility(View.GONE);
-                planPartyEndDayAfterButton.setVisibility(View.GONE);
-                planPartyEndEveningButton.hideButtonInMenu(false);
-            } else if (status == Status.DA_RUNNING) {
-                ((MainActivity)getActivity()).getAddButton().setVisibility(View.GONE);
-                ((MainActivity)getActivity()).getRemoveButton().setVisibility(View.GONE);
-                planpartyStartButton.setVisibility(View.GONE);
-                planPartyEndEveningButton.setVisibility(View.GONE);
-                planPartyEndDayAfterButton.setVisibility(View.VISIBLE);
-
-                //planPartyEndDayAfterButton.setLabelVisibility(View.GONE);
-                planPartyEndDayAfterButton.hideButtonInMenu(false);
-            }*/
-
-            //((MainActivity)getActivity()).getFloatingActionMenu().showMenu(true);
-
         }
-    }
-
-    private void displayBacCalcFABs(int state) {
-        ((MainActivity)getActivity()).getBacFabAddButton().setVisibility(state);
-        ((MainActivity)getActivity()).getBacFabAddButton().hide(false);
-        ((MainActivity)getActivity()).getBacFabRemoveButton().setVisibility(state);
-        ((MainActivity)getActivity()).getBacFabRemoveButton().hide(false);
-    }
-
-    private void displayPlanPartyFABs(int state) {
-        ((MainActivity)getActivity()).getAddButton().setVisibility(state);
-        ((MainActivity)getActivity()).getAddButton().hideButtonInMenu(false);
-        //((MainActivity)getActivity()).getAddButton().setLabelVisibility(View.GONE);
-        ((MainActivity)getActivity()).getRemoveButton().setVisibility(state);
-        ((MainActivity)getActivity()).getRemoveButton().hideButtonInMenu(false);
-        //((MainActivity)getActivity()).getRemoveButton().setLabelVisibility(View.GONE);
-    }
-
-    private void displayPlanPartyActionFABs(int state) {
-        ((MainActivity)getActivity()).getPlanpartyStartButton().setVisibility(state);
-        ((MainActivity)getActivity()).getPlanpartyStartButton().hideButtonInMenu(false);
-        //((MainActivity)getActivity()).getPlanpartyStartButton().setLabelVisibility(View.GONE);
-        ((MainActivity)getActivity()).getPlanPartyEndEveningButton().setVisibility(state);
-        ((MainActivity)getActivity()).getPlanPartyEndEveningButton().hideButtonInMenu(false);
-        //((MainActivity)getActivity()).getPlanPartyEndEveningButton().setLabelVisibility(View.GONE);
-        ((MainActivity)getActivity()).getPlanPartyEndDayAfterButton().setVisibility(state);
-        ((MainActivity)getActivity()).getPlanPartyEndDayAfterButton().hideButtonInMenu(false);
-        //((MainActivity)getActivity()).getPlanPartyEndDayAfterButton().setLabelVisibility(View.GONE);
     }
 
 
@@ -254,17 +189,15 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
         return super.onOptionsItemSelected(item);
     }
 
+    /*
     @Override
     public void onResume(){
         super.onResume();
-        /*if (((MainActivity)getActivity()).getCurrentViewpagerPosition() == 2) {
-            ((MainActivity)getActivity()).getFloatingActionMenu().showMenu(true);
-        }*/
-
-        /*setUserData();
+        setUserData();
         status = isSessionOver();
-        stateHandler(status);*/
+        stateHandler(status);
     }
+    */
 
     private void stateHandler(Status state){
         if(state == Status.RUNNING){
@@ -356,16 +289,42 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
     //HUSK!
     private void partyNotRunning(){
         if (bacPlanPartyIsSelected()) {
-
-            if (((MainActivity)getActivity()).getFloatingActionMenu().isOpened()) {
-                ((MainActivity)getActivity()).getFloatingActionMenu().close(true);
+            FloatingActionMenu floatingActionMenu = ((MainActivity)getActivity()).getFloatingActionMenu();
+            if (floatingActionMenu.isOpened()) {
+                System.out.println("åpen");
+                floatingActionMenu.close(true);
+                new Handler().postDelayed(new Runnable() {
+                    public void run() {
+                        ((MainActivity)getActivity()).getBacFabAddButton().setVisibility(View.GONE);
+                        ((MainActivity)getActivity()).getBacFabRemoveButton().setVisibility(View.GONE);
+                        ((MainActivity)getActivity()).getDayAfterFabEndButton().setVisibility(View.GONE);
+                        planPartyEndEveningButton.setVisibility(View.GONE);
+                        planPartyEndDayAfterButton.setVisibility(View.GONE);
+                        planpartyStartButton.setVisibility(View.VISIBLE);
+                        planpartyStartButton.setLabelVisibility(View.VISIBLE);
+                        ((MainActivity)getActivity()).getAddButton().setVisibility(View.VISIBLE);
+                        ((MainActivity)getActivity()).getAddButton().setLabelVisibility(View.VISIBLE);
+                        ((MainActivity)getActivity()).getRemoveButton().setVisibility(View.VISIBLE);
+                        ((MainActivity)getActivity()).getRemoveButton().setLabelVisibility(View.VISIBLE);
+                    }
+                }, 500);
             } else {
-
+                System.out.println("ikke åpen");
+                ((MainActivity)getActivity()).getBacFabAddButton().setVisibility(View.GONE);
+                ((MainActivity)getActivity()).getBacFabRemoveButton().setVisibility(View.GONE);
+                ((MainActivity)getActivity()).getDayAfterFabEndButton().setVisibility(View.GONE);
+                planPartyEndEveningButton.setVisibility(View.GONE);
+                planPartyEndDayAfterButton.setVisibility(View.GONE);
+                floatingActionMenu.showMenu(true);
+                planpartyStartButton.setVisibility(View.VISIBLE);
+                planpartyStartButton.setLabelVisibility(View.VISIBLE);
+                ((MainActivity)getActivity()).getAddButton().setVisibility(View.VISIBLE);
+                ((MainActivity)getActivity()).getAddButton().setLabelVisibility(View.VISIBLE);
+                ((MainActivity)getActivity()).getRemoveButton().setVisibility(View.VISIBLE);
+                ((MainActivity)getActivity()).getRemoveButton().setLabelVisibility(View.VISIBLE);
             }
 
-            ((MainActivity)getActivity()).getDayAfterFabEndButton().setVisibility(View.GONE);
-            planPartyEndEveningButton.setVisibility(View.GONE);
-            planPartyEndDayAfterButton.setVisibility(View.GONE);
+
 
             //((MainActivity)getActivity()).getFloatingActionMenu().close(true);
 
@@ -665,13 +624,13 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
     private void statusBtnHandler(){
         String textOnBtn = statusBtn;
         if(textOnBtn.equals("Avslutt Kvelden")){
-            if (bacPlanPartyIsSelected()) {
+            /*if (bacPlanPartyIsSelected()) {
                 planpartyStartButton.setVisibility(View.GONE);
                 planPartyEndEveningButton.setVisibility(View.VISIBLE);
                 planPartyEndDayAfterButton.setVisibility(View.GONE);
                 ((MainActivity)getActivity()).getAddButton().setVisibility(View.VISIBLE);
                 ((MainActivity)getActivity()).getRemoveButton().setVisibility(View.VISIBLE);
-            }
+            }*/
             System.out.println("\nAVSLUTT KJØRER: \nStart tidspunkt: " + planPartyDB.getStartTimeStamp() + "\nNåværende Tidspunkt: " + new Date());
             System.out.println("Differanse nåværende tidspunkt og starttidspunkt: " + getDateDiff(planPartyDB.getStartTimeStamp(), new Date(), TimeUnit.MINUTES));
 
@@ -682,23 +641,23 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
             }
         }
         if(textOnBtn.equals("Avslutt Dagen Derpå")){
-            if (bacPlanPartyIsSelected()) {
+            /*if (bacPlanPartyIsSelected()) {
                 planpartyStartButton.setVisibility(View.GONE);
                 planPartyEndEveningButton.setVisibility(View.GONE);
                 planPartyEndDayAfterButton.setVisibility(View.VISIBLE);
                 ((MainActivity)getActivity()).getAddButton().setVisibility(View.GONE);
                 ((MainActivity)getActivity()).getRemoveButton().setVisibility(View.GONE);
-            }
+            }*/
             showAlertDayAfterRunning();
         }
         if(textOnBtn.equals("Start Kvelden")){
-            if (bacPlanPartyIsSelected()) {
+            /*if (bacPlanPartyIsSelected()) {
                 planpartyStartButton.setVisibility(View.VISIBLE);
                 planPartyEndEveningButton.setVisibility(View.GONE);
                 planPartyEndDayAfterButton.setVisibility(View.GONE);
                 ((MainActivity)getActivity()).getAddButton().setVisibility(View.VISIBLE);
                 ((MainActivity)getActivity()).getRemoveButton().setVisibility(View.VISIBLE);
-            }
+            }*/
 
             showAlertNotRunning();
         }
@@ -707,23 +666,23 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
     private void removeBtnHandler(){
         String textOnBtn = statusBtn;
         if(textOnBtn.equals("Avslutt Kvelden")){
-            if (bacPlanPartyIsSelected()) {
+            /*if (bacPlanPartyIsSelected()) {
                 planpartyStartButton.setVisibility(View.GONE);
                 planPartyEndEveningButton.setVisibility(View.VISIBLE);
                 planPartyEndDayAfterButton.setVisibility(View.GONE);
                 ((MainActivity)getActivity()).getAddButton().setVisibility(View.VISIBLE);
                 ((MainActivity)getActivity()).getRemoveButton().setVisibility(View.VISIBLE);
-            }
+            }*/
             removeConsumedUnits(getUnitId());
         }
         if(textOnBtn.equals("Start Kvelden")){
-            if (bacPlanPartyIsSelected()) {
+            /*if (bacPlanPartyIsSelected()) {
                 planpartyStartButton.setVisibility(View.VISIBLE);
                 planPartyEndEveningButton.setVisibility(View.GONE);
                 planPartyEndDayAfterButton.setVisibility(View.GONE);
                 ((MainActivity)getActivity()).getAddButton().setVisibility(View.VISIBLE);
                 ((MainActivity)getActivity()).getRemoveButton().setVisibility(View.VISIBLE);
-            }
+            }*/
             removePlannedUnits(getUnitId());
         }
         stateHandler(status);

@@ -110,7 +110,7 @@ public class BacCalcFragment extends Fragment implements ViewPager.OnPageChangeL
                         ((MainActivity)getActivity()).getBacFabRemoveButton().setLabelVisibility(View.VISIBLE);
                     }
                 }, 500);
-            } else if (floatingActionMenu.isMenuHidden()) {
+            } else /*if (floatingActionMenu.isMenuHidden())*/ {
                 displayBacCalcFABs(View.GONE);
                 displayPlanPartyFABs(View.GONE);
                 displayPlanPartyActionFABs(View.GONE);
