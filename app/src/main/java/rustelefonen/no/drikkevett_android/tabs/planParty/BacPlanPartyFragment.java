@@ -457,12 +457,10 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
                 ((MainActivity)getActivity()).getDayAfterFabEndButton().setVisibility(View.GONE);
                 planpartyStartButton.setVisibility(View.GONE);
                 planPartyEndEveningButton.setVisibility(View.GONE);
+                addBtn.setVisibility(View.GONE);
+                removeBtn.setVisibility(View.GONE);
                 planPartyEndDayAfterButton.setVisibility(View.VISIBLE);
                 planPartyEndDayAfterButton.setLabelVisibility(View.VISIBLE);
-                addBtn.setVisibility(View.VISIBLE);
-                addBtn.setLabelVisibility(View.VISIBLE);
-                removeBtn.setVisibility(View.VISIBLE);
-                removeBtn.setLabelVisibility(View.VISIBLE);
             }
         }, 500);
 
