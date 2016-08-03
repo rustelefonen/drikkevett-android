@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -104,9 +105,9 @@ public class BacDayAfterFragment extends Fragment {
 
         //if (bacDayAfterIsSelected()) ((MainActivity)getActivity()).getFloatingActionMenu().showMenu(true);
 
-        setUserData();
+        /*setUserData();
         status = getStatus();
-        statusHandler(status);
+        statusHandler(status);*/
 
         /*btnEndDA.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -160,14 +161,27 @@ public class BacDayAfterFragment extends Fragment {
             status = getStatus();
             statusHandler(status);
 
-            displayPlanPartyFABs(View.GONE);
+
+
+
+
+
+
+
+
+
+
+
+
+
+            /*displayPlanPartyFABs(View.GONE);
             displayPlanPartyActionFABs(View.GONE);
             displayBacCalcFABs(View.GONE);
             ((MainActivity)getActivity()).getDayAfterFabEndButton().setVisibility(View.VISIBLE);
             ((MainActivity)getActivity()).getDayAfterFabEndButton().hideButtonInMenu(true);
 
             if(status == Status.DA_RUNNING)((MainActivity)getActivity()).getFloatingActionMenu().showMenu(true);
-            else ((MainActivity)getActivity()).getFloatingActionMenu().hideMenu(true);
+            else ((MainActivity)getActivity()).getFloatingActionMenu().hideMenu(true);*/
         }
     }
 
@@ -214,7 +228,7 @@ public class BacDayAfterFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-
+/*
     @Override
     public void onResume(){
         super.onResume();
@@ -222,25 +236,7 @@ public class BacDayAfterFragment extends Fragment {
         status = getStatus();
         statusHandler(status);
     }
-
-
-    /*
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (!this.isVisible()) return;
-        if (!isVisibleToUser) return;
-        setUserData();
-        status = getStatus();
-        statusHandler(status);
-
-        if(status == Status.RUNNING || status == Status.NOT_RUNNING || status == Status.DEFAULT){
-            if (bacDayAfterIsSelected()) floatingActionMenu.hideMenu(true);
-        }
-    }
-
-    */
-
+*/
     private void statusHandler(Status state){
         if(state == Status.RUNNING || state == Status.NOT_RUNNING || state == Status.DEFAULT){
             planPartyRunning();
@@ -279,10 +275,55 @@ public class BacDayAfterFragment extends Fragment {
     }
 
     private void planPartyRunning(){
+        ((MainActivity)getActivity()).getFloatingActionMenu().hideMenu(true);
         setVisualsPP();
     }
 
     private void dayAfterRunning(){
+
+        FloatingActionMenu floatingActionMenu = ((MainActivity)getActivity()).getFloatingActionMenu();
+        if (floatingActionMenu.isOpened()) {
+            floatingActionMenu.close(true);
+            new Handler().postDelayed(new Runnable() {
+                public void run() {
+                    ((MainActivity)getActivity()).getBacFabAddButton().setVisibility(View.GONE);
+                    ((MainActivity)getActivity()).getBacFabRemoveButton().setVisibility(View.GONE);
+                    ((MainActivity)getActivity()).getAddButton().setVisibility(View.GONE);
+                    ((MainActivity)getActivity()).getRemoveButton().setVisibility(View.GONE);
+                    ((MainActivity)getActivity()).getPlanpartyStartButton().setVisibility(View.GONE);
+                    ((MainActivity)getActivity()).getPlanPartyEndEveningButton().setVisibility(View.GONE);
+                    ((MainActivity)getActivity()).getPlanPartyEndDayAfterButton().setVisibility(View.GONE);
+                    ((MainActivity)getActivity()).getDayAfterFabEndButton().setVisibility(View.VISIBLE);
+                    ((MainActivity)getActivity()).getDayAfterFabEndButton().setLabelVisibility(View.VISIBLE);
+
+                }
+            }, 500);
+        } else /*if (floatingActionMenu.isMenuHidden())*/ {
+            ((MainActivity)getActivity()).getBacFabAddButton().setVisibility(View.GONE);
+            ((MainActivity)getActivity()).getBacFabRemoveButton().setVisibility(View.GONE);
+            ((MainActivity)getActivity()).getAddButton().setVisibility(View.GONE);
+            ((MainActivity)getActivity()).getRemoveButton().setVisibility(View.GONE);
+            ((MainActivity)getActivity()).getPlanpartyStartButton().setVisibility(View.GONE);
+            ((MainActivity)getActivity()).getPlanPartyEndEveningButton().setVisibility(View.GONE);
+            ((MainActivity)getActivity()).getPlanPartyEndDayAfterButton().setVisibility(View.GONE);
+            ((MainActivity)getActivity()).getDayAfterFabEndButton().setVisibility(View.GONE);
+            ((MainActivity)getActivity()).getDayAfterFabEndButton().setLabelVisibility(View.GONE);
+            floatingActionMenu.showMenu(true);
+            ((MainActivity)getActivity()).getDayAfterFabEndButton().setVisibility(View.VISIBLE);
+            ((MainActivity)getActivity()).getDayAfterFabEndButton().setLabelVisibility(View.VISIBLE);
+        }
+
+
+
+
+
+
+
+
+
+
+
+
         getUnits();
         setStats();
         pieChart = (PieChart) v.findViewById(R.id.pie_chart_bac_day_after);
