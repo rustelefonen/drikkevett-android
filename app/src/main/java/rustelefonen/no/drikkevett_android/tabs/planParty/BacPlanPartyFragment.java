@@ -273,7 +273,7 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
                     removeBtn.setLabelVisibility(View.VISIBLE);
                 }
             } else {
-
+                if (floatingActionMenu.isMenuHidden()) floatingActionMenu.showMenu(true);
             }
         } else {
             System.out.println("en av de var synlige");
