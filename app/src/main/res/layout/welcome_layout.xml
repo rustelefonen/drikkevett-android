@@ -63,7 +63,7 @@
                     android:layout_weight="50"
                     android:textColor="@color/textColor"
                     android:text="Veiledning"
-                    android:background="@color/redSuper"
+                    android:background="@color/greenSuper"
                     android:onClick="guide"/>
                 <Button
                     android:layout_width="wrap_content"

@@ -94,49 +94,25 @@ public class BacCalcFragment extends Fragment implements ViewPager.OnPageChangeL
     @Subscribe
     public void getSelectedPage(SelectedPageEvent selectedPageEvent) {
         if (selectedPageEvent.page == 1) {
-            if (((MainActivity)getActivity()).getFloatingActionMenu().isMenuHidden()) { //Fra home evt superswipe fra historikk
-
-                System.out.println("skjult");
-            } else {    //Fra plan party
-                System.out.println("ikke skjult");
-            }
-
             displayBacCalcFABs(View.VISIBLE);
             displayPlanPartyFABs(View.GONE);
             displayPlanPartyActionFABs(View.GONE);
             ((MainActivity)getActivity()).getDayAfterFabEndButton().setVisibility(View.GONE);
-
-
 
             ((MainActivity)getActivity()).getFloatingActionMenu().close(true);
             ((MainActivity)getActivity()).getFloatingActionMenu().showMenu(true);
 
-            ((MainActivity)getActivity()).getBacFabAddButton().show(false);
-            ((MainActivity)getActivity()).getBacFabRemoveButton().showButtonInMenu(false);
-            /*
-            displayPlanPartyFABs(View.GONE);
-            displayPlanPartyActionFABs(View.GONE);
-            displayBacCalcFABs(View.VISIBLE);
-            ((MainActivity)getActivity()).getDayAfterFabEndButton().setVisibility(View.GONE);
-
-            ((MainActivity)getActivity()).getFloatingActionMenu().showMenu(true);
-            ((MainActivity)getActivity()).getFloatingActionMenu().close(true);*/
-
+            ((MainActivity)getActivity()).getBacFabAddButton().setLabelVisibility(View.VISIBLE);
+            ((MainActivity)getActivity()).getBacFabRemoveButton().setLabelVisibility(View.VISIBLE);
         }
     }
 
 
     private void displayBacCalcFABs(int state) {
         ((MainActivity)getActivity()).getBacFabAddButton().setVisibility(state);
-        //((MainActivity)getActivity()).getBacFabAddButton().show(false);
-        //((MainActivity)getActivity()).getBacFabAddButton().hideButtonInMenu(false);
-        ((MainActivity)getActivity()).getBacFabAddButton().hideButtonInMenu(false);
-        //((MainActivity)getActivity()).getBacFabAddButton().setLabelVisibility(View.GONE);
+        ((MainActivity)getActivity()).getBacFabAddButton().setLabelVisibility(View.GONE);
         ((MainActivity)getActivity()).getBacFabRemoveButton().setVisibility(state);
-        //((MainActivity)getActivity()).getBacFabRemoveButton().show(false);
-        //((MainActivity)getActivity()).getBacFabRemoveButton().hideButtonInMenu(false);
-        ((MainActivity)getActivity()).getBacFabRemoveButton().hideButtonInMenu(false);
-        //((MainActivity)getActivity()).getBacFabRemoveButton().setLabelVisibility(View.GONE);
+        ((MainActivity)getActivity()).getBacFabRemoveButton().setLabelVisibility(View.GONE);
     }
 
     private void displayPlanPartyFABs(int state) {
