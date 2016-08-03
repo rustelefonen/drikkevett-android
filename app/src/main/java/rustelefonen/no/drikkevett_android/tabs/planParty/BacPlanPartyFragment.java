@@ -60,7 +60,7 @@ import static rustelefonen.no.drikkevett_android.util.PartyUtil.countingGrams;
 import static rustelefonen.no.drikkevett_android.util.PartyUtil.getDateDiff;
 
 public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageChangeListener,
-        RadioGroup.OnCheckedChangeListener, View.OnClickListener {
+        RadioGroup.OnCheckedChangeListener {
 
     private double weight = 0;
     private String gender = "";
@@ -152,14 +152,12 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
     @Subscribe
     public void getSelectedPage(SelectedPageEvent selectedPageEvent) {
         if (selectedPageEvent.page == 2) {
-            displayBacCalcFABs(View.GONE);
-            ((MainActivity)getActivity()).getFloatingActionMenu().close(true);
+
+            //((MainActivity)getActivity()).getFloatingActionMenu().close(true);
 
             setUserData();
             status = isSessionOver();
             stateHandler(status);
-
-            ((MainActivity)getActivity()).getDayAfterFabEndButton().setVisibility(View.GONE);
 
 
             /*
@@ -192,16 +190,16 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
                 planPartyEndDayAfterButton.hideButtonInMenu(false);
             }*/
 
-            ((MainActivity)getActivity()).getFloatingActionMenu().showMenu(true);
+            //((MainActivity)getActivity()).getFloatingActionMenu().showMenu(true);
 
         }
     }
 
     private void displayBacCalcFABs(int state) {
         ((MainActivity)getActivity()).getBacFabAddButton().setVisibility(state);
-        //((MainActivity)getActivity()).getBacFabAddButton().hide(true);
+        ((MainActivity)getActivity()).getBacFabAddButton().hide(false);
         ((MainActivity)getActivity()).getBacFabRemoveButton().setVisibility(state);
-        //((MainActivity)getActivity()).getBacFabRemoveButton().hide(true);
+        ((MainActivity)getActivity()).getBacFabRemoveButton().hide(false);
     }
 
     private void displayPlanPartyFABs(int state) {
@@ -259,13 +257,13 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
     @Override
     public void onResume(){
         super.onResume();
-        if (((MainActivity)getActivity()).getCurrentViewpagerPosition() == 2) {
+        /*if (((MainActivity)getActivity()).getCurrentViewpagerPosition() == 2) {
             ((MainActivity)getActivity()).getFloatingActionMenu().showMenu(true);
-        }
+        }*/
 
-        setUserData();
+        /*setUserData();
         status = isSessionOver();
-        stateHandler(status);
+        stateHandler(status);*/
     }
 
     private void stateHandler(Status state){
@@ -358,14 +356,51 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
     //HUSK!
     private void partyNotRunning(){
         if (bacPlanPartyIsSelected()) {
+
+            if (((MainActivity)getActivity()).getFloatingActionMenu().isOpened()) {
+                ((MainActivity)getActivity()).getFloatingActionMenu().close(true);
+            } else {
+
+            }
+
+            ((MainActivity)getActivity()).getDayAfterFabEndButton().setVisibility(View.GONE);
             planPartyEndEveningButton.setVisibility(View.GONE);
             planPartyEndDayAfterButton.setVisibility(View.GONE);
+
+            //((MainActivity)getActivity()).getFloatingActionMenu().close(true);
+
+            //displayBacCalcFABs(View.GONE);
+
+
+
+
+            /*
+
             ((MainActivity)getActivity()).getAddButton().setVisibility(View.VISIBLE);
-            ((MainActivity)getActivity()).getAddButton().hideButtonInMenu(true);
+            ((MainActivity)getActivity()).getAddButton().setLabelVisibility(View.GONE);
+
             ((MainActivity)getActivity()).getRemoveButton().setVisibility(View.VISIBLE);
-            ((MainActivity)getActivity()).getRemoveButton().hideButtonInMenu(true);
+            ((MainActivity)getActivity()).getRemoveButton().setLabelVisibility(View.GONE);
+
             planpartyStartButton.setVisibility(View.VISIBLE);
-            planpartyStartButton.hideButtonInMenu(true);
+            planpartyStartButton.setLabelVisibility(View.GONE);
+
+
+
+            if (((MainActivity)getActivity()).getFloatingActionMenu().isMenuHidden()) {
+                System.out.println("var gjemt");
+                ((MainActivity)getActivity()).getFloatingActionMenu().showMenu(true);
+            } else if (((MainActivity)getActivity()).getFloatingActionMenu().isOpened()) {
+                System.out.println("var åpnet");
+                ((MainActivity)getActivity()).getFloatingActionMenu().close(true);
+            } else {
+                System.out.println("sup");
+            }
+
+
+            ((MainActivity)getActivity()).getAddButton().setLabelVisibility(View.VISIBLE);
+            ((MainActivity)getActivity()).getRemoveButton().setLabelVisibility(View.VISIBLE);
+            planpartyStartButton.setLabelVisibility(View.VISIBLE);*/
         }
 
 
@@ -1158,8 +1193,8 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
     private void setListeners() {
         pageIndicatorGroup.setOnCheckedChangeListener(this);
         beerScroll.addOnPageChangeListener(this);
-        addBtn.setOnClickListener(this);
-        removeBtn.setOnClickListener(this);
+        //addBtn.setOnClickListener(this);
+        //removeBtn.setOnClickListener(this);
     }
 
     private void initWidgets(){
@@ -1183,6 +1218,7 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
     private boolean bacPlanPartyIsSelected() {
         return ((MainActivity)getActivity()).getCurrentViewpagerPosition() == 2;
     }
+/*
 
     @Override
     public void onClick(View view) {
@@ -1201,25 +1237,9 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
                 addPlannedUnits(getUnitId());
             }
             stateHandler(status);
-            /*if (fabLabelsHidden) return;
-            fabLabelsHidden = true;
-            hideFabLabels();*/
         } else if (id == R.id.subtract_button) {
             if (!bacPlanPartyIsSelected()) return;
             removeBtnHandler();
-            /*if (fabLabelsHidden) return;
-            fabLabelsHidden = true;
-            hideFabLabels();*/
         }
-    }
-
-    private void hideFabLabels() {
-        new Handler().postDelayed(new Runnable() {
-            public void run() {
-                //insert animation?
-                addBtn.setLabelVisibility(View.GONE);
-                removeBtn.setLabelVisibility(View.GONE);
-            }
-        }, 5000);
-    }
+    }*/
 }

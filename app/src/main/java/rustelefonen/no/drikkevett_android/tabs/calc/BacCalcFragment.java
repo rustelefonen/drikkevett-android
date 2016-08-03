@@ -17,6 +17,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.Entry;
@@ -94,16 +95,32 @@ public class BacCalcFragment extends Fragment implements ViewPager.OnPageChangeL
     @Subscribe
     public void getSelectedPage(SelectedPageEvent selectedPageEvent) {
         if (selectedPageEvent.page == 1) {
-            displayBacCalcFABs(View.VISIBLE);
-            displayPlanPartyFABs(View.GONE);
-            displayPlanPartyActionFABs(View.GONE);
-            ((MainActivity)getActivity()).getDayAfterFabEndButton().setVisibility(View.GONE);
-
-            ((MainActivity)getActivity()).getFloatingActionMenu().close(true);
-            ((MainActivity)getActivity()).getFloatingActionMenu().showMenu(true);
-
-            ((MainActivity)getActivity()).getBacFabAddButton().setLabelVisibility(View.VISIBLE);
-            ((MainActivity)getActivity()).getBacFabRemoveButton().setLabelVisibility(View.VISIBLE);
+            FloatingActionMenu floatingActionMenu = ((MainActivity)getActivity()).getFloatingActionMenu();
+            if (floatingActionMenu.isOpened()) {
+                floatingActionMenu.close(true);
+                new Handler().postDelayed(new Runnable() {
+                    public void run() {
+                        displayBacCalcFABs(View.GONE);
+                        displayPlanPartyFABs(View.GONE);
+                        displayPlanPartyActionFABs(View.GONE);
+                        ((MainActivity)getActivity()).getDayAfterFabEndButton().setVisibility(View.GONE);
+                        ((MainActivity)getActivity()).getBacFabAddButton().setVisibility(View.VISIBLE);
+                        ((MainActivity)getActivity()).getBacFabRemoveButton().setVisibility(View.VISIBLE);
+                        ((MainActivity)getActivity()).getBacFabAddButton().setLabelVisibility(View.VISIBLE);
+                        ((MainActivity)getActivity()).getBacFabRemoveButton().setLabelVisibility(View.VISIBLE);
+                    }
+                }, 500);
+            } else if (floatingActionMenu.isMenuHidden()) {
+                displayBacCalcFABs(View.GONE);
+                displayPlanPartyFABs(View.GONE);
+                displayPlanPartyActionFABs(View.GONE);
+                ((MainActivity)getActivity()).getDayAfterFabEndButton().setVisibility(View.GONE);
+                floatingActionMenu.showMenu(true);
+                ((MainActivity)getActivity()).getBacFabAddButton().setVisibility(View.VISIBLE);
+                ((MainActivity)getActivity()).getBacFabRemoveButton().setVisibility(View.VISIBLE);
+                ((MainActivity)getActivity()).getBacFabAddButton().setLabelVisibility(View.VISIBLE);
+                ((MainActivity)getActivity()).getBacFabRemoveButton().setLabelVisibility(View.VISIBLE);
+            }
         }
     }
 
@@ -117,13 +134,18 @@ public class BacCalcFragment extends Fragment implements ViewPager.OnPageChangeL
 
     private void displayPlanPartyFABs(int state) {
         ((MainActivity)getActivity()).getAddButton().setVisibility(state);
+        ((MainActivity)getActivity()).getAddButton().setLabelVisibility(View.GONE);
         ((MainActivity)getActivity()).getRemoveButton().setVisibility(state);
+        ((MainActivity)getActivity()).getRemoveButton().setLabelVisibility(View.GONE);
     }
 
     private void displayPlanPartyActionFABs(int state) {
         ((MainActivity)getActivity()).getPlanpartyStartButton().setVisibility(state);
+        ((MainActivity)getActivity()).getPlanpartyStartButton().setLabelVisibility(View.GONE);
         ((MainActivity)getActivity()).getPlanPartyEndEveningButton().setVisibility(state);
+        ((MainActivity)getActivity()).getPlanPartyEndEveningButton().setLabelVisibility(View.GONE);
         ((MainActivity)getActivity()).getPlanPartyEndDayAfterButton().setVisibility(state);
+        ((MainActivity)getActivity()).getPlanPartyEndDayAfterButton().setLabelVisibility(View.GONE);
     }
 
     @Override
