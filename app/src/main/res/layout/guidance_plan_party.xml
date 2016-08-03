@@ -13,8 +13,8 @@
         />
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:src="@drawable/wine"
+        android:layout_height="310dp"
+        android:src="@drawable/planleggkvelden"
         android:layout_gravity="center"
         android:padding="20dp"
         />

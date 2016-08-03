@@ -188,9 +188,15 @@ public class BacCalcFragment extends Fragment implements ViewPager.OnPageChangeL
         if (tmpGender.equals("Mann")) gender = Gender.MALE;
         else if (tmpGender.equals("Kvinne")) gender = Gender.FEMALE;
 
-        String bac = calculateBAC(gender, user.getWeight(), countingGrams(beer, wine, drink, shot), hours);
-        pieChart.setCenterText(Double.valueOf(bac) + PER_MILLE);
-        pieChart.animateY(0, Easing.EasingOption.EaseInOutQuad);
+        try {
+            String bac = calculateBAC(gender, user.getWeight(), countingGrams(beer, wine, drink, shot), hours);
+            pieChart.setCenterText(Double.valueOf(bac) + PER_MILLE);
+            pieChart.animateY(0, Easing.EasingOption.EaseInOutQuad);
+        } catch (NumberFormatException e){
+            String bac = "" + 0.0;
+            pieChart.setCenterText(Double.valueOf(bac) + PER_MILLE);
+            pieChart.animateY(0, Easing.EasingOption.EaseInOutQuad);
+        }
     }
 
     private int colorQuote(double bac){
