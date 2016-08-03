@@ -6,5 +6,6 @@
     android:initialLayout="@layout/bac_widget"
     android:updatePeriodMillis="180000"
     android:resizeMode="horizontal|vertical"
-    android:previewImage="@drawable/beer">
+    android:previewImage="@mipmap/ic_launcher"
+    android:widgetCategory="home_screen">
 </appwidget-provider>
