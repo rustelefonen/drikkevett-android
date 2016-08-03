@@ -45,8 +45,9 @@ public class BacWidgetProvider extends AppWidgetProvider {
                 views.setTextViewText(R.id.widget_planned_total, getPlannedUnits(context));
                 views.setTextViewText(R.id.registered_widget, getRegisteredUnits(context));
 
-                views.setTextViewText(R.id.bac_widget_day_month, getDay());
-                views.setTextViewText(R.id.bac_widget_year, getYear());
+                System.out.println("dag: " + getDay());
+                //views.setTextViewText(R.id.bac_widget_day_month, getDay());
+                //views.setTextViewText(R.id.bac_widget_year, getYear());
 
 
                 //get user
