@@ -1169,7 +1169,7 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
                 updateStatusBtn(status.toString());
                 stateHandler(status);
 
-                dayAfterRunningFabUpdate();
+                partyNotRunningFabUpdate();
 
             }
         }).setNegativeButton("Avbryt", new DialogInterface.OnClickListener() {
