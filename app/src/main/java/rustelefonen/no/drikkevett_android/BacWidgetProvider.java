@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.widget.RemoteViews;
 
 import java.text.DecimalFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -20,6 +21,7 @@ import rustelefonen.no.drikkevett_android.db.User;
 import rustelefonen.no.drikkevett_android.db.UserDao;
 import rustelefonen.no.drikkevett_android.intro.WelcomeActivity;
 import rustelefonen.no.drikkevett_android.tabs.home.SuperDao;
+import rustelefonen.no.drikkevett_android.util.DateUtil;
 import rustelefonen.no.drikkevett_android.util.PartyUtil;
 
 import static rustelefonen.no.drikkevett_android.util.PartyUtil.calculateBAC;
@@ -43,12 +45,18 @@ public class BacWidgetProvider extends AppWidgetProvider {
                 views.setTextViewText(R.id.widget_planned_total, getPlannedUnits(context));
                 views.setTextViewText(R.id.registered_widget, getRegisteredUnits(context));
 
+                views.setTextViewText(R.id.bac_widget_day_month, getDay());
+                views.setTextViewText(R.id.bac_widget_year, getYear());
+
 
                 //get user
                 PlanPartyElements planPartyElements = getCurrentPlanPartyElement(context);
                 User user = getUser(context);
                 if (user != null) {
-                    String bac = liveUpdatePromille(user.getWeight(), user.getGender(), planPartyElements.getStartTimeStamp(), context);
+                    String bac = null;
+                    if (planPartyElements != null) {
+                        bac = liveUpdatePromille(user.getWeight(), user.getGender(), planPartyElements.getStartTimeStamp(), context);
+                    }
                     views.setTextViewText(R.id.per_mille_widget, bac);
                 }
 
@@ -198,5 +206,19 @@ public class BacWidgetProvider extends AppWidgetProvider {
         }
         DecimalFormat numberFormat = new DecimalFormat("#.##");
         return numberFormat.format(sum);
+    }
+
+    private String getYear() {
+        Date date = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        return calendar.get(Calendar.YEAR) + "";
+    }
+
+    private String getDay() {
+        Date date = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        return calendar.get(Calendar.DAY_OF_MONTH)  + ". " + DateUtil.getMonthName(calendar.get(Calendar.MONTH));
     }
 }

@@ -1288,7 +1288,7 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
             if (!bacPlanPartyIsSelected()) return;
             if(status.equals(Status.RUNNING)){
                 String unitAdded = planPartyDB.addConsumedUnits(getUnitId());
-                Toast.makeText(getContext(), unitAdded, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getContext(), unitAdded, Toast.LENGTH_SHORT).show();
                 if(!planPartyDB.isFirstUnitAdded()){
                     System.out.println("First unit added =)");
                     setFirstUnitAdded();
