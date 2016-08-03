@@ -48,6 +48,7 @@ import rustelefonen.no.drikkevett_android.db.PlanPartyElements;
 import rustelefonen.no.drikkevett_android.db.PlanPartyElementsDao;
 import rustelefonen.no.drikkevett_android.db.User;
 import rustelefonen.no.drikkevett_android.tabs.calc.fragments.BeerScrollAdapter;
+import rustelefonen.no.drikkevett_android.tabs.dayAfter.BacDayAfterFragment;
 import rustelefonen.no.drikkevett_android.tabs.home.SuperDao;
 import rustelefonen.no.drikkevett_android.util.NavigationUtil;
 import rustelefonen.no.drikkevett_android.util.PartyUtil;
@@ -155,6 +156,16 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
             setUserData();
             status = isSessionOver();
             stateHandler(status);
+
+            new Handler().postDelayed(new Runnable() {
+                public void run() {
+                    System.out.println("kjører tøffe tøff");
+                    if (bacPlanPartyIsSelected()) {
+                        if (((MainActivity)getActivity()).getFloatingActionMenu().isMenuHidden())
+                            ((MainActivity)getActivity()).getFloatingActionMenu().showMenu(true);
+                    }
+                }
+            }, 1000);
         }
     }
 
@@ -485,12 +496,10 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
                             ((MainActivity)getActivity()).getDayAfterFabEndButton().setVisibility(View.GONE);
                             planpartyStartButton.setVisibility(View.GONE);
                             planPartyEndEveningButton.setVisibility(View.GONE);
+                            addBtn.setVisibility(View.GONE);
+                            removeBtn.setVisibility(View.GONE);
                             planPartyEndDayAfterButton.setVisibility(View.VISIBLE);
                             planPartyEndDayAfterButton.setLabelVisibility(View.VISIBLE);
-                            addBtn.setVisibility(View.VISIBLE);
-                            addBtn.setLabelVisibility(View.VISIBLE);
-                            removeBtn.setVisibility(View.VISIBLE);
-                            removeBtn.setLabelVisibility(View.VISIBLE);
                         }
                     }, 500);
                 } else {
@@ -500,13 +509,11 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
                     ((MainActivity)getActivity()).getDayAfterFabEndButton().setVisibility(View.GONE);
                     planpartyStartButton.setVisibility(View.GONE);
                     planPartyEndEveningButton.setVisibility(View.GONE);
+                    addBtn.setVisibility(View.GONE);
+                    removeBtn.setVisibility(View.GONE);
                     floatingActionMenu.showMenu(true);
                     planPartyEndDayAfterButton.setVisibility(View.VISIBLE);
                     planPartyEndDayAfterButton.setLabelVisibility(View.VISIBLE);
-                    addBtn.setVisibility(View.VISIBLE);
-                    addBtn.setLabelVisibility(View.VISIBLE);
-                    removeBtn.setVisibility(View.VISIBLE);
-                    removeBtn.setLabelVisibility(View.VISIBLE);
                 }
             } else {
                 //dayAfterRunningFabUpdate();
@@ -1097,7 +1104,7 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
                 status = Status.RUNNING;
                 updateStatusBtn(status.toString());
                 stateHandler(status);
-                dayAfterRunningFabUpdate();
+                partyRunningDabUpdate();
             }
         }).setNegativeButton("Avbryt", new DialogInterface.OnClickListener() {
             @Override

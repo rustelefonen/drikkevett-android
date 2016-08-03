@@ -313,6 +313,18 @@ public class BacDayAfterFragment extends Fragment {
             ((MainActivity)getActivity()).getDayAfterFabEndButton().setLabelVisibility(View.VISIBLE);
         }
 
+        new Handler().postDelayed(new Runnable() {
+            public void run() {
+                System.out.println("kjører tøffe tøff");
+                if (bacDayAfterIsSelected()) {
+                    if (status == Status.DA_RUNNING) {
+                        if (((MainActivity)getActivity()).getFloatingActionMenu().isMenuHidden())
+                            ((MainActivity)getActivity()).getFloatingActionMenu().showMenu(true);
+                    }
+                }
+            }
+        }, 1000);
+
 
 
 

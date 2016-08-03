@@ -93,7 +93,7 @@ public class BacCalcFragment extends Fragment implements ViewPager.OnPageChangeL
     }
 
     @Subscribe
-    public void getSelectedPage(SelectedPageEvent selectedPageEvent) {
+    public void getSelectedPage(final SelectedPageEvent selectedPageEvent) {
         if (selectedPageEvent.page == 1) {
             FloatingActionMenu floatingActionMenu = ((MainActivity)getActivity()).getFloatingActionMenu();
             if (floatingActionMenu.isOpened()) {
@@ -122,6 +122,15 @@ public class BacCalcFragment extends Fragment implements ViewPager.OnPageChangeL
                 ((MainActivity)getActivity()).getBacFabRemoveButton().setLabelVisibility(View.VISIBLE);
             }
         }
+        new Handler().postDelayed(new Runnable() {
+            public void run() {
+                System.out.println("kjører tøffe tøff");
+                if (bacCalcIsSelected()) {
+                    if (((MainActivity)getActivity()).getFloatingActionMenu().isMenuHidden())
+                        ((MainActivity)getActivity()).getFloatingActionMenu().showMenu(true);
+                }
+            }
+        }, 1000);
     }
 
 

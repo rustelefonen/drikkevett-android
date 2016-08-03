@@ -6,7 +6,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -68,6 +71,29 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
 
         questionLink.setOnClickListener(this);
         submitButton.setOnClickListener(this);
+
+        insertToolbar();
+
+    }
+
+    private void insertToolbar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.textColor));
+        toolbar.setTitle("Send spørsmål");
+
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayShowHomeEnabled(true);
+        }
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hasChanged();
+            }
+        });
     }
 
     private List<String> makeAgeList(){
@@ -164,5 +190,9 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
                                         @Field("user-submitted-captcha") String captcha,
                                         @Field("user-submitted-category") String category,
                                         @Field("user-submitted-post") String post);
+    }
+
+    private void hasChanged() {
+        super.onBackPressed();
     }
 }
