@@ -14,8 +14,8 @@
         />
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:src="@drawable/prov_dette"
+        android:layout_height="310dp"
+        android:src="@drawable/day_after_guidance"
         android:layout_gravity="center"
         android:padding="20dp"
         />
