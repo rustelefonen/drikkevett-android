@@ -199,9 +199,9 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
 
     private void displayBacCalcFABs(int state) {
         ((MainActivity)getActivity()).getBacFabAddButton().setVisibility(state);
-        ((MainActivity)getActivity()).getBacFabAddButton().hide(true);
+        //((MainActivity)getActivity()).getBacFabAddButton().hide(true);
         ((MainActivity)getActivity()).getBacFabRemoveButton().setVisibility(state);
-        ((MainActivity)getActivity()).getBacFabRemoveButton().hide(true);
+        //((MainActivity)getActivity()).getBacFabRemoveButton().hide(true);
     }
 
     private void displayPlanPartyFABs(int state) {
@@ -365,7 +365,7 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
             ((MainActivity)getActivity()).getRemoveButton().setVisibility(View.VISIBLE);
             ((MainActivity)getActivity()).getRemoveButton().hideButtonInMenu(true);
             planpartyStartButton.setVisibility(View.VISIBLE);
-            //planpartyStartButton.hideButtonInMenu(true);
+            planpartyStartButton.hideButtonInMenu(true);
         }
 
 
