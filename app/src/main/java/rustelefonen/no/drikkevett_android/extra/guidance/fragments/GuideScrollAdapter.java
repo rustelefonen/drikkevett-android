@@ -8,7 +8,7 @@ import android.support.v4.app.FragmentPagerAdapter;
  * Created by RUStelefonen on 26.07.2016.
  */
 
-public class GuideScrollAdapter  extends FragmentPagerAdapter {
+public class GuideScrollAdapter extends FragmentPagerAdapter {
 
     public GuideScrollAdapter(FragmentManager fm) {
         super(fm);
@@ -30,4 +30,6 @@ public class GuideScrollAdapter  extends FragmentPagerAdapter {
     public int getCount() {
         return 8;
     }
+
+
 }
