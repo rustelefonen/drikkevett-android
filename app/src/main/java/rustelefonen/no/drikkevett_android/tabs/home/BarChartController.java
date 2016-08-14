@@ -12,6 +12,7 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import rustelefonen.no.drikkevett_android.db.History;
@@ -38,11 +39,13 @@ public class BarChartController {
     }
 
     public void styleBarChart() {
+
+
         barChart.setNoDataText(NO_DATA_TEXT);
         barChart.getAxisLeft().setDrawGridLines(false);
         barChart.getAxisRight().setDrawGridLines(false);
         barChart.getXAxis().setDrawGridLines(false);
-        barChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM_INSIDE);
+        barChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
         barChart.getAxisRight().setDrawTopYLabelEntry(false);
         barChart.getAxisLeft().setTextColor(WHITE_COLOR);
         barChart.getAxisRight().setEnabled(false);
@@ -60,11 +63,34 @@ public class BarChartController {
         barChart.getAxisLeft().setDrawAxisLine(false);
         barChart.getXAxis().setDrawAxisLine(false);
 
-        barChart.setVisibleXRange(6, 8);
 
 
 
-        barChart.getXAxis().setAvoidFirstLastClipping(true);
+
+        //barChart.se
+
+
+        //barChart.getBa
+        //barChart.getXAxis().setSpaceBetweenLabels(40);
+
+        //barChart.setViewPortOffsets(60f, 0f, 0f, 0f);
+
+        //barChart.getXAxis().setLabelRotationAngle(45f);
+
+        //barChart.getXAxis().label
+
+
+        //barChart.setX
+
+        //barChart.resetViewPortOffsets();
+        //barChart.setViewPortOffsets(0f, 0f, 0f, 0f);
+        //barChart.setVisibleXRange(6, 1);
+
+
+
+        //barChart.getXAxis().setAvoidFirstLastClipping(true);*/
+
+
 
 
     }
@@ -73,31 +99,41 @@ public class BarChartController {
         ArrayList<BarEntry> valueSet1 = new ArrayList<>();
         ArrayList<BarEntry> valueSet2 = new ArrayList<>();
 
+        List<Integer> colors = new ArrayList<>();
+
         for (int i = 0; i < historyList.size(); i++) {
             History history = historyList.get(i);
             if (history.getHighestBAC() > user.getGoalBAC()) {
-                valueSet2.add(new BarEntry(history.getHighestBAC().floatValue(), i));
+                valueSet1.add(new BarEntry(history.getHighestBAC().floatValue(), i));
+                colors.add(Color.rgb(221, 112, 112));
             } else {
                 valueSet1.add(new BarEntry(history.getHighestBAC().floatValue(), i));
+                colors.add(Color.rgb(0, 155, 0));
             }
         }
 
         BarDataSet barDataSet1 = new BarDataSet(valueSet1, "Brand 1");
-        barDataSet1.setColor(Color.rgb(0, 155, 0));
+
+        barDataSet1.setColors(colors);
+
+        barDataSet1.setBarSpacePercent(40f);
+
+        //barDataSet1.setColor(Color.rgb(0, 155, 0));
         barDataSet1.setDrawValues(false);
         BarDataSet barDataSet2 = new BarDataSet(valueSet2, "Brand 2");
         barDataSet2.setColor(Color.rgb(221, 112, 112));
+        //barDataSet2.setBarSpacePercent(0f);
         barDataSet2.setDrawValues(false);
         ArrayList<IBarDataSet> dataSets = new ArrayList<>();
         dataSets.add(barDataSet1);
-        dataSets.add(barDataSet2);
+        //dataSets.add(barDataSet2);
         return dataSets;
     }
 
     private ArrayList<String> getXAxisValues() {
         ArrayList<String> xAxis = new ArrayList<>();
         for (History history : historyList) {
-            xAxis.add(DateUtil.getDayOfMonth(history.getStartDate()));
+            xAxis.add(DateUtil.getDayOfMonth(history.getStartDate()) /*+ ". " + DateUtil.getMonthShortName(history.getStartDate())*/);
         }
         return xAxis;
     }

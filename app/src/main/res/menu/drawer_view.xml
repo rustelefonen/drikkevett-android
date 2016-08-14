@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:title="Generelt">
         <menu>
-            <group android:checkableBehavior="single">
+            <group android:checkableBehavior="none">
                 <item
                     android:id="@+id/drawer_view_information"
                     android:title="Informasjon"
@@ -18,7 +18,7 @@
         <menu>
             <group
                 android:id="@+id/nav_drawer_settings_group"
-                android:checkableBehavior="single">
+                android:checkableBehavior="none">
                 <item
                     android:id="@+id/nav_first_fragment"
                     android:title="Endre din bruker"
@@ -36,7 +36,7 @@
     </item>
     <item android:title="Ekstra">
         <menu>
-            <group android:checkableBehavior="single">
+            <group android:checkableBehavior="none">
                 <item
                     android:id="@+id/nav_fourth_fragment"
                     android:title="Kilder"

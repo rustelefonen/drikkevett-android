@@ -33,6 +33,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -148,6 +149,15 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
                 statusBtnHandler();
             }
         });
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.add(Calendar.MINUTE, 30);
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.add(Calendar.MINUTE, 5);
+        planPartyDB.insertHistoryDB(1, 1, 1, 1, new Date(), calendar.getTime(), 400, 0.5);
 
         return v;
     }
