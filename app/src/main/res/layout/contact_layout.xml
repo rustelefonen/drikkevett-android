@@ -47,7 +47,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Her kan du kontakte oss om du ønsker det. Du kan enten sende inn et spørsmål til vår hjemmeside (rustelefonen.no) og få svar fra en av våre mange fagkonsulenter.\n\nEller ringe oss å få direkte kontakt med våre kontakter elns? Herpa derp derp"
+                    android:text="Her kan du enten sende inn et anonymt spørsmål eller ringe oss.\n\nSpørsmålene blir publisert på vår hjemmeside (rustelefonen.no)."
                     android:textColor="@color/textColor"
                     android:layout_gravity="center"
                     android:gravity="center"
