@@ -34,7 +34,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/textColor"
                 android:textSize="16sp"
-                android:text="Legg inn en langsiktig makspromille du ønsker å holde deg under frem til en ønsket dato. Makspromillen tilsvarer et nivå av promille du ikke vil overstige i løpet av én kveld."
+                android:text="Legg inn en langsiktig makspromille du ønsker å holde deg under frem til en ønsket dato. Makspromillen tilsvarer et nivå av promille du ikke vil overstige i løpet av én kveld. NB! Promillekalkulatoren gir en indikasjon på din promille, og skal ikke brukes som en utregning for når du kan kjøre!"
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:layout_marginBottom="64dp"/>
