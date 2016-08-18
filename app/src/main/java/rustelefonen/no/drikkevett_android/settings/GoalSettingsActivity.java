@@ -83,8 +83,8 @@ public class GoalSettingsActivity extends AppCompatActivity {
         goalBacSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                float perMille = (float) progress / 10f;
-                goalBacEditText.setText(Float.toString(perMille));
+                float permille = (float) progress / 10f;
+                goalBacEditText.setText(Float.toString(permille));
             }
 
             @Override
@@ -181,7 +181,7 @@ public class GoalSettingsActivity extends AppCompatActivity {
 
     public void saveNewGoals(View view) {
         double goalBac = getDouble(goalBacEditText.getText().toString());
-        if (goalBac <= 0.0 || goalBac < 2.0) {
+        if (goalBac <= 0.0 || goalBac > 2.0) {
             Toast.makeText(this, "Ugyldig mål", Toast.LENGTH_SHORT).show();
             return;
         }
