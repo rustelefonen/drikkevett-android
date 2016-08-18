@@ -39,8 +39,6 @@ public class BarChartController {
     }
 
     public void styleBarChart() {
-
-
         barChart.setNoDataText(NO_DATA_TEXT);
         barChart.getAxisLeft().setDrawGridLines(false);
         barChart.getAxisRight().setDrawGridLines(false);
@@ -62,53 +60,23 @@ public class BarChartController {
         barChart.getAxisRight().addLimitLine(limit);
         barChart.getAxisLeft().setDrawAxisLine(false);
         barChart.getXAxis().setDrawAxisLine(false);
-
-
-
-
-
-        //barChart.se
-
-
-        //barChart.getBa
-        //barChart.getXAxis().setSpaceBetweenLabels(40);
-
-        //barChart.setViewPortOffsets(60f, 0f, 0f, 0f);
-
-        //barChart.getXAxis().setLabelRotationAngle(45f);
-
-        //barChart.getXAxis().label
-
-
-        //barChart.setX
-
-        //barChart.resetViewPortOffsets();
-        //barChart.setViewPortOffsets(0f, 0f, 0f, 0f);
-        //barChart.setVisibleXRange(6, 1);
-
-
-
-        //barChart.getXAxis().setAvoidFirstLastClipping(true);*/
-
-
-
-
+        barChart.setVisibleXRange(8,8);
+        barChart.setHighlightPerTapEnabled(false);
+        barChart.getAxisLeft().setAxisMinValue(0.0f);
     }
 
     private ArrayList<IBarDataSet> getDataSet() {
         ArrayList<BarEntry> valueSet1 = new ArrayList<>();
-        ArrayList<BarEntry> valueSet2 = new ArrayList<>();
-
         List<Integer> colors = new ArrayList<>();
 
         for (int i = 0; i < historyList.size(); i++) {
             History history = historyList.get(i);
             if (history.getHighestBAC() > user.getGoalBAC()) {
                 valueSet1.add(new BarEntry(history.getHighestBAC().floatValue(), i));
-                colors.add(Color.rgb(221, 112, 112));
+                colors.add(Color.parseColor("#DD7070"));
             } else {
                 valueSet1.add(new BarEntry(history.getHighestBAC().floatValue(), i));
-                colors.add(Color.rgb(0, 155, 0));
+                colors.add(Color.parseColor("#1AC149"));
             }
         }
 
@@ -118,15 +86,9 @@ public class BarChartController {
 
         barDataSet1.setBarSpacePercent(40f);
 
-        //barDataSet1.setColor(Color.rgb(0, 155, 0));
         barDataSet1.setDrawValues(false);
-        BarDataSet barDataSet2 = new BarDataSet(valueSet2, "Brand 2");
-        barDataSet2.setColor(Color.rgb(221, 112, 112));
-        //barDataSet2.setBarSpacePercent(0f);
-        barDataSet2.setDrawValues(false);
         ArrayList<IBarDataSet> dataSets = new ArrayList<>();
         dataSets.add(barDataSet1);
-        //dataSets.add(barDataSet2);
         return dataSets;
     }
 

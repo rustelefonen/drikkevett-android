@@ -108,7 +108,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:text="Standard"
-                        android:background="@color/redSuper"
+                        android:background="@color/greenSuper"
                         android:textColor="@color/textColor"
                         android:layout_weight="50"
                         android:onClick="setDefault" />

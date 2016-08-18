@@ -157,7 +157,7 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
         Calendar cal = Calendar.getInstance();
         cal.setTime(new Date());
         cal.add(Calendar.MINUTE, 5);
-        planPartyDB.insertHistoryDB(1, 1, 1, 1, new Date(), calendar.getTime(), 400, 0.5);
+        //planPartyDB.insertHistoryDB(1, 1, 1, 1, new Date(), calendar.getTime(), 400, 0.8);
 
         return v;
     }
