@@ -2,7 +2,6 @@ package rustelefonen.no.drikkevett_android.tabs.home;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.net.Uri;
@@ -40,13 +39,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import rustelefonen.no.drikkevett_android.SelectedPageEvent;
-import rustelefonen.no.drikkevett_android.goalreached.GoalReachedActivity;
 import rustelefonen.no.drikkevett_android.MainActivity;
 import rustelefonen.no.drikkevett_android.R;
+import rustelefonen.no.drikkevett_android.SelectedPageEvent;
 import rustelefonen.no.drikkevett_android.db.History;
 import rustelefonen.no.drikkevett_android.db.HistoryDao;
 import rustelefonen.no.drikkevett_android.db.User;
+import rustelefonen.no.drikkevett_android.goalreached.GoalReachedActivity;
 import rustelefonen.no.drikkevett_android.util.DateUtil;
 import rustelefonen.no.drikkevett_android.util.ImageUtil;
 import rustelefonen.no.drikkevett_android.util.NavigationUtil;

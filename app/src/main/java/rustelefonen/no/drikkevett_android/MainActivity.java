@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
@@ -305,52 +306,100 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
     private void launchGallery() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            if (!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 987);
-            }
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 987);
+        } else {
+            galleryIntent();
         }
     }
 
     public void launchCamera() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            if (!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
-            }
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+        } else {
+            cameraIntent();
         }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
+
             case CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    cameraIntent();
-
-
-
-
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
-
-                } else {
-
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                }
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) cameraIntent();
+                else checkCameraPermission(permissions, grantResults);
                 return;
             }
             case 987: {
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    galleryIntent();
-                } else {
-
-                }
+                checkGalleryPermission(permissions, grantResults);
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) galleryIntent();
                 return;
             }
+        }
+    }
 
-            // other 'case' lines to check for other
-            // permissions this app might request
+    private void checkCameraPermission(String permissions[], int[] grantResults) {
+        for (int i = 0, len = permissions.length; i < len; i++) {
+
+            String permission = permissions[i];
+
+            if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
+                boolean showRationale = false;
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                    showRationale = shouldShowRequestPermissionRationale( permission );
+                }
+                if (! showRationale) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.AlertDialogCustom));
+                    builder.setTitle("Mangler tillatelse til kamera")
+                            .setMessage("For å få tilgang til kameraet må du tillate dette i innstillingene. Ønsker du å gå dit nå?")
+                            .setPositiveButton("JA", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                                    Uri uri = Uri.fromParts("package", getPackageName(), null);
+                                    intent.setData(uri);
+                                    startActivityForResult(intent, PackageManager.PERMISSION_GRANTED);
+                                }
+                            })
+                            .setNegativeButton("AVBRYT", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // do nothing
+                                }
+                            })
+                            .show();
+                }
+            }
+        }
+    }
+
+    private void checkGalleryPermission(String [] permissions, int[] grantResults) {
+        for (int i = 0, len = permissions.length; i < len; i++) {
+
+            String permission = permissions[i];
+
+            if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
+                boolean showRationale = false;
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                    showRationale = shouldShowRequestPermissionRationale( permission );
+                }
+                if (! showRationale) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.AlertDialogCustom));
+                    builder.setTitle("Mangler tillatelse til galleriet")
+                            .setMessage("For å få tilgang til galleriet må du tillate dette i innstillingene. Ønsker du å gå dit nå?")
+                            .setPositiveButton("JA", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                                    Uri uri = Uri.fromParts("package", getPackageName(), null);
+                                    intent.setData(uri);
+                                    startActivityForResult(intent, PackageManager.PERMISSION_GRANTED);
+                                }
+                            })
+                            .setNegativeButton("AVBRYT", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // do nothing
+                                }
+                            })
+                            .show();
+                }
+            }
         }
     }
 
