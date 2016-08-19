@@ -18,7 +18,7 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="310dp"
-        android:src="@drawable/ic_aaaaaaa"
+        android:src="@drawable/ic_homesreenshot"
         android:layout_gravity="center"
         android:padding="20dp"
         android:id="@+id/imageView" />
