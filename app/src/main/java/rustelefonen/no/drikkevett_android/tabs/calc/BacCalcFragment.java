@@ -47,7 +47,7 @@ public class BacCalcFragment extends Fragment implements ViewPager.OnPageChangeL
     private int shot = 0;
 
     // HOURS
-    private int hours = 0;
+    private int hours = 1;
 
     // TEXTVIEWS
     public TextView labelHours;
@@ -71,8 +71,6 @@ public class BacCalcFragment extends Fragment implements ViewPager.OnPageChangeL
     public RadioGroup pageIndicatorGroup;
 
     private User user;
-
-    private boolean fabLabelsHidden = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -188,15 +186,9 @@ public class BacCalcFragment extends Fragment implements ViewPager.OnPageChangeL
         if (tmpGender.equals("Mann")) gender = Gender.MALE;
         else if (tmpGender.equals("Kvinne")) gender = Gender.FEMALE;
 
-        try {
-            String bac = calculateBAC(gender, user.getWeight(), countingGrams(beer, wine, drink, shot), hours);
-            pieChart.setCenterText(Double.valueOf(bac) + PER_MILLE);
-            pieChart.animateY(0, Easing.EasingOption.EaseInOutQuad);
-        } catch (NumberFormatException e){
-            String bac = "" + 0.0;
-            pieChart.setCenterText(Double.valueOf(bac) + PER_MILLE);
-            pieChart.animateY(0, Easing.EasingOption.EaseInOutQuad);
-        }
+        String bac = calculateBAC(gender, user.getWeight(), countingGrams(beer, wine, drink, shot), hours);
+        pieChart.setCenterText(bac + PER_MILLE);
+        pieChart.animateY(0, Easing.EasingOption.EaseInOutQuad);
     }
 
     private int colorQuote(double bac){
@@ -267,6 +259,8 @@ public class BacCalcFragment extends Fragment implements ViewPager.OnPageChangeL
         double oppdatertPromille = 0.0;
         double genderScore = setGenderScore(gender);
 
+        System.out.println("gender: " + genderScore + " weight: " + weight + " gram: " + grams + " hours: " + hours);
+
         if(grams == 0.0){
             oppdatertPromille = 0.0;
         } else {
@@ -275,6 +269,7 @@ public class BacCalcFragment extends Fragment implements ViewPager.OnPageChangeL
                 oppdatertPromille = 0.0;
             }
         }
+        System.out.println("bac: " + oppdatertPromille);
         pieChart.setCenterTextColor(colorQuote(oppdatertPromille));
         labelQuotes.setText(textQuote(oppdatertPromille));
         labelQuotes.setTextColor(colorQuote(oppdatertPromille));
@@ -282,11 +277,13 @@ public class BacCalcFragment extends Fragment implements ViewPager.OnPageChangeL
         DecimalFormat numberFormat = new DecimalFormat("#.##");
         String newPromille = numberFormat.format(oppdatertPromille);
 
+        System.out.println("ny promille: " + newPromille);
+
         return newPromille;
     }
 
     private double countingGrams(double beerUnits, double wineUnits, double drinkUnits, double shotUnits){
-        return (beerUnits * 12.6) + (wineUnits * 14.0) + (drinkUnits * 15.0) + (shotUnits * 14.2);
+        return (beerUnits * 23.0) + (wineUnits * 15.4) + (drinkUnits * 16.0) + (shotUnits * 16.0);
     }
 
     private double setGenderScore(Gender gender){
@@ -478,6 +475,7 @@ public class BacCalcFragment extends Fragment implements ViewPager.OnPageChangeL
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+        System.out.println(i);
         if (i < 1 && i > 24) hours = 1;
         hours = i;
 

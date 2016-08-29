@@ -33,7 +33,7 @@
                 android:padding="20dp"
                 />
             <TextView
-                android:text="Øl: 0,5 dl"
+                android:text="Øl: 0,5 l\n(4,5 % alkohol)"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
@@ -54,7 +54,7 @@
                 android:padding="20dp"
                 />
             <TextView
-                android:text="Vin: 12 cl"
+                android:text="Vin: 1,2 dl\n(13 % alkohol)"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
@@ -75,7 +75,7 @@
                 android:padding="20dp"
                 />
             <TextView
-                android:text="Drink: 4 cl"
+                android:text="Drink: 4 cl\n(40 % alkohol)"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
@@ -96,7 +96,7 @@
                 android:padding="20dp"
                 />
             <TextView
-                android:text="Shot: 4 cl"
+                android:text="Shot: 4 cl\n(40 % alkohol)"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="16sp"

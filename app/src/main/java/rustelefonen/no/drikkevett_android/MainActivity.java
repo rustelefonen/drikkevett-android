@@ -178,6 +178,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     }
 
     private void fetchData() {
+        System.out.println("fetcher...");
         fetchUser();
         insertUserNameIfExists();
         insertImageIfExists();

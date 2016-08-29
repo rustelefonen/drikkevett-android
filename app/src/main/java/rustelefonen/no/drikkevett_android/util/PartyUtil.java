@@ -17,9 +17,9 @@ import java.util.concurrent.TimeUnit;
 
 public class PartyUtil {
     // SET GRAM VALUES:
-    private static double beerGrams = 12.6;
-    private static double wineGrams = 14.0;
-    private static double drinkGrams = 15.0;
+    private static double beerGrams = 23.0;
+    private static double wineGrams = 16.0;
+    private static double drinkGrams = 16.0;
     private static double shotGrams = 16.0;
 
     private Context context;
