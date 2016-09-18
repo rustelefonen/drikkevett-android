@@ -283,7 +283,7 @@ public class BacCalcFragment extends Fragment implements ViewPager.OnPageChangeL
     }
 
     private double countingGrams(double beerUnits, double wineUnits, double drinkUnits, double shotUnits){
-        return (beerUnits * 23.0) + (wineUnits * 15.4) + (drinkUnits * 16.0) + (shotUnits * 16.0);
+        return (beerUnits * 23.0) + (wineUnits * 16.0) + (drinkUnits * 16.0) + (shotUnits * 16.0);
     }
 
     private double setGenderScore(Gender gender){

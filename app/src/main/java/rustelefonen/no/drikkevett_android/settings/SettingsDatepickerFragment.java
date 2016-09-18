@@ -32,8 +32,18 @@ public class SettingsDatepickerFragment extends DialogFragment implements DatePi
         int day = c.get(Calendar.DAY_OF_MONTH);
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), this, year, month, day);
-        datePickerDialog.getDatePicker().setMinDate(new Date().getTime()-(new Date().getTime()%(24*60*60*1000)));
+        //datePickerDialog.getDatePicker().setMinDate(new Date().getTime()-(new Date().getTime()%(24*60*60*1000)));
+
+        datePickerDialog.getDatePicker().setMinDate(getTomorrow());
+
         return datePickerDialog;
+    }
+
+    private long getTomorrow() {
+        Calendar c = Calendar.getInstance();
+        c.setTime(new Date());
+        c.add(Calendar.DATE, 1);
+        return c.getTime().getTime();
     }
 
     @Override
