@@ -109,7 +109,7 @@ public class BacCalcFragment extends Fragment implements ViewPager.OnPageChangeL
 
         boolean gender = user.getGender().equals("Mann");
         double weight = user.getWeight();
-        double hours = (double) seekBar.getProgress();
+        double hours = (double) (seekBar.getProgress() + 1);
 
         double bac = BacUtility.calculateBac(beerUnits, wineUnits, drinkUnits, shotUnits, hours, gender, weight);
 
@@ -247,17 +247,9 @@ public class BacCalcFragment extends Fragment implements ViewPager.OnPageChangeL
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-        /*System.out.println(i);
-        if (i < 1 && i > 24) hours = 1;
-        hours = i;
-
-        if(hours <= 1){
-            hours = 1;
-            labelHours.setText("Promillen om " + hours + " time");
-        } else {
-            labelHours.setText("Promillen om " + hours + " timer");
-        }
-        totalPromille();*/
+        int hours = i + 1;
+        String formattedString = hours == 1 ? "Promillen om " + hours + " time" : "Promillen om " + hours + " timer";
+        labelHours.setText(formattedString);
     }
 
     @Override
@@ -265,6 +257,7 @@ public class BacCalcFragment extends Fragment implements ViewPager.OnPageChangeL
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
+        updateBac();
         fillPieChart();
         pieChart.animateY(1400, Easing.EasingOption.EaseInOutQuad);
     }

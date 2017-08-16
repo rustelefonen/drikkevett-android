@@ -364,7 +364,7 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/seekBarBacCalc"
                         android:layout_marginBottom="20dp"
-                        android:max="24"
+                        android:max="23"
                         />
                 </LinearLayout>
 
