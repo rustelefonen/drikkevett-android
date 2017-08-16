@@ -1,10 +1,13 @@
 package rustelefonen.no.drikkevett_android.intro;
 
 import android.app.DialogFragment;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.ContextThemeWrapper;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.SeekBar;
@@ -106,11 +109,27 @@ public class GoalRegistrationActivity extends AppCompatActivity {
             return;
         }
 
-        insertUser();
+        String message = "For å regne ut promille mest mulig nøyaktig, ber appen deg om å oppgi kjønn, alder og vekt. Ønsker du å opprette profilbilde behøver appen tilgang på kamera og galleri. Du kan velge å ikke gi appen tilgang til dette. All informasjon som lagres i appen krypteres på din telefon og vil ikke sendes videre. Dette gjelder alle versjoner i iOS og versjoner fra og med 5.0 (lollipop) i Android. Kildekoden til appen ligger åpen på Github under brukeren rustelefonen: https://github.com/rustelefonen.";
 
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra(MainActivity.ID, user);
-        startActivity(intent);
+        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.AlertDialogCustom));
+        builder.setTitle("Personvernerklæring")
+                .setMessage(message)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        insertUser();
+
+                        Intent intent = new Intent(getBaseContext(), MainActivity.class);
+                        intent.putExtra(MainActivity.ID, user);
+                        startActivity(intent);
+                    }
+                })
+                .setNegativeButton("AVBRYT", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                })
+                .show();
+
+
     }
 
     private void insertUser() {

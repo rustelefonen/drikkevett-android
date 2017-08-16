@@ -116,12 +116,12 @@ public class BacDayAfterFragment extends Fragment {
             }
         });*/
 
-        ((MainActivity)getActivity()).getDayAfterFabEndButton().setOnClickListener(new View.OnClickListener() {
+        /*((MainActivity)getActivity()).getDayAfterFabEndButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showAlert();
             }
-        });
+        });*/
 
         // REGISTRATION
         beerBtnAfterReg_DA.setOnClickListener(new View.OnClickListener() {
@@ -186,19 +186,15 @@ public class BacDayAfterFragment extends Fragment {
     }
 
     private void displayBacCalcFABs(int state) {
-        ((MainActivity)getActivity()).getBacFabAddButton().setVisibility(state);
-        ((MainActivity)getActivity()).getBacFabRemoveButton().setVisibility(state);
+
     }
 
     private void displayPlanPartyFABs(int state) {
-        ((MainActivity)getActivity()).getAddButton().setVisibility(state);
-        ((MainActivity)getActivity()).getRemoveButton().setVisibility(state);
+
     }
 
     private void displayPlanPartyActionFABs(int state) {
-        ((MainActivity)getActivity()).getPlanpartyStartButton().setVisibility(state);
-        ((MainActivity)getActivity()).getPlanPartyEndEveningButton().setVisibility(state);
-        ((MainActivity)getActivity()).getPlanPartyEndDayAfterButton().setVisibility(state);
+
     }
 
 
@@ -275,12 +271,12 @@ public class BacDayAfterFragment extends Fragment {
     }
 
     private void planPartyRunning(){
-        ((MainActivity)getActivity()).getFloatingActionMenu().hideMenu(true);
+        //((MainActivity)getActivity()).getFloatingActionMenu().hideMenu(true);
         setVisualsPP();
     }
 
     private void dayAfterRunning(){
-
+/*
         FloatingActionMenu floatingActionMenu = ((MainActivity)getActivity()).getFloatingActionMenu();
         if (floatingActionMenu.isOpened()) {
             floatingActionMenu.close(true);
@@ -298,7 +294,7 @@ public class BacDayAfterFragment extends Fragment {
 
                 }
             }, 500);
-        } else /*if (floatingActionMenu.isMenuHidden())*/ {
+        } else*/ /*if (floatingActionMenu.isMenuHidden())*/ /*{
             ((MainActivity)getActivity()).getBacFabAddButton().setVisibility(View.GONE);
             ((MainActivity)getActivity()).getBacFabRemoveButton().setVisibility(View.GONE);
             ((MainActivity)getActivity()).getAddButton().setVisibility(View.GONE);
@@ -323,7 +319,7 @@ public class BacDayAfterFragment extends Fragment {
                     }
                 }
             }
-        }, 1000);
+        }, 1000);*/
 
 
 
@@ -966,7 +962,7 @@ public class BacDayAfterFragment extends Fragment {
             public void onClick(DialogInterface dialogInterface, int i) {
                 clearDBTables();
                 statusHandler(status);
-                ((MainActivity)getActivity()).getFloatingActionMenu().hideMenu(true);
+                //((MainActivity)getActivity()).getFloatingActionMenu().hideMenu(true);
             }
         }).setNegativeButton("Avbryt", new DialogInterface.OnClickListener() {
             @Override
@@ -1071,7 +1067,7 @@ public class BacDayAfterFragment extends Fragment {
         planPaRunning_LinLay = (LinearLayout) v.findViewById(R.id.planP_running_layout_DA);
         dayAfterRunning_LinLay = (LinearLayout) v.findViewById(R.id.dayAfterRunning_layout_ID);
 
-        floatingActionMenu = ((MainActivity)getActivity()).getFloatingActionMenu();
+        //floatingActionMenu = ((MainActivity)getActivity()).getFloatingActionMenu();
     }
 
     private boolean bacDayAfterIsSelected() {

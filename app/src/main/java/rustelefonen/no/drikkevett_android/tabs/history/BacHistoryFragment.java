@@ -66,9 +66,9 @@ public class BacHistoryFragment extends Fragment {
         if (selectedPageEvent.page == 4) {
             refreshFragment();
             displayHiddenCard();
-            ((MainActivity)getActivity()).getFloatingActionMenu().hideMenu(true);
+            //((MainActivity)getActivity()).getFloatingActionMenu().hideMenu(true);
         } else {
-            ((MainActivity)getActivity()).getFloatingActionMenu().close(true);
+            //((MainActivity)getActivity()).getFloatingActionMenu().close(true);
         }
     }
 

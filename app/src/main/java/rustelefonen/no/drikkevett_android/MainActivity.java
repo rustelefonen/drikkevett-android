@@ -68,15 +68,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     private ActionBarDrawerToggle actionBarDrawerToggle;
     public Toolbar toolbar;
     public ViewPager viewPager;
-    public FloatingActionMenu floatingActionMenu;
-    public FloatingActionButton addButton;
-    public FloatingActionButton removeButton;
-    public FloatingActionButton planpartyStartButton;
-    public FloatingActionButton planPartyEndEveningButton;
-    public FloatingActionButton planPartyEndDayAfterButton;
-    public FloatingActionButton bacFabAddButton;
-    public FloatingActionButton bacFabRemoveButton;
-    public FloatingActionButton dayAfterFabEndButton;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -290,7 +282,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.nvView);
 
-        floatingActionMenu = (FloatingActionMenu) findViewById(R.id.fab_menu_lol);
+        /*floatingActionMenu = (FloatingActionMenu) findViewById(R.id.fab_menu_lol);
 
         addButton = (FloatingActionButton) findViewById(R.id.add_button);
         removeButton = (FloatingActionButton) findViewById(R.id.subtract_button);
@@ -302,7 +294,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         planPartyEndEveningButton = (FloatingActionButton) findViewById(R.id.fab_plan_party_end_evening);
         planPartyEndDayAfterButton = (FloatingActionButton) findViewById(R.id.fab_plan_party_end_day_after);
 
-        dayAfterFabEndButton = (FloatingActionButton) findViewById(R.id.fab_day_after_end_day_after);
+        dayAfterFabEndButton = (FloatingActionButton) findViewById(R.id.fab_day_after_end_day_after);*/
     }
 
     private void launchGallery() {
@@ -470,41 +462,5 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
     public int getCurrentViewpagerPosition() {
         return currentViewpagerPosition;
-    }
-
-    public FloatingActionButton getAddButton() {
-        return addButton;
-    }
-
-    public FloatingActionButton getRemoveButton() {
-        return removeButton;
-    }
-
-    public FloatingActionButton getBacFabAddButton() {
-        return bacFabAddButton;
-    }
-
-    public FloatingActionButton getBacFabRemoveButton() {
-        return bacFabRemoveButton;
-    }
-
-    public FloatingActionButton getPlanpartyStartButton() {
-        return planpartyStartButton;
-    }
-
-    public FloatingActionButton getPlanPartyEndEveningButton() {
-        return planPartyEndEveningButton;
-    }
-
-    public FloatingActionButton getPlanPartyEndDayAfterButton() {
-        return planPartyEndDayAfterButton;
-    }
-
-    public FloatingActionButton getDayAfterFabEndButton() {
-        return dayAfterFabEndButton;
-    }
-
-    public FloatingActionMenu getFloatingActionMenu() {
-        return floatingActionMenu;
     }
 }

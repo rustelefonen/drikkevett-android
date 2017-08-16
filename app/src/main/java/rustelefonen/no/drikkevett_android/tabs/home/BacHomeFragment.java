@@ -1,6 +1,5 @@
 package rustelefonen.no.drikkevett_android.tabs.home;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -45,7 +44,6 @@ import rustelefonen.no.drikkevett_android.SelectedPageEvent;
 import rustelefonen.no.drikkevett_android.db.History;
 import rustelefonen.no.drikkevett_android.db.HistoryDao;
 import rustelefonen.no.drikkevett_android.db.User;
-import rustelefonen.no.drikkevett_android.goalreached.GoalReachedActivity;
 import rustelefonen.no.drikkevett_android.util.DateUtil;
 import rustelefonen.no.drikkevett_android.util.ImageUtil;
 import rustelefonen.no.drikkevett_android.util.NavigationUtil;
@@ -109,14 +107,13 @@ public class BacHomeFragment extends Fragment{
         fillPieChart();
         stylePieChart();
         setHasOptionsMenu(true);
-        fireGoalDateReachedView();
         return view;
     }
 
     @Subscribe
     public void getSelectedPage(SelectedPageEvent selectedPageEvent) {
         if (selectedPageEvent.page == 0) {
-            ((MainActivity)getActivity()).getFloatingActionMenu().hideMenu(true);
+            //((MainActivity)getActivity()).getFloatingActionMenu().hideMenu(true);
             if (goalPieChart != null) goalPieChart.animateY(1400, Easing.EasingOption.EaseInOutQuad);
         }
     }
@@ -261,7 +258,7 @@ public class BacHomeFragment extends Fragment{
         double underGoal = 0.0;
 
         for (History history : historyList) {
-            if (history.getHighestBAC() > goal) {       //tok større enn, uenig med iOS-versjonen
+            if (history.getHighestBAC() > goal) {
                 overGoal++;
             } else {
                 underGoal++;
@@ -341,16 +338,5 @@ public class BacHomeFragment extends Fragment{
         String nickname = user.getNickname();
         if (nickname == null) return;
         imageTextView.setText(nickname);
-    }
-
-    private void fireGoalDateReachedView(){
-        Date currentDate = new Date();
-        System.out.println("Current Dato: " + currentDate + "\nEr etter -> \nMålet ditt: " + user.getGoalDate());
-
-        if(currentDate.after(user.getGoalDate())){
-            Intent intent = new Intent(getContext(), GoalReachedActivity.class);
-            intent.putExtra(GoalReachedActivity.ID, user);
-            startActivity(intent);
-        }
     }
 }
