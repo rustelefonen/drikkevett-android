@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/backgroundColor">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="32dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/textColor"
+            android:textSize="32sp"
+            android:text="Alkoholpriser"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_marginBottom="32dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/textColor"
+            android:textSize="16sp"
+            android:text="Legg inn pris som ca. tilsvarer hva du betaler for hver enkel enhet.\nKlikk på &quot;Standard&quot;-knappen for gjennomsnittlige priser."
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_marginBottom="64dp"/>
+
+        <EditText
+            android:padding="8dp"
+            android:id="@+id/alco_reg_beer_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_action_beer"
+            android:hint="Oppgi øl-pris"
+            android:textColorHint="@color/greyTextColor"
+            android:textColor="@color/backgroundColor"
+            android:background="@color/textColor"
+            android:textSize="16sp"
+            android:layout_marginBottom="32dp"
+            android:inputType="numberPassword"/>
+
+        <EditText
+            android:padding="8dp"
+            android:id="@+id/alco_reg_wine_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_action_cup_1"
+            android:background="@color/textColor"
+            android:hint="Oppgi vin-pris"
+            android:textColorHint="@color/greyTextColor"
+            android:textSize="16sp"
+            android:layout_marginBottom="32dp"
+            android:inputType="numberPassword"/>
+
+        <EditText
+            android:padding="8dp"
+            android:id="@+id/alco_reg_drink_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_action_cup"
+            android:background="@color/textColor"
+            android:hint="Oppgi drink-pris"
+            android:textColorHint="@color/greyTextColor"
+            android:textSize="16sp"
+            android:layout_marginBottom="32dp"
+            android:inputType="numberPassword"/>
+        <EditText
+            android:padding="8dp"
+            android:id="@+id/alco_reg_shot_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_action_shot_glass"
+            android:background="@color/textColor"
+            android:hint="Oppgi shot-pris"
+            android:textColorHint="@color/greyTextColor"
+            android:textSize="16sp"
+            android:layout_marginBottom="32dp"
+            android:inputType="numberPassword"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Standard"
+                android:background="@color/greenSuper"
+                android:textColor="@color/textColor"
+                android:onClick="setDefault"/>
+        </LinearLayout>
+    </LinearLayout>
+</android.support.v4.widget.NestedScrollView>
