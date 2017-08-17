@@ -30,14 +30,14 @@
             android:text="Legg inn pris som ca. tilsvarer hva du betaler for hver enkel enhet.\nKlikk på &quot;Standard&quot;-knappen for gjennomsnittlige priser."
             android:layout_gravity="center"
             android:gravity="center"
-            android:layout_marginBottom="64dp"/>
+            android:layout_marginBottom="32dp"/>
 
         <EditText
             android:padding="8dp"
-            android:id="@+id/alco_reg_beer_edit_text"
+            android:id="@+id/intro_cost_edit_beer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_action_beer"
+            android:drawableRight="@drawable/ic_action_beer"
             android:hint="Oppgi øl-pris"
             android:textColorHint="@color/greyTextColor"
             android:textColor="@color/backgroundColor"
@@ -48,38 +48,41 @@
 
         <EditText
             android:padding="8dp"
-            android:id="@+id/alco_reg_wine_edit_text"
+            android:id="@+id/intro_cost_edit_wine"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_action_cup_1"
+            android:drawableRight="@drawable/ic_action_cup_1"
             android:background="@color/textColor"
             android:hint="Oppgi vin-pris"
             android:textColorHint="@color/greyTextColor"
+            android:textColor="@color/backgroundColor"
             android:textSize="16sp"
             android:layout_marginBottom="32dp"
             android:inputType="numberPassword"/>
 
         <EditText
             android:padding="8dp"
-            android:id="@+id/alco_reg_drink_edit_text"
+            android:id="@+id/intro_cost_edit_drink"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_action_cup"
+            android:drawableRight="@drawable/ic_action_cup"
             android:background="@color/textColor"
             android:hint="Oppgi drink-pris"
             android:textColorHint="@color/greyTextColor"
+            android:textColor="@color/backgroundColor"
             android:textSize="16sp"
             android:layout_marginBottom="32dp"
             android:inputType="numberPassword"/>
         <EditText
             android:padding="8dp"
-            android:id="@+id/alco_reg_shot_edit_text"
+            android:id="@+id/intro_cost_edit_shot"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_action_shot_glass"
+            android:drawableRight="@drawable/ic_action_shot_glass"
             android:background="@color/textColor"
             android:hint="Oppgi shot-pris"
             android:textColorHint="@color/greyTextColor"
+            android:textColor="@color/backgroundColor"
             android:textSize="16sp"
             android:layout_marginBottom="32dp"
             android:inputType="numberPassword"/>
@@ -87,15 +90,28 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:weightSum="100">
 
             <Button
-                android:layout_width="match_parent"
+                android:id="@+id/intro_cost_standard_button"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="Standard"
                 android:background="@color/greenSuper"
                 android:textColor="@color/textColor"
-                android:onClick="setDefault"/>
+                android:onClick="setDefault"
+                android:layout_weight="50"/>
+
+            <Button
+                android:id="@+id/intro_cost_edit_units"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Enheter"
+                android:background="@color/blueButton"
+                android:textColor="@color/textColor"
+                android:onClick="setDefault"
+                android:layout_weight="50"/>
         </LinearLayout>
     </LinearLayout>
 </android.support.v4.widget.NestedScrollView>

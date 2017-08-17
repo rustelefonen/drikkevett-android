@@ -49,12 +49,12 @@
             android:orientation="horizontal">
 
             <Button
+                android:id="@+id/intro_welcome_guide"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/textColor"
                 android:text="Veiledning"
-                android:background="@color/greenSuper"
-                android:onClick="guide"/>
+                android:background="@color/greenSuper" />
 
         </LinearLayout>
     </LinearLayout>

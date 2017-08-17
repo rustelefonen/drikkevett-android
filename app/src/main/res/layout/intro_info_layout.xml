@@ -31,13 +31,13 @@
             android:text="Legg inn en langsiktig makspromille du ønsker å holde deg under frem til en ønsket dato. Makspromillen tilsvarer et nivå av promille du ikke vil overstige i løpet av én kveld. NB! Promillekalkulatoren gir en indikasjon på din promille, og skal ikke brukes som en utregning for når du kan kjøre!"
             android:layout_gravity="center"
             android:gravity="center"
-            android:layout_marginBottom="64dp"/>
+            android:layout_marginBottom="32dp"/>
 
         <EditText
             android:id="@+id/goal_reg_bac_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_action_goals"
+            android:drawableRight="@drawable/ic_action_goals"
             android:hint="Oppgi en øvre promille"
             android:textColorHint="@color/greyTextColor"
             android:textColor="@color/backgroundColor"
@@ -53,7 +53,7 @@
             android:id="@+id/user_reg_nickname_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_action_ic_person_48px"
+            android:drawableRight="@drawable/ic_action_ic_person_48px"
             android:hint="Kallenavn"
             android:textColorHint="@color/greyTextColor"
             android:textColor="@color/backgroundColor"
@@ -94,7 +94,7 @@
             android:id="@+id/user_reg_weight_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_action_weight_tool"
+            android:drawableRight="@drawable/ic_action_weight_tool"
             android:background="@color/textColor"
             android:hint="Vekt"
             android:textColorHint="@color/greyTextColor"
@@ -106,7 +106,7 @@
         <Button
             android:id="@+id/user_reg_next_button"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="wrap_content"
             android:text="Kom i gang!"
             android:background="@color/blueButton"
             android:textColor="@color/textColor"

@@ -913,7 +913,7 @@ public class BacDayAfterFragment extends Fragment {
         Button dialogButton = (Button) dialog.findViewById(R.id.dialogButtonOK);
         Button dialogCancel = (Button) dialog.findViewById(R.id.dialogCancel);
 
-        // if button is clicked, close the custom dialog
+        // if guidanceButton is clicked, close the custom dialog
         dialogButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

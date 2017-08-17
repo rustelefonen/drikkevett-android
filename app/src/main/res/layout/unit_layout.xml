@@ -8,12 +8,75 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     android:fillViewport="true">
 
-    <ImageView
+    <include layout="@layout/toolbar"/>
+
+    <android.support.v4.view.ViewPager
+        android:padding="16dp"
+        android:id="@+id/unit_viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="150dp">
+    </android.support.v4.view.ViewPager>
+
+    <RadioGroup
+        android:id="@+id/unit_radio_group"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/beer"
+        android:orientation="horizontal"
         android:layout_gravity="center"
-        android:layout_marginBottom="32dp"/>
+        android:padding="2dp"
+        android:layout_marginBottom="16dp">
+        <RadioButton
+            android:id="@+id/unit_radio_one"
+            android:layout_weight="20"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:button="@android:color/transparent"
+            android:background="@drawable/page_indicator_background"/>
+
+        <LinearLayout
+            android:layout_width="5dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"/>
+
+        <RadioButton
+            android:id="@+id/unit_radio_two"
+            android:layout_weight="20"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:button="@android:color/transparent"
+            android:background="@drawable/page_indicator_background"/>
+
+        <LinearLayout
+            android:layout_width="5dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"/>
+
+        <RadioButton
+            android:id="@+id/unit_radio_three"
+            android:layout_weight="20"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:button="@android:color/transparent"
+            android:background="@drawable/page_indicator_background"/>
+
+        <LinearLayout
+            android:layout_width="5dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"/>
+
+        <RadioButton
+            android:id="@+id/unit_radio_four"
+            android:layout_weight="20"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:button="@android:color/transparent"
+            android:background="@drawable/page_indicator_background"/>
+
+        <LinearLayout
+            android:layout_width="5dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"/>
+    </RadioGroup>
 
     <LinearLayout
         android:layout_width="260dp"
@@ -31,6 +94,7 @@
             android:textColor="@color/textColor"
             android:layout_weight="50"/>
         <TextView
+            android:id="@+id/unit_percent_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="4,5%"
@@ -39,10 +103,11 @@
             android:layout_weight="50"/>
     </LinearLayout>
     <SeekBar
+        android:id="@+id/unit_percent_seek_bar"
         android:layout_width="260dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:max="1000"
+        android:max="959"
         android:layout_marginBottom="16dp"/>
 
     <LinearLayout
@@ -61,6 +126,7 @@
             android:textColor="@color/textColor"
             android:layout_weight="50"/>
         <TextView
+            android:id="@+id/unit_amount_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="50 cl"
@@ -69,13 +135,15 @@
             android:layout_weight="50"/>
     </LinearLayout>
     <SeekBar
+        android:id="@+id/unit_amount_seek_bar"
         android:layout_width="260dp"
         android:layout_gravity="center"
         android:layout_height="wrap_content"
-        android:max="1000"
+        android:max="99"
         android:layout_marginBottom="16dp"/>
 
     <Button
+        android:id="@+id/unit_standard_button"
         android:layout_width="260dp"
         android:layout_gravity="center"
         android:layout_height="wrap_content"

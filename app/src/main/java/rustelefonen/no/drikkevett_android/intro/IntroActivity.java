@@ -25,10 +25,13 @@ public class IntroActivity extends AppCompatActivity implements ViewPager.OnPage
         viewPager = (ViewPager) findViewById(R.id.intro_viewpager);
         radioGroup = (RadioGroup) findViewById(R.id.intro_radio_group);
 
+
         viewPager.setAdapter(new IntroViewPagerAdapter(getSupportFragmentManager()));
 
         viewPager.addOnPageChangeListener(this);
         radioGroup.setOnCheckedChangeListener(this);
+
+        radioGroup.check(radioGroup.getChildAt(0).getId());
     }
 
     @Override

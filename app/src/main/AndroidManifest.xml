@@ -102,6 +102,8 @@
             android:name=".ContactActivity"
             android:screenOrientation="portrait"
             android:configChanges="orientation|keyboardHidden"/>
+        <activity android:name=".unit.UnitEditActivity"
+            android:label="Enheter"/>
         <receiver android:name=".BacWidgetProvider">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
