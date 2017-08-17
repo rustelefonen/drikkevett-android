@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/backgroundColor"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    android:fillViewport="true">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/beer"
+        android:layout_gravity="center"
+        android:layout_marginBottom="32dp"/>
+
+    <LinearLayout
+        android:layout_width="260dp"
+        android:layout_gravity="center"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="100"
+        android:layout_marginBottom="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Alkoholprosent:"
+            android:gravity="left"
+            android:textColor="@color/textColor"
+            android:layout_weight="50"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="4,5%"
+            android:gravity="right"
+            android:textColor="@color/textColor"
+            android:layout_weight="50"/>
+    </LinearLayout>
+    <SeekBar
+        android:layout_width="260dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:max="1000"
+        android:layout_marginBottom="16dp"/>
+
+    <LinearLayout
+        android:layout_width="260dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="horizontal"
+        android:weightSum="100"
+        android:layout_marginBottom="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Enhetsmengde:"
+            android:gravity="left"
+            android:textColor="@color/textColor"
+            android:layout_weight="50"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="50 cl"
+            android:gravity="right"
+            android:textColor="@color/textColor"
+            android:layout_weight="50"/>
+    </LinearLayout>
+    <SeekBar
+        android:layout_width="260dp"
+        android:layout_gravity="center"
+        android:layout_height="wrap_content"
+        android:max="1000"
+        android:layout_marginBottom="16dp"/>
+
+    <Button
+        android:layout_width="260dp"
+        android:layout_gravity="center"
+        android:layout_height="wrap_content"
+        android:text="Standard"
+        android:background="@color/greenSuper"
+        android:textColor="@color/textColor"
+        android:layout_marginBottom="16dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Tips:\n1 l = dl = 100 cl\n1 halvliter = 50 cl"
+        android:textAlignment="center"
+        android:textColor="@color/textColor"/>
+</LinearLayout>
