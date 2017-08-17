@@ -45,6 +45,7 @@ public class BacCalcFragment extends Fragment implements ViewPager.OnPageChangeL
 
     private static final String PER_MILLE = "\u2030";
 
+    public TextView bacLabel;
     public TextView labelHours;
     public TextView labelBeerNrUnits;
     public TextView labelWineNrUnits;
@@ -56,7 +57,6 @@ public class BacCalcFragment extends Fragment implements ViewPager.OnPageChangeL
     public Button removeButton;
 
     private SeekBar seekBar;
-    public PieChart pieChart;
     public ViewPager beerScroll;
     public RadioGroup pageIndicatorGroup;
 
@@ -113,12 +113,11 @@ public class BacCalcFragment extends Fragment implements ViewPager.OnPageChangeL
 
         double bac = BacUtility.calculateBac(beerUnits, wineUnits, drinkUnits, shotUnits, hours, gender, weight);
 
-        pieChart.setCenterText(new DecimalFormat("#.##").format(bac) + PER_MILLE);
-        pieChart.setCenterTextColor(BacUtility.getQuoteTextColorBy(bac));
+        String formattedBac = new DecimalFormat("#.##").format(bac) + PER_MILLE;
+        bacLabel.setText(formattedBac);
+        bacLabel.setTextColor(BacUtility.getQuoteTextColorBy(bac));
         labelQuotes.setText(BacUtility.getQuoteTextBy(bac));
         labelQuotes.setTextColor(BacUtility.getQuoteTextColorBy(bac));
-
-        pieChart.animateY(0, Easing.EasingOption.EaseInOutQuad);
     }
 
     private void initWidgets(View view){
@@ -129,7 +128,7 @@ public class BacCalcFragment extends Fragment implements ViewPager.OnPageChangeL
         labelWineNrUnits = (TextView) view.findViewById(R.id.textViewWineUnits);
         labelDrinkNrUnits = (TextView) view.findViewById(R.id.textViewDrinkUnits);
         labelShotNrUnits = (TextView) view.findViewById(R.id.textViewShotUnits);
-        pieChart = (PieChart) view.findViewById(R.id.pie_chart_bac_calc);
+        bacLabel = (TextView) view.findViewById(R.id.bac_calc_bac_label);
         beerScroll = (ViewPager) view.findViewById(R.id.beer_scroll);
         labelQuotes = (TextView) view.findViewById(R.id.text_view_quotes);
         addButton = (Button) view.findViewById(R.id.bac_calc_add_button);
@@ -148,65 +147,12 @@ public class BacCalcFragment extends Fragment implements ViewPager.OnPageChangeL
         beerScroll.setAdapter(new BeerScrollAdapter(this.getChildFragmentManager()));
         beerScroll.setCurrentItem(0);
         pageIndicatorGroup.check(pageIndicatorGroup.getChildAt(0).getId());
-        fillPieChart();
-        stylePieChart();
         labelBeerNrUnits.setText("0");
         labelWineNrUnits.setText("0");
         labelDrinkNrUnits.setText("0");
         labelShotNrUnits.setText("0");
 
         updateBac();
-    }
-
-
-    private void fillPieChart() {
-        int beerUnits = tryParseInt(labelBeerNrUnits.getText().toString());
-        int wineUnits = tryParseInt(labelWineNrUnits.getText().toString());
-        int drinkUnits = tryParseInt(labelDrinkNrUnits.getText().toString());
-        int shotUnits = tryParseInt(labelShotNrUnits.getText().toString());
-
-        ArrayList<Entry> entries = new ArrayList<>();
-
-        entries.add(new Entry((float) beerUnits, 0));
-        entries.add(new Entry((float) wineUnits, 1));
-        entries.add(new Entry((float) drinkUnits, 2));
-        entries.add(new Entry((float) shotUnits, 3));
-
-        PieDataSet dataset = new PieDataSet(entries, "# of Calls");
-        dataset.setDrawValues(false);
-        dataset.setColors(getColors());
-
-        ArrayList<String> labels = new ArrayList<>();
-
-        for (int i = 0; i < 4; i++) labels.add("");
-
-        PieData data = new PieData(labels, dataset); // initialize Piedata
-        pieChart.setData(data);
-    }
-
-    private void stylePieChart() {
-        pieChart.setCenterText("0.0" + PER_MILLE);
-        pieChart.setDrawHoleEnabled(true);
-        pieChart.setHoleRadius(90f);
-        pieChart.setHoleColor(Color.TRANSPARENT);
-        pieChart.setCenterTextRadiusPercent(100f);
-        pieChart.setTransparentCircleRadius(95f);
-        pieChart.setDescription("");
-        pieChart.setDrawSliceText(false);
-        pieChart.getLegend().setEnabled(false);
-        pieChart.setRotationEnabled(false);
-        pieChart.setDrawSliceText(false);
-        pieChart.setCenterTextSize(27.0f);
-        pieChart.setCenterTextColor(Color.parseColor("#FFFFFF"));
-        pieChart.animateY(1400, Easing.EasingOption.EaseInOutQuad);
-    }
-
-    private int[] getColors() {
-        return new int[]{
-                ContextCompat.getColor(getContext(), R.color.beerColor),
-                ContextCompat.getColor(getContext(), R.color.wineColor),
-                ContextCompat.getColor(getContext(), R.color.drinkColor),
-                ContextCompat.getColor(getContext(), R.color.shotColor)};
     }
 
     private void removeAddedBeverages() {
@@ -214,12 +160,14 @@ public class BacCalcFragment extends Fragment implements ViewPager.OnPageChangeL
         labelWineNrUnits.setText("0");
         labelDrinkNrUnits.setText("0");
         labelShotNrUnits.setText("0");
+
+        seekBar.setProgress(0);
+        labelHours.setText("Promillen om 1 time");
+        updateBac();
     }
 
     private void refreshFragment() {
         updateBac();
-        fillPieChart();
-        pieChart.animateY(1400, Easing.EasingOption.EaseInOutQuad);
     }
 
     @Override
@@ -250,6 +198,7 @@ public class BacCalcFragment extends Fragment implements ViewPager.OnPageChangeL
         int hours = i + 1;
         String formattedString = hours == 1 ? "Promillen om " + hours + " time" : "Promillen om " + hours + " timer";
         labelHours.setText(formattedString);
+        updateBac();
     }
 
     @Override
@@ -257,9 +206,7 @@ public class BacCalcFragment extends Fragment implements ViewPager.OnPageChangeL
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
-        updateBac();
-        fillPieChart();
-        pieChart.animateY(1400, Easing.EasingOption.EaseInOutQuad);
+
     }
 
     @Override
@@ -303,8 +250,6 @@ public class BacCalcFragment extends Fragment implements ViewPager.OnPageChangeL
 
             if (wasUpdated) {
                 updateBac();
-                fillPieChart();
-                pieChart.animateY(1400, Easing.EasingOption.EaseInOutQuad);
             }
         }
         else if (v.getId() == R.id.bac_calc_remove_button) {
@@ -346,8 +291,6 @@ public class BacCalcFragment extends Fragment implements ViewPager.OnPageChangeL
 
             if (wasUpdated) {
                 updateBac();
-                fillPieChart();
-                pieChart.animateY(1400, Easing.EasingOption.EaseInOutQuad);
             }
         }
     }

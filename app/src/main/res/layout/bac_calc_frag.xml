@@ -20,335 +20,36 @@
                 card_view:cardBackgroundColor="@color/cardColor"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/card_one_bacCALC"
-                card_view:cardUseCompatPadding="true"
-                card_view:cardElevation="4dp">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingTop="15dp"
-                    >
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center"
-                        >
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            >
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:orientation="vertical"
-                                android:layout_weight="25">
-                                <TextView
-                                    android:textColor="@color/textColor"
-                                    android:text="0"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:id="@+id/textViewBeerUnits"
-                                    android:gravity="center"
-                                    android:layout_gravity="center"
-                                    android:textSize="32sp"
-                                    android:minWidth="75dp"
-                                    />
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:textColor="@color/greyTextColor"
-                                    android:layout_gravity="center"
-                                    android:text="Øl"
-                                    android:textSize="14dp"
-                                    android:minWidth="75dp"
-                                    android:textAlignment="center"
-                                    />
-                                <LinearLayout
-                                    android:layout_marginTop="8dp"
-                                    android:layout_width="10dp"
-                                    android:layout_height="3dp"
-                                    android:layout_gravity="center"
-                                    android:background="@color/beerColor"/>
-
-                            </LinearLayout>
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="25"
-                                android:orientation="vertical">
-
-                                <TextView
-                                    android:textColor="@color/textColor"
-                                    android:text="0"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:id="@+id/textViewWineUnits"
-                                    android:gravity="center"
-                                    android:layout_gravity="center"
-                                    android:textSize="32sp"
-                                    android:minWidth="75dp"
-                                    android:paddingTop="5dp"
-                                    />
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center"
-                                    android:text="Vin"
-                                    android:textColor="@color/greyTextColor"
-                                    android:textSize="14dp"
-                                    android:minWidth="75dp"
-                                    android:textAlignment="center"
-                                    />
-                                <LinearLayout
-                                    android:layout_marginTop="8dp"
-                                    android:layout_width="10dp"
-                                    android:layout_height="3dp"
-                                    android:layout_gravity="center"
-                                    android:background="@color/wineColor"/>
-                            </LinearLayout>
-                        </LinearLayout>
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical">
-                            <com.github.mikephil.charting.charts.PieChart
-                                android:padding="16dp"
-                                android:layout_width="175dp"
-                                android:layout_height="175dp"
-                                android:id="@+id/pie_chart_bac_calc">
-                            </com.github.mikephil.charting.charts.PieChart>
-
-                        </LinearLayout>
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            >
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="25"
-                                android:orientation="vertical">
-                                <TextView
-                                    android:textColor="@color/textColor"
-                                    android:text="0"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:id="@+id/textViewDrinkUnits"
-                                    android:gravity="center"
-                                    android:layout_gravity="center"
-                                    android:textSize="32sp"
-                                    android:minWidth="75dp"
-                                    />
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:textColor="@color/greyTextColor"
-                                    android:layout_gravity="center"
-                                    android:text="Drink"
-                                    android:textSize="14dp"
-                                    android:minWidth="75dp"
-                                    android:textAlignment="center"
-                                    />
-                                <LinearLayout
-                                    android:layout_marginTop="8dp"
-                                    android:layout_width="10dp"
-                                    android:layout_height="3dp"
-                                    android:layout_gravity="center"
-                                    android:background="@color/drinkColor"/>
-                            </LinearLayout>
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="25"
-                                android:orientation="vertical">
-
-                                <TextView
-                                    android:textColor="@color/textColor"
-                                    android:text="0"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:id="@+id/textViewShotUnits"
-                                    android:layout_gravity="center"
-                                    android:gravity="center"
-                                    android:textSize="32sp"
-                                    android:minWidth="75dp"
-                                    android:paddingTop="5dp"
-                                    />
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:textColor="@color/greyTextColor"
-                                    android:layout_gravity="center"
-                                    android:text="Shot"
-                                    android:textSize="14dp"
-                                    android:minWidth="75dp"
-                                    android:textAlignment="center"
-                                    />
-                                <LinearLayout
-                                    android:layout_marginTop="8dp"
-                                    android:layout_width="10dp"
-                                    android:layout_height="3dp"
-                                    android:layout_gravity="center"
-                                    android:background="@color/shotColor"/>
-                            </LinearLayout>
-                        </LinearLayout>
-                    </LinearLayout>
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center"
-                        >
-                        <TextView
-                            android:text="Kos deg"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/text_view_quotes"
-                            android:gravity="center"
-                            android:textColor="@color/textColor"
-                            android:textSize="16sp"
-                            android:textAlignment="center"
-                            android:maxWidth="175dp"
-                            android:minHeight="65dp"
-                            />
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-
-            </android.support.v7.widget.CardView>
-
-            <android.support.v7.widget.CardView
-                card_view:cardBackgroundColor="@color/cardColor"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/card_two_bacCALC"
-                card_view:cardUseCompatPadding="true"
-                card_view:cardElevation="4dp">
-
-                    <LinearLayout
-                        android:id="@+id/view_pager_scroller"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:layout_below="@+id/pie_chart_bac_calc"
-                        android:padding="20dp"
-                        >
-                        <android.support.v4.view.ViewPager
-                            android:padding="16dp"
-                            android:id="@+id/beer_scroll"
-                            android:layout_width="match_parent"
-                            android:layout_height="150dp"
-                            >
-                        </android.support.v4.view.ViewPager>
-
-                        <RadioGroup
-                            android:id="@+id/page_indicator_radio"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:layout_gravity="center"
-                            android:padding="2dp">
-                            <RadioButton
-                                android:id="@+id/radio_one"
-                                android:layout_weight="20"
-                                android:layout_width="10dp"
-                                android:layout_height="10dp"
-                                android:button="@android:color/transparent"
-                                android:background="@drawable/page_indicator_background"/>
-
-                            <LinearLayout
-                                android:layout_width="5dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="5"/>
-
-                            <RadioButton
-                                android:id="@+id/radio_two"
-                                android:layout_weight="20"
-                                android:layout_width="10dp"
-                                android:layout_height="10dp"
-                                android:button="@android:color/transparent"
-                                android:background="@drawable/page_indicator_background"/>
-
-                            <LinearLayout
-                                android:layout_width="5dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="5"/>
-
-                            <RadioButton
-                                android:id="@+id/radio_three"
-                                android:layout_weight="20"
-                                android:layout_width="10dp"
-                                android:layout_height="10dp"
-                                android:button="@android:color/transparent"
-                                android:background="@drawable/page_indicator_background"/>
-
-                            <LinearLayout
-                                android:layout_width="5dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="5"/>
-
-                            <RadioButton
-                                android:id="@+id/radio_four"
-                                android:layout_weight="20"
-                                android:layout_width="10dp"
-                                android:layout_height="10dp"
-                                android:button="@android:color/transparent"
-                                android:background="@drawable/page_indicator_background"/>
-
-                            <LinearLayout
-                                android:layout_width="5dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="5"/>
-                        </RadioGroup>
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:layout_marginTop="8dp"
-                            android:weightSum="1.0">
-
-                            <Button
-                                android:id="@+id/bac_calc_remove_button"
-                                android:layout_width="0dip"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="0.5"
-                                android:text="Fjern"
-                                android:textColor="@color/textColor"
-                                android:foreground="?android:selectableItemBackground"
-                                android:background="#0000" />
-
-                            <Button
-                                android:id="@+id/bac_calc_add_button"
-                                android:layout_width="0dip"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="0.5"
-                                android:text="Legg til"
-                                android:textColor="@color/textColor"
-                                android:foreground="?android:selectableItemBackground"
-                                android:background="#0000" />
-
-                        </LinearLayout>
-                    </LinearLayout>
-            </android.support.v7.widget.CardView>
-
-            <android.support.v7.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                card_view:cardUseCompatPadding="true"
                 card_view:cardElevation="4dp"
-                card_view:cardBackgroundColor="@color/cardColor">
+                android:layout_marginBottom="4dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginRight="4dp"
+                android:layout_marginLeft="4dp"
+                >
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    >
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="0,0"
+                        android:textColor="@color/textColor"
+                        android:textAlignment="center"
+                        android:textSize="48sp"
+                        android:id="@+id/bac_calc_bac_label"/>
+                    <TextView
+                        android:text="Kos deg"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/text_view_quotes"
+                        android:textColor="@color/textColor"
+                        android:gravity="center"
+                        android:textSize="16sp"
+                        android:textAlignment="center"
+                        android:minHeight="80dp"
+                        />
                     <TextView
                         android:textColor="@color/textColor"
                         android:text="Promillen om 1 time"
@@ -367,7 +68,257 @@
                         android:max="23"
                         />
                 </LinearLayout>
+            </android.support.v7.widget.CardView>
 
+            <android.support.v7.widget.CardView
+                card_view:cardBackgroundColor="@color/cardColor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/card_two_bacCALC"
+                card_view:cardElevation="4dp"
+                android:layout_marginBottom="4dp"
+                android:layout_marginRight="4dp"
+                android:layout_marginLeft="4dp">
+
+                <LinearLayout
+                    android:id="@+id/view_pager_scroller"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_below="@+id/pie_chart_bac_calc"
+                    android:padding="20dp"
+                    >
+                    <android.support.v4.view.ViewPager
+                        android:padding="16dp"
+                        android:id="@+id/beer_scroll"
+                        android:layout_width="match_parent"
+                        android:layout_height="150dp"
+                        >
+                    </android.support.v4.view.ViewPager>
+
+                    <RadioGroup
+                        android:id="@+id/page_indicator_radio"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_gravity="center"
+                        android:padding="2dp">
+                        <RadioButton
+                            android:id="@+id/radio_one"
+                            android:layout_weight="20"
+                            android:layout_width="10dp"
+                            android:layout_height="10dp"
+                            android:button="@android:color/transparent"
+                            android:background="@drawable/page_indicator_background"/>
+
+                        <LinearLayout
+                            android:layout_width="5dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="5"/>
+
+                        <RadioButton
+                            android:id="@+id/radio_two"
+                            android:layout_weight="20"
+                            android:layout_width="10dp"
+                            android:layout_height="10dp"
+                            android:button="@android:color/transparent"
+                            android:background="@drawable/page_indicator_background"/>
+
+                        <LinearLayout
+                            android:layout_width="5dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="5"/>
+
+                        <RadioButton
+                            android:id="@+id/radio_three"
+                            android:layout_weight="20"
+                            android:layout_width="10dp"
+                            android:layout_height="10dp"
+                            android:button="@android:color/transparent"
+                            android:background="@drawable/page_indicator_background"/>
+
+                        <LinearLayout
+                            android:layout_width="5dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="5"/>
+
+                        <RadioButton
+                            android:id="@+id/radio_four"
+                            android:layout_weight="20"
+                            android:layout_width="10dp"
+                            android:layout_height="10dp"
+                            android:button="@android:color/transparent"
+                            android:background="@drawable/page_indicator_background"/>
+
+                        <LinearLayout
+                            android:layout_width="5dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="5"/>
+                    </RadioGroup>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="8dp"
+                        android:weightSum="1.0">
+
+                        <Button
+                            android:id="@+id/bac_calc_remove_button"
+                            android:layout_width="0dip"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.5"
+                            android:text="Fjern"
+                            android:textColor="@color/textColor"
+                            android:foreground="?android:selectableItemBackground"
+                            android:background="#0000" />
+
+                        <Button
+                            android:id="@+id/bac_calc_add_button"
+                            android:layout_width="0dip"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.5"
+                            android:text="Legg til"
+                            android:textColor="@color/textColor"
+                            android:foreground="?android:selectableItemBackground"
+                            android:background="#0000" />
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_weight="25">
+                            <TextView
+                                android:textColor="@color/textColor"
+                                android:text="0"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/textViewBeerUnits"
+                                android:gravity="center"
+                                android:layout_gravity="center"
+                                android:textSize="32sp"
+                                />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/greyTextColor"
+                                android:layout_gravity="center"
+                                android:text="Øl"
+                                android:textSize="14dp"
+                                android:textAlignment="center"
+                                />
+                            <LinearLayout
+                                android:layout_marginTop="8dp"
+                                android:layout_width="10dp"
+                                android:layout_height="3dp"
+                                android:layout_gravity="center"
+                                android:background="@color/beerColor"/>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="25"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:textColor="@color/textColor"
+                                android:text="0"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/textViewWineUnits"
+                                android:gravity="center"
+                                android:layout_gravity="center"
+                                android:textSize="32sp"
+                                />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="Vin"
+                                android:textColor="@color/greyTextColor"
+                                android:textSize="14dp"
+                                android:textAlignment="center"
+                                />
+                            <LinearLayout
+                                android:layout_marginTop="8dp"
+                                android:layout_width="10dp"
+                                android:layout_height="3dp"
+                                android:layout_gravity="center"
+                                android:background="@color/wineColor"/>
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="25"
+                            android:orientation="vertical">
+                            <TextView
+                                android:textColor="@color/textColor"
+                                android:text="0"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/textViewDrinkUnits"
+                                android:gravity="center"
+                                android:layout_gravity="center"
+                                android:textSize="32sp"
+                                />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/greyTextColor"
+                                android:layout_gravity="center"
+                                android:text="Drink"
+                                android:textSize="14dp"
+                                android:textAlignment="center"
+                                />
+                            <LinearLayout
+                                android:layout_marginTop="8dp"
+                                android:layout_width="10dp"
+                                android:layout_height="3dp"
+                                android:layout_gravity="center"
+                                android:background="@color/drinkColor"/>
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="25"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:textColor="@color/textColor"
+                                android:text="0"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/textViewShotUnits"
+                                android:layout_gravity="center"
+                                android:gravity="center"
+                                android:textSize="32sp"
+                                />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/greyTextColor"
+                                android:layout_gravity="center"
+                                android:text="Shot"
+                                android:textSize="14dp"
+                                android:textAlignment="center"
+                                />
+                            <LinearLayout
+                                android:layout_marginTop="8dp"
+                                android:layout_width="10dp"
+                                android:layout_height="3dp"
+                                android:layout_gravity="center"
+                                android:background="@color/shotColor"/>
+                        </LinearLayout>
+
+                    </LinearLayout>
+                </LinearLayout>
             </android.support.v7.widget.CardView>
         </LinearLayout>
 </android.support.v4.widget.NestedScrollView>
