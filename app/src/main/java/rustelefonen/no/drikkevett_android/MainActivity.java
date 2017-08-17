@@ -11,6 +11,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
@@ -67,13 +69,33 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     private NavigationView navigationView;
     private ActionBarDrawerToggle actionBarDrawerToggle;
     public Toolbar toolbar;
-    public ViewPager viewPager;
+    public NonSwipeableViewPager viewPager;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         initWidgets();
         setupToolbar();
         setupNavigationDrawer();
@@ -129,8 +151,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         ActionBar actionBar = getSupportActionBar();
         if (actionBar == null) return;
         String title = position == 0 ? "Hjem" : position == 1 ? "Promillekalkulator"
-                : position == 2 ? "Planlegg kvelden" : position == 3 ? "Dagen Derpå"
-                : position == 4 ? "Historikk" : "";
+                : position == 2 ? "Drikkeepisode" : position == 3 ? "Historikk" : "";
         actionBar.setTitle(title);
     }
 
@@ -281,20 +302,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.nvView);
-
-        /*floatingActionMenu = (FloatingActionMenu) findViewById(R.id.fab_menu_lol);
-
-        addButton = (FloatingActionButton) findViewById(R.id.add_button);
-        removeButton = (FloatingActionButton) findViewById(R.id.subtract_button);
-
-        bacFabAddButton = (FloatingActionButton) findViewById(R.id.bac_fab_add_button);
-        bacFabRemoveButton = (FloatingActionButton) findViewById(R.id.bac_fab_subtract_button);
-
-        planpartyStartButton = (FloatingActionButton) findViewById(R.id.fab_start_night_button);
-        planPartyEndEveningButton = (FloatingActionButton) findViewById(R.id.fab_plan_party_end_evening);
-        planPartyEndDayAfterButton = (FloatingActionButton) findViewById(R.id.fab_plan_party_end_day_after);
-
-        dayAfterFabEndButton = (FloatingActionButton) findViewById(R.id.fab_day_after_end_day_after);*/
     }
 
     private void launchGallery() {
@@ -443,15 +450,39 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     }
 
     private void setupViewpager() {
-        viewPager = (ViewPager) findViewById(R.id.container);
+        viewPager = (NonSwipeableViewPager) findViewById(R.id.container);
         viewPager.setAdapter(new SectionsPagerAdapter(getSupportFragmentManager()));
 
-        tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(viewPager);
+        BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
+        BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
 
-        setTabLayoutIcons();
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.bottom_nav_home:
+                        viewPager.setCurrentItem(0);
+                        break;
+                    case R.id.bottom_nav_bac_calc:
+                        viewPager.setCurrentItem(1);
+                        break;
+                    case R.id.bottom_nav_drink_episode:
+                        viewPager.setCurrentItem(2);
+                        break;
+                    case R.id.bottom_nav_history:
+                        viewPager.setCurrentItem(3);
+                }
+                return false;
+            }
+        });
+
+        //tabLayout = (TabLayout) findViewById(R.id.tabs);
+        //tabLayout.setupWithViewPager(viewPager);
+
+        //setTabLayoutIcons();
 
         viewPager.addOnPageChangeListener(this);
+
     }
 
     private void setupToolbar() {

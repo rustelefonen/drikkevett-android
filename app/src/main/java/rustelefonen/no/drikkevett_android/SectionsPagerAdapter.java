@@ -26,13 +26,12 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
             default: return new BacHomeFragment();
             case 1: return new BacCalcFragment();
             case 2: return new BacPlanPartyFragment();
-            case 3: return new BacDayAfterFragment();
-            case 4: return new BacHistoryFragment();
+            case 3: return new BacHistoryFragment();
         }
     }
 
     @Override
-    public int getCount() { return 5; }
+    public int getCount() { return 4; }
 
     @Override
     public CharSequence getPageTitle(int position) {

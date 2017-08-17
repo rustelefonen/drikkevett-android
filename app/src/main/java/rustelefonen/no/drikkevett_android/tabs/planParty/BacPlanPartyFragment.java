@@ -109,7 +109,6 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.bac_plan_party_frag, container, false);
-        EventBus.getDefault().register(this);
 
 
         planPartyDB = new PlanPartyDB(getContext());
