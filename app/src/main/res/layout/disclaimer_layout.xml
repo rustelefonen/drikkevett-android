@@ -34,6 +34,7 @@
             android:textColor="@color/textColor"/>
 
         <Button
+            android:id="@+id/intro_disclaimer_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="OK, skjønner"

@@ -94,6 +94,7 @@
             android:theme="@style/Theme.AppCompat.NoActionBar"
             android:screenOrientation="portrait"
             android:configChanges="orientation|keyboardHidden"/>
+        <activity android:name=".intro.PrivacyActivity"/>
         <activity android:name=".intro.IntroActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar"
             android:screenOrientation="portrait"
@@ -102,6 +103,7 @@
             android:name=".ContactActivity"
             android:screenOrientation="portrait"
             android:configChanges="orientation|keyboardHidden"/>
+        <activity android:name=".intro.DisclaimerActivity"/>
         <activity android:name=".unit.UnitEditActivity"
             android:label="Enheter"/>
         <receiver android:name=".BacWidgetProvider">

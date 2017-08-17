@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/backgroundColor">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="8dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="All informasjon du lagrer og legger til i appen vil kun registreres lokalt på din telefon. Informasjonen blir kryptert i henhold til telefonens krypteringsprogram. Kryptering er en matematisk metode som sørger for konfidensialitet ved at informasjon ikke kan leses av uvedkommende (https://www.datatilsynet.no/Sikkerhet-internkontroll/Kryptering/). Alle iOS-telefoner er kryptert så lenge det er satt en kode på telefonen."
+            android:textColor="@color/textColor"
+            android:layout_marginBottom="8dp"
+            android:autoLink="web"/>
+
+        <Button
+            android:id="@+id/intro_privacy_accept_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Aksepter"
+            android:background="@color/greenSuper"
+            android:textColor="@color/textColor"/>
+    </LinearLayout>
+
+
+
+</LinearLayout>

@@ -24,6 +24,7 @@
             android:layout_marginBottom="32dp"/>
 
         <TextView
+            android:id="@+id/intro_bac_quote"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/textColor"
@@ -34,7 +35,7 @@
             android:layout_marginBottom="32dp"/>
 
         <EditText
-            android:id="@+id/goal_reg_bac_edit_text"
+            android:id="@+id/intro_goal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawableRight="@drawable/ic_action_goals"
@@ -50,7 +51,7 @@
 
         <EditText
             android:padding="8dp"
-            android:id="@+id/user_reg_nickname_edit_text"
+            android:id="@+id/intro_nickname"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawableRight="@drawable/ic_action_ic_person_48px"
@@ -64,7 +65,7 @@
             android:scrollHorizontally="false"
             android:minLines="1"
             android:maxLength="25"
-            android:inputType="textEmailAddress|textEmailSubject"
+            android:inputType="textFilter"
             android:imeOptions="actionDone"
             android:windowSoftInputMode="adjustResize"/>
 
@@ -74,37 +75,41 @@
             android:orientation="horizontal"
             android:layout_marginBottom="32dp"
             android:background="@color/textColor"
-            android:padding="4dp">
+            android:padding="4dp"
+            android:weightSum="100">
+
+            <Spinner
+                android:id="@+id/intro_gender_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left|center"
+                android:layout_weight="95" />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_action_gender_symbol"
-                android:layout_gravity="left|center"/>
-
-            <Spinner
-                android:id="@+id/user_reg_gender_spinner"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right|center" />
+                android:layout_weight="5"
+                android:layout_gravity="right|center"/>
         </LinearLayout>
 
         <EditText
             android:padding="8dp"
-            android:id="@+id/user_reg_weight_edit_text"
+            android:id="@+id/intro_weight"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawableRight="@drawable/ic_action_weight_tool"
             android:background="@color/textColor"
             android:hint="Vekt"
             android:textColorHint="@color/greyTextColor"
+            android:textColor="@color/backgroundColor"
             android:textSize="16sp"
             android:layout_marginBottom="32dp"
             android:inputType="numberDecimal"
             android:windowSoftInputMode="adjustResize"/>
 
         <Button
-            android:id="@+id/user_reg_next_button"
+            android:id="@+id/intro_start_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Kom i gang!"

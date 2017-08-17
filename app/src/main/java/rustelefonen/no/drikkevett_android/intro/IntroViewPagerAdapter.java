@@ -14,22 +14,23 @@ import rustelefonen.no.drikkevett_android.intro.fragments.WelcomeFragment;
 
 public class IntroViewPagerAdapter extends FragmentPagerAdapter {
 
+    private Fragment[] fragments = new Fragment[3];
+
     public IntroViewPagerAdapter(FragmentManager fm) {
         super(fm);
+        fragments[0] = new WelcomeFragment();
+        fragments[1] = new CostFragment();
+        fragments[2] = new InfoFragment();
     }
 
     @Override
     public Fragment getItem(int position) {
-        switch(position){
-            default: return new WelcomeFragment();
-            case 1: return new CostFragment();
-            case 2: return new InfoFragment();
-        }
+        return fragments[position];
     }
 
     @Override
     public int getCount() {
-        return 3;
+        return fragments.length;
     }
 
     @Override

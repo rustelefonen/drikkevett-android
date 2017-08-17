@@ -29,6 +29,20 @@ public class BacUtility {
         else return "De aller fleste vil være døde ved promille over 4.";
     }
 
+    public static String getQuoteRegisterTextBy(double bac) {
+        if (bac < 0.2) return "Legg inn en langsiktig makspromille du ønsker å holde deg under. Makspromillen tilsvarer et promillenivå du ikke ønsker å gå over i løpet av én kveld/fest/drikkeepisode.";
+        else if (isBetween(bac, 0.2, 0.3)) return "Du merker så vidt at du har drukket.";
+        else if (isBetween(bac, 0.3, 0.4)) return "Du føler deg lett påvirket.";
+        else if (isBetween(bac, 0.4, 0.6)) return "De fleste kjenner seg avslappet og man blir mer pratsom.";
+        else if (isBetween(bac, 0.6, 0.8)) return "Lykkepromille: Hevet stemningsleie og en følelse av velbehag, men man blir også mer impulsiv, kritikkløs og risikovillig.";
+        else if (isBetween(bac, 0.8, 1.0)) return "Koordinasjon og balanse påvirkes. Drikker du mer enn dette vil de uønskede virkningene av alkoholen bli mer fremtredende enn de ønskede.";
+        else if (isBetween(bac, 1.0, 1.3)) return "Balansen blir dårligere, man snakker snøvlete, og kontroll med bevegelser forverres.";
+        else if (isBetween(bac, 1.3, 1.5)) return "Uønskede virkninger som kvalme, brekninger, tretthet og sløvhet øker. Mange blir også mer aggressive.";
+        else if (isBetween(bac, 1.5, 2.0)) return "Hukommelsen sliter, faren for blackout øker.";
+        else if (isBetween(bac, 2.0, 2.5)) return "Bevissthetsgraden senkes og man blir vanskelig å få kontakt med.";
+        else return "Bevisstløshet og pustehemning kan inntreffe.";
+    }
+
     public static int getQuoteTextColorBy(double bac) {
         if (bac < 0.8) return Color.rgb(26, 193, 73);
         else if (isBetween(bac, 0.8, 1.3)) return Color.rgb(255, 180, 10);
