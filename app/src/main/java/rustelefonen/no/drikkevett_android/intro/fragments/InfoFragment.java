@@ -131,8 +131,6 @@ public class InfoFragment extends Fragment implements NumberPicker.OnValueChange
 
             User user = ((IntroActivity)getActivity()).getUserWithCostValues();
 
-            System.out.println(user.getBeerPrice());
-
             NumberFormat format = NumberFormat.getInstance(Locale.FRANCE);
             Number number = null;
             try {

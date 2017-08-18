@@ -29,7 +29,11 @@
                     android:icon="@drawable/ic_action_coin"/>
                 <item
                     android:id="@+id/nav_third_fragment"
-                    android:title="Endre ditt mål"
+                    android:title="Endre prosent og mengder"
+                    android:icon="@drawable/ic_action_goals"/>
+                <item
+                    android:id="@+id/nav_sixth_fragment"
+                    android:title="Varsel om risikofylt alkoholbruk"
                     android:icon="@drawable/ic_action_goals"/>
             </group>
         </menu>

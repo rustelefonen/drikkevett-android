@@ -38,6 +38,7 @@
                     android:layout_marginBottom="32dp"/>
 
                 <TextView
+                    android:id="@+id/settings_goal_quotes"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/greyTextColor"
@@ -46,6 +47,21 @@
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:layout_marginBottom="64dp"/>
+
+                <EditText
+                    android:id="@+id/goal_settings_bac_edit_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/ic_action_goals"
+                    android:hint="Oppgi en øvre promille"
+                    android:textColorHint="@color/greyTextColor"
+                    android:textColor="@color/backgroundColor"
+                    android:background="@color/textColor"
+                    android:textSize="16sp"
+                    android:layout_marginBottom="32dp"
+                    android:inputType="numberDecimal"
+                    android:padding="8dp"
+                    android:focusable="false"/>
 
                 <EditText
                     android:id="@+id/user_settings_nickname_edit_text"
@@ -97,18 +113,6 @@
                     android:textSize="16sp"
                     android:layout_marginBottom="32dp"
                     android:inputType="numberDecimal"
-                    android:padding="8dp"/>
-                <EditText
-                    android:id="@+id/user_settings_age_edit_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:drawableLeft="@drawable/ic_action_events_calendar"
-                    android:background="@color/textColor"
-                    android:hint="Alder"
-                    android:textColorHint="@color/greyTextColor"
-                    android:textSize="16sp"
-                    android:layout_marginBottom="32dp"
-                    android:inputType="number"
                     android:padding="8dp"/>
                 <Button
                     android:id="@+id/user_settings_save_button"

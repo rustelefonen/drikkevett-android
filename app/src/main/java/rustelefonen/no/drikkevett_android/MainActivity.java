@@ -50,6 +50,7 @@ import rustelefonen.no.drikkevett_android.settings.AlcoholPricingSettingsActivit
 import rustelefonen.no.drikkevett_android.settings.GoalSettingsActivity;
 import rustelefonen.no.drikkevett_android.settings.UserSettingsActivity;
 import rustelefonen.no.drikkevett_android.tabs.home.SuperDao;
+import rustelefonen.no.drikkevett_android.unit.UnitEditActivity;
 import rustelefonen.no.drikkevett_android.util.ImageUtil;
 
 public class MainActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener {
@@ -76,26 +77,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         initWidgets();
         setupToolbar();
         setupNavigationDrawer();
@@ -247,13 +228,14 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
             intent = new Intent(this, AlcoholPricingSettingsActivity.class);
             intent.putExtra(AlcoholPricingSettingsActivity.ID, getUser());
         } else if (itemId == R.id.nav_third_fragment) {
-            intent = new Intent(this, GoalSettingsActivity.class);
-            intent.putExtra(GoalSettingsActivity.ID, getUser());
+            intent = new Intent(this, UnitEditActivity.class);
         } else if (itemId == R.id.nav_fourth_fragment) intent = new Intent(this, SourcesActivity.class);
         else if (itemId == R.id.nav_fifth_fragment) {
             intent = new Intent(this, Guidance.class);
         } else if (itemId == R.id.drawer_view_contact) {
             intent = new Intent(this, ContactActivity.class);
+        } else if (itemId == R.id.nav_sixth_fragment) {
+
         }
         if (intent != null) startActivity(intent);
     }
@@ -267,23 +249,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                         return true;
                     }
                 });
-    }
-
-    private void setTabLayoutIcons() {
-        TabLayout.Tab homeTab = tabLayout.getTabAt(FIRST_TAB_INDEX);
-        if (homeTab != null) homeTab.setIcon(R.drawable.ic_action_ic_home_white_24dp);
-
-        TabLayout.Tab calcTab = tabLayout.getTabAt(1);
-        if (calcTab != null) calcTab.setIcon(R.drawable.ic_action_ic_action_promilleikon1000000);
-
-        TabLayout.Tab planPartyTab = tabLayout.getTabAt(2);
-        if (planPartyTab != null) planPartyTab.setIcon(R.drawable.ic_action_chekclistasd);
-
-        TabLayout.Tab dayAfterTab = tabLayout.getTabAt(3);
-        if (dayAfterTab != null) dayAfterTab.setIcon(R.drawable.ic_action_ic_mood_bad_white_24dp);
-
-        TabLayout.Tab historyTab = tabLayout.getTabAt(4);
-        if (historyTab != null) historyTab.setIcon(R.drawable.ic_action_ic_history_black_24dp);
     }
 
     private void fetchUser() {
