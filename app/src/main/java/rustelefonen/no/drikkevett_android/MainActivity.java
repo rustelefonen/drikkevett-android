@@ -49,6 +49,7 @@ import rustelefonen.no.drikkevett_android.information.InformationCategoryActivit
 import rustelefonen.no.drikkevett_android.settings.AlcoholPricingSettingsActivity;
 import rustelefonen.no.drikkevett_android.settings.GoalSettingsActivity;
 import rustelefonen.no.drikkevett_android.settings.UserSettingsActivity;
+import rustelefonen.no.drikkevett_android.settings.WhoWarningActivity;
 import rustelefonen.no.drikkevett_android.tabs.home.SuperDao;
 import rustelefonen.no.drikkevett_android.unit.UnitEditActivity;
 import rustelefonen.no.drikkevett_android.util.ImageUtil;
@@ -235,7 +236,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         } else if (itemId == R.id.drawer_view_contact) {
             intent = new Intent(this, ContactActivity.class);
         } else if (itemId == R.id.nav_sixth_fragment) {
-
+            intent = new Intent(this, WhoWarningActivity.class);
         }
         if (intent != null) startActivity(intent);
     }

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/backgroundColor">
+
+    <include layout="@layout/toolbar"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/textColor"
+            android:text="I følge Verdens helseorganisasjon er det en helt klart forhøyet risiko for svært alvorlige helseskader om du drikker 14 alkoholenheter eller mer per uke for kvinner og 21 alkoholenheter eller mer per uke for menn."/>
+
+        <Button
+            android:id="@+id/who_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Les mer"
+            android:background="#0000"
+            android:textColor="@color/textColor"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/textColor"
+            android:text="Hvis du prøver å registrere flere enheter enn dette vil du få en pop-up i appen som advarer deg om risikofylt alkoholbruk. Du velger selv nedenfor om du ønsker dette eller ikke."
+            android:layout_marginBottom="16dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="100">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="50"
+                android:text="Varsel er skrudd på"
+                android:textColor="@color/textColor"/>
+            <Switch
+                android:id="@+id/who_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="50" />
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>

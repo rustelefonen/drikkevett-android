@@ -103,6 +103,7 @@
             android:name=".ContactActivity"
             android:screenOrientation="portrait"
             android:configChanges="orientation|keyboardHidden"/>
+        <activity android:name=".settings.WhoWarningActivity"/>
         <activity android:name=".intro.DisclaimerActivity"/>
         <activity android:name=".unit.UnitEditActivity"
             android:label="Enheter"/>
