@@ -86,6 +86,39 @@ public class Main {
         ToMany informationCategoryToInformation = informationCategory.addToMany(information, informationCategoryId);
         informationCategoryToInformation.setName("informationList");
 
+        Entity unit = schema.addEntity("Unit");
+        unit.addIdProperty();
+        unit.addStringProperty("unitType");
+        unit.addDateProperty("timestamp");
+        unit.implementsSerializable();
+
+        Entity newHistory = schema.addEntity("newHistory");
+        newHistory.addIdProperty();
+        newHistory.addIntProperty("beerCost");
+        newHistory.addIntProperty("wineCost");
+        newHistory.addIntProperty("drinkCost");
+        newHistory.addIntProperty("shotCost");
+
+        newHistory.addDoubleProperty("beerGrams");
+        newHistory.addDoubleProperty("wineGrams");
+        newHistory.addDoubleProperty("drinkGrams");
+        newHistory.addDoubleProperty("shotGrams");
+
+        newHistory.addIntProperty("beerPlannedUnitCount");
+        newHistory.addIntProperty("winePlannedUnitCount");
+        newHistory.addIntProperty("drinkPlannedUnitCount");
+        newHistory.addIntProperty("shotPlannedUnitCount");
+
+        newHistory.addDateProperty("beginDate");
+        newHistory.addDateProperty("endDate");
+        newHistory.addBooleanProperty("gender");
+        newHistory.addDoubleProperty("weight");
+
+        Property newHistoryId = unit.addLongProperty("historyId").notNull().getProperty();
+        ToMany newHistoryUnits = newHistory.addToMany(unit, newHistoryId);
+        newHistoryUnits.setName("units");
+
+
         DaoGenerator dg = new DaoGenerator();
         dg.generateAll(schema, "./app/src/main/java");
     }
