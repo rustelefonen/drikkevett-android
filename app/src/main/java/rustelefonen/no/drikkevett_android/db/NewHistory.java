@@ -8,7 +8,7 @@ import de.greenrobot.dao.DaoException;
 /**
  * Entity mapped to table "NEW_HISTORY".
  */
-public class newHistory {
+public class NewHistory {
 
     private Long id;
     private Integer beerCost;
@@ -32,18 +32,18 @@ public class newHistory {
     private transient DaoSession daoSession;
 
     /** Used for active entity operations. */
-    private transient newHistoryDao myDao;
+    private transient NewHistoryDao myDao;
 
     private List<Unit> units;
 
-    public newHistory() {
+    public NewHistory() {
     }
 
-    public newHistory(Long id) {
+    public NewHistory(Long id) {
         this.id = id;
     }
 
-    public newHistory(Long id, Integer beerCost, Integer wineCost, Integer drinkCost, Integer shotCost, Double beerGrams, Double wineGrams, Double drinkGrams, Double shotGrams, Integer beerPlannedUnitCount, Integer winePlannedUnitCount, Integer drinkPlannedUnitCount, Integer shotPlannedUnitCount, java.util.Date beginDate, java.util.Date endDate, Boolean gender, Double weight) {
+    public NewHistory(Long id, Integer beerCost, Integer wineCost, Integer drinkCost, Integer shotCost, Double beerGrams, Double wineGrams, Double drinkGrams, Double shotGrams, Integer beerPlannedUnitCount, Integer winePlannedUnitCount, Integer drinkPlannedUnitCount, Integer shotPlannedUnitCount, java.util.Date beginDate, java.util.Date endDate, Boolean gender, Double weight) {
         this.id = id;
         this.beerCost = beerCost;
         this.wineCost = wineCost;

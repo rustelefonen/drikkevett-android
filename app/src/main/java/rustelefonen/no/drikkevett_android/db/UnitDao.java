@@ -130,7 +130,7 @@ public class UnitDao extends AbstractDao<Unit, Long> {
         return true;
     }
     
-    /** Internal query to resolve the "units" to-many relationship of newHistory. */
+    /** Internal query to resolve the "units" to-many relationship of NewHistory. */
     public List<Unit> _queryNewHistory_Units(long historyId) {
         synchronized (this) {
             if (newHistory_UnitsQuery == null) {

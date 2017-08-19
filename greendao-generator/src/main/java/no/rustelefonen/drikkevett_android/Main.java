@@ -92,7 +92,7 @@ public class Main {
         unit.addDateProperty("timestamp");
         unit.implementsSerializable();
 
-        Entity newHistory = schema.addEntity("newHistory");
+        Entity newHistory = schema.addEntity("NewHistory");
         newHistory.addIdProperty();
         newHistory.addIntProperty("beerCost");
         newHistory.addIntProperty("wineCost");

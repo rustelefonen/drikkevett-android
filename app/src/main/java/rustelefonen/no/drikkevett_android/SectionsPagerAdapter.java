@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import rustelefonen.no.drikkevett_android.tabs.calc.BacCalcFragment;
 import rustelefonen.no.drikkevett_android.tabs.dayAfter.BacDayAfterFragment;
+import rustelefonen.no.drikkevett_android.tabs.drinkEpisode.DrinkEpisode;
 import rustelefonen.no.drikkevett_android.tabs.history.BacHistoryFragment;
 import rustelefonen.no.drikkevett_android.tabs.home.BacHomeFragment;
 import rustelefonen.no.drikkevett_android.tabs.planParty.BacPlanPartyFragment;
@@ -25,7 +26,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
         switch(position){
             default: return new BacHomeFragment();
             case 1: return new BacCalcFragment();
-            case 2: return new BacPlanPartyFragment();
+            case 2: return new DrinkEpisode();
             case 3: return new BacHistoryFragment();
         }
     }

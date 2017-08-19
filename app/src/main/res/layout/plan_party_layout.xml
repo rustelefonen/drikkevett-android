@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:background="@color/backgroundColor">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:id="@+id/layout_planPartyRunning_ID_PP">
+
+            <android.support.v7.widget.CardView
+                card_view:cardBackgroundColor="@color/cardColor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/card_two_plan_party"
+                card_view:cardUseCompatPadding="true"
+                card_view:cardElevation="4dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Planlegg kvelden din!"
+                        android:textColor="@color/textColor"
+                        android:textAlignment="center"/>
+                    <android.support.v4.view.ViewPager
+                        android:padding="16dp"
+                        android:id="@+id/plan_party_view_pager"
+                        android:layout_width="match_parent"
+                        android:layout_height="150dp">
+                    </android.support.v4.view.ViewPager>
+                    <RadioGroup
+                        android:id="@+id/plan_party_radio_group"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_gravity="center"
+                        android:padding="2dp"
+                        >
+                        <RadioButton
+                            android:id="@+id/plan_party_button_one"
+                            android:layout_weight="20"
+                            android:layout_width="10dp"
+                            android:layout_height="10dp"
+                            android:button="@android:color/transparent"
+                            android:background="@drawable/page_indicator_background"/>
+
+                        <LinearLayout
+                            android:layout_width="5dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="5"/>
+
+                        <RadioButton
+                            android:id="@+id/plan_party_button_two"
+                            android:layout_weight="20"
+                            android:layout_width="10dp"
+                            android:layout_height="10dp"
+                            android:button="@android:color/transparent"
+                            android:background="@drawable/page_indicator_background"/>
+
+                        <LinearLayout
+                            android:layout_width="5dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="5"/>
+
+                        <RadioButton
+                            android:id="@+id/plan_party_button_three"
+                            android:layout_weight="20"
+                            android:layout_width="10dp"
+                            android:layout_height="10dp"
+                            android:button="@android:color/transparent"
+                            android:background="@drawable/page_indicator_background"/>
+
+                        <LinearLayout
+                            android:layout_width="5dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="5"/>
+
+                        <RadioButton
+                            android:id="@+id/plan_party_button_four"
+                            android:layout_weight="20"
+                            android:layout_width="10dp"
+                            android:layout_height="10dp"
+                            android:button="@android:color/transparent"
+                            android:background="@drawable/page_indicator_background"/>
+
+                        <LinearLayout
+                            android:layout_width="5dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="5"/>
+                    </RadioGroup>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <Button
+                            android:id="@+id/plan_party_remove_button"
+                            android:layout_width="0dip"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.5"
+                            android:text="Fjern"
+                            android:textColor="@color/textColor"
+                            android:foreground="?android:selectableItemBackground"
+                            android:background="#0000" />
+
+                        <Button
+                            android:id="@+id/plan_party_add_button"
+                            android:layout_width="0dip"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.5"
+                            android:text="Legg til"
+                            android:textColor="@color/textColor"
+                            android:foreground="?android:selectableItemBackground"
+                            android:background="#0000" />
+                    </LinearLayout>
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                card_view:cardBackgroundColor="@color/cardColor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/card_one_plan_party"
+                card_view:cardUseCompatPadding="true"
+                card_view:cardElevation="4dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="16dp">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_weight="25">
+                            <TextView
+                                android:textColor="@color/textColor"
+                                android:text="0"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/plan_party_beer_units"
+                                android:gravity="center"
+                                android:layout_gravity="center"
+                                android:textSize="32sp"
+                                />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/greyTextColor"
+                                android:layout_gravity="center"
+                                android:text="Øl"
+                                android:textSize="14dp"
+                                android:textAlignment="center"
+                                />
+                            <LinearLayout
+                                android:layout_marginTop="8dp"
+                                android:layout_width="10dp"
+                                android:layout_height="3dp"
+                                android:layout_gravity="center"
+                                android:background="@color/beerColor"/>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="25"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:textColor="@color/textColor"
+                                android:text="0"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/plan_party_wine_units"
+                                android:gravity="center"
+                                android:layout_gravity="center"
+                                android:textSize="32sp"
+                                />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="Vin"
+                                android:textColor="@color/greyTextColor"
+                                android:textSize="14dp"
+                                android:textAlignment="center"
+                                />
+                            <LinearLayout
+                                android:layout_marginTop="8dp"
+                                android:layout_width="10dp"
+                                android:layout_height="3dp"
+                                android:layout_gravity="center"
+                                android:background="@color/wineColor"/>
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="25"
+                            android:orientation="vertical">
+                            <TextView
+                                android:textColor="@color/textColor"
+                                android:text="0"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/plan_party_drink_units"
+                                android:gravity="center"
+                                android:layout_gravity="center"
+                                android:textSize="32sp"
+                                />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/greyTextColor"
+                                android:layout_gravity="center"
+                                android:text="Drink"
+                                android:textSize="14dp"
+                                android:textAlignment="center"
+                                />
+                            <LinearLayout
+                                android:layout_marginTop="8dp"
+                                android:layout_width="10dp"
+                                android:layout_height="3dp"
+                                android:layout_gravity="center"
+                                android:background="@color/drinkColor"/>
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="25"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:textColor="@color/textColor"
+                                android:text="0"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/plan_party_shot_units"
+                                android:layout_gravity="center"
+                                android:gravity="center"
+                                android:textSize="32sp"
+                                />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/greyTextColor"
+                                android:layout_gravity="center"
+                                android:text="Shot"
+                                android:textSize="14dp"
+                                android:textAlignment="center"
+                                />
+                            <LinearLayout
+                                android:layout_marginTop="8dp"
+                                android:layout_width="10dp"
+                                android:layout_height="3dp"
+                                android:layout_gravity="center"
+                                android:background="@color/shotColor"/>
+                        </LinearLayout>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="100"
+                        android:layout_marginBottom="16dp">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="50"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/plan_party_expected_bac"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="0,00"
+                                android:textColor="@color/textColor"
+                                android:layout_gravity="center"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Forventet promille"
+                                android:textColor="@color/textColor"
+                                android:layout_gravity="center"/>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="50"
+                            android:orientation="vertical"
+                            android:layout_marginBottom="16dp">
+
+                            <TextView
+                                android:id="@+id/plan_party_expected_cost"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="0,-"
+                                android:textColor="@color/textColor"
+                                android:layout_gravity="center"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Forventet kostnad"
+                                android:textColor="@color/textColor"
+                                android:layout_gravity="center"/>
+
+                        </LinearLayout>
+                    </LinearLayout>
+                    <Button
+                        android:id="@+id/plan_party_start_evening"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="Start kvelden"
+                        android:textColor="@color/textColor"
+                        android:background="@color/greenSuper"/>
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+        </LinearLayout>
+    </LinearLayout>
+</android.support.v4.widget.NestedScrollView>
