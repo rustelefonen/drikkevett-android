@@ -44,7 +44,7 @@
                 android:id="@+id/container"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+                app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
 
 
@@ -61,7 +61,7 @@
             app:itemIconTint="#000000"
             app:theme="@style/Widget.Design.NavigationView.Test"
             app:headerLayout="@layout/nav_header"
-            app:menu="@menu/drawer_view" />
+            app:menu="@menu/drawer_view"/>
 
 
 

@@ -1,12 +1,12 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 23
+    compileSdkVersion 25
     buildToolsVersion '25.0.0'
     defaultConfig {
         applicationId "rustelefonen.no.drikkevett_android"
         minSdkVersion 15
-        targetSdkVersion 23
+        targetSdkVersion 25
         versionCode 4
         versionName "1.3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -30,32 +30,16 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
-    //Charts
-    
-
-    //GreenDAO
-    compile group: 'de.greenrobot', name: 'greendao', version: '2.1.0'
-
-
-    compile 'com.android.support:appcompat-v7:23.4.0'
+    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.android.support:design:25.3.1'
+    compile 'com.android.support:recyclerview-v7:25.3.1'
+    compile 'com.android.support:cardview-v7:25.3.1'
     compile 'com.github.PhilJay:MPAndroidChart:v2.2.5'
-    compile 'com.android.support:design:24.0.0'
-
-    //For eldre support av cardview og recycleview
-    compile 'com.android.support:cardview-v7:21.0.+'
-    compile 'com.android.support:recyclerview-v7:21.0.+'
-
-    compile 'com.android.support:appcompat-v7:23.2.0'
-
-    compile 'de.hdodenhof:circleimageview:1.3.0'
 
     compile 'com.squareup.retrofit2:retrofit:2.0.2'
     compile 'com.squareup.retrofit2:converter-gson:2.0.2'
+    compile 'de.hdodenhof:circleimageview:1.3.0'
 
-    compile 'com.github.clans:fab:1.6.4'
-
-    compile 'org.greenrobot:eventbus:3.0.0'
-
-    compile 'com.android.support:design:25.0.0'
+    compile group: 'de.greenrobot', name: 'greendao', version: '2.1.0'
 
 }

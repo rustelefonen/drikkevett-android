@@ -33,11 +33,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.github.clans.fab.FloatingActionButton;
-import com.github.clans.fab.FloatingActionMenu;
-
-import org.greenrobot.eventbus.EventBus;
-
 import java.io.File;
 import java.util.List;
 
@@ -47,7 +42,6 @@ import rustelefonen.no.drikkevett_android.extra.guidance.Guidance;
 import rustelefonen.no.drikkevett_android.extra.sources.SourcesActivity;
 import rustelefonen.no.drikkevett_android.information.InformationCategoryActivity;
 import rustelefonen.no.drikkevett_android.settings.AlcoholPricingSettingsActivity;
-import rustelefonen.no.drikkevett_android.settings.GoalSettingsActivity;
 import rustelefonen.no.drikkevett_android.settings.UserSettingsActivity;
 import rustelefonen.no.drikkevett_android.settings.WhoWarningActivity;
 import rustelefonen.no.drikkevett_android.tabs.home.SuperDao;
@@ -84,6 +78,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         setupViewpager();
         onPageSelected(FIRST_TAB_INDEX);
         fetchData();
+
 
     }
 
@@ -128,7 +123,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     @Override
     public void onPageSelected(int position) {
         currentViewpagerPosition = position;
-        EventBus.getDefault().post(new SelectedPageEvent(position));
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar == null) return;
@@ -427,16 +421,16 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.bottom_nav_home:
-                        viewPager.setCurrentItem(0);
+                        viewPager.setCurrentItem(0, false);
                         break;
                     case R.id.bottom_nav_bac_calc:
-                        viewPager.setCurrentItem(1);
+                        viewPager.setCurrentItem(1, false);
                         break;
                     case R.id.bottom_nav_drink_episode:
-                        viewPager.setCurrentItem(2);
+                        viewPager.setCurrentItem(2, false);
                         break;
                     case R.id.bottom_nav_history:
-                        viewPager.setCurrentItem(3);
+                        viewPager.setCurrentItem(3, false);
                 }
                 return false;
             }

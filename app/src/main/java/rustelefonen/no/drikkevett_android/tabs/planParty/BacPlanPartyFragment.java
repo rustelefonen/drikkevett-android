@@ -1,66 +1,25 @@
 package rustelefonen.no.drikkevett_android.tabs.planParty;
 
-import android.content.DialogInterface;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.github.clans.fab.FloatingActionButton;
-import com.github.clans.fab.FloatingActionMenu;
-import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.PieData;
-import com.github.mikephil.charting.data.PieDataSet;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
-import rustelefonen.no.drikkevett_android.MainActivity;
 import rustelefonen.no.drikkevett_android.R;
 import rustelefonen.no.drikkevett_android.SelectedPageEvent;
-import rustelefonen.no.drikkevett_android.db.DayAfterBAC;
-import rustelefonen.no.drikkevett_android.db.DayAfterBACDao;
-import rustelefonen.no.drikkevett_android.db.History;
-import rustelefonen.no.drikkevett_android.db.HistoryDao;
-import rustelefonen.no.drikkevett_android.db.PlanPartyElements;
-import rustelefonen.no.drikkevett_android.db.PlanPartyElementsDao;
-import rustelefonen.no.drikkevett_android.db.User;
 import rustelefonen.no.drikkevett_android.tabs.calc.fragments.BeerScrollAdapter;
-import rustelefonen.no.drikkevett_android.tabs.dayAfter.BacDayAfterFragment;
-import rustelefonen.no.drikkevett_android.tabs.home.SuperDao;
-import rustelefonen.no.drikkevett_android.util.NavigationUtil;
 import rustelefonen.no.drikkevett_android.util.PartyUtil;
-
-import static rustelefonen.no.drikkevett_android.util.DateUtil.setEndOfSesStamp;
-import static rustelefonen.no.drikkevett_android.util.DateUtil.setForgottenNewUnitDate;
-import static rustelefonen.no.drikkevett_android.util.DateUtil.setNewUnitDate;
-import static rustelefonen.no.drikkevett_android.util.PartyUtil.calculateBAC;
-import static rustelefonen.no.drikkevett_android.util.PartyUtil.countingGrams;
-import static rustelefonen.no.drikkevett_android.util.PartyUtil.getDateDiff;
 
 public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageChangeListener,
         RadioGroup.OnCheckedChangeListener, View.OnClickListener {
@@ -187,7 +146,6 @@ public class BacPlanPartyFragment extends Fragment implements ViewPager.OnPageCh
 
     }
 
-    @Subscribe
     public void getSelectedPage(SelectedPageEvent selectedPageEvent) {}
 }
 //

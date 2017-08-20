@@ -1,42 +1,79 @@
 package rustelefonen.no.drikkevett_android.tabs.drinkEpisode;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.RadioGroup;
+import android.widget.TextView;
 
-import org.greenrobot.eventbus.EventBus;
-
+import java.text.DecimalFormat;
+import java.util.Date;
 import java.util.List;
 
-import rustelefonen.no.drikkevett_android.NonSwipeableViewPager;
+import rustelefonen.no.drikkevett_android.MainActivity;
 import rustelefonen.no.drikkevett_android.R;
-import rustelefonen.no.drikkevett_android.SectionsPagerAdapter;
-import rustelefonen.no.drikkevett_android.SelectedPageEvent;
 import rustelefonen.no.drikkevett_android.db.NewHistory;
 import rustelefonen.no.drikkevett_android.db.NewHistoryDao;
+import rustelefonen.no.drikkevett_android.db.User;
+import rustelefonen.no.drikkevett_android.tabs.calc.fragments.BeerScrollAdapter;
 import rustelefonen.no.drikkevett_android.tabs.home.SuperDao;
+import rustelefonen.no.drikkevett_android.util.BacUtility;
 
 /**
  * Created by simenfonnes on 18.08.2017.
  */
 
-public class DrinkEpisode extends Fragment implements NonSwipeableViewPager.OnPageChangeListener {
+public class DrinkEpisode extends Fragment implements Button.OnClickListener, ViewPager.OnPageChangeListener, RadioGroup.OnCheckedChangeListener {
 
-    public NonSwipeableViewPager viewPager;
+    public LinearLayout planPartyLinearLayout;
+    public LinearLayout currentPartyLinearLayout;
+
+    //Plan
+    public ViewPager planPartyViewPager;
+    public RadioGroup planPartyRadioGroup;
+    public Button planPartyRemoveButton;
+    public Button planPartyAddButton;
+
+    public TextView planPartyBeerUnits;
+    public TextView planPartyWineUnits;
+    public TextView planPartyDrinkUnits;
+    public TextView planPartyShotUnits;
+
+    public TextView planPartyExpectedBac;
+    public TextView planPartyExpectedCost;
+    public Button planPartyStartEveningButton;
+
+    //Current
+    public TextView currentPartyBac;
+    public TextView currentPartyQuote;
+    public ViewPager currentPartyViewPager;
+    public RadioGroup currentPartyRadioGroup;
+
+    public Button currentPartyUndoButton;
+    public Button currentPartyAddButton;
+
+    public TextView currentPartyBeerUnits;
+    public TextView currentPartyWineUnits;
+    public TextView currentPartyDrinkUnits;
+    public TextView currentPartyShotUnits;
+
+    public Button currentPartyEndEveningButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         View view = inflater.inflate(R.layout.drink_episode_layout, container, false);
-        viewPager = (NonSwipeableViewPager) view.findViewById(R.id.drink_episode_view_pager);
-        viewPager.setAdapter(new DrinkEpisodeAdapter(getActivity().getSupportFragmentManager()));
-        viewPager.addOnPageChangeListener(this);
-        onPageSelected(0);
+
+        initWidgets(view);
+        setListeners();
+
+        setView();
+
         return view;
     }
 
@@ -45,30 +82,33 @@ public class DrinkEpisode extends Fragment implements NonSwipeableViewPager.OnPa
         super.setUserVisibleHint(isVisibleToUser);
 
         if (this.isVisible()) {
-            System.out.println("grr");
-            if (!isVisibleToUser) {
-
-                System.out.println("brr");
+            if (isVisibleToUser) {
+                setView();
             }
         }
     }
 
-    @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+    private void setView() {
+        Status status = getCurrentStatus();
+        if (status == Status.NOT_RUNNING) {
+            planPartyLinearLayout.setVisibility(View.VISIBLE);
+            currentPartyLinearLayout.setVisibility(View.GONE);
+        }
+        else if (status == Status.RUNNING) {
+            currentPartyLinearLayout.setVisibility(View.VISIBLE);
+            planPartyLinearLayout.setVisibility(View.GONE);
 
+            initCurrentParty();
+        }
     }
 
-    @Override
-    public void onPageSelected(int position) {
-        /*ActionBar actionBar = getContext().getSupportActionBar();
-        if (actionBar == null) return;
-        String title = position == 0 ? "Hjem" : position == 1 ? "Promillekalkulator"
-                : position == 2 ? "Drikkeepisode" : position == 3 ? "Historikk" : "";
-        actionBar.setTitle(title);*/
-    }
+    private void initCurrentParty() {
+        NewHistory newHistory = getCurrentHistory();
+        currentPartyBeerUnits.setText("0/" + newHistory.getBeerPlannedUnitCount());
+        currentPartyWineUnits.setText("0/" + newHistory.getWinePlannedUnitCount());
+        currentPartyDrinkUnits.setText("0/" + newHistory.getDrinkPlannedUnitCount());
+        currentPartyShotUnits.setText("0/" + newHistory.getShotPlannedUnitCount());
 
-    @Override
-    public void onPageScrollStateChanged(int state) {
 
     }
 
@@ -80,6 +120,7 @@ public class DrinkEpisode extends Fragment implements NonSwipeableViewPager.OnPa
         SuperDao superDao = new SuperDao(getContext());
         NewHistoryDao newHistoryDao = superDao.getNewHistoryDao();
         List<NewHistory> histories = newHistoryDao.queryBuilder().list();
+        superDao.close();
 
         for (NewHistory history : histories) {
             if (history.getEndDate() == null) return Status.RUNNING;
@@ -91,6 +132,7 @@ public class DrinkEpisode extends Fragment implements NonSwipeableViewPager.OnPa
         SuperDao superDao = new SuperDao(getContext());
         NewHistoryDao newHistoryDao = superDao.getNewHistoryDao();
         List<NewHistory> histories = newHistoryDao.queryBuilder().list();
+        superDao.close();
 
         for (NewHistory history : histories) {
             if (history.getEndDate() == null) return history;
@@ -98,7 +140,264 @@ public class DrinkEpisode extends Fragment implements NonSwipeableViewPager.OnPa
         return null;
     }
 
-    public void changeView() {
-        System.out.println("GRRR");
+    private void initWidgets(View view) {
+        planPartyLinearLayout = (LinearLayout) view.findViewById(R.id.drink_episode_plan_party);
+        currentPartyLinearLayout = (LinearLayout) view.findViewById(R.id.drink_episode_current_party);
+
+        //Plan
+        planPartyViewPager = (ViewPager) view.findViewById(R.id.plan_party_view_pager);
+        planPartyRadioGroup = (RadioGroup) view.findViewById(R.id.plan_party_radio_group);
+        planPartyRemoveButton = (Button) view.findViewById(R.id.plan_party_remove_button);
+        planPartyAddButton = (Button) view.findViewById(R.id.plan_party_add_button);
+
+        planPartyBeerUnits = (TextView) view.findViewById(R.id.plan_party_beer_units);
+        planPartyWineUnits = (TextView) view.findViewById(R.id.plan_party_wine_units);
+        planPartyDrinkUnits = (TextView) view.findViewById(R.id.plan_party_drink_units);
+        planPartyShotUnits = (TextView) view.findViewById(R.id.plan_party_shot_units);
+
+        planPartyExpectedBac = (TextView) view.findViewById(R.id.plan_party_expected_bac);
+        planPartyExpectedCost = (TextView) view.findViewById(R.id.plan_party_expected_cost);
+        planPartyStartEveningButton = (Button) view.findViewById(R.id.plan_party_start_evening);
+
+        //Current
+        currentPartyBac = (TextView) view.findViewById(R.id.current_party_bac);
+        currentPartyQuote = (TextView) view.findViewById(R.id.current_party_quote);
+        currentPartyViewPager = (ViewPager) view.findViewById(R.id.current_party_view_pager);
+        currentPartyRadioGroup = (RadioGroup) view.findViewById(R.id.current_party_radio_group);
+
+        currentPartyUndoButton = (Button) view.findViewById(R.id.current_party_undo_button);
+        currentPartyAddButton = (Button) view.findViewById(R.id.current_party_add_button);
+
+        currentPartyBeerUnits = (TextView) view.findViewById(R.id.current_party_beer_units);
+        currentPartyWineUnits = (TextView) view.findViewById(R.id.current_party_wine_units);
+        currentPartyDrinkUnits = (TextView) view.findViewById(R.id.current_party_drink_units);
+        currentPartyShotUnits = (TextView) view.findViewById(R.id.current_party_shot_units);
+
+        currentPartyEndEveningButton = (Button) view.findViewById(R.id.current_party_end_evening);
     }
+
+    private void setListeners() {
+        planPartyRemoveButton.setOnClickListener(this);
+        planPartyAddButton.setOnClickListener(this);
+        planPartyViewPager.addOnPageChangeListener(this);
+        planPartyRadioGroup.setOnCheckedChangeListener(this);
+        planPartyStartEveningButton.setOnClickListener(this);
+
+        planPartyViewPager.setAdapter(new BeerScrollAdapter(this.getChildFragmentManager()));
+        planPartyViewPager.setCurrentItem(0);
+        planPartyRadioGroup.check(planPartyRadioGroup.getChildAt(0).getId());
+
+        currentPartyViewPager.addOnPageChangeListener(this);
+        currentPartyRadioGroup.setOnCheckedChangeListener(this);
+        currentPartyUndoButton.setOnClickListener(this);
+        currentPartyAddButton.setOnClickListener(this);
+
+        currentPartyViewPager.setAdapter(new BeerScrollAdapter(this.getChildFragmentManager()));
+        currentPartyViewPager.setCurrentItem(0);
+        currentPartyRadioGroup.check(currentPartyRadioGroup.getChildAt(0).getId());
+    }
+
+    private void updateBac() {
+        double beerUnitCount = tryParseDouble(planPartyBeerUnits.getText().toString());
+        double wineUnitCount = tryParseDouble(planPartyWineUnits.getText().toString());
+        double drinkUnitCount = tryParseDouble(planPartyDrinkUnits.getText().toString());
+        double shotUnitCount = tryParseDouble(planPartyShotUnits.getText().toString());
+
+        double hours = 0.0;
+
+        User user = ((MainActivity)getActivity()).getUser();
+
+        boolean gender = user.getGender().equals("Mann");
+        double weight = user.getWeight();
+
+        double bac = BacUtility.calculateBac(beerUnitCount, wineUnitCount, drinkUnitCount, shotUnitCount, hours, gender, weight);
+
+        planPartyExpectedBac.setText(new DecimalFormat("##.00").format(bac));
+    }
+
+    private void updateCost() {
+        double beerUnitCount = tryParseDouble(planPartyBeerUnits.getText().toString());
+        double wineUnitCount = tryParseDouble(planPartyWineUnits.getText().toString());
+        double drinkUnitCount = tryParseDouble(planPartyDrinkUnits.getText().toString());
+        double shotUnitCount = tryParseDouble(planPartyShotUnits.getText().toString());
+
+        User user = ((MainActivity)getActivity()).getUser();
+
+        double totalCost = (beerUnitCount * user.getBeerPrice()) + (wineUnitCount * user.getWinePrice()) +
+                (drinkUnitCount * user.getDrinkPrice()) + (shotUnitCount * user.getShotPrice());
+        planPartyExpectedCost.setText("" + totalCost);
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.plan_party_remove_button) removeUnitFromPlanParty(planPartyViewPager.getCurrentItem());
+        else if (v.getId() == R.id.plan_party_add_button) addUnitToPlanParty(planPartyViewPager.getCurrentItem());
+        else if (v.getId() == R.id.plan_party_start_evening) startEvening();
+        else if (v.getId() == R.id.current_party_undo_button) undoUnitFromCurrentParty();
+        else if (v.getId() == R.id.current_party_add_button) addUnitToCurrentParty(currentPartyViewPager.getCurrentItem());
+        else if (v.getId() == R.id.current_party_end_evening) endEvening();
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
+
+    @Override
+    public void onPageSelected(int position) {
+        if (planPartyLinearLayout.getVisibility() == View.VISIBLE) {
+            if (position == 0) planPartyRadioGroup.check(R.id.plan_party_button_one);
+            else if (position == 1) planPartyRadioGroup.check(R.id.plan_party_button_two);
+            else if (position == 2) planPartyRadioGroup.check(R.id.plan_party_button_three);
+            else if (position == 3) planPartyRadioGroup.check(R.id.plan_party_button_four);
+        }
+        else {
+            if (position == 0) currentPartyRadioGroup.check(R.id.current_party_radio_one);
+            else if (position == 1) currentPartyRadioGroup.check(R.id.current_party_radio_two);
+            else if (position == 2) currentPartyRadioGroup.check(R.id.current_party_radio_three);
+            else if (position == 3) currentPartyRadioGroup.check(R.id.current_party_radio_four);
+        }
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {}
+
+    @Override
+    public void onCheckedChanged(RadioGroup group, int checkedId) {
+        int id = group.getCheckedRadioButtonId();
+
+        //Plan
+        if (id == R.id.plan_party_button_one) planPartyViewPager.setCurrentItem(0);
+        else if (id == R.id.plan_party_button_two) planPartyViewPager.setCurrentItem(1);
+        else if (id == R.id.plan_party_button_three) planPartyViewPager.setCurrentItem(2);
+        else if (id == R.id.plan_party_button_four) planPartyViewPager.setCurrentItem(3);
+
+        //Current
+        else if (id == R.id.current_party_radio_one) currentPartyViewPager.setCurrentItem(0);
+        else if (id == R.id.current_party_radio_two) currentPartyViewPager.setCurrentItem(1);
+        else if (id == R.id.current_party_radio_three) currentPartyViewPager.setCurrentItem(2);
+        else if (id == R.id.current_party_radio_four) currentPartyViewPager.setCurrentItem(3);
+    }
+
+    private int tryParse(String number) {
+        try {
+            return Integer.parseInt(number);
+        } catch (NumberFormatException ignored) {
+            return -1;
+        }
+    }
+
+    private double tryParseDouble(String number) {
+        try {
+            return Double.parseDouble(number);
+        } catch (NumberFormatException ignored) {
+            return -1.0;
+        }
+    }
+
+    private void addUnitToPlanParty(int unitType) {
+        if (unitType == 0) {
+            int beerUnitCount = tryParse(planPartyBeerUnits.getText().toString());
+            if (beerUnitCount < 20) {
+                planPartyBeerUnits.setText("" + (beerUnitCount + 1));
+            }
+        }
+        else if (unitType == 1) {
+            int wineUnitCount = tryParse(planPartyWineUnits.getText().toString());
+            if (wineUnitCount < 20) {
+                planPartyWineUnits.setText("" + (wineUnitCount + 1));
+            }
+        }
+        else if (unitType == 2) {
+            int drinkUnitCount = tryParse(planPartyDrinkUnits.getText().toString());
+            if (drinkUnitCount < 20) {
+                planPartyDrinkUnits.setText("" + (drinkUnitCount + 1));
+            }
+        }
+        else if (unitType == 3) {
+            int shotUnitCount = tryParse(planPartyShotUnits.getText().toString());
+            if (shotUnitCount < 20) {
+                planPartyShotUnits.setText("" + (shotUnitCount + 1));
+            }
+        }
+        updateBac();
+        updateCost();
+    }
+
+    private void removeUnitFromPlanParty(int unitType) {
+        if (unitType == 0) {
+            int beerUnitCount = tryParse(planPartyBeerUnits.getText().toString());
+            if (beerUnitCount > 0) {
+                planPartyBeerUnits.setText("" + (beerUnitCount - 1));
+            }
+        }
+        else if (unitType == 1) {
+            int wineUnitCount = tryParse(planPartyWineUnits.getText().toString());
+            if (wineUnitCount > 0) {
+                planPartyWineUnits.setText("" + (wineUnitCount - 1));
+            }
+        }
+        else if (unitType == 2) {
+            int drinkUnitCount = tryParse(planPartyDrinkUnits.getText().toString());
+            if (drinkUnitCount > 0) {
+                planPartyDrinkUnits.setText("" + (drinkUnitCount - 1));
+            }
+        }
+        else if (unitType == 3) {
+            int shotUnitCount = tryParse(planPartyShotUnits.getText().toString());
+            if (shotUnitCount > 0) {
+                planPartyShotUnits.setText("" + (shotUnitCount - 1));
+            }
+        }
+        updateBac();
+        updateCost();
+    }
+
+    private void addUnitToCurrentParty(int unitType) {
+
+    }
+
+    private void undoUnitFromCurrentParty() {
+
+    }
+
+    private void endEvening() {
+
+    }
+
+    private void startEvening() {
+        int beerUnitCount = tryParse(planPartyBeerUnits.getText().toString());
+        int wineUnitCount = tryParse(planPartyWineUnits.getText().toString());
+        int drinkUnitCount = tryParse(planPartyDrinkUnits.getText().toString());
+        int shotUnitCount = tryParse(planPartyShotUnits.getText().toString());
+
+        SuperDao superDao = new SuperDao(getContext());
+        NewHistoryDao newHistoryDao = superDao.getNewHistoryDao();
+        NewHistory newHistory = new NewHistory();
+
+        newHistory.setBeginDate(new Date());
+        newHistory.setBeerPlannedUnitCount(beerUnitCount);
+        newHistory.setWinePlannedUnitCount(wineUnitCount);
+        newHistory.setDrinkPlannedUnitCount(drinkUnitCount);
+        newHistory.setShotPlannedUnitCount(shotUnitCount);
+
+        User user = ((MainActivity)getActivity()).getUser();
+
+        newHistory.setBeerCost(user.getBeerPrice());
+        newHistory.setWineCost(user.getWinePrice());
+        newHistory.setDrinkCost(user.getDrinkPrice());
+        newHistory.setShotCost(user.getShotPrice());
+
+        newHistory.setBeerGrams(BacUtility.getUnitGrams(0));
+        newHistory.setWineGrams(BacUtility.getUnitGrams(1));
+        newHistory.setDrinkGrams(BacUtility.getUnitGrams(2));
+        newHistory.setShotGrams(BacUtility.getUnitGrams(3));
+
+        newHistory.setGender(user.getGender().equals("Mann"));
+        newHistory.setWeight(user.getWeight());
+
+        newHistoryDao.insert(newHistory);
+        superDao.close();
+
+        setView();
+    }
+
 }

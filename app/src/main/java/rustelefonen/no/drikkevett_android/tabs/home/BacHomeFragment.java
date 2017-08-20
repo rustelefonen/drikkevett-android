@@ -17,7 +17,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.github.clans.fab.FloatingActionButton;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
@@ -26,9 +25,6 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
 
 import java.io.File;
 import java.math.RoundingMode;
@@ -85,21 +81,12 @@ public class BacHomeFragment extends Fragment{
     public TextView barChartMonth;
     public TextView barChartYear;
 
-    public FloatingActionButton addProfileImageFab;
-
     private User user;
-
-    boolean hack = false;
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.bac_home_frag, container, false);
-        EventBus.getDefault().register(this);
-        if (!hack) {
-            ((MainActivity)getActivity()).onPageSelected(0);
-            hack = true;
-        }
+
 
         initWidgets(view);
         fetchUser();
@@ -110,7 +97,6 @@ public class BacHomeFragment extends Fragment{
         return view;
     }
 
-    @Subscribe
     public void getSelectedPage(SelectedPageEvent selectedPageEvent) {
         if (selectedPageEvent.page == 0) {
             //((MainActivity)getActivity()).getFloatingActionMenu().hideMenu(true);
@@ -129,7 +115,6 @@ public class BacHomeFragment extends Fragment{
 
     @Override
     public void onDestroyView() {
-        EventBus.getDefault().unregister(this);
         super.onDestroyView();
     }
 
@@ -180,7 +165,6 @@ public class BacHomeFragment extends Fragment{
         goalCardView = (CardView) view.findViewById(R.id.goal_card_view);
         barChartYear = (TextView) view.findViewById(R.id.home_bar_chart_year);
         barChartMonth = (TextView) view.findViewById(R.id.home_bar_chart_month);
-        addProfileImageFab = (FloatingActionButton) view.findViewById(R.id.add_profile_image_fab);
     }
 
     private void fillWidgets() {

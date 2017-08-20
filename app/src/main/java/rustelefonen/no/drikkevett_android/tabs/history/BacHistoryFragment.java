@@ -16,11 +16,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.github.mikephil.charting.animation.Easing;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-
 import java.util.List;
 
 import rustelefonen.no.drikkevett_android.MainActivity;
@@ -61,7 +56,6 @@ public class BacHistoryFragment extends Fragment {
         initDataset();
     }
 
-    @Subscribe
     public void getSelectedPage(SelectedPageEvent selectedPageEvent) {
         if (selectedPageEvent.page == 4) {
             refreshFragment();
@@ -70,13 +64,6 @@ public class BacHistoryFragment extends Fragment {
         } else {
             //((MainActivity)getActivity()).getFloatingActionMenu().close(true);
         }
-    }
-
-
-    @Override
-    public void onDestroyView() {
-        EventBus.getDefault().unregister(this);
-        super.onDestroyView();
     }
 
     @Override
@@ -114,7 +101,6 @@ public class BacHistoryFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.bac_history_frag, container, false);
-        EventBus.getDefault().register(this);
 
         rootView.setTag(TAG);
 

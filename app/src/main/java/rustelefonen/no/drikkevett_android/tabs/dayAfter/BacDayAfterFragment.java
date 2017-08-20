@@ -4,7 +4,6 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -21,16 +20,11 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.github.clans.fab.FloatingActionButton;
-import com.github.clans.fab.FloatingActionMenu;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -55,8 +49,6 @@ import rustelefonen.no.drikkevett_android.util.NavigationUtil;
 import rustelefonen.no.drikkevett_android.util.PartyUtil;
 
 import static rustelefonen.no.drikkevett_android.util.DateUtil.setForgottenNewUnitDate;
-import static rustelefonen.no.drikkevett_android.util.DateUtil.setNewUnitDate;
-import static rustelefonen.no.drikkevett_android.util.PartyUtil.addMinsToDate;
 import static rustelefonen.no.drikkevett_android.util.PartyUtil.calculateBAC;
 import static rustelefonen.no.drikkevett_android.util.PartyUtil.countingGrams;
 import static rustelefonen.no.drikkevett_android.util.PartyUtil.getDateDiff;
@@ -93,12 +85,10 @@ public class BacDayAfterFragment extends Fragment {
 
     private static final String PER_MILLE = "\u2030";
 
-    public FloatingActionMenu floatingActionMenu;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.bac_day_after_frag, container, false);
-        EventBus.getDefault().register(this);
 
         dayAfter_db = new DayAfter_DB(getContext());
         initWidgets();
@@ -154,7 +144,6 @@ public class BacDayAfterFragment extends Fragment {
         return v;
     }
 
-    @Subscribe
     public void getSelectedPage(SelectedPageEvent selectedPageEvent) {
         if (selectedPageEvent.page == 3) {
             setUserData();
@@ -200,7 +189,6 @@ public class BacDayAfterFragment extends Fragment {
 
     @Override
     public void onDestroyView() {
-        EventBus.getDefault().unregister(this);
         super.onDestroyView();
     }
 
@@ -1041,7 +1029,6 @@ public class BacDayAfterFragment extends Fragment {
         afterRegDrinkLbl.setText(afterRegDrink + "");
         afterRegShotLbl.setText(afterRegShot + "");
         //btnEndDA.setVisibility(View.VISIBLE);
-        floatingActionMenu.showMenu(true);
         planPaRunning_LinLay.setVisibility(View.GONE);
         dayAfterRunning_LinLay.setVisibility(View.VISIBLE);
         colorsUnitLabels();
