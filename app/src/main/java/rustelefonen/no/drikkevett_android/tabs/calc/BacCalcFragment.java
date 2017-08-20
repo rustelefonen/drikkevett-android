@@ -1,5 +1,7 @@
 package rustelefonen.no.drikkevett_android.tabs.calc;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -20,6 +22,7 @@ import rustelefonen.no.drikkevett_android.MainActivity;
 import rustelefonen.no.drikkevett_android.R;
 import rustelefonen.no.drikkevett_android.db.User;
 import rustelefonen.no.drikkevett_android.tabs.calc.fragments.BeerScrollAdapter;
+import rustelefonen.no.drikkevett_android.unit.UnitEditActivity;
 import rustelefonen.no.drikkevett_android.util.BacUtility;
 import rustelefonen.no.drikkevett_android.util.NavigationUtil;
 
@@ -93,13 +96,23 @@ public class BacCalcFragment extends Fragment implements ViewPager.OnPageChangeL
         double weight = user.getWeight();
         double hours = (double) (seekBar.getProgress() + 1);
 
-        double bac = BacUtility.calculateBac(beerUnits, wineUnits, drinkUnits, shotUnits, hours, gender, weight);
+        double bac = BacUtility.calculateBac(beerUnits, wineUnits, drinkUnits, shotUnits,
+                getUnitGrams(0), getUnitGrams(1), getUnitGrams(2), getUnitGrams(3), hours, gender, weight);
 
         String formattedBac = new DecimalFormat("#.##").format(bac) + PER_MILLE;
         bacLabel.setText(formattedBac);
         bacLabel.setTextColor(BacUtility.getQuoteTextColorBy(bac));
         labelQuotes.setText(BacUtility.getQuoteTextBy(bac));
         labelQuotes.setTextColor(BacUtility.getQuoteTextColorBy(bac));
+    }
+
+    public double getUnitGrams(int unitType) {
+        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+
+        float percent = sharedPref.getFloat(UnitEditActivity.percentKeys[unitType], UnitEditActivity.defaultPercent[unitType]);
+        int amount = sharedPref.getInt(UnitEditActivity.amountKeys[unitType], UnitEditActivity.defaultAmount[unitType]);
+
+        return amount * percent / 10.0f;
     }
 
     private void initWidgets(View view){

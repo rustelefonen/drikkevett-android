@@ -94,9 +94,9 @@ public class PlanPartyFragment extends Fragment implements Button.OnClickListene
         boolean gender = user.getGender().equals("Mann");
         double weight = user.getWeight();
 
-        double bac = BacUtility.calculateBac(beerUnitCount, wineUnitCount, drinkUnitCount, shotUnitCount, hours, gender, weight);
+        //double bac = BacUtility.calculateBac(beerUnitCount, wineUnitCount, drinkUnitCount, shotUnitCount, hours, gender, weight);
 
-        expectedBac.setText(new DecimalFormat("##.00").format(bac));
+        //expectedBac.setText(new DecimalFormat("##.00").format(bac));
     }
 
     private void updateCost() {
@@ -244,10 +244,10 @@ public class PlanPartyFragment extends Fragment implements Button.OnClickListene
         newHistory.setDrinkCost(user.getDrinkPrice());
         newHistory.setShotCost(user.getShotPrice());
 
-        newHistory.setBeerGrams(BacUtility.getUnitGrams(0));
+        /*newHistory.setBeerGrams(BacUtility.getUnitGrams(0));
         newHistory.setWineGrams(BacUtility.getUnitGrams(1));
         newHistory.setDrinkGrams(BacUtility.getUnitGrams(2));
-        newHistory.setShotGrams(BacUtility.getUnitGrams(3));
+        newHistory.setShotGrams(BacUtility.getUnitGrams(3));*/
 
         newHistory.setGender(user.getGender().equals("Mann"));
         newHistory.setWeight(user.getWeight());

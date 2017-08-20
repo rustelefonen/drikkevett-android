@@ -120,7 +120,7 @@ public class HistoryActivity extends AppCompatActivity {
 
             long seconds = (unit.getTimestamp().getTime() - history.getBeginDate().getTime()) / 1000;
 
-            double hours = seconds / 3600.0;
+            double hours = seconds / 3600000.0;
 
             double bac = BacUtility.calculateBac(beerUnits, wineUnits, drinkUnits, shotUnits, history.getBeerGrams(), history.getWineGrams(), history.getDrinkGrams(), history.getShotGrams(), hours, history.getGender(), history.getWeight());
             entries.add(new Entry((float) bac, i));

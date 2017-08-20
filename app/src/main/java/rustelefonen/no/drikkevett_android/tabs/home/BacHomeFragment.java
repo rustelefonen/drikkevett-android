@@ -49,10 +49,6 @@ import rustelefonen.no.drikkevett_android.util.DateUtil;
 import rustelefonen.no.drikkevett_android.util.ImageUtil;
 import rustelefonen.no.drikkevett_android.util.NavigationUtil;
 
-import static rustelefonen.no.drikkevett_android.tabs.home.HistoryCalculator.getTotalAverageHighestBac;
-import static rustelefonen.no.drikkevett_android.tabs.home.HistoryCalculator.getTotalCost;
-import static rustelefonen.no.drikkevett_android.tabs.home.HistoryCalculator.getTotalHighestBac;
-
 public class BacHomeFragment extends Fragment{
 
     public TextView quoteTextView;
@@ -147,22 +143,22 @@ public class BacHomeFragment extends Fragment{
         DecimalFormat df = new DecimalFormat("#.##");
         df.setRoundingMode(RoundingMode.CEILING);
 
-        String formattedTotalCost = df.format(getTotalCost(entireHistoryList, getContext())) + ",-";
+        String formattedTotalCost = df.format(HistoryUtility.getTotalCost(entireHistoryList, getContext())) + ",-";
 
         totalCountTextView.setText(formattedTotalCost);
-        totalBacCountTextView.setText(df.format(getTotalHighestBac(entireHistoryList, context)));
-        avgBacCountTextView.setText(df.format(getTotalAverageHighestBac(entireHistoryList, context)));
+        totalBacCountTextView.setText(df.format(HistoryUtility.getTotalHighestBac(entireHistoryList, context)));
+        avgBacCountTextView.setText(df.format(HistoryUtility.getTotalAverageHighestBac(entireHistoryList, context)));
     }
 
     private void setAvgCard(List<NewHistory> historiesInCurrentMonth, Context context) {
         DecimalFormat df = new DecimalFormat("#.##");
         df.setRoundingMode(RoundingMode.CEILING);
 
-        String formattedTotalCost = df.format(getTotalCost(historiesInCurrentMonth, context)) + ",-";
+        String formattedTotalCost = df.format(HistoryUtility.getTotalCost(historiesInCurrentMonth, context)) + ",-";
 
         lastMonthCostTextView.setText(formattedTotalCost);
-        lastMonthHighestBacTextView.setText(df.format(getTotalHighestBac(historiesInCurrentMonth, context)));
-        lastMonthAvgBacTextView.setText(df.format(getTotalAverageHighestBac(historiesInCurrentMonth, context)));
+        lastMonthHighestBacTextView.setText(df.format(HistoryUtility.getTotalHighestBac(historiesInCurrentMonth, context)));
+        lastMonthAvgBacTextView.setText(df.format(HistoryUtility.getTotalAverageHighestBac(historiesInCurrentMonth, context)));
     }
 
     private void setViewVisibility(boolean historyIsEmpty) {

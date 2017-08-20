@@ -1,6 +1,9 @@
 package rustelefonen.no.drikkevett_android.tabs.drinkEpisode;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -12,6 +15,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -23,7 +27,9 @@ import rustelefonen.no.drikkevett_android.db.Unit;
 import rustelefonen.no.drikkevett_android.db.UnitDao;
 import rustelefonen.no.drikkevett_android.db.User;
 import rustelefonen.no.drikkevett_android.tabs.calc.fragments.BeerScrollAdapter;
+import rustelefonen.no.drikkevett_android.tabs.home.HistoryUtility;
 import rustelefonen.no.drikkevett_android.tabs.home.SuperDao;
+import rustelefonen.no.drikkevett_android.unit.UnitEditActivity;
 import rustelefonen.no.drikkevett_android.util.BacUtility;
 
 /**
@@ -66,10 +72,15 @@ public class DrinkEpisode extends Fragment implements Button.OnClickListener, Vi
 
     public Button currentPartyEndEveningButton;
 
+    private Runnable timeUpdater;
+    private Handler handler;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         View view = inflater.inflate(R.layout.drink_episode_layout, container, false);
+
+        handler = new Handler();
 
         initWidgets(view);
         setListeners();
@@ -77,6 +88,28 @@ public class DrinkEpisode extends Fragment implements Button.OnClickListener, Vi
         setView();
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (getCurrentStatus() == Status.RUNNING) {
+            timeUpdater = new Runnable() {
+                @Override
+                public void run() {
+                    updateRunningBac();
+                    handler.postDelayed(this, 1000);
+                }
+            };
+            timeUpdater.run();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        handler.removeCallbacks(timeUpdater);
     }
 
     @Override
@@ -90,6 +123,48 @@ public class DrinkEpisode extends Fragment implements Button.OnClickListener, Vi
         }
     }
 
+    private void updateRunningBac() {
+        double beerUnits = tryParseDouble(currentPartyBeerUnits.getText().toString().split("/")[0]);
+        double wineUnits = tryParseDouble(currentPartyWineUnits.getText().toString().split("/")[0]);
+        double drinkUnits = tryParseDouble(currentPartyDrinkUnits.getText().toString().split("/")[0]);
+        double shotUnits = tryParseDouble(currentPartyShotUnits.getText().toString().split("/")[0]);
+
+        User user = ((MainActivity)getActivity()).getUser();
+
+        Date firstUnitAddedDate = getDateOfFirstUnitAdded();
+        if (firstUnitAddedDate == null) firstUnitAddedDate = new Date();
+
+        double hours = (new Date().getTime() - firstUnitAddedDate.getTime()) / 3600000.0;
+        boolean gender = user.getGender().equals("Mann");
+        double weight = user.getWeight();
+
+        double bac = BacUtility.calculateBac(beerUnits, wineUnits, drinkUnits, shotUnits, getUnitGrams(0), getUnitGrams(1), getUnitGrams(2), getUnitGrams(3), hours, gender, weight);
+
+        String bacText = new DecimalFormat("##.00").format(bac) + "\u2030";
+        currentPartyBac.setText(bacText);
+        currentPartyQuote.setText(BacUtility.getQuoteTextBy(bac));
+        int color = BacUtility.getQuoteTextColorBy(bac);
+        currentPartyQuote.setTextColor(color);
+        currentPartyBac.setTextColor(color);
+    }
+
+    public double getUnitGrams(int unitType) {
+        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+
+        float percent = sharedPref.getFloat(UnitEditActivity.percentKeys[unitType], UnitEditActivity.defaultPercent[unitType]);
+        int amount = sharedPref.getInt(UnitEditActivity.amountKeys[unitType], UnitEditActivity.defaultAmount[unitType]);
+
+        return amount * percent / 10.0f;
+    }
+
+    private Date getDateOfFirstUnitAdded() {
+        NewHistory history = getCurrentHistory();
+        List<Unit> units = HistoryUtility.getHistoryUnitsOrdered(history, getContext());
+
+        if (units.size() > 0) return units.get(0).getTimestamp();
+        return null;
+    }
+
     private void setView() {
         Status status = getCurrentStatus();
         if (status == Status.NOT_RUNNING) {
@@ -100,18 +175,37 @@ public class DrinkEpisode extends Fragment implements Button.OnClickListener, Vi
             currentPartyLinearLayout.setVisibility(View.VISIBLE);
             planPartyLinearLayout.setVisibility(View.GONE);
 
-            initCurrentParty();
+            updateParty();
         }
     }
 
-    private void initCurrentParty() {
+    private void updateParty() {
         NewHistory newHistory = getCurrentHistory();
-        currentPartyBeerUnits.setText("0/" + newHistory.getBeerPlannedUnitCount());
-        currentPartyWineUnits.setText("0/" + newHistory.getWinePlannedUnitCount());
-        currentPartyDrinkUnits.setText("0/" + newHistory.getDrinkPlannedUnitCount());
-        currentPartyShotUnits.setText("0/" + newHistory.getShotPlannedUnitCount());
+        if (newHistory == null) return;
 
+        List<Unit> units = HistoryUtility.getHistoryUnits(newHistory, getContext());
 
+        int beerUnits = 0;
+        int wineUnits = 0;
+        int drinkUnits = 0;
+        int shotUnits = 0;
+
+        for (Unit unit : units) {
+            if (unit.getUnitType().equals("Beer")) beerUnits++;
+            else if (unit.getUnitType().equals("Wine")) wineUnits++;
+            else if (unit.getUnitType().equals("Drink")) drinkUnits++;
+            else if (unit.getUnitType().equals("Shot")) shotUnits++;
+        }
+
+        String beerText = beerUnits + "/" + newHistory.getBeerPlannedUnitCount();
+        String wineText = wineUnits + "/" + newHistory.getWinePlannedUnitCount();
+        String drinkText = drinkUnits + "/" + newHistory.getDrinkPlannedUnitCount();
+        String shotText = shotUnits + "/" + newHistory.getShotPlannedUnitCount();
+
+        currentPartyBeerUnits.setText(beerText);
+        currentPartyWineUnits.setText(wineText);
+        currentPartyDrinkUnits.setText(drinkText);
+        currentPartyShotUnits.setText(shotText);
     }
 
     public enum Status {
@@ -213,7 +307,8 @@ public class DrinkEpisode extends Fragment implements Button.OnClickListener, Vi
         boolean gender = user.getGender().equals("Mann");
         double weight = user.getWeight();
 
-        double bac = BacUtility.calculateBac(beerUnitCount, wineUnitCount, drinkUnitCount, shotUnitCount, hours, gender, weight);
+        double bac = BacUtility.calculateBac(beerUnitCount, wineUnitCount, drinkUnitCount, shotUnitCount,
+                getUnitGrams(0), getUnitGrams(1), getUnitGrams(2), getUnitGrams(3), hours, gender, weight);
 
         planPartyExpectedBac.setText(new DecimalFormat("##.00").format(bac));
     }
@@ -239,10 +334,6 @@ public class DrinkEpisode extends Fragment implements Button.OnClickListener, Vi
         else if (v.getId() == R.id.current_party_undo_button) undoUnitFromCurrentParty();
         else if (v.getId() == R.id.current_party_add_button) {
             addUnitToCurrentParty(currentPartyViewPager.getCurrentItem());
-            NewHistory newHistory = getCurrentHistory();
-            for (Unit unit : newHistory.getUnits()) {
-                System.out.println(unit.getUnitType());
-            }
         }
         else if (v.getId() == R.id.current_party_end_evening) endEvening();
     }
@@ -371,27 +462,38 @@ public class DrinkEpisode extends Fragment implements Button.OnClickListener, Vi
         unit.setTimestamp(new Date());
         unit.setHistoryId(newHistory.getId());
 
-        newHistory.getUnits().add(unit);
-        newHistory.resetUnits();
-
         SuperDao superDao = new SuperDao(getContext());
         UnitDao unitDao = superDao.getUnitDao();
         unitDao.insert(unit);
-        //superDao.close();
+
+        superDao.close();
+
+        updateParty();
     }
 
     private void undoUnitFromCurrentParty() {
+        NewHistory history = getCurrentHistory();
+        if (history == null) return;
 
+        SuperDao superDao = new SuperDao(getContext());
+        UnitDao unitDao = superDao.getUnitDao();
+
+        List<Unit> units = unitDao.queryBuilder().where(UnitDao.Properties.HistoryId.eq(history.getId())).orderDesc(UnitDao.Properties.Timestamp).list();
+
+        if (units.size() > 0) {
+            unitDao.delete(units.get(0));
+        }
+        updateParty();
     }
 
     private void endEvening() {
         NewHistory newHistory = getCurrentHistory();
         if (newHistory == null) return;
 
-        newHistory.setBeerGrams(BacUtility.getUnitGrams(0));
-        newHistory.setWineGrams(BacUtility.getUnitGrams(1));
-        newHistory.setDrinkGrams(BacUtility.getUnitGrams(2));
-        newHistory.setShotGrams(BacUtility.getUnitGrams(3));
+        newHistory.setBeerGrams(getUnitGrams(0));
+        newHistory.setWineGrams(getUnitGrams(1));
+        newHistory.setDrinkGrams(getUnitGrams(2));
+        newHistory.setShotGrams(getUnitGrams(3));
 
         User user = ((MainActivity)getActivity()).getUser();
 
@@ -408,6 +510,8 @@ public class DrinkEpisode extends Fragment implements Button.OnClickListener, Vi
         NewHistoryDao newHistoryDao = superDao.getNewHistoryDao();
         newHistoryDao.update(newHistory);
         superDao.close();
+
+        handler.removeCallbacks(timeUpdater);
 
         setView();
     }
@@ -430,15 +534,15 @@ public class DrinkEpisode extends Fragment implements Button.OnClickListener, Vi
 
         User user = ((MainActivity)getActivity()).getUser();
 
-        newHistory.setBeerCost(user.getBeerPrice());
+        /*newHistory.setBeerCost(user.getBeerPrice());
         newHistory.setWineCost(user.getWinePrice());
         newHistory.setDrinkCost(user.getDrinkPrice());
         newHistory.setShotCost(user.getShotPrice());
 
-        newHistory.setBeerGrams(BacUtility.getUnitGrams(0));
+        newHistory.setBeerGrams(getUnitGrams(0));
         newHistory.setWineGrams(BacUtility.getUnitGrams(1));
         newHistory.setDrinkGrams(BacUtility.getUnitGrams(2));
-        newHistory.setShotGrams(BacUtility.getUnitGrams(3));
+        newHistory.setShotGrams(BacUtility.getUnitGrams(3));*/
 
         newHistory.setGender(user.getGender().equals("Mann"));
         newHistory.setWeight(user.getWeight());
@@ -446,7 +550,28 @@ public class DrinkEpisode extends Fragment implements Button.OnClickListener, Vi
         newHistoryDao.insert(newHistory);
         superDao.close();
 
+        resetPlannedUnits();
+
         setView();
+
+        timeUpdater = new Runnable() {
+            @Override
+            public void run() {
+                updateRunningBac();
+                handler.postDelayed(this, 1000);
+            }
+        };
+        timeUpdater.run();
+    }
+
+    private void resetPlannedUnits() {
+        planPartyBeerUnits.setText("0");
+        planPartyWineUnits.setText("0");
+        planPartyDrinkUnits.setText("0");
+        planPartyShotUnits.setText("0");
+
+        planPartyExpectedBac.setText("0,0");
+        planPartyExpectedCost.setText("0,-");
     }
 
 }

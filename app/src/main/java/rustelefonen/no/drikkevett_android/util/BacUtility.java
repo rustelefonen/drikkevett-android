@@ -3,6 +3,7 @@ package rustelefonen.no.drikkevett_android.util;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.support.v7.app.AppCompatActivity;
 
 import rustelefonen.no.drikkevett_android.unit.UnitEditActivity;
 
@@ -58,7 +59,7 @@ public class BacUtility {
     public static boolean isBetween(double x, double lower, double upper) {
         return lower <= x && x < upper;
     }
-
+/*
     public static double calculateBac(double beerUnits, double wineUnits, double drinkUnits, double shotUnits, double hours, boolean gender, double weight) {
         double totalGrams = ((beerUnits * getUnitGrams(0)) + (wineUnits * getUnitGrams(1)) + (drinkUnits * getUnitGrams(2)) + (shotUnits * getUnitGrams(3))) * 0.79;
 
@@ -68,7 +69,7 @@ public class BacUtility {
         if (currentBac < 0.0) return 0.0;
         return currentBac;
     }
-
+*/
     public static double calculateBac(double beerUnits, double wineUnits, double drinkUnits, double shotUnits, double beerGrams, double wineGrams, double drinkGrams, double shotGrams, double hours, boolean gender, double weight) {
         double totalGrams = ((beerUnits * beerGrams) + (wineUnits * wineGrams) + (drinkUnits * drinkGrams) + (shotUnits * shotGrams)) * 0.79;
 
@@ -78,12 +79,14 @@ public class BacUtility {
         if (currentBac < 0.0) return 0.0;
         return currentBac;
     }
+/*
+    public static double getUnitGrams(int unitType, AppCompatActivity appCompatActivity) {
+        SharedPreferences sharedPref = appCompatActivity.getPreferences(Context.MODE_PRIVATE);
 
-    public static double getUnitGrams(int unitType/*, SharedPreferences sharedPref*/) {
-        /*float percent = sharedPref.getFloat(UnitEditActivity.percentKeys[unitType], UnitEditActivity.defaultPercent[unitType]);
+        float percent = sharedPref.getFloat(UnitEditActivity.percentKeys[unitType], UnitEditActivity.defaultPercent[unitType]);
         int amount = sharedPref.getInt(UnitEditActivity.amountKeys[unitType], UnitEditActivity.defaultAmount[unitType]);
 
-        return amount * percent / 10.0f;*/
+        return amount * percent / 10.0f;
 
 
 
@@ -105,5 +108,5 @@ public class BacUtility {
         else if (unitType == 1) return wineGrams;
         else if (unitType == 2) return drinkGrams;
         else return shotGrams;
-    }
+    }*/
 }

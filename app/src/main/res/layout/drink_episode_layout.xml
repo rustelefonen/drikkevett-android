@@ -355,7 +355,7 @@
 
                         <Button
                             android:id="@+id/plan_party_start_evening"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:background="@color/greenSuper"
@@ -631,7 +631,7 @@
                     </LinearLayout>
                     <Button
                         android:id="@+id/current_party_end_evening"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/greenSuper"
                         android:text="Avslutt kvelden"
