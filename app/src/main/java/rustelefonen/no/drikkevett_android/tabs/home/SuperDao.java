@@ -12,6 +12,7 @@ import rustelefonen.no.drikkevett_android.db.InformationDao;
 import rustelefonen.no.drikkevett_android.db.NewHistoryDao;
 import rustelefonen.no.drikkevett_android.db.PlanPartyElements;
 import rustelefonen.no.drikkevett_android.db.PlanPartyElementsDao;
+import rustelefonen.no.drikkevett_android.db.UnitDao;
 import rustelefonen.no.drikkevett_android.db.UserDao;
 import rustelefonen.no.drikkevett_android.information.DatabaseHelper;
 
@@ -57,6 +58,8 @@ public class SuperDao {
     public DayAfterBACDao getDayAfterBACDao() { return daoSession.getDayAfterBACDao(); }
 
     public NewHistoryDao getNewHistoryDao() { return daoSession.getNewHistoryDao(); }
+
+    public UnitDao getUnitDao() {return daoSession.getUnitDao(); }
 
     public void close() {
         helper.close();

@@ -1,8 +1,13 @@
 package rustelefonen.no.drikkevett_android.tabs.home;
 
+import android.content.Context;
+
 import java.util.List;
 
 import rustelefonen.no.drikkevett_android.db.History;
+import rustelefonen.no.drikkevett_android.db.NewHistory;
+import rustelefonen.no.drikkevett_android.db.Unit;
+import rustelefonen.no.drikkevett_android.util.BacUtility;
 
 import static rustelefonen.no.drikkevett_android.util.DateUtil.dateIsWithin30Days;
 
@@ -12,63 +17,68 @@ import static rustelefonen.no.drikkevett_android.util.DateUtil.dateIsWithin30Day
 
 public class HistoryCalculator {
 
-    public static int getTotalCost(List<History> historyList) {
+    public static int getTotalCost(List<NewHistory> histories, Context context) {
         int totalCost = 0;
-        for (History history : historyList) {
-            totalCost += history.getSum();
+        for (NewHistory history : histories) {
+            List<Unit> units = HistoryUtility.getHistoryUnits(history, context);
+            for (Unit unit : units) {
+                if (unit.getUnitType().equals("Beer")) totalCost += history.getBeerCost();
+                else if (unit.getUnitType().equals("Wine")) totalCost += history.getWineCost();
+                else if (unit.getUnitType().equals("Drink")) totalCost += history.getDrinkCost();
+                else if (unit.getUnitType().equals("Shot")) totalCost += history.getShotCost();
+            }
         }
         return totalCost;
     }
 
-    public static double getTotalHighestBac(List<History> historyList) {
+    public static double getTotalHighestBac(List<NewHistory> histories, Context context) {
         double highestBac = 0.0;
-        for (History history : historyList) {
-            if (history.getHighestBAC() > highestBac) {
-                highestBac = history.getHighestBAC();
+        for (NewHistory history : histories) {
+            double beerUnits = 0.0;
+            double wineUnits = 0.0;
+            double drinkUnits = 0.0;
+            double shotUnits = 0.0;
+
+            List<Unit> units = HistoryUtility.getHistoryUnits(history, context);
+
+            for (Unit unit : units) {
+                if (unit.getUnitType().equals("Beer")) beerUnits += 1.0;
+                else if (unit.getUnitType().equals("Wine")) wineUnits += 1.0;
+                else if (unit.getUnitType().equals("Drink")) drinkUnits += 1.0;
+                else if (unit.getUnitType().equals("Shot")) shotUnits += 1.0;
             }
+
+            double bac = BacUtility.calculateBac(beerUnits, wineUnits, drinkUnits, shotUnits,
+                    history.getBeerGrams(), history.getWineGrams(), history.getDrinkGrams(),
+                    history.getShotCost(), 0.0, history.getGender(), history.getWeight());
+
+            if (bac > highestBac) highestBac = bac;
         }
         return highestBac;
     }
 
-    public static double getTotalAverageHighestBac(List<History> historyList) {
-        double sum = 0.0;
-        for (History history : historyList) {
-            sum += history.getHighestBAC();
-        }
-        return sum / historyList.size();
-    }
+    public static double getTotalAverageHighestBac(List<NewHistory> histories, Context context) {
+        double bacSum = 0.0;
+        for (NewHistory history : histories) {
+            double beerUnits = 0.0;
+            double wineUnits = 0.0;
+            double drinkUnits = 0.0;
+            double shotUnits = 0.0;
 
-    public static int getLastMonthCost(List<History> historyList) {
-        int sum = 0;
-        for (History history : historyList) {
-            if (dateIsWithin30Days(history.getStartDate())) {
-                sum += history.getSum();
-            }
-        }
-        return sum;
-    }
+            List<Unit> units = HistoryUtility.getHistoryUnits(history, context);
 
-    public static double getLastMonthHighestBac(List<History> historyList) {
-        double highestBac = 0.0;
-        for (History history : historyList) {
-            if (dateIsWithin30Days(history.getStartDate())) {
-                if (history.getHighestBAC() > highestBac) {
-                    highestBac = history.getHighestBAC();
-                }
+            for (Unit unit : units) {
+                if (unit.getUnitType().equals("Beer")) beerUnits += 1.0;
+                else if (unit.getUnitType().equals("Wine")) wineUnits += 1.0;
+                else if (unit.getUnitType().equals("Drink")) drinkUnits += 1.0;
+                else if (unit.getUnitType().equals("Shot")) shotUnits += 1.0;
             }
-        }
-        return highestBac;
-    }
 
-    public static double getLastMonthAverageBac(List<History> historyList) {
-        double sum = 0.0;
-        int highestBacCount = 0;
-        for (History history : historyList) {
-            if (dateIsWithin30Days(history.getStartDate())) {
-                sum += history.getHighestBAC();
-                highestBacCount++;
-            }
+            bacSum += BacUtility.calculateBac(beerUnits, wineUnits, drinkUnits, shotUnits,
+                    history.getBeerGrams(), history.getWineGrams(), history.getDrinkGrams(),
+                    history.getShotCost(), 0.0, history.getGender(), history.getWeight());
+
         }
-        return sum / highestBacCount;
+        return bacSum / (double) histories.size();
     }
 }

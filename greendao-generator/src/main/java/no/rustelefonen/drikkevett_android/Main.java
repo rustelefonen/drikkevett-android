@@ -114,6 +114,8 @@ public class Main {
         newHistory.addBooleanProperty("gender");
         newHistory.addDoubleProperty("weight");
 
+        newHistory.implementsSerializable();
+
         Property newHistoryId = unit.addLongProperty("historyId").notNull().getProperty();
         ToMany newHistoryUnits = newHistory.addToMany(unit, newHistoryId);
         newHistoryUnits.setName("units");

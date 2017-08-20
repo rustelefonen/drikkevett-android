@@ -1,6 +1,10 @@
 package rustelefonen.no.drikkevett_android.util;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
+
+import rustelefonen.no.drikkevett_android.unit.UnitEditActivity;
 
 /**
  * Created by simenfonnes on 16.08.2017.
@@ -65,7 +69,38 @@ public class BacUtility {
         return currentBac;
     }
 
-    public static double getUnitGrams(int unitType) {
+    public static double calculateBac(double beerUnits, double wineUnits, double drinkUnits, double shotUnits, double beerGrams, double wineGrams, double drinkGrams, double shotGrams, double hours, boolean gender, double weight) {
+        double totalGrams = ((beerUnits * beerGrams) + (wineUnits * wineGrams) + (drinkUnits * drinkGrams) + (shotUnits * shotGrams)) * 0.79;
+
+        double genderScore = gender ? 0.7 : 0.6;
+
+        double currentBac = (totalGrams/(weight * genderScore) - (0.15 * hours));
+        if (currentBac < 0.0) return 0.0;
+        return currentBac;
+    }
+
+    public static double getUnitGrams(int unitType/*, SharedPreferences sharedPref*/) {
+        /*float percent = sharedPref.getFloat(UnitEditActivity.percentKeys[unitType], UnitEditActivity.defaultPercent[unitType]);
+        int amount = sharedPref.getInt(UnitEditActivity.amountKeys[unitType], UnitEditActivity.defaultAmount[unitType]);
+
+        return amount * percent / 10.0f;*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         if (unitType == 0) return beerGrams;
         else if (unitType == 1) return wineGrams;
         else if (unitType == 2) return drinkGrams;

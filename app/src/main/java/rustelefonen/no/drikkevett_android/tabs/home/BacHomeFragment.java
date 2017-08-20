@@ -1,5 +1,6 @@
 package rustelefonen.no.drikkevett_android.tabs.home;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -20,43 +21,40 @@ import android.widget.TextView;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.LimitLine;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
 import java.io.File;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import rustelefonen.no.drikkevett_android.MainActivity;
 import rustelefonen.no.drikkevett_android.R;
-import rustelefonen.no.drikkevett_android.SelectedPageEvent;
-import rustelefonen.no.drikkevett_android.db.History;
-import rustelefonen.no.drikkevett_android.db.HistoryDao;
+import rustelefonen.no.drikkevett_android.db.NewHistory;
+import rustelefonen.no.drikkevett_android.db.Unit;
 import rustelefonen.no.drikkevett_android.db.User;
 import rustelefonen.no.drikkevett_android.util.DateUtil;
 import rustelefonen.no.drikkevett_android.util.ImageUtil;
 import rustelefonen.no.drikkevett_android.util.NavigationUtil;
 
-import static rustelefonen.no.drikkevett_android.tabs.home.HistoryCalculator.getLastMonthAverageBac;
-import static rustelefonen.no.drikkevett_android.tabs.home.HistoryCalculator.getLastMonthCost;
-import static rustelefonen.no.drikkevett_android.tabs.home.HistoryCalculator.getLastMonthHighestBac;
 import static rustelefonen.no.drikkevett_android.tabs.home.HistoryCalculator.getTotalAverageHighestBac;
 import static rustelefonen.no.drikkevett_android.tabs.home.HistoryCalculator.getTotalCost;
 import static rustelefonen.no.drikkevett_android.tabs.home.HistoryCalculator.getTotalHighestBac;
 
 public class BacHomeFragment extends Fragment{
 
-    //Fields
-    public String photoFileName = "photo.jpg";
-
-    //Widgets
     public TextView quoteTextView;
     public ImageView profileImage;
     public TextView totalCostTextView;
@@ -72,75 +70,27 @@ public class BacHomeFragment extends Fragment{
     public TextView totalBacCountTextView;
     public TextView avgBacCountTextView;
     public TextView imageTextView;
-
     public CardView noDataBarChartCardView;
     public CardView historyCardView;
     public CardView noDataPieChart;
     public CardView goalCardView;
-
     public TextView barChartMonth;
     public TextView barChartYear;
-
-    private User user;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.bac_home_frag, container, false);
-
-
         initWidgets(view);
-        fetchUser();
         fillWidgets();
-        fillPieChart();
-        stylePieChart();
         setHasOptionsMenu(true);
         return view;
-    }
-
-    public void getSelectedPage(SelectedPageEvent selectedPageEvent) {
-        if (selectedPageEvent.page == 0) {
-            //((MainActivity)getActivity()).getFloatingActionMenu().hideMenu(true);
-            if (goalPieChart != null) goalPieChart.animateY(1400, Easing.EasingOption.EaseInOutQuad);
-        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        fetchUser();
         insertProfileImageIfExists();
-        insertNicknameIfExists();
-    }
-
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-    }
-
-    private void fetchUser() {
-        user = ((MainActivity)getActivity()).getUser();
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        getActivity().getMenuInflater().inflate(R.menu.simple_menu, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_contact:
-                NavigationUtil.navigateToContactInformation(getContext());
-                return false;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    private String getRandomQuote() {
-        String[] quotes = getResources().getStringArray(R.array.quotes);
-        int randomIndex = (int) (Math.random() * quotes.length-1 + 1);
-        return quotes[randomIndex];
+        insertNicknameIfExists(((MainActivity)getActivity()).getUser());
     }
 
     private void initWidgets(View view) {
@@ -169,84 +119,143 @@ public class BacHomeFragment extends Fragment{
 
     private void fillWidgets() {
         quoteTextView.setText(getRandomQuote());
-        List<History> historyList = getHistoryList();
-        List<History> entireHistoryList = getEntireHistoryList();
-        if (historyList.size() > 0) {
-            noDataBarChartCardView.setVisibility(View.GONE);
-            noDataPieChart.setVisibility(View.GONE);
-            historyCardView.setVisibility(View.VISIBLE);
-            goalCardView.setVisibility(View.VISIBLE);
+
+        List<NewHistory> historiesInCurrentMonth = HistoryUtility.getHistoriesInCurrentMonth(getContext());
+        List<NewHistory> allCompletedHistories = HistoryUtility.getAllCompletedHistories(getContext());
+
+        if (historiesInCurrentMonth.size() > 0) {
+            setViewVisibility(false);
+
             Date now = new Date();
             barChartMonth.setText(DateUtil.getMonthOfDate(now));
             barChartYear.setText(DateUtil.getYearOfDate(now));
 
-            DecimalFormat df = new DecimalFormat("#.##");
-            df.setRoundingMode(RoundingMode.CEILING);
+            setTotalCard(allCompletedHistories, getContext());
+            setAvgCard(historiesInCurrentMonth, getContext());
 
-            totalCountTextView.setText(df.format(getTotalCost(entireHistoryList)) + ",-");
-            totalBacCountTextView.setText(df.format(getTotalHighestBac(entireHistoryList)));
-            avgBacCountTextView.setText(df.format(getTotalAverageHighestBac(entireHistoryList)));
+            User user = ((MainActivity)getActivity()).getUser();
 
-            lastMonthCostTextView.setText(df.format(getLastMonthCost(entireHistoryList)) + ",-");
-            lastMonthHighestBacTextView.setText(df.format(getLastMonthHighestBac(entireHistoryList)));
-            lastMonthAvgBacTextView.setText(df.format(getLastMonthAverageBac(entireHistoryList)));
+            setBarChartData(historiesInCurrentMonth, user);
+            styleBarChart(user);
 
-            if (user == null) return;
-            BarChartController chartController = new BarChartController(historyBarChart, user, getHistoryList());
-            chartController.setData();
-            chartController.styleBarChart();
-        } else {
+            fillPieChart(historiesInCurrentMonth, user);
+            stylePieChart(user);
+        } else setViewVisibility(true);
+    }
+
+    private void setTotalCard(List<NewHistory> entireHistoryList, Context context) {
+        DecimalFormat df = new DecimalFormat("#.##");
+        df.setRoundingMode(RoundingMode.CEILING);
+
+        String formattedTotalCost = df.format(getTotalCost(entireHistoryList, getContext())) + ",-";
+
+        totalCountTextView.setText(formattedTotalCost);
+        totalBacCountTextView.setText(df.format(getTotalHighestBac(entireHistoryList, context)));
+        avgBacCountTextView.setText(df.format(getTotalAverageHighestBac(entireHistoryList, context)));
+    }
+
+    private void setAvgCard(List<NewHistory> historiesInCurrentMonth, Context context) {
+        DecimalFormat df = new DecimalFormat("#.##");
+        df.setRoundingMode(RoundingMode.CEILING);
+
+        String formattedTotalCost = df.format(getTotalCost(historiesInCurrentMonth, context)) + ",-";
+
+        lastMonthCostTextView.setText(formattedTotalCost);
+        lastMonthHighestBacTextView.setText(df.format(getTotalHighestBac(historiesInCurrentMonth, context)));
+        lastMonthAvgBacTextView.setText(df.format(getTotalAverageHighestBac(historiesInCurrentMonth, context)));
+    }
+
+    private void setViewVisibility(boolean historyIsEmpty) {
+        if (historyIsEmpty) {
             noDataBarChartCardView.setVisibility(View.VISIBLE);
             noDataPieChart.setVisibility(View.VISIBLE);
             historyCardView.setVisibility(View.GONE);
             goalCardView.setVisibility(View.GONE);
         }
-    }
-
-    private int getCurrentMonth() {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(new Date());
-        return calendar.get(Calendar.MONTH);
-    }
-
-    private List<History> getHistoryList() {
-        SuperDao superDao = new SuperDao(getContext());
-        HistoryDao historyDao = superDao.getHistoryDao();
-        List<History> historyList = historyDao.queryBuilder().list();
-        superDao.close();
-
-        List<History> historiesInThisMonth = new ArrayList<>();
-        int currentMonth = getCurrentMonth();
-
-        for (History history : historyList) {
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(history.getStartDate());
-            if (calendar.get(Calendar.MONTH) == currentMonth) historiesInThisMonth.add(history);
+        else {
+            noDataBarChartCardView.setVisibility(View.GONE);
+            noDataPieChart.setVisibility(View.GONE);
+            historyCardView.setVisibility(View.VISIBLE);
+            goalCardView.setVisibility(View.VISIBLE);
         }
-        return historiesInThisMonth;
     }
 
-    private List<History> getEntireHistoryList() {
-        SuperDao superDao = new SuperDao(getContext());
-        HistoryDao historyDao = superDao.getHistoryDao();
-        List<History> historyList = historyDao.queryBuilder().list();
-        superDao.close();
-        return historyList;
+    private void setBarChartData(List<NewHistory> historiesInCurrentMonth, User user) {
+        BarData data = new BarData(getXAxisValues(historiesInCurrentMonth), getDataSet(historiesInCurrentMonth, user));
+        historyBarChart.setData(data);
     }
 
-    private void fillPieChart() {
-        List<History> historyList = getHistoryList();
+    public void styleBarChart(User user) {
+        int whiteColor = Color.parseColor("#FFFFFF");
+        historyBarChart.setNoDataText("ingen graf.");
+        historyBarChart.getAxisLeft().setDrawGridLines(false);
+        historyBarChart.getAxisRight().setDrawGridLines(false);
+        historyBarChart.getXAxis().setDrawGridLines(false);
+        historyBarChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+        historyBarChart.getAxisRight().setDrawTopYLabelEntry(false);
+        historyBarChart.getAxisLeft().setTextColor(whiteColor);
+        historyBarChart.getAxisRight().setEnabled(false);
+        historyBarChart.getXAxis().setTextColor(whiteColor);
+        historyBarChart.getLegend().setEnabled(false);
+        historyBarChart.setDescription("");
+        historyBarChart.setPinchZoom(false);
+        historyBarChart.setDoubleTapToZoomEnabled(false);
+        historyBarChart.getAxisRight().removeAllLimitLines();
+        historyBarChart.animateXY(1000, 1000);
+        LimitLine limit = new LimitLine(user.getGoalBAC().floatValue(), "");
+        limit.setLineColor(whiteColor);
+        limit.enableDashedLine(8.5f, 8.5f, 6.5f);
+        historyBarChart.getAxisRight().addLimitLine(limit);
+        historyBarChart.getAxisLeft().setDrawAxisLine(false);
+        historyBarChart.getXAxis().setDrawAxisLine(false);
+        historyBarChart.setVisibleXRange(8,8);
+        historyBarChart.setHighlightPerTapEnabled(false);
+        historyBarChart.getAxisLeft().setAxisMinValue(0.0f);
+    }
 
-        double goal = ((MainActivity)getActivity()).getUser().getGoalBAC();
+    private ArrayList<IBarDataSet> getDataSet(List<NewHistory> historiesInCurrentMonth, User user) {
+        ArrayList<BarEntry> valueSet1 = new ArrayList<>();
+        List<Integer> colors = new ArrayList<>();
+
+        for (int i = 0; i < historiesInCurrentMonth.size(); i++) {
+            NewHistory history = historiesInCurrentMonth.get(i);
+            List<Unit> units = HistoryUtility.getHistoryUnits(history, getContext());
+
+            if (HistoryUtility.getHighestBac(history, units) > user.getGoalBAC()) {
+                valueSet1.add(new BarEntry((float) HistoryUtility.getHighestBac(history, units), i));
+                colors.add(Color.parseColor("#DD7070"));
+            } else {
+                valueSet1.add(new BarEntry((float) HistoryUtility.getHighestBac(history, units), i));
+                colors.add(Color.parseColor("#1AC149"));
+            }
+        }
+        BarDataSet barDataSet1 = new BarDataSet(valueSet1, "Brand 1");
+        barDataSet1.setColors(colors);
+        barDataSet1.setBarSpacePercent(40f);
+        barDataSet1.setDrawValues(false);
+
+        ArrayList<IBarDataSet> dataSets = new ArrayList<>();
+        dataSets.add(barDataSet1);
+        return dataSets;
+    }
+
+    private ArrayList<String> getXAxisValues(List<NewHistory> historiesInCurrentMonth) {
+        ArrayList<String> xAxis = new ArrayList<>();
+        for (NewHistory history : historiesInCurrentMonth) {
+            xAxis.add(DateUtil.getDayOfMonth(history.getBeginDate()));
+        }
+        return xAxis;
+    }
+
+    private void fillPieChart(List<NewHistory> historiesInCurrentMonth, User user) {
+        double goal = user.getGoalBAC();
         double overGoal = 0.0;
         double underGoal = 0.0;
 
-        for (History history : historyList) {
-            if (history.getHighestBAC() > goal) {
-                overGoal++;
-            } else {
-                underGoal++;
-            }
+        for (NewHistory history : historiesInCurrentMonth) {
+            List<Unit> units = HistoryUtility.getHistoryUnits(history, getContext());
+            if (HistoryUtility.getHighestBac(history, units) > goal) overGoal++;
+            else underGoal++;
         }
 
         ArrayList<Entry> entries = new ArrayList<>();
@@ -254,9 +263,7 @@ public class BacHomeFragment extends Fragment{
         entries.add(new Entry((float) underGoal, 1));
 
         PieDataSet dataset = new PieDataSet(entries, "# of Calls");
-
         dataset.setDrawValues(false);
-
         dataset.setColors(new int[]{Color.parseColor("#DD7070"), Color.parseColor("#1AC149")});
 
         ArrayList<String> labels = new ArrayList<>();
@@ -267,8 +274,7 @@ public class BacHomeFragment extends Fragment{
         goalPieChart.setData(data);
     }
 
-    private void stylePieChart() {
-        User user = ((MainActivity)getActivity()).getUser();
+    private void stylePieChart(User user) {
         if (user != null) goalPieChart.setCenterText(user.getGoalBAC() +"");
         goalPieChart.setDrawHoleEnabled(true);
         goalPieChart.setHoleRadius(80f);
@@ -300,8 +306,29 @@ public class BacHomeFragment extends Fragment{
         });
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        getActivity().getMenuInflater().inflate(R.menu.simple_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_contact:
+                NavigationUtil.navigateToContactInformation(getContext());
+                return false;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private String getRandomQuote() {
+        String[] quotes = getResources().getStringArray(R.array.quotes);
+        int randomIndex = (int) (Math.random() * quotes.length-1 + 1);
+        return quotes[randomIndex];
+    }
+
     private void insertProfileImageIfExists() {
-        Uri takenPhotoUri = ImageUtil.getPhotoFileUri(photoFileName, getContext());
+        Uri takenPhotoUri = ImageUtil.getPhotoFileUri("photo.jpg", getContext());
         if (takenPhotoUri == null) return;
         if (!new File(takenPhotoUri.getPath()).exists()) return;
         Bitmap takenImage = ImageUtil.decodeSampledBitmapFromResource(getContext(), takenPhotoUri, getWidth(), 175);
@@ -310,17 +337,17 @@ public class BacHomeFragment extends Fragment{
         profileImage.setImageBitmap(takenImage);
     }
 
+    private void insertNicknameIfExists(User user) {
+        if (user == null) return;
+        String nickname = user.getNickname();
+        if (nickname == null) return;
+        imageTextView.setText(nickname);
+    }
+
     private int getWidth() {
         Display display = getActivity().getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
         return size.x;
-    }
-
-    private void insertNicknameIfExists() {
-        if (user == null) return;
-        String nickname = user.getNickname();
-        if (nickname == null) return;
-        imageTextView.setText(nickname);
     }
 }

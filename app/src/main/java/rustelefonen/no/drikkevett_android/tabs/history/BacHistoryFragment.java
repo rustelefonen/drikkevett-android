@@ -16,15 +16,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import rustelefonen.no.drikkevett_android.MainActivity;
 import rustelefonen.no.drikkevett_android.R;
-import rustelefonen.no.drikkevett_android.SelectedPageEvent;
-import rustelefonen.no.drikkevett_android.db.GraphHistory;
-import rustelefonen.no.drikkevett_android.db.GraphHistoryDao;
-import rustelefonen.no.drikkevett_android.db.History;
-import rustelefonen.no.drikkevett_android.db.HistoryDao;
+import rustelefonen.no.drikkevett_android.db.NewHistory;
+import rustelefonen.no.drikkevett_android.db.NewHistoryDao;
 import rustelefonen.no.drikkevett_android.tabs.home.SuperDao;
 import rustelefonen.no.drikkevett_android.util.NavigationUtil;
 
@@ -32,10 +30,7 @@ public class BacHistoryFragment extends Fragment {
     private static final String TAG = "RecyclerViewFragment";
     private static final int SPAN_COUNT = 2;
 
-    boolean hack = false;
-
     public CardView defaultCard;
-
 
     private enum LayoutManagerType {
         GRID_LAYOUT_MANAGER,
@@ -47,23 +42,13 @@ public class BacHistoryFragment extends Fragment {
     protected HistoryAdapter mAdapter;
     protected RecyclerView.LayoutManager mLayoutManager;
 
-    private List<History> historyList;
+    private List<NewHistory> historyList;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         initDataset();
-    }
-
-    public void getSelectedPage(SelectedPageEvent selectedPageEvent) {
-        if (selectedPageEvent.page == 4) {
-            refreshFragment();
-            displayHiddenCard();
-            //((MainActivity)getActivity()).getFloatingActionMenu().hideMenu(true);
-        } else {
-            //((MainActivity)getActivity()).getFloatingActionMenu().close(true);
-        }
     }
 
     @Override
@@ -114,7 +99,7 @@ public class BacHistoryFragment extends Fragment {
         setRecyclerViewLayoutManager(mCurrentLayoutManagerType);
 
         double goalBac = ((MainActivity)getActivity()).getUser().getGoalBAC();
-        mAdapter = new HistoryAdapter(historyList, goalBac);
+        mAdapter = new HistoryAdapter(historyList, getContext(), goalBac);
         mRecyclerView.setAdapter(mAdapter);
 
         return rootView;
@@ -147,13 +132,20 @@ public class BacHistoryFragment extends Fragment {
 
     private void initDataset() {
         SuperDao superDao = new SuperDao(getContext());
-        HistoryDao historyDao = superDao.getHistoryDao();
-        historyList = historyDao.queryBuilder().orderDesc(HistoryDao.Properties.StartDate).list();
+        NewHistoryDao historyDao = superDao.getNewHistoryDao();
+
+        List<NewHistory> allHistoriesSorted = historyDao.queryBuilder().orderDesc(NewHistoryDao.Properties.BeginDate).list();
+        List<NewHistory> tempList = new ArrayList<>();
+
+        for (NewHistory newHistory : allHistoriesSorted) {
+            if (newHistory.getEndDate() != null) tempList.add(newHistory);
+        }
+        historyList = tempList;
         superDao.close();
     }
 
     private void deleteAllHistories() {
-        SuperDao superDao = new SuperDao(getContext());
+        /*SuperDao superDao = new SuperDao(getContext());
         HistoryDao historyDao = superDao.getHistoryDao();
         GraphHistoryDao graphHistoryDao = superDao.getGraphHistoryDao();
 
@@ -167,13 +159,13 @@ public class BacHistoryFragment extends Fragment {
         for (History history : historyList) {
             historyDao.delete(history);
         }
-        superDao.close();
+        superDao.close();*/
     }
 
     private void refreshFragment() {
         initDataset();
         double goalBac = ((MainActivity)getActivity()).getUser().getGoalBAC();
-        mAdapter = new HistoryAdapter(historyList, goalBac);
+        mAdapter = new HistoryAdapter(historyList, getContext(), goalBac);
         mRecyclerView.setAdapter(mAdapter);
     }
 

@@ -17,16 +17,15 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import rustelefonen.no.drikkevett_android.R;
-import rustelefonen.no.drikkevett_android.db.GraphHistory;
-import rustelefonen.no.drikkevett_android.db.GraphHistoryDao;
-import rustelefonen.no.drikkevett_android.db.History;
-import rustelefonen.no.drikkevett_android.tabs.home.SuperDao;
+import rustelefonen.no.drikkevett_android.db.NewHistory;
+import rustelefonen.no.drikkevett_android.db.Unit;
+import rustelefonen.no.drikkevett_android.tabs.home.HistoryUtility;
+import rustelefonen.no.drikkevett_android.util.BacUtility;
 import rustelefonen.no.drikkevett_android.util.DateUtil;
 
 /**
@@ -37,8 +36,8 @@ public class HistoryActivity extends AppCompatActivity {
 
     public static final String ID = "History";
 
-    private History history;
-    private List<GraphHistory> graphHistories;
+    private NewHistory history;
+    List<Unit> units;
 
     public LineChart lineChart;
 
@@ -55,20 +54,10 @@ public class HistoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.history_layout);
         insertHistoryIfExists();
-        setData();
+        units = HistoryUtility.getHistoryUnits(history, this);
         initWidgets();
         fillWidgets();
         insertToolbar();
-    }
-
-    private void fillWidgets() {
-        setupLineChart();
-        beerCountTextView.setText(history.getBeerCount() + "");
-        wineCountTextView.setText(history.getWineCount() + "");
-        drinkCountTextView.setText(history.getDrinkCount() + "");
-        shotCountTextView.setText(history.getShotCount() + "");
-        historyCostTextView.setText(history.getSum() + "");
-        historyHighestBacTextView.setText(history.getHighestBAC() + "");
     }
 
     private void initWidgets() {
@@ -79,6 +68,16 @@ public class HistoryActivity extends AppCompatActivity {
         shotCountTextView = (TextView) findViewById(R.id.history_shot_count);
         historyCostTextView = (TextView) findViewById(R.id.history_cost);
         historyHighestBacTextView = (TextView) findViewById(R.id.history_highest_bac);
+    }
+
+    private void fillWidgets() {
+        setupLineChart();
+        beerCountTextView.setText(history.getBeerPlannedUnitCount() + "");
+        wineCountTextView.setText(history.getWinePlannedUnitCount() + "");
+        drinkCountTextView.setText(history.getDrinkPlannedUnitCount() + "");
+        shotCountTextView.setText(history.getShotPlannedUnitCount() + "");
+        historyCostTextView.setText(HistoryUtility.getTotalCost(history, units) + "");
+        historyHighestBacTextView.setText(new DecimalFormat("##.00").format(HistoryUtility.getHighestBac(history, units)));
     }
 
     private void setupLineChart() {
@@ -99,76 +98,48 @@ public class HistoryActivity extends AppCompatActivity {
 
     private void insertHistoryIfExists() {
         Object tmpHistory = getIntent().getSerializableExtra(ID);
-        if (tmpHistory != null && tmpHistory instanceof History) history = (History) tmpHistory;
-    }
-
-    private String getNorwegianDayOfWeek(int day) {
-        if (day == 1) return "Søndag";
-        else if (day == 2) return "Mandag";
-        else if (day == 3) return "Tirsdag";
-        else if (day == 4) return "Onsdag";
-        else if (day == 5) return "Torsdag";
-        else if (day == 6) return "Fredag";
-        else if (day == 7) return "Lørdag";
-        return "";
-    }
-
-    private String getTitle(Date date) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        int weekDay = calendar.get(Calendar.DAY_OF_WEEK);
-        int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
-        int month = calendar.get(Calendar.MONTH);
-        int year = calendar.get(Calendar.YEAR);
-
-        return getNorwegianDayOfWeek(weekDay) + " " + dayOfMonth + ". " + DateUtil.getMonthName(month) + " - " + year;
-    }
-
-    private String getHoursAndMinutes(Date date) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        String tempTime = "";
-        String tempMinute = "";
-        String tempHour = "";
-
-        if(calendar.get(Calendar.MINUTE) >= 0 && calendar.get(Calendar.MINUTE) <= 9){
-            tempMinute = "0" + calendar.get(Calendar.MINUTE);
-        } else {
-            tempMinute = "" + calendar.get(Calendar.MINUTE);
-        }
-        if(calendar.get(Calendar.HOUR_OF_DAY) >= 0 && calendar.get(Calendar.HOUR_OF_DAY) <= 9){
-            tempHour = "0" + calendar.get(Calendar.HOUR_OF_DAY);
-        } else {
-            tempHour = "" + calendar.get(Calendar.HOUR_OF_DAY);
-        }
-        tempTime = tempHour + ":" + tempMinute;
-        return tempTime;
+        if (tmpHistory != null && tmpHistory instanceof NewHistory) history = (NewHistory) tmpHistory;
     }
 
     private LineData getLineData() {
         ArrayList<Entry> entries = new ArrayList<>();
         ArrayList<String> labels = new ArrayList<>();
 
-        int size = 0;
-        if (graphHistories != null) size = graphHistories.size();
-        for (int i = 0; i < size; i++) {
-            entries.add(new Entry(graphHistories.get(i).getCurrentBAC().floatValue(), i));
-            labels.add(getHoursAndMinutes(graphHistories.get(i).getTimestamp()));
+        double beerUnits = 0.0;
+        double wineUnits = 0.0;
+        double drinkUnits = 0.0;
+        double shotUnits = 0.0;
+
+        for (int i = 0; i < units.size(); i++) {
+            Unit unit = units.get(i);
+
+            if (unit.getUnitType().equals("Beer")) {beerUnits += 1.0;}
+            else if (unit.getUnitType().equals("Wine")) {wineUnits += 1.0;}
+            else if (unit.getUnitType().equals("Drink")) {drinkUnits += 1.0;}
+            else if (unit.getUnitType().equals("Shot")) {shotUnits += 1.0;}
+
+            long seconds = (unit.getTimestamp().getTime() - history.getBeginDate().getTime()) / 1000;
+
+            double hours = seconds / 3600.0;
+
+            double bac = BacUtility.calculateBac(beerUnits, wineUnits, drinkUnits, shotUnits, history.getBeerGrams(), history.getWineGrams(), history.getDrinkGrams(), history.getShotGrams(), hours, history.getGender(), history.getWeight());
+            entries.add(new Entry((float) bac, i));
+            labels.add(DateUtil.getHoursAndMinutes(unit.getTimestamp()));
         }
 
-        LineDataSet dataset = new LineDataSet(entries, "# of Calls");
+        LineDataSet dataSet = new LineDataSet(entries, "# of Calls");
 
-        dataset.setDrawFilled(true);
-        dataset.setDrawHighlightIndicators(false);
-        dataset.setDrawCircleHole(true);
-        dataset.setDrawValues(false);
-        dataset.setCircleRadius(5f);
-        dataset.setCircleColor(ContextCompat.getColor(this, R.color.textColor));
-        dataset.setFillColor(ContextCompat.getColor(this, R.color.historyLineChartGreen));
-        dataset.setColor(ContextCompat.getColor(this, R.color.historyLineChartGreen));
-        dataset.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+        dataSet.setDrawFilled(true);
+        dataSet.setDrawHighlightIndicators(false);
+        dataSet.setDrawCircleHole(true);
+        dataSet.setDrawValues(false);
+        dataSet.setCircleRadius(5f);
+        dataSet.setCircleColor(ContextCompat.getColor(this, R.color.textColor));
+        dataSet.setFillColor(ContextCompat.getColor(this, R.color.historyLineChartGreen));
+        dataSet.setColor(ContextCompat.getColor(this, R.color.historyLineChartGreen));
+        dataSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
 
-        return new LineData(labels, dataset);
+        return new LineData(labels, dataSet);
     }
 
     @Override
@@ -185,7 +156,7 @@ public class HistoryActivity extends AppCompatActivity {
     private void insertToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.textColor));
-        toolbar.setTitle(getTitle(history.getStartDate()));
+        toolbar.setTitle(DateUtil.getTitle(history.getBeginDate()));
 
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -204,12 +175,5 @@ public class HistoryActivity extends AppCompatActivity {
 
     private void hasChanged() {
         super.onBackPressed();
-    }
-
-    private void setData() {
-        SuperDao superDao = new SuperDao(this);
-        GraphHistoryDao graphHistoryDao = superDao.getGraphHistoryDao();
-        graphHistories = graphHistoryDao.queryBuilder().where(GraphHistoryDao.Properties.HistoryId.eq(history.getId())).list();
-        superDao.close();
     }
 }

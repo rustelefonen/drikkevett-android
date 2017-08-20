@@ -145,4 +145,47 @@ public class DateUtil {
         date = calendar.getTime();
         return date;
     }
+
+    public static String getNorwegianDayOfWeek(int day) {
+        if (day == 1) return "Søndag";
+        else if (day == 2) return "Mandag";
+        else if (day == 3) return "Tirsdag";
+        else if (day == 4) return "Onsdag";
+        else if (day == 5) return "Torsdag";
+        else if (day == 6) return "Fredag";
+        else if (day == 7) return "Lørdag";
+        return "";
+    }
+
+    public static String getHoursAndMinutes(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        String tempTime = "";
+        String tempMinute = "";
+        String tempHour = "";
+
+        if(calendar.get(Calendar.MINUTE) >= 0 && calendar.get(Calendar.MINUTE) <= 9){
+            tempMinute = "0" + calendar.get(Calendar.MINUTE);
+        } else {
+            tempMinute = "" + calendar.get(Calendar.MINUTE);
+        }
+        if(calendar.get(Calendar.HOUR_OF_DAY) >= 0 && calendar.get(Calendar.HOUR_OF_DAY) <= 9){
+            tempHour = "0" + calendar.get(Calendar.HOUR_OF_DAY);
+        } else {
+            tempHour = "" + calendar.get(Calendar.HOUR_OF_DAY);
+        }
+        tempTime = tempHour + ":" + tempMinute;
+        return tempTime;
+    }
+
+    public static String getTitle(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        int weekDay = calendar.get(Calendar.DAY_OF_WEEK);
+        int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+        int month = calendar.get(Calendar.MONTH);
+        int year = calendar.get(Calendar.YEAR);
+
+        return DateUtil.getNorwegianDayOfWeek(weekDay) + " " + dayOfMonth + ". " + DateUtil.getMonthName(month) + " - " + year;
+    }
 }

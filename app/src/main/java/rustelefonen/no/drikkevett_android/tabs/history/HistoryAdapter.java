@@ -14,11 +14,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.List;
 
 import rustelefonen.no.drikkevett_android.R;
 import rustelefonen.no.drikkevett_android.db.History;
+import rustelefonen.no.drikkevett_android.db.NewHistory;
+import rustelefonen.no.drikkevett_android.db.Unit;
+import rustelefonen.no.drikkevett_android.db.UnitDao;
+import rustelefonen.no.drikkevett_android.tabs.home.HistoryUtility;
+import rustelefonen.no.drikkevett_android.tabs.home.SuperDao;
+import rustelefonen.no.drikkevett_android.util.BacUtility;
 import rustelefonen.no.drikkevett_android.util.DateUtil;
 
 /**
@@ -27,11 +34,13 @@ import rustelefonen.no.drikkevett_android.util.DateUtil;
 
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHolder> {
 
-    private List<History> historyList;
+    private List<NewHistory> historyList;
+    private Context context;
     private double goalBac;
 
-    public HistoryAdapter(List<History> historyList, double goalBac) {
+    public HistoryAdapter(List<NewHistory> historyList, Context context, double goalBac) {
         this.historyList = historyList;
+        this.context = context;
         this.goalBac = goalBac;
     }
 
@@ -46,35 +55,29 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         return new ViewHolder(v, v.getContext());
     }
 
-    private String getNorwegianDayOfWeek(int day) {
-        if (day == 1) return "Søndag";
-        else if (day == 2) return "Mandag";
-        else if (day == 3) return "Tirsdag";
-        else if (day == 4) return "Onsdag";
-        else if (day == 5) return "Torsdag";
-        else if (day == 6) return "Fredag";
-        else if (day == 7) return "Lørdag";
-        return "";
-    }
-
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
-        History history = historyList.get(position);
-        viewHolder.getDayTextView().setText(DateUtil.getDayOfMonth(history.getStartDate()) + "");
-        viewHolder.getMonthTextView().setText(DateUtil.getMonthShortName(history.getStartDate()) + "");
+        NewHistory history = historyList.get(position);
+        List<Unit> units = HistoryUtility.getHistoryUnits(history, context);
 
-        String perMille = "\u2030";
-        viewHolder.getHighestBacTextView().setText(history.getHighestBAC() + perMille);
-        String cashIndicator = ",-";
-        viewHolder.getTotalCostTextView().setText(history.getSum() + cashIndicator);
+        double highestBac = HistoryUtility.getHighestBac(history, units);
+
+        String highestBacFormatted = new DecimalFormat("##.00").format(highestBac) + "\u2030";
+        String totalCostFormatted = HistoryUtility.getTotalCost(history, units) + ",-";
+
+        viewHolder.getHighestBacTextView().setText(highestBacFormatted);
+        viewHolder.getTotalCostTextView().setText(totalCostFormatted);
 
         Calendar calendar = Calendar.getInstance();
-        calendar.setTime(history.getStartDate());
-        viewHolder.getDayOfWeekTextView().setText(getNorwegianDayOfWeek(calendar.get(Calendar.DAY_OF_WEEK)) + " brukte du");
+        calendar.setTime(history.getBeginDate());
+        viewHolder.getDayOfWeekTextView().setText(DateUtil.getNorwegianDayOfWeek(calendar.get(Calendar.DAY_OF_WEEK)) + " brukte du");
+
+        viewHolder.getDayTextView().setText(DateUtil.getDayOfMonth(history.getBeginDate()) + "");
+        viewHolder.getMonthTextView().setText(DateUtil.getMonthShortName(history.getBeginDate()) + "");
 
         final View view = viewHolder.getView();
 
-        if (history.getHighestBAC() > goalBac) {
+        if (highestBac > goalBac) {
             int red = ContextCompat.getColor(view.getContext(), R.color.historyRed);
             ((GradientDrawable)viewHolder.getShapeView().getBackground()).setColor(red);
             viewHolder.getHighestBacTextView().setTextColor(red);

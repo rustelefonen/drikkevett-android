@@ -19,6 +19,8 @@ import rustelefonen.no.drikkevett_android.MainActivity;
 import rustelefonen.no.drikkevett_android.R;
 import rustelefonen.no.drikkevett_android.db.NewHistory;
 import rustelefonen.no.drikkevett_android.db.NewHistoryDao;
+import rustelefonen.no.drikkevett_android.db.Unit;
+import rustelefonen.no.drikkevett_android.db.UnitDao;
 import rustelefonen.no.drikkevett_android.db.User;
 import rustelefonen.no.drikkevett_android.tabs.calc.fragments.BeerScrollAdapter;
 import rustelefonen.no.drikkevett_android.tabs.home.SuperDao;
@@ -191,6 +193,7 @@ public class DrinkEpisode extends Fragment implements Button.OnClickListener, Vi
         currentPartyRadioGroup.setOnCheckedChangeListener(this);
         currentPartyUndoButton.setOnClickListener(this);
         currentPartyAddButton.setOnClickListener(this);
+        currentPartyEndEveningButton.setOnClickListener(this);
 
         currentPartyViewPager.setAdapter(new BeerScrollAdapter(this.getChildFragmentManager()));
         currentPartyViewPager.setCurrentItem(0);
@@ -234,7 +237,13 @@ public class DrinkEpisode extends Fragment implements Button.OnClickListener, Vi
         else if (v.getId() == R.id.plan_party_add_button) addUnitToPlanParty(planPartyViewPager.getCurrentItem());
         else if (v.getId() == R.id.plan_party_start_evening) startEvening();
         else if (v.getId() == R.id.current_party_undo_button) undoUnitFromCurrentParty();
-        else if (v.getId() == R.id.current_party_add_button) addUnitToCurrentParty(currentPartyViewPager.getCurrentItem());
+        else if (v.getId() == R.id.current_party_add_button) {
+            addUnitToCurrentParty(currentPartyViewPager.getCurrentItem());
+            NewHistory newHistory = getCurrentHistory();
+            for (Unit unit : newHistory.getUnits()) {
+                System.out.println(unit.getUnitType());
+            }
+        }
         else if (v.getId() == R.id.current_party_end_evening) endEvening();
     }
 
@@ -352,7 +361,23 @@ public class DrinkEpisode extends Fragment implements Button.OnClickListener, Vi
     }
 
     private void addUnitToCurrentParty(int unitType) {
+        NewHistory newHistory = getCurrentHistory();
+        if (newHistory == null) return;
 
+        String[] unitTypes= new String[]{"Beer", "Wine", "Drink", "Shot"};
+
+        Unit unit = new Unit();
+        unit.setUnitType(unitTypes[unitType]);
+        unit.setTimestamp(new Date());
+        unit.setHistoryId(newHistory.getId());
+
+        newHistory.getUnits().add(unit);
+        newHistory.resetUnits();
+
+        SuperDao superDao = new SuperDao(getContext());
+        UnitDao unitDao = superDao.getUnitDao();
+        unitDao.insert(unit);
+        //superDao.close();
     }
 
     private void undoUnitFromCurrentParty() {
@@ -360,7 +385,31 @@ public class DrinkEpisode extends Fragment implements Button.OnClickListener, Vi
     }
 
     private void endEvening() {
+        NewHistory newHistory = getCurrentHistory();
+        if (newHistory == null) return;
 
+        newHistory.setBeerGrams(BacUtility.getUnitGrams(0));
+        newHistory.setWineGrams(BacUtility.getUnitGrams(1));
+        newHistory.setDrinkGrams(BacUtility.getUnitGrams(2));
+        newHistory.setShotGrams(BacUtility.getUnitGrams(3));
+
+        User user = ((MainActivity)getActivity()).getUser();
+
+        newHistory.setBeerCost(user.getBeerPrice());
+        newHistory.setWineCost(user.getWinePrice());
+        newHistory.setDrinkCost(user.getDrinkPrice());
+        newHistory.setShotCost(user.getShotPrice());
+
+        newHistory.setGender(user.getGender().equals("Mann"));
+        newHistory.setWeight(user.getWeight());
+        newHistory.setEndDate(new Date());
+
+        SuperDao superDao = new SuperDao(getContext());
+        NewHistoryDao newHistoryDao = superDao.getNewHistoryDao();
+        newHistoryDao.update(newHistory);
+        superDao.close();
+
+        setView();
     }
 
     private void startEvening() {
