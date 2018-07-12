@@ -3,6 +3,7 @@ package rustelefonen.no.drikkevett_android.tabs.calc;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -107,7 +108,7 @@ public class BacCalcFragment extends Fragment implements ViewPager.OnPageChangeL
     }
 
     public double getUnitGrams(int unitType) {
-        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = getActivity().getSharedPreferences("drikkevettShared", Context.MODE_PRIVATE);
 
         float percent = sharedPref.getFloat(UnitEditActivity.percentKeys[unitType], UnitEditActivity.defaultPercent[unitType]);
         int amount = sharedPref.getInt(UnitEditActivity.amountKeys[unitType], UnitEditActivity.defaultAmount[unitType]);

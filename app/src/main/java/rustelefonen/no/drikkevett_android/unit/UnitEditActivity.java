@@ -185,7 +185,7 @@ public class UnitEditActivity extends AppCompatActivity implements ViewPager.OnP
         float percent = Float.parseFloat(percentTextView.getText().toString().split(" ")[0]);
         int amount = Integer.parseInt(amountTextView.getText().toString().split(" ")[0]);
 
-        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = this.getSharedPreferences("drikkevettShared", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putFloat(percentKeys[unitType], percent);
         editor.putInt(amountKeys[unitType], amount);

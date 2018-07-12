@@ -149,7 +149,7 @@ public class DrinkEpisode extends Fragment implements Button.OnClickListener, Vi
     }
 
     public double getUnitGrams(int unitType) {
-        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = getActivity().getSharedPreferences("drikkevettShared", Context.MODE_PRIVATE);
 
         float percent = sharedPref.getFloat(UnitEditActivity.percentKeys[unitType], UnitEditActivity.defaultPercent[unitType]);
         int amount = sharedPref.getInt(UnitEditActivity.amountKeys[unitType], UnitEditActivity.defaultAmount[unitType]);
